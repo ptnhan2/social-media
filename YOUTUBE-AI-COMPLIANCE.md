@@ -1,18 +1,45 @@
 # YouTube AI Content Compliance — Detailed Solutions
 
-> Synthesized from 20+ sources: alici.ai (12-channel audit), flocker.tv, fliki.ai, lenspov.com, dimantika.com, vidiq.com, shortopus.com, reelsmakerai.com, tubeaitools.com, eliro.pro, scalelab.com, earninglivingonline.com, quasa.io (July 2026 latest), promptreverse.app, yoh.app, fluxnote.io, and others.
+> Synthesized from 20+ sources: **YouTube official (Matt Koval, YPP clarification video, July 2026)**, alici.ai (12-channel audit), flocker.tv, fliki.ai, lenspov.com, dimantika.com, vidiq.com, shortopus.com, reelsmakerai.com, tubeaitools.com, eliro.pro, scalelab.com, earninglivingonline.com, quasa.io (July 2026 latest), promptreverse.app, yoh.app, fluxnote.io, and others.
 
 ## Core Principle (all sources agree)
 
 > "YouTube did not ban AI. It banned content a reviewer can spot as a template." — alici.ai
 
+**YouTube's own framing (Matt Koval, official):**
+> "We are agnostic to what tools are used to create the content. If you make it with gen AI, great. If you make it without gen AI, that's great too. Our policies are independent of how the content is made."
+
+> "We want content that we know what channel it comes from. It couldn't be on a hundred other channels. Be original, authentic."
+
+> "You're sharing your personal voice, your personal vision... there's a progression of your talent, your ability as a storyteller and you can see the channel, you can become invested in the channel."
+
 **The one-sentence test YouTube reviewers apply:**
 > "Could a reviewer identify this as mass-produced from a template, with no detectable human creative direction?"
 
-**Three demonetization categories (quasa.io, July 2026 — most recent):**
-1. Generic or Repetitive Content — templated, interchangeable
-2. Unsatisfying or Off-putting Content — manipulative without substance
-3. AI Personas on Sensitive Topics — AI presenting as expert on health/legal/finance/politics
+## Community Guidelines vs YPP — Two Different Systems
+
+> **From YouTube official:** Community Guidelines = rules for what's allowed on YouTube (removal). YPP = what channels are allowed to monetize (higher bar, channel-level evaluation).
+
+| System | What it covers | Consequence | Scope |
+|--------|---------------|-------------|-------|
+| Community Guidelines | Sex/nudity, hate speech, self-harm, egregious harm | Video removed | Per-video |
+| YPP policies | Generic/repetitive, off-putting, AI personas on sensitive topics | Channel demonetized | Per-channel |
+
+**Key:** Anybody can upload a video. Not anybody can be in YPP. YPP evaluates the channel AS A WHOLE.
+
+## Three Demonetization Buckets (YouTube official, July 2026)
+
+**From Matt Koval (YouTube):** "Inauthentic content" was too vague. Now broken into 3 specific buckets:
+
+1. **Generic, Repetitive, Template-based Content** — "made with templates and there's not much variation from video to video... 3,000 identical cookie cutter videos"
+2. **Off-putting, Distressing, Emotionally Manipulative** — "animal in distress, minors in distressing situations, emotionally manipulative content... viewers don't want to come back"
+3. **AI Personas on Sensitive Topics** — "AI personas talking about finance, legal issues, healthcare, medical issues"
+
+## Myths Debunked (YouTube official)
+
+- **Mass-flagging myth**: "The number of flags a video or channel may get has nothing to do with how an evaluation is done. It doesn't matter if one person flagged it or a thousand people flagged it."
+- **Tutorial myth**: YouTube specifically warns against tutorials teaching cookie-cutter content: "Don't waste your time. Focus on being creative, being original, bringing your authentic thought process."
+- **"Inauthentic content" was just vague wording**: "We recognized that 'inauthentic content' was not very helpful. Now there's more clarity."
 
 ---
 
@@ -202,7 +229,13 @@ From alici.ai — 21-day appeal timeline:
 - Days 11-18: Appeal. File via YouTube Studio. Keep short: (1) acknowledge pattern, (2) describe remediation done, (3) link new uploads as proof.
 - Days 19-21: Wait. Reviews typically 7-14 days.
 
+**If appeal denied — 90-day reapply (YouTube official):**
+> "Creators can reapply 90 days later. We hope the creator will have uploaded new content that is the kind of content that we want in YPP. Maybe they've gotten rid of some content that is undesirable. We evaluate with a fresh set of eyes. People reapply after 90 days all the time and lots of them get back in." — Matt Koval, YouTube
+
 From scalelab.com: "Do not delete the video; it appeals harder and does not remove the strike."
+
+**Channel progression concept (YouTube official):**
+> YouTube evaluates channel progression: "there's a progression of your talent, your ability as a storyteller and you can see the channel, you can become invested in the channel." — A channel that shows growth, evolution, and increasing quality over time is more defensible than a static cookie-cutter channel.
 
 ---
 
@@ -250,27 +283,28 @@ From scalelab.com: "Do not delete the video; it appeals harder and does not remo
 
 ---
 
-## Sources (20+)
+## Sources (23+)
 
-1. alici.ai — 12-channel audit, 14-rule checklist, 3-layer authenticity stack
-2. flocker.tv — Jan 2026 enforcement wave analysis
-3. fliki.ai — 5 protection strategies, case studies
-4. lenspov.com — Safe vs flagged, disclosure rules
-5. dimantika.com — 4 patterns that get flagged, visual DNA
-6. vidiq.com — 4-step safe AI system, what's allowed
-7. shortopus.com — 10 most successful faceless channels
-8. reelsmakerai.com — 50+ faceless channel examples, 10K channel study
-9. tubeaitools.com — Real AI voice channel examples
-10. eliro.pro — What gets demonetized, what doesn't
-11. scalelab.com — How to fix your channel, appeal process
-12. earninglivingonline.com — What still earns in 2026
-13. quasa.io — July 2026 policy clarification (3 categories)
-14. promptreverse.app — Visual production system for faceless
-15. yoh.app — Compliance checklist, disclosure workflow
-16. fluxnote.io — AI voice monetization guide
-17. bottlerocketcontent.com — Jan 2026 crackdown analysis
-18. techcrunch.com — YouTube AI slop policy reporting
-19. mashable.com — YouTube AI policy announcement
-20. theverge.com — YouTube monetization policy update
-21. wisdomimbibe.com — Think Media podcast case studies
-22. lastplaydistro.com — Reused content policy for AI
+1. **YouTube official (Matt Koval, YPP clarification video, July 2026)** — 3 buckets, tool-agnostic principle, Community Guidelines vs YPP, mass-flagging myth, 21-day appeal + 90-day reapply, channel progression concept, tutorial warning
+2. alici.ai — 12-channel audit, 14-rule checklist, 3-layer authenticity stack
+3. flocker.tv — Jan 2026 enforcement wave analysis
+4. fliki.ai — 5 protection strategies, case studies
+5. lenspov.com — Safe vs flagged, disclosure rules
+6. dimantika.com — 4 patterns that get flagged, visual DNA
+7. vidiq.com — 4-step safe AI system, what's allowed
+8. shortopus.com — 10 most successful faceless channels
+9. reelsmakerai.com — 50+ faceless channel examples, 10K channel study
+10. tubeaitools.com — Real AI voice channel examples
+11. eliro.pro — What gets demonetized, what doesn't
+12. scalelab.com — How to fix your channel, appeal process
+13. earninglivingonline.com — What still earns in 2026
+14. quasa.io — July 2026 policy clarification (3 categories — confirmed by YouTube official)
+15. promptreverse.app — Visual production system for faceless
+16. yoh.app — Compliance checklist, disclosure workflow
+17. fluxnote.io — AI voice monetization guide
+18. bottlerocketcontent.com — Jan 2026 crackdown analysis
+19. techcrunch.com — YouTube AI slop policy reporting
+20. mashable.com — YouTube AI policy announcement
+21. theverge.com — YouTube monetization policy update
+22. wisdomimbibe.com — Think Media podcast case studies
+23. lastplaydistro.com — Reused content policy for AI
