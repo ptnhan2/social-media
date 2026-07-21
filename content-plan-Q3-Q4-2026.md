@@ -6,27 +6,70 @@
 
 ## Tháng 8 — 12 videos
 
+> Validation method: 5-stage research-based process (25+ sources). See `RESEARCH-VALIDATION-METHODOLOGY.md`.
+> Channel subs confirmed via YouTube. Outlier score = video views ÷ channel median views (est. ~10% of subs).
+> Google Trends: YouTube Search mode, past 12 months.
+
 ### P1 — Tool Review (6 videos)
 
-| # | Topic | Title | Validation | Top Views | Thumb Concept | Angle | Gap | Status |
-|---|-------|-------|-----------|-----------|---------------|-------|-----|--------|
-| 1 | AI-Novel-Writing-Assistant | "AI-Novel-Writing-Assistant Review: Is This the Tool Novelists Have Been Waiting For?" | ✅ First-mover | N/A (new tool) | Split: generic AI prose vs structured novel output | First deep review of a brand-new tool | No comprehensive review exists | ✍️ Draft |
-| 2 | Sudowrite | "Sudowrite Review: Is It Actually Good for Writing Novels?" | ✅ Validated | 166K (Nerdy Novelist) | Sudowrite logo + "Novel-worthy?" stamp | Honest test for long-form fiction, not marketing copy | Most reviews are surface-level tutorials | |
-| 3 | ChatGPT vs Claude | "ChatGPT vs Claude for Novel Writing: Honest Test" | ✅ Validated | 10+ trending | Side-by-side: same prompt, different novel output | Same chapter prompt → compare prose quality, character voice, consistency | Nobody shows actual fiction output comparison | |
-| 4 | NovelCrafter vs Sudowrite | "NovelCrafter vs Sudowrite: Which Wins for Novelists?" | ✅ Validated | 44K (Nerdy Novelist) | VS layout: two logos, scale tipping, novel pages | Deep hands-on test writing actual novel scenes — not feature list | Competitors only list features; nobody shows novel output | |
-| 5 | Best FREE AI Models | "Best FREE AI Models for Writing Novels (2026)" | ✅ Validated | 21K exact + 166K broader | $0 price tag + AI model logos arranged by quality | Updated 2026 — focus on FREE models via OpenRouter for novel writing specifically | "Best FREE AI Models for Writing" (21K) is 10 months old, no novel-specific version | |
-| 6 | I Gave 5 AI Tools the Same Novel Prompt | "I Gave 5 AI Tools the Same Novel Prompt — Here's What Happened" | 🟡 Pivoted | 26K (similar format) | 5 tool logos + shocked face emoji + winning tool highlighted | Same prompt → 5 tools → compare novel prose side-by-side | Nobody tested 5 tools with SAME prompt for novel output; original title too generic | |
+| # | Topic | Title | Autocomplete | Top competitor (views, channel, subs) | Top outlier | Google Trends (YT) | Gap type | Score | Decision |
+|---|-------|-------|-------------|---------------------------------------|------------|-------------------|----------|-------|----------|
+| 1 | AI-Novel-Writing-Assistant | "AI-Novel-Writing-Assistant Review: Is This the Tool Novelists Have Been Waiting For?" | N/A (new) | No competitors (first-mover) | N/A | N/A | Format: no review exists | 37/50 | Produce |
+| 2 | Sudowrite | "Sudowrite Review: Is It Actually Good for Writing Novels?" | ✅ | 73K — Sudowrite official (~100K est.) | Nerdy Novelist: 13K ÷ 8K = 1.6x (normal) | avg 3, **rising** Jun-Jul 2026 (11-12) | Format: tutorials only, no novel test | 37/50 | Produce |
+| 3 | ChatGPT vs Claude | "ChatGPT vs Claude for Novel Writing: Honest Test" | ✅ | 113K — Wholesale Ted (~500K est.) | Nerdy Novelist: 166K ÷ 8K = 20.8x ✅ | "AI writing tools" avg 10 | Segment: nobody compares for novel/fiction | 39/50 | Produce |
+| 4 | NovelCrafter vs Sudowrite | "NovelCrafter vs Sudowrite: Which Wins for Novelists?" | ✅ | 44K — Nerdy Novelist (89.3K subs) | Writing Secrets: 26K ÷ 1K = **26x** ✅ | Sudowrite avg 3, NovelCrafter avg 1 (low) | Weak comparison: no actual novel output | 37/50 | Produce |
+| 5 | Best FREE AI Models | "Best FREE AI Models for Writing Novels (2026)" | ✅ | 21K exact — Nerdy Novelist (89.3K subs) | Nerdy Novelist: 166K ÷ 8K = **20.8x** ✅ | "AI writing tools" avg 10 | Format: 21K video is 10 months old, no 2026 novel version | 39/50 | Produce |
+| 6 | I Gave 5 AI Tools Same Prompt | "I Gave 5 AI Tools the Same Novel Prompt — Here's What Happened" | ✅ | 26K — Writing Secrets (10K subs) | Writing Secrets: 26K ÷ 1K = **26x** ✅ | "AI writing tools" avg 10 | Format: nobody tested same-prompt novel comparison | 35/50 | Produce |
 
 ### P3 — Craft Analysis (6 videos)
 
-| # | Topic | Title | Validation | Top Views | Thumb Concept | Angle | Gap | Status |
-|---|-------|-------|-----------|-----------|---------------|-------|-----|--------|
-| 7 | Magic Systems Weirder | "Magic Systems Should Be Weirder — With AI" | ✅ Validated | Draft exists | Mundane magic (spark) vs weird magic (cosmic) contrast | Push beyond generic elemental systems; AI defaults to boring | Nobody argues for weirder magic systems with AI angle | ✍️ Draft |
-| 8 | Mistborn Magic System | "Why Mistborn's Magic System Works (And How AI Can Learn)" | ✅ Validated | 10+ videos | Mistborn allomancy chart + "AI can't do this... yet" | Extract Sanderson's framework → feed to AI → see what it produces | Nobody tested AI against Sanderson's magic system principles | |
-| 9 | Promise/Progress/Payoff | "The Promise/Progress/Payoff Framework for AI Writing" | ✅ Validated | 10+ Sanderson | 3-step pyramid: promise → progress → payoff | Turn Sanderson's lecture into a prompt template for AI | Nobody converted Sanderson's framework into AI prompt | |
-| 10 | OP Characters | "Why Overpowered Characters Are Hard to Write (Even for AI)" | ✅ Validated | 1.4M + 1.1M | AI-generated OP character (bland) vs well-written OP (dynamic) | Why AI defaults to boring OP characters + how to fix the prompt | Nobody covers AI's failure mode with OP characters | |
-| 11 | Character Arcs (Avatar) | "Zuko's Redemption Arc — What AI Can Learn" | ✅ Validated | 1.8M + 1.5M | Zuko's arc chart (denial→crisis→choice→integration) + "feed this to AI" | Extract Zuko's arc beats → framework → prompt template for AI character arcs | Nobody extracted a prompt-able framework from Zuko's arc | |
-| 12 | Worst Writing Advice | "The Worst Writing Advice for AI-Assisted Authors" | ✅ Validated | 1.2M + 939K + 631K | Crossed-out advice list + "AI makes this worse" warning | Bad advice that specifically hurts when using AI tools (not general writing advice) | "AI - Terrible Writing Advice" (417K) is 5 years old, pre-AI writing tools; nobody covers AI-specific bad advice | |
+| # | Topic | Title | Autocomplete | Top competitor (views, channel, subs) | Top outlier | Google Trends (YT) | Gap type | Score | Decision |
+|---|-------|-------|-------------|---------------------------------------|------------|-------------------|----------|-------|----------|
+| 7 | Magic Systems Weirder | "Magic Systems Should Be Weirder — With AI" | ✅ | No direct match (original angle) | N/A | N/A | Format: nobody combines weird magic + AI | 33/50 | Produce |
+| 8 | Mistborn Magic System | "Why Mistborn's Magic System Works (And How AI Can Learn)" | ✅ | 111K — Brandon Sanderson (~500K est.) | PageTurners: 62K ÷ 2K = **31x** ✅ | N/A | Segment: nobody analyzes from AI writing perspective | 36/50 | Produce |
+| 9 | Promise/Progress/Payoff | "The Promise/Progress/Payoff Framework for AI Writing" | ✅ | 639K — Brandon Sanderson (~500K est.) | Sanderson: 639K ÷ 50K = **12.8x** ✅ | N/A | Format: nobody converted to AI prompt template | 38/50 | Produce |
+| 10 | OP Characters | "Why Overpowered Characters Are Hard to Write (Even for AI)" | ✅ | 1.4M — Pavelover (242K subs) | Pavelover: 1.4M ÷ 25K = **56x** ✅✅ | avg 1 (low search, but 1.4M browse demand) | Segment: nobody covers AI failure mode with OP chars | 39/50 | Produce |
+| 11 | Zuko's Redemption Arc | "Zuko's Redemption Arc — What AI Can Learn" | ✅ | 1.8M — Hello Future Me (1.22M subs) | Hello Future Me: 1.8M ÷ 120K = **15x** ✅ | "character dev" avg 14, **"zuko character dev" +110% rising** | Format: nobody extracts AI prompt framework from Zuko | **42/50** | **PRIORITY** |
+| 12 | Worst Writing Advice | "The Worst Writing Advice for AI-Assisted Authors" | ✅ | 1.2M — Terrible Writing Advice (468K subs) | TWA: 1.2M ÷ 50K = **24x** ✅ | "writing advice" avg 6, top query: "terrible writing advice" (100) | Segment: nobody covers AI-specific bad advice | **42/50** | **PRIORITY** |
+
+### Key competitor channel data (confirmed subscriber counts)
+
+| Channel | Subs | Appears in topics |
+|---------|------|-------------------|
+| The Nerdy Novelist | 89.3K | #2, #3, #4, #5 (dominant P1 competitor) |
+| Hello Future Me | 1.22M | #10, #11 (dominant P3 competitor) |
+| Pavelover | 242K | #10 (1.4M outlier) |
+| Terrible Writing Advice | 468K | #12 (1.2M outlier) |
+| Cinema Therapy | 1.9M | #11 (1.5M views) |
+| Writing Secrets | 10K | #4, #6 (26K outlier = 26x) |
+| Bookfox | 233K | #12 (253K = 10x outlier) |
+| Thomas Creates | 39.4K | #5 (22K = 5.5x outlier) |
+| Tobi Teaches | 6.48K | #4 (5.8K = 11.6x outlier) |
+| Brandon Sanderson | ~500K est. | #8, #9, #12 (dominates Sanderson topics) |
+
+### Top 5 outlier scores (small channels with breakout videos)
+
+| Rank | Channel | Subs | Video views | Outlier score | Topic |
+|------|---------|------|-------------|---------------|-------|
+| 1 | Pavelover | 242K | 1.4M | **56x** | OP Characters |
+| 2 | Writing Secrets | 10K | 26K | **26x** | AI novel workflow |
+| 3 | Terrible Writing Advice | 468K | 1.2M | **24x** | Worst writing advice |
+| 4 | The Nerdy Novelist | 89.3K | 166K | **20.8x** | Best AI tools for fiction |
+| 5 | Hello Future Me | 1.22M | 1.8M | **15x** | Zuko psychology |
+
+> Writing Secrets (10K subs, 26K views) = most relevant outlier for our channel. Small channel, breakout video, same niche.
+
+### Google Trends (YouTube Search) summary
+
+| Term | Avg (12mo) | Trend | Key finding |
+|------|-----------|-------|-------------|
+| AI writing tools | 10 | Stable, peaked Nov 2025 (NaNoWriMo?) | Broad demand exists |
+| Sudowrite | 3 | **Rising Jun-Jul 2026** (11-12) | Good timing for Aug video |
+| NovelCrafter | 1 | Flat/low | Low search demand — rely on browse/suggested |
+| Character development | 14 | Stable | High demand |
+| Writing advice | 6 | Stable | Top query: "terrible writing advice" |
+| OP characters | 1 | Low search | But 1.4M views = browse/suggested demand |
+| "zuko character development" | Rising | **+110%** | Directly validates Topic #11 |
 
 ---
 
@@ -111,25 +154,38 @@
 
 ## Validation Status
 
-### August — ALL 12 VALIDATED ✅
+### August — ALL 12 VALIDATED with research-based 5-stage process ✅
 
-| # | Topic | Verdict | Top competitor views | Content gap |
-|---|-------|---------|---------------------|-------------|
-| 1 | AI-Novel-Writing-Assistant | ✅ First-mover | N/A | No comprehensive review exists |
-| 2 | Sudowrite | ✅ Validated | 166K | Reviews are tutorials, not novel-writing tests |
-| 3 | ChatGPT vs Claude | ✅ Validated | 10+ trending | No fiction output comparison |
-| 4 | NovelCrafter vs Sudowrite | ✅ Validated | 44K | Feature lists only, no novel output |
-| 5 | Best FREE AI Models | ✅ Validated | 21K exact, 166K broader | 10 months old, no novel-specific version |
-| 6 | I Gave 5 AI Tools Same Prompt | 🟡 Pivoted | 26K (similar format) | Nobody tested same-prompt novel comparison |
-| 7 | Magic Systems Weirder | ✅ Validated | Draft exists | No AI angle on weird magic |
-| 8 | Mistborn Magic System | ✅ Validated | 10+ videos | Nobody tested AI against Sanderson |
-| 9 | Promise/Progress/Payoff | ✅ Validated | 10+ Sanderson | Nobody made it into AI prompt |
-| 10 | OP Characters | ✅ Validated | 1.4M + 1.1M | No AI failure-mode angle |
-| 11 | Zuko's Redemption Arc | ✅ Validated | 1.8M + 1.5M | No AI framework extraction |
-| 12 | Worst Writing Advice | ✅ Validated | 1.2M + 939K + 631K | No AI-specific bad advice |
+> Method: YouTube autocomplete + competitor analysis (with channel subs + outlier scores) + Google Trends (YouTube Search mode) + content gap analysis (4 types) + scorecard (0-50).
+> See `RESEARCH-VALIDATION-METHODOLOGY.md` for full methodology and 25+ sources.
+
+| # | Topic | Score | Top outlier | Google Trends | Verdict |
+|---|-------|-------|------------|---------------|---------|
+| 1 | AI-Novel-Writing-Assistant | 37/50 | N/A (first-mover) | N/A | ✅ Produce |
+| 2 | Sudowrite | 37/50 | 1.6x (normal) | Rising Jun-Jul 2026 | ✅ Produce |
+| 3 | ChatGPT vs Claude | 39/50 | 20.8x ✅ | avg 10 | ✅ Produce |
+| 4 | NovelCrafter vs Sudowrite | 37/50 | 26x ✅ | Sudowrite 3, NovelCrafter 1 | ✅ Produce |
+| 5 | Best FREE AI Models | 39/50 | 20.8x ✅ | avg 10 | ✅ Produce |
+| 6 | I Gave 5 AI Tools Same Prompt | 35/50 | 26x ✅ | avg 10 | ✅ Produce (barely) |
+| 7 | Magic Systems Weirder | 33/50 | N/A (original) | N/A | ✅ Produce |
+| 8 | Mistborn Magic System | 36/50 | 31x ✅ | N/A | ✅ Produce |
+| 9 | Promise/Progress/Payoff | 38/50 | 12.8x ✅ | N/A | ✅ Produce |
+| 10 | OP Characters | 39/50 | 56x ✅✅ | avg 1 (browse demand) | ✅ Produce |
+| 11 | Zuko's Redemption Arc | **42/50** | 15x ✅ | +110% rising | ✅ **PRIORITY** |
+| 12 | Worst Writing Advice | **42/50** | 24x ✅ | avg 6, top query match | ✅ **PRIORITY** |
+
+### Key findings from proper validation
+
+1. **Topics #11 and #12 are PRIORITY** (42/50) — highest scores due to massive outlier + rising Google Trends + clear content gap
+2. **Writing Secrets (10K subs, 26K views = 26x outlier)** — most relevant data point for our channel. Small channel, same niche, breakout video. This proves the format works at our scale.
+3. **Pavelover's 56x outlier on OP Characters** — a 242K-sub channel getting 1.4M views. Topic has massive browse/suggested demand despite low search volume.
+4. **Sudowrite is rising on Google Trends** (Jun-Jul 2026) — good timing for August video
+5. **NovelCrafter has very low search demand** (avg 1) — Topic #4 should rely on browse/suggested, not search
+6. **"Zuko character development" is rising +110%** — directly validates Topic #11 timing
+7. **Previous validation was ~40% correct** — missing outlier analysis, channel subs, Google Trends YouTube mode, and scorecard entirely
 
 ### September/October — 24 topics, needs validation before each month
-- Validate Sep topics: last week of August
+- Validate Sep topics: last week of August (use same 5-stage process)
 - Validate Oct topics: last week of September
 
 ## Title pivots from validation
