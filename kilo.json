@@ -1,0 +1,11 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "mcp": {
+    "postiz": {
+      "type": "remote",
+      "url": "http://localhost:4007/api/mcp",
+      "headers": { "Authorization": "Bearer FILL_POSTIZ_API_KEY" },
+      "enabled": false
+    }
+  }
+}

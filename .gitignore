@@ -1,0 +1,22 @@
+# Dependencies
+.kilo/node_modules/
+
+# Kilo internal (memory, cache — not content)
+.kilo/memory/
+.kilo/.gitignore
+.kilo/.playwright-mcp/
+
+# Playwright cache
+.playwright-mcp/
+
+# Downloads (installers, etc.)
+downloads/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
