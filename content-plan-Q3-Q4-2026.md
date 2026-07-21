@@ -8,25 +8,25 @@
 
 ### P1 — Tool Review (6 videos)
 
-| # | Topic | Title | Validation | Status |
-|---|-------|-------|-----------|--------|
-| 1 | AI-Novel-Writing-Assistant | "AI-Novel-Writing-Assistant Review: Is This the Tool Novelists Have Been Waiting For?" | First-mover | ✍️ Draft có sẵn |
-| 2 | Sudowrite | "Sudowrite Review: Is It Actually Good for Writing Novels?" | ✅ 10+ competitors | |
-| 3 | ChatGPT vs Claude | "ChatGPT vs Claude for Novel Writing: Honest Test" | ✅ 10+ trending | |
-| 4 | NovelCrafter vs Sudowrite | "NovelCrafter vs Sudowrite: Which Wins for Novelists?" | 🟡 Needs check | |
-| 5 | Best FREE AI Models | "Best FREE AI Models for Writing Novels (2026)" | 🟡 Needs check | |
-| 6 | I Tested 5 AI Tools | "I Tested 5 AI Writing Tools — Here's What Nobody Tells You" | 🟡 Needs check | |
+| # | Topic | Title | Validation | Top Views | Thumb Concept | Angle | Gap | Status |
+|---|-------|-------|-----------|-----------|---------------|-------|-----|--------|
+| 1 | AI-Novel-Writing-Assistant | "AI-Novel-Writing-Assistant Review: Is This the Tool Novelists Have Been Waiting For?" | ✅ First-mover | N/A (new tool) | Split: generic AI prose vs structured novel output | First deep review of a brand-new tool | No comprehensive review exists | ✍️ Draft |
+| 2 | Sudowrite | "Sudowrite Review: Is It Actually Good for Writing Novels?" | ✅ Validated | 166K (Nerdy Novelist) | Sudowrite logo + "Novel-worthy?" stamp | Honest test for long-form fiction, not marketing copy | Most reviews are surface-level tutorials | |
+| 3 | ChatGPT vs Claude | "ChatGPT vs Claude for Novel Writing: Honest Test" | ✅ Validated | 10+ trending | Side-by-side: same prompt, different novel output | Same chapter prompt → compare prose quality, character voice, consistency | Nobody shows actual fiction output comparison | |
+| 4 | NovelCrafter vs Sudowrite | "NovelCrafter vs Sudowrite: Which Wins for Novelists?" | ✅ Validated | 44K (Nerdy Novelist) | VS layout: two logos, scale tipping, novel pages | Deep hands-on test writing actual novel scenes — not feature list | Competitors only list features; nobody shows novel output | |
+| 5 | Best FREE AI Models | "Best FREE AI Models for Writing Novels (2026)" | ✅ Validated | 21K exact + 166K broader | $0 price tag + AI model logos arranged by quality | Updated 2026 — focus on FREE models via OpenRouter for novel writing specifically | "Best FREE AI Models for Writing" (21K) is 10 months old, no novel-specific version | |
+| 6 | I Gave 5 AI Tools the Same Novel Prompt | "I Gave 5 AI Tools the Same Novel Prompt — Here's What Happened" | 🟡 Pivoted | 26K (similar format) | 5 tool logos + shocked face emoji + winning tool highlighted | Same prompt → 5 tools → compare novel prose side-by-side | Nobody tested 5 tools with SAME prompt for novel output; original title too generic | |
 
 ### P3 — Craft Analysis (6 videos)
 
-| # | Topic | Title | Validation | Status |
-|---|-------|-------|-----------|--------|
-| 7 | Magic Systems Weirder | "Magic Systems Should Be Weirder — With AI" | ✅ Draft có sẵn | ✍️ |
-| 8 | Mistborn Magic System | "Why Mistborn's Magic System Works (And How AI Can Learn)" | ✅ 10+ videos | |
-| 9 | Promise/Progress/Payoff | "The Promise/Progress/Payoff Framework for AI Writing" | ✅ 10+ Sanderson | |
-| 10 | OP Characters | "Why Overpowered Characters Are Hard to Write (Even for AI)" | 🟡 Needs check | |
-| 11 | Character Arcs (Avatar) | "Zuko's Redemption Arc — What AI Can Learn" | 🟡 Needs check | |
-| 12 | Worst Writing Advice | "The Worst Writing Advice (And What Actually Works with AI)" | 🟡 Needs check | |
+| # | Topic | Title | Validation | Top Views | Thumb Concept | Angle | Gap | Status |
+|---|-------|-------|-----------|-----------|---------------|-------|-----|--------|
+| 7 | Magic Systems Weirder | "Magic Systems Should Be Weirder — With AI" | ✅ Validated | Draft exists | Mundane magic (spark) vs weird magic (cosmic) contrast | Push beyond generic elemental systems; AI defaults to boring | Nobody argues for weirder magic systems with AI angle | ✍️ Draft |
+| 8 | Mistborn Magic System | "Why Mistborn's Magic System Works (And How AI Can Learn)" | ✅ Validated | 10+ videos | Mistborn allomancy chart + "AI can't do this... yet" | Extract Sanderson's framework → feed to AI → see what it produces | Nobody tested AI against Sanderson's magic system principles | |
+| 9 | Promise/Progress/Payoff | "The Promise/Progress/Payoff Framework for AI Writing" | ✅ Validated | 10+ Sanderson | 3-step pyramid: promise → progress → payoff | Turn Sanderson's lecture into a prompt template for AI | Nobody converted Sanderson's framework into AI prompt | |
+| 10 | OP Characters | "Why Overpowered Characters Are Hard to Write (Even for AI)" | ✅ Validated | 1.4M + 1.1M | AI-generated OP character (bland) vs well-written OP (dynamic) | Why AI defaults to boring OP characters + how to fix the prompt | Nobody covers AI's failure mode with OP characters | |
+| 11 | Character Arcs (Avatar) | "Zuko's Redemption Arc — What AI Can Learn" | ✅ Validated | 1.8M + 1.5M | Zuko's arc chart (denial→crisis→choice→integration) + "feed this to AI" | Extract Zuko's arc beats → framework → prompt template for AI character arcs | Nobody extracted a prompt-able framework from Zuko's arc | |
+| 12 | Worst Writing Advice | "The Worst Writing Advice for AI-Assisted Authors" | ✅ Validated | 1.2M + 939K + 631K | Crossed-out advice list + "AI makes this worse" warning | Bad advice that specifically hurts when using AI tools (not general writing advice) | "AI - Terrible Writing Advice" (417K) is 5 years old, pre-AI writing tools; nobody covers AI-specific bad advice | |
 
 ---
 
@@ -111,10 +111,31 @@
 
 ## Validation Status
 
-- ✅ Validated: 6 topics (August)
-- ✍️ Draft exists: 2 topics (August)
-- 🟡 Needs quick validation: 4 topics (August) + 24 topics (Sep/Oct)
-- Validate Sep/Oct topics trước mỗi tháng
+### August — ALL 12 VALIDATED ✅
+
+| # | Topic | Verdict | Top competitor views | Content gap |
+|---|-------|---------|---------------------|-------------|
+| 1 | AI-Novel-Writing-Assistant | ✅ First-mover | N/A | No comprehensive review exists |
+| 2 | Sudowrite | ✅ Validated | 166K | Reviews are tutorials, not novel-writing tests |
+| 3 | ChatGPT vs Claude | ✅ Validated | 10+ trending | No fiction output comparison |
+| 4 | NovelCrafter vs Sudowrite | ✅ Validated | 44K | Feature lists only, no novel output |
+| 5 | Best FREE AI Models | ✅ Validated | 21K exact, 166K broader | 10 months old, no novel-specific version |
+| 6 | I Gave 5 AI Tools Same Prompt | 🟡 Pivoted | 26K (similar format) | Nobody tested same-prompt novel comparison |
+| 7 | Magic Systems Weirder | ✅ Validated | Draft exists | No AI angle on weird magic |
+| 8 | Mistborn Magic System | ✅ Validated | 10+ videos | Nobody tested AI against Sanderson |
+| 9 | Promise/Progress/Payoff | ✅ Validated | 10+ Sanderson | Nobody made it into AI prompt |
+| 10 | OP Characters | ✅ Validated | 1.4M + 1.1M | No AI failure-mode angle |
+| 11 | Zuko's Redemption Arc | ✅ Validated | 1.8M + 1.5M | No AI framework extraction |
+| 12 | Worst Writing Advice | ✅ Validated | 1.2M + 939K + 631K | No AI-specific bad advice |
+
+### September/October — 24 topics, needs validation before each month
+- Validate Sep topics: last week of August
+- Validate Oct topics: last week of September
+
+## Title pivots from validation
+
+- Video #6: "I Tested 5 AI Writing Tools" → "I Gave 5 AI Tools the Same Novel Prompt" (original title too generic, direct competitor views were 13-20; pivoted to novel-specific comparison)
+- Video #12: "The Worst Writing Advice" → "The Worst Writing Advice for AI-Assisted Authors" (broad topic needs niche angle; AI-specific bad advice is untapped)
 
 ## Next step
 
