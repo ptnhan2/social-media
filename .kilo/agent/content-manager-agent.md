@@ -47,38 +47,78 @@ Ask: "Bạn muốn review tool nào / analyze novel nào? Hoặc tôi tự pick 
 ### Step 2: Pick 6 topics (2/month, rotating P1 + P3)
 Read `CONTENT-CALENDAR.md` title bank. Pick topics, ask user to confirm.
 
-### Step 3: Validate demand for each topic (15 min/topic)
+### Step 3: Validate demand for each topic (20-30 min/topic)
 
-For each topic, do this validation:
+> Research-based process from 25+ sources. See `RESEARCH-VALIDATION-METHODOLOGY.md` for full source list and `BATCH-CONTENT-WORKFLOW.md` Phase 0 for detailed steps.
 
-**a) YouTube autocomplete test (10 sec)**
-- Use `webfetch` on: `https://www.youtube.com/results?search_query=[URL-encoded topic]`
-- OR ask user to type topic into YouTube Search and report autocomplete suggestions
-- Strong: topic appears in top 3 suggestions
-- Weak: doesn't appear
+**5-stage validation:**
 
-**b) Competitor check**
-- Search topic on YouTube
-- Note top 5-10 results: title, views, upload date, channel size
-- Strong: top results have 50K+ views with recent dates
-- Weak: under 5K views
+**a) Search Demand Verification (5 min)**
+- YouTube autocomplete: gõ topic vào YouTube search bar. Topic trong top suggestions = demand thật.
+- Dùng wildcard `*` trước/sau keyword để tìm biến thể.
+- Alphabet trick: gõ `topic a`, `topic b`, `topic c` để tìm tất cả variants.
+- Use browser (Playwright) to search YouTube — `webfetch` không works (YouTube renders via JS).
 
-**c) Google Trends check**
-- Use `webfetch` on: `https://trends.google.com/trends/explore?q=[URL-encoded topic]`
-- Strong: rising or stable
-- Weak: declining
+**b) Competitor Analysis (10 min)**
+- Search topic trên YouTube via browser. Cho 5-10 top results, thu thập:
 
-**d) Content gap**
-- From competitor videos: what do they cover? What do they miss?
-- Your video fills the gap
+| Video | Views | Channel subs | Outlier score | Why it worked | Gap |
+|-------|-------|-------------|---------------|---------------|-----|
 
-**Validation Scorecard:**
+- **Channel subs**: bắt buộc — view counts vô nghĩa nếu không biết channel size
+- **Outlier score = Video views ÷ Channel median views** (median, not average)
+  - 2x = worth noticing, 3-5x = strong signal, 10x+ = deep analysis
+- **Mid-sized channel test**: 10K-100K sub channels hit 50K+ views thường xuyên = demand thật. Chỉ mega-channels = saturated.
+- **Why it worked**: format? title pattern? thumbnail style? timing? personality?
+
+> "A 1M-view video on a 10M-sub channel is NOT an outlier. A 50K-view video on a 5K-sub channel IS a 10x outlier — this is the gold." — OverseerOS
+
+**c) Google Trends — YouTube Search mode (5 min)**
+- Vào Google Trends, **switch "Web Search" → "YouTube Search"** (critical — most people miss this)
+- Set timeframe 5 năm để thấy seasonality
+- Compare 2-5 terms cùng lúc
+- Check "Rising" related queries — early signal trước peak
+- Note: Google Trends chỉ cho 0-100 relative index, KHÔNG cho absolute volume
+
+**d) Content Gap Analysis (5 min)**
+- Identify 1 trong 4 gap types:
+  - Missing question (comment lặp cùng câu hỏi)
+  - Weak comparison (competitor cover partial, not full decision)
+  - Audience segment (1 nhóm bị bỏ qua)
+  - Format gap (topic có nhưng sai format — tutorial vs test)
+
+**e) Scorecard (2 min)**
+Score mỗi category 0-5, total 0-50:
+
+| Category | Question |
+|----------|----------|
+| Viewer clarity | How specific is the target viewer? |
+| Pain/desire strength | How urgent is the problem? |
+| Demand evidence | Competitor breakouts + search data |
+| Search potential | Search intent + volume match |
+| Suggested/browse potential | Curiosity gap + visual click potential |
+| Title potential | Can write 5-10 strong title options? |
+| Thumbnail potential | Visual tension, mobile readability |
+| Retention potential | Natural structure, payoff, rewatch hooks |
+| Differentiation | Hard-to-copy angle |
+| Channel fit | Pillar alignment, positioning |
+
+| Score | Decision |
+|-------|----------|
+| 0-15 | Kill |
+| 16-24 | Save for later |
+| 25-32 | Needs sharper angle |
+| 33-40 | Produce |
+| 41-50 | Priority |
+
+**Validation Scorecard output:**
 ```
 Topic: [topic]
 YouTube autocomplete: ✅/❌
-Competitor views: [N]K (strong/weak)
-Google Trends: rising/flat/declining
-Content gap: [1 sentence — what competitors miss]
+Competitor analysis: top views [N]K | top outlier [N]x on [N]K-sub channel
+Google Trends (YouTube Search): rising/flat/declining
+Content gap: [1 sentence — which of 4 gap types]
+Scorecard: [N]/50 → [Kill/Save/Sharpen/Produce/Priority]
 VERDICT: [validated / needs pivot / weak demand]
 ```
 
@@ -159,13 +199,18 @@ Example:
 
 ### Step 2: Competitor Research (20 min/video)
 
-Use `webfetch` to search YouTube for the topic. Find 5-7 competitor videos.
+Use browser (Playwright) to search YouTube for the topic. Find 5-7 competitor videos.
 
 For each, note:
-| Video | Views | Channel size | Upload date | Why it worked | Gap we can beat |
-|-------|-------|-------------|-------------|---------------|-----------------|
+| Video | Views | Channel subs | Outlier score | Why it worked | Gap we can beat |
+|-------|-------|-------------|---------------|---------------|-----------------|
 
-Find outliers: videos with views 10-20x channel's average.
+- **Channel subs**: bắt buộc — view counts vô nghĩa nếu không biết channel size
+- **Outlier score = Video views ÷ Channel median views** (median, not average)
+  - 3-5x = strong signal, 10x+ = deep analysis warranted
+- **Why it worked**: format? title? thumbnail? timing? personality?
+- **Analyze channels 2-3x your size** — mega-channels don't teach what works at your scale
+- Find outliers: small channels with breakout videos = gap exists at your scale
 
 ### Step 3: Comment Mining (10 min/video)
 
@@ -349,12 +394,13 @@ DO NOT post all Shorts same day. Space 5-7 days apart:
 
 ## FLOW 4: Quick Validation (`validate [topic]`)
 
-Fast validation for a single topic:
+Fast validation for a single topic — condensed version of FLOW 1 Step 3:
 
-1. YouTube autocomplete: ask user to type topic in YouTube Search, report suggestions
-2. Competitor check: `webfetch` YouTube search results, note top 5 views
-3. Google Trends: `webfetch` trends page
-4. Content gap: what do top videos miss?
+1. **YouTube autocomplete**: use browser to search YouTube, check if topic appears in suggestions. Use wildcard `*` and alphabet trick.
+2. **Competitor check**: browser search YouTube, note top 5-7 results with views AND channel subs. Calculate outlier score = views ÷ channel median.
+3. **Google Trends**: switch to "YouTube Search" mode (not Web Search). Check rising/flat/declining + related queries.
+4. **Content gap**: identify 1 of 4 gap types (missing question / weak comparison / audience segment / format gap).
+5. **Scorecard**: score 0-50. Below 25 = don't produce.
 
 Output:
 ```
@@ -363,9 +409,11 @@ Output:
 | Signal | Result |
 |--------|--------|
 | Autocomplete | ✅/❌ |
-| Competitor views | [N]K |
-| Google Trends | rising/flat/declining |
-| Content gap | [1 sentence] |
+| Top competitor views | [N]K on [N]K-sub channel |
+| Top outlier score | [N]x (strong/weak) |
+| Google Trends (YouTube) | rising/flat/declining |
+| Content gap | [type: 1 sentence] |
+| Scorecard | [N]/50 → [decision] |
 
 VERDICT: [validated / pivot / weak]
 ```

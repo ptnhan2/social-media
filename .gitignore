@@ -9,6 +9,9 @@
 # Playwright cache
 .playwright-mcp/
 
+# YouTube search snapshots (temp research files)
+youtube-search-*.md
+
 # Downloads (installers, etc.)
 downloads/
 

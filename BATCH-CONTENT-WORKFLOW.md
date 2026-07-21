@@ -49,14 +49,85 @@ Xoay 3 pillars:
 - P1 (AI tool review): ~6/tháng
 - P3 (Craft analysis): ~6/tháng
 
-### Validate demand (15 min/topic)
+### Validate demand (20-30 min/topic)
+
+> Research-based process from 25+ sources (Ahrefs, vidIQ, TubeBuddy, OverseerOS, AutonoLab, Colin & Samir, Think with Google). See `RESEARCH-VALIDATION-METHODOLOGY.md` for full source list.
+
+**5-stage validation cho mỗi topic:**
+
+#### Stage 1: Search Demand Verification (5 min)
+1. **YouTube autocomplete**: Gõ topic vào YouTube search bar. Topic xuất hiện trong top suggestions = demand thật. Dùng wildcard `*` trước/sau keyword để tìm biến thể.
+2. **YouTube Suggest alphabet trick**: Gõ `topic a`, `topic b`, `topic c`... để tìm tất cả autocomplete variants.
+3. Nếu không có keyword tool (vidIQ/TubeBuddy): YouTube autocomplete + Google Trends là đủ cho demand signal.
+
+#### Stage 2: Competitor Analysis (10 min)
+Search topic trên YouTube. Cho 5-10 top results, thu thập:
+
+| Video | Views | **Channel subs** | Upload date | **Outlier score** | Why it worked | Gap |
+|-------|-------|-----------------|-------------|-------------------|---------------|-----|
+
+- **Channel subs**: View counts KHÔNG có nghĩa nếu không biết channel size. 44K views trên 100K-sub channel = bình thường. 44K views trên 5K-sub channel = outlier 8.8x.
+- **Outlier score = Video views ÷ Channel median views**. Dùng median, không dùng average (1 viral video distort mean).
+  - 2x = worth noticing
+  - 3-5x = strong signal
+  - 10x+ = deep analysis warranted
+- **Why it worked**: Format? Topic? Title pattern? Thumbnail style? Timing? Personality?
+- **Mid-sized channel test**: Nếu 10K-100K sub channels hit 50K+ views thường xuyên = demand thật. Chỉ mega-channels mới có views = saturated.
+
+> "A 1M-view video on a 10M-sub channel is NOT an outlier. A 50K-view video on a 5K-sub channel IS a 10x outlier — this is the gold." — OverseerOS
+
+#### Stage 3: Google Trends — YouTube Search mode (5 min)
+1. Vào [Google Trends](https://trends.google.com)
+2. **Switch search type từ "Web Search" → "YouTube Search"** (critical —大多数人 miss this)
+3. Set timeframe 5 năm để thấy seasonality + long-term trajectory
+4. Compare 2-5 terms cùng lúc (VD: "Sudowrite" vs "NovelCrafter" vs "AI writing")
+5. Check **"Rising" related queries** — percentage growth, early signal trước peak
+6. Check **"Top" related queries** — most-searched adjacent topics
 
 | Signal | Strong | Weak |
 |--------|--------|------|
-| YouTube autocomplete | Top 3 suggestions | Không xuất hiện |
-| Competitor views | 50K+ views | <5K views |
-| Google Trends | Rising/stable | Declining |
-| Content gap | Có angle competitors miss | Đã cover hết |
+| Rising queries | Trending up | Declining |
+| Seasonality | Publish 4-8 tuần trước peak | Past peak |
+| Term comparison | Target term cao nhất | Target term thấp nhất |
+
+> Google Trends KHÔNG cho absolute volume — chỉ 0-100 relative index.
+
+#### Stage 4: Content Gap Analysis (5 min)
+Từ competitor videos, identify 1 trong 4 gap types:
+
+| Gap Type | Signal | Action |
+|----------|--------|--------|
+| Missing question | Comment lặp cùng câu hỏi | Answer directly |
+| Weak comparison | Competitor cover partial, not full decision | Create complete comparison |
+| Audience segment | 1 nhóm bị bỏ qua (VD: novel writers vs general) | Target that subgroup |
+| Format gap | Topic có nhưng sai format (tutorial vs test) | Repackage in better format |
+
+#### Stage 5: Scorecard (2 min)
+
+Score mỗi category 0-5. Total 0-50.
+
+| Category | Question |
+|----------|----------|
+| Viewer clarity | How specific is the target viewer? |
+| Pain/desire strength | How urgent is the problem? |
+| Demand evidence | Competitor breakouts + search data |
+| Search potential | Search intent + volume match |
+| Suggested/browse potential | Curiosity gap + visual click potential |
+| Title potential | Can write 5-10 strong title options? |
+| Thumbnail potential | Visual tension, mobile readability |
+| Retention potential | Natural structure, payoff, rewatch hooks |
+| Differentiation | Hard-to-copy angle |
+| Channel fit | Pillar alignment, positioning |
+
+| Score | Decision |
+|-------|----------|
+| 0-15 | Kill |
+| 16-24 | Save for later |
+| 25-32 | Needs sharper angle |
+| 33-40 | Produce |
+| 41-50 | Priority |
+
+> Source: OverseerOS Topic Validation Scorecard (2026). See `RESEARCH-VALIDATION-METHODOLOGY.md`.
 
 ### Write title + thumbnail concept
 
@@ -97,10 +168,18 @@ Cho 12 videos/tháng. Agent làm research + draft, user review/fix + ADD human a
 
 ### Step 2: Competitor Research (15 min/video)
 
-5-7 competitor videos. Tìm outliers (views 10-20x channel average).
+Search topic trên YouTube. 5-7 competitor videos. Cho mỗi video:
 
-| Video | Views | Channel size | Why it worked | Gap we can beat |
-|-------|-------|-------------|---------------|-----------------|
+| Video | Views | Channel subs | Outlier score | Why it worked | Gap we can beat |
+|-------|-------|-------------|---------------|---------------|-----------------|
+
+- **Channel subs**: bắt buộc — view counts vô nghĩa nếu không biết channel size
+- **Outlier score = Video views ÷ Channel median views** (dùng median, không dùng average)
+  - 3-5x = strong signal (topic works at this scale)
+  - 10x+ = deep analysis warranted (what made it break out?)
+- **Why it worked**: format? title pattern? thumbnail style? timing? personality? search demand?
+- **Gap**: 1 trong 4 gap types (missing question / weak comparison / audience segment / format gap)
+- **Analyze channels 2-3x your size** — these show what your realistic next level looks like. Mega-channels don't teach what works at your scale.
 
 ### Step 3: Hook Design (5 min/video)
 
