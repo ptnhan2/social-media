@@ -1,109 +1,182 @@
-# Content Strategy — AI Novel-Writing Agent Channel (v2 — user's vision)
+# Content Strategy — Craft × AI Channel (v3 — July 2026)
 
-> 3 pillar content, tất cả automatable qua AI + workflow. Không viết tiểu thuyết, không viết essay tay.
+> Direction: Craft × AI Intersection — bridges traditional writing craft with AI-assisted writing.
+> Research-based: 300+ sources, scored 30/35 on direction scorecard vs 14/35 for tool reviewer.
 > Product: AI agent hỗ trợ tác giả sáng tác tiểu thuyết. Đang build.
-> Audience: tác giả tiểu thuyết muốn dùng AI. Goal: organic traffic → product lead-gen.
+> Audience: novelists who use AI (or want to) and care about writing craft.
+> Goal: organic traffic → newsletter → product lead-gen.
 
 ---
 
-## Positioning (chốt — "dev-analyst", không "author-first")
+## Positioning
 
-**"Dev building AI for novelists — reviewing AI writing tools, analyzing writing craft, building in public."**
+**"I analyze how AI handles writing craft — why it fails, what that reveals about craft, and how to fix it."**
 
-Precedent: **Kindlepreneur** (Dave Chesson) = non-author tool reviewer → massive author audience (SEO "best AI writing tools"). Chứng minh: không cần là author, chỉ cần analyst/curator có giá trị.
+Not a tool reviewer. Not a pure craft analyst. The BRIDGE between craft theory and AI practice.
 
----
+| What exists | What's missing (us) |
+|------------|-------------------|
+| Craft channels (Sanderson 881K, Hello Future Me 1.22M) — zero AI content | Craft × AI intersection |
+| AI tool channels (Nerdy Novelist 89K) — zero craft theory | Craft × AI intersection |
+| Academic papers (ACL, arXiv) — zero YouTube presence | Translate research to video |
 
-## 3 Content Pillars (user-defined, all automatable)
-
-### Pillar 1: AI Writing Tool Review (insight: AI writing landscape)
-- **Làm gì**: khám phá, giới thiệu, tóm tắt, đánh giá AI writing tools (Sudowrite, NovelCrafter, ChatGPT, Claude, Jasper, etc.)
-- **Giá trị cho bạn**: hiểu landscape → build product tốt hơn (competitive intel)
-- **Giá trị cho audience**: authors đang tìm tool AI → review = high-intent search traffic
-- **Precedent**: Kindlepreneur (SEO tool reviews, affiliate), Nerdy Novelist (88K subs, tool tutorials)
-- **Automation**: Agent research tool (docs/web scrape) → summarize features → evaluate pros/cons → draft review (script or blog) → bạn test tool (10min) + fix draft (15min)
-- **Format**: YouTube 10-15 min (tool walkthrough + demo) OR blog post SEO (3000+ words)
-- **Cadence**: 1-2/tháng
-- **Monetize**: affiliate (tool bạn review)
-
-### Pillar 2: Daily Build-in-Public (insight: build process)
-- **Làm gì**: daily update về quá trình build sản phẩm (feature, bug, decision, progress)
-- **Giá trị cho bạn**: build-in-public = auth + audience trust
-- **Giá trị für audience**: indie dev journey = relatable + educational
-- **Precedent**: levelsio (Twitter build-in-public), Marc Lou (ShipFast devlog)
-- **Automation**: Agent đọc **git log / commit messages** → sinh Day-N devlog post (social-post F1 formula) → bạn approve (1 min)
-- **Format**: X/Threads post (1-3 câu) + weekly summary newsletter
-- **Cadence**: daily (5-7/tuần)
-- **Monetize**: product waitlist CTA
-
-### Pillar 3: Writing Novel Knowledge (insight: deep writing craft)
-- **Làm gì**: phân tích nhân vật, phân tích cốt truyện, giới thiệu flow viết, kỹ thuật viết, review sách/truyện → phân tích cái hay
-- **Giá trị cho bạn**: hiểu writing craft sâu → build AI agent hiểu craft (không chỉ tech)
-- **Giá trị cho audience**: authors học craft → top-funnel broad reach
-- **Precedent**: HFM (1.22M subs, phân tích Avatar/Tolkien worldbuilding), Sanderson (millions views, dạy craft via analysis)
-- **Automation**: Agent chọn novel/technique → research (plot/character/reviews) → analyze (character arc / plot structure / technique breakdown) → draft → bạn fix craft accuracy (15-30 min)
-- **Format**: YouTube video essay 15-30 min (analytical, not creative) OR blog post
-- **Cadence**: 1-2/tháng
-- **Monetize**: product CTA + course (sau)
+> Moat: requires dual expertise (craft theory + AI knowledge). Neither craft channels nor AI channels can easily pivot. (Source: 300+ sources, July 2026)
 
 ---
 
-## Automation level per pillar
+## Content Direction: Craft × AI (single primary pillar)
 
-| Pillar | AI làm | Bạn làm | Automation | Time/content |
-|---|---|---|---|---|
-| 1. Tool review | Research + draft review | Test tool + fix draft | ~80% | 25 min |
-| 2. Daily devlog | Sinh từ git log | Approve | ~95% | 1 min |
-| 3. Craft analysis | Research + analyze + draft | Fix craft accuracy | ~70% | 15-30 min |
+### What we make
+Analytical videos that take a craft principle (show-don't-tell, subtext, pacing, character voice, magic system design, etc.) and analyze how AI handles it, why it fails, and how to fix it.
 
-## Total time/tuần (review/fix only)
-- 1-2 tool review × 25 min = 50 min
-- 5 daily devlog × 1 min = 5 min
-- 1 craft analysis × 30 min = 30 min
-- Reddit engagement (genuine) = 30 min
-- **= ~2h/tuần**
+### 6 Content Categories (rotate for format variation — compliance #3)
+
+| Category | Example | Mechanism |
+|----------|---------|-----------|
+| Craft Principle × AI | "Why AI Can't Write Subtext" | #5 First principles |
+| Framework × AI | "Sanderson's 2nd Law + AI: Why AI Magic Systems Have No Limitations" | #1 Framework |
+| AI Pattern Analysis | "Why AI Dialogue Sounds Like Therapy" | #3 Case study |
+| Community Problem Solve | "Why AI Characters All Sound the Same by Chapter 30" (from Reddit r/WritingWithAI) | #7 Community-driven |
+| Model Comparison (craft lens) | "ChatGPT vs Claude for Dialogue: A Craft Analysis" | #2 Comparative |
+| Workflow Design | "How to Build a Story Bible AI Actually Follows" | #1 Framework |
+
+### Content approach
+- **No tool testing** — pure analysis from public sources (docs, reviews, Reddit, academic papers)
+- **First-person analytical voice** — confident, experiential, NOT secondhand-sounding
+- **Review written AS IF user has used the tool** — but actual research from internet sources
+- **Research-based frameworks** — evaluation criteria from `RESEARCH-FRAMEWORKS.md`, not intuition
+
+### Cadence: 8 videos/month (2/week)
+
+| Day | Task | Time |
+|-----|------|------|
+| Mon | Research video 1 + devlog | 2h |
+| Tue | Script video 1 (hook handwritten + AI draft + human rewrite) | 2h |
+| Wed | Voice + visuals + assembly video 1 | 1.5h |
+| Thu | Research video 2 + script start | 2h |
+| Fri | Script video 2 finish + voice + visuals + assembly | 2h |
+| Sat | Repurpose both videos (X threads, Shorts, Reddit) | 2h |
+| Sun | Newsletter + comment replies + buffer | 1h |
+
+**Monthly: 8 videos + 30 devlogs + 4 newsletters + 8 repurpose batches = ~54h** (fits 2h/day × 30 days)
+
+---
+
+## Secondary: Daily Devlog (build-in-public)
+
+- Agent reads git log → drafts devlog post (max 280 chars) → user approves (1 min)
+- Format: X/Threads post (1-3 sentences)
+- Cadence: daily (5-7/week)
+- Purpose: build-in-public authenticity + audience trust
+
+---
+
+## Production pipeline (per video ~3-3.5h production + 1.5h repurpose = ~5h)
+
+See `AUTHENTICITY-PIPELINE.md` for full details.
+
+| Phase | Time | Key technique |
+|-------|------|--------------|
+| Research | 45-60 min | 5-10 sources, 1 Reddit thread, 1-sentence thesis |
+| Script | 60-90 min | Hook + thesis HANDWRITTEN, AI draft, human rewrite (remove 7 AI tells) |
+| Voiceover | 5 min | ElevenLabs: stability 35-45%, script formatting (pauses, emphasis) |
+| Visuals | 20 min | Open Design: DESIGN.md brand contract, voice-led (audio first → visuals match) |
+| Assembly | 30 min | CapCut: auto-captions, 90% hard cuts, film grain, music -22dB, -14 LUFS |
+| Publish | 10 min | Source links in description, AI disclosure toggle |
+| Repurpose | 90 min | X thread + Shorts notes + Reddit post + newsletter section |
 
 ---
 
 ## Repurpose engine
+
 ```
-1 tool review (video hoặc blog) → Short clips (tool demo highlights) + X thread + Newsletter section
-1 craft analysis (video) → Shorts (key insight) + X thread + Blog (SEO) + Reddit (value post)
+1 Craft × AI video →
+  ├── 2-3 Shorts (key insight clips, spaced 3-5 days apart)
+  ├── 1 X Thread (5-8 tweets, each standalone)
+  ├── 1 Reddit post (genuine value, no product link first 3 months)
+  └── 1 Newsletter section (cut content — insight that didn't make video)
+
 Daily devlog → Weekly newsletter summary (Friday)
 ```
 
-## Platform
-- **YouTube**: tool reviews + craft analysis (video essay)
-- **X/Threads**: daily devlog + repurpose threads
-- **Blog**: SEO tool reviews + craft analysis (text)
-- **Newsletter**: weekly summary (devlog + content + product progress)
-- **Reddit**: genuine value posts (r/writing, r/Worldbuilding)
+---
 
-## Title formula (adapted)
-**Tool review**: "Sudowrite vs NovelCrafter: Which AI Writing Tool Actually Works?", "Best FREE AI Models for Writing Novels (2026)", "I Tested 5 AI Writing Tools — Here's What Nobody Tells You"
-**Build-in-public**: "Day 42: The AI agent wrote its first chapter today", "3 bugs I fixed building an AI novel agent this week"
-**Craft analysis**: "Why [franchise]'s villain works (and how AI can learn from it)", "The Competence Ceiling: Why Overpowered Characters Fail", "Character Arcs in [novel] — Analyzed by AI"
+## Title formula (Craft × AI)
+
+**Craft Principle × AI:**
+- "Why AI Can't Write Subtext — And the Prompt Framework That Fixes It"
+- "Show Don't Tell vs AI: The Craft Reason AI Over-Explains"
+- "Why AI Pacing Feels Like One Speed — And How to Fix It"
+
+**Framework × AI:**
+- "Sanderson's 2nd Law + AI: Why AI Magic Systems Have No Limitations"
+- "Save the Cat + AI: Where AI Breaks Story Structure"
+- "The MICE Quotient: Why AI Can't Write Milieu Stories"
+
+**AI Pattern Analysis:**
+- "Why AI Dialogue Sounds Like Therapy"
+- "Why AI Characters All Sound the Same by Chapter 30"
+- "The 'AI Sameness' Problem: Why All AI Prose Sounds Identical"
+
+---
+
+## Platform
+
+- **YouTube**: Craft × AI analytical videos (8/month, 2/week)
+- **X/Threads**: daily devlog + repurpose threads
+- **Blog**: SEO Craft × AI analysis (text version of video, 1500-3000 words)
+- **Newsletter**: weekly summary (devlog + content + product progress)
+- **Reddit**: genuine value posts (r/writing, r/WritingWithAI, r/worldbuilding)
+
+---
 
 ## Monetization
-1. Product (AI agent SaaS) — primary
-2. Affiliate (tools reviewed) — secondary
-3. Membership/course — tertiary
-4. AdSense — quaternary
+
+1. **Product** (AI agent SaaS) — primary, future
+2. **Newsletter** (owned audience) — primary, immediate
+3. **Course** ("Craft × AI Writing Workshop") — after 3 months audience
+4. **Community** (Skool/Discord) — after 6 months
+5. **AdSense** — quaternary, one stream not the business
+
+---
 
 ## Analytics
+
 - Key metric: email signups / product waitlist (not vanity)
-- Review weekly: which pillar performs best → double down
+- Review weekly: which category performs best → double down
 - UTM track all links from content → product
+- Retention gate: AVD >50% or views >channel median → repurpose. Both below → note "weak topic"
+
+---
 
 ## Idea sources
-- AI tool landscape: Product Hunt, GitHub trending, Twitter AI-writing accounts, Reddit r/artificial
-- Build process: git log (automated)
-- Writing craft: Reddit r/writing questions, popular novels, HFM/Sanderson topics (adapt, don't copy)
+
+- **Community**: Reddit r/WritingWithAI (158K members, 230% YoY growth), r/writing, r/fantasywriters, r/worldbuilding
+- **Craft theory**: Sanderson BYU lectures, Hello Future Me videos, writing craft books, academic papers
+- **AI research**: ACL papers, arXiv, NC Bench, model documentation, community comparisons
+- **Build process**: git log (automated devlog)
+- **Competitor gaps**: mine comments on Sanderson, Hello Future Me, Nerdy Novelist for unanswered questions
+
+---
 
 ## Stack mapping
-- **Tool review video** → Open Design (screen recording + motion graphics overlay + DESIGN.md brand)
-- **Daily devlog** → social-post skill F1 (agent reads git log → post)
-- **Craft analysis video** → Open Design (video essay, HFM-style analytical, franchise visuals)
-- **Blog** → Hashnode/Dev.to (publish trực tiếp)
+
+- **Craft × AI video** → Open Design (custom visuals per scene, DESIGN.md brand) + ElevenLabs (voiceover, stability 35-45%) + CapCut (assembly, film grain, captions)
+- **Daily devlog** → social-post skill (agent reads git log → post)
+- **Blog** → Hashnode/Dev.to
 - **Publish** → Manual (upload trực tiếp từng platform)
-- **Orchestration** → KiloCode agent + MCP (Open Design) + social-post skill
+- **Orchestration** → KiloCode agent + sub-agents for research
+
+---
+
+## Key reference files
+
+| File | Purpose |
+|------|---------|
+| `BATCH-CONTENT-WORKFLOW.md` | 5-phase workflow (plan → pre-production → production → repurpose → publish) |
+| `AUTHENTICITY-PIPELINE.md` | Stack optimization: ElevenLabs settings, Open Design workflow, CapCut techniques, script authenticity |
+| `CONTENT-CREATION-MECHANISMS.md` | 16 content creation mechanisms, mechanism assignments |
+| `RESEARCH-FRAMEWORKS.md` | 10-criteria tool eval, 7-dimension magic system, 12-dimension AI model comparison |
+| `RESEARCH-VALIDATION-METHODOLOGY.md` | 5-stage topic validation process |
+| `YOUTUBE-AI-COMPLIANCE.md` | 14 compliance rules + case studies + synthesis safety |
+| `DESIGN.md` | Brand system (palette, typography, motion) |

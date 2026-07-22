@@ -3,7 +3,7 @@ Type: blog post / video script
 Date: 2026-07-18
 Tool: AI-Novel-Writing-Assistant (ExplosiveCoderflome)
 Source: GitHub API search (ai+writing+novel, sort stars)
-Note: Draft based on research (GitHub description + README). User should test tool before publishing.
+Note: Draft based on research (GitHub description + README). Pure analysis from public sources — no tool testing required.
 ---
 
 # AI-Novel-Writing-Assistant Review: Is This the AI Writing Tool Novelists Have Been Waiting For?

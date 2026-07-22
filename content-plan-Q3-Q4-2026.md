@@ -1,216 +1,96 @@
-# Content Plan Q3-Q4 2026 (Tháng 8, 9, 10)
+# Content Plan Q3-Q4 2026 (Tháng 8, 9, 10) — Craft × AI
 
-> 12 videos/tháng (6 P1 + 6 P3). 3 videos/tuần.
-> Faceless format: research → script → voiceover → visuals → assembly.
-> Mixed format (long-form + Shorts) = 39% more revenue (10K channel study).
+> Direction: Craft × AI Intersection. 8 videos/tháng (2/week).
+> Pure analysis from public sources — no tool testing. First-person analytical voice.
+> Validation: 5-stage research-based process (see `RESEARCH-VALIDATION-METHODOLOGY.md`).
+> Mechanisms: see `CONTENT-CREATION-MECHANISMS.md`. Frameworks: see `RESEARCH-FRAMEWORKS.md`.
 
-## Tháng 8 — 12 videos
+## Tháng 8 — 8 videos
 
-> Validation method: 5-stage research-based process (25+ sources). See `RESEARCH-VALIDATION-METHODOLOGY.md`.
-> Channel subs confirmed via YouTube. Outlier score = video views ÷ channel median views (est. ~10% of subs).
-> Google Trends: YouTube Search mode, past 12 months.
+| # | Category | Title | Mechanism | Research sources | Demand evidence |
+|---|----------|-------|-----------|-----------------|-----------------|
+| 1 | Craft Principle × AI | "Why AI Can't Write Subtext — And the Prompt Framework That Fixes It" | #5 First principles | ACL Narrative Flattening paper, NailedIt comparison, Reddit r/WritingWithAI (214↑) | Reddit: "AI names emotions instead of evoking them" — top pain point |
+| 2 | AI Pattern Analysis | "Why AI Dialogue Sounds Like Therapy" | #3 Case study | Reddit r/slatestarcodex (445↑, 193 comments), r/ClaudeAI (214↑) | "Dialogue is AI fiction's weakest link" — community consensus |
+| 3 | Framework × AI | "Sanderson's 2nd Law + AI: Why AI Magic Systems Have No Limitations" | #1 Framework | Sanderson BYU lectures (639K views), RESEARCH-FRAMEWORKS.md 7-dimension magic, Mistborn research report | Sanderson 881K subs, zero AI crossover content exists |
+| 4 | Craft Principle × AI | "Show Don't Tell vs AI: The Craft Reason AI Over-Explains" | #5 First principles | NailedIt, ProseWeave, eBookTreasures comparisons | 178K-196K views on pure "show don't tell" videos, zero AI crossover |
+| 5 | Community Problem Solve | "Why AI Characters All Sound the Same by Chapter 30" | #7 Community-driven | Reddit r/WritingWithAI (36↑, 36 comments), r/ClaudeAI voice drift reports | "Characters bleed together by chapter 30" — recurring complaint |
+| 6 | AI Pattern Analysis | "The 'AI Sameness' Problem: Why All AI Prose Sounds Identical" | #4 Debunking | "AI Writing Is Trash" video (463K views), Narrative Flattening paper (arXiv) | 463K outlier proves demand for AI writing critique |
+| 7 | Craft Principle × AI | "Why AI Pacing Feels Like One Speed — And How to Fix It" | #5 First principles | ProseWeave pacing test, The Invisible Pen comparison, community reports | Jenna Moreci, Abbie Emmons have huge pacing audiences, zero AI analysis |
+| 8 | Workflow Design | "How to Build a Story Bible AI Actually Follows" | #1 Framework | Reddit r/WritingWithAI (62 comments on context window), Sudowrite research report | "How to track timeline/characters across long AI book" — top question |
 
-### P1 — Tool Review (6 videos)
+### Mechanism rotation (compliance #3 — no 2 consecutive same)
 
-| # | Topic | Title | Autocomplete | Top competitor (views, channel, subs) | Top outlier | Google Trends (YT) | Gap type | Score | Decision |
-|---|-------|-------|-------------|---------------------------------------|------------|-------------------|----------|-------|----------|
-| 1 | AI-Novel-Writing-Assistant | "AI-Novel-Writing-Assistant Review: Is This the Tool Novelists Have Been Waiting For?" | N/A (new) | No competitors (first-mover) | N/A | N/A | Format: no review exists | 37/50 | Produce |
-| 2 | Sudowrite | "Sudowrite Review: Is It Actually Good for Writing Novels?" | ✅ | 73K — Sudowrite official (~100K est.) | Nerdy Novelist: 13K ÷ 8K = 1.6x (normal) | avg 3, **rising** Jun-Jul 2026 (11-12) | Format: tutorials only, no novel test | 37/50 | Produce |
-| 3 | ChatGPT vs Claude | "ChatGPT vs Claude for Novel Writing: Honest Test" | ✅ | 113K — Wholesale Ted (~500K est.) | Nerdy Novelist: 166K ÷ 8K = 20.8x ✅ | "AI writing tools" avg 10 | Segment: nobody compares for novel/fiction | 39/50 | Produce |
-| 4 | NovelCrafter vs Sudowrite | "NovelCrafter vs Sudowrite: Which Wins for Novelists?" | ✅ | 44K — Nerdy Novelist (89.3K subs) | Writing Secrets: 26K ÷ 1K = **26x** ✅ | Sudowrite avg 3, NovelCrafter avg 1 (low) | Weak comparison: no actual novel output | 37/50 | Produce |
-| 5 | Best FREE AI Models | "Best FREE AI Models for Writing Novels (2026)" | ✅ | 21K exact — Nerdy Novelist (89.3K subs) | Nerdy Novelist: 166K ÷ 8K = **20.8x** ✅ | "AI writing tools" avg 10 | Format: 21K video is 10 months old, no 2026 novel version | 39/50 | Produce |
-| 6 | I Gave 5 AI Tools Same Prompt | "I Gave 5 AI Tools the Same Novel Prompt — Here's What Happened" | ✅ | 26K — Writing Secrets (10K subs) | Writing Secrets: 26K ÷ 1K = **26x** ✅ | "AI writing tools" avg 10 | Format: nobody tested same-prompt novel comparison | 35/50 | Produce |
+| # | Mechanism | Structure |
+|---|-----------|-----------|
+| 1 | #5 First principles | D: Myth→Reality→Proof→Takeaway |
+| 2 | #3 Case study | B: Story→Framework→Example→Application |
+| 3 | #1 Framework | D: Myth→Reality→Proof→Takeaway |
+| 4 | #5 First principles | A: Hook→Problem→3 solutions→Verdict |
+| 5 | #7 Community-driven | B: Story→Framework→Example→Application |
+| 6 | #4 Debunking | D: Myth→Reality→Proof→Takeaway |
+| 7 | #5 First principles | A: Hook→Problem→3 solutions→Verdict |
+| 8 | #1 Framework | C: Comparison→Criteria→Test→Winner |
 
-### P3 — Craft Analysis (6 videos)
+### Reusable research from old topics
 
-| # | Topic | Title | Autocomplete | Top competitor (views, channel, subs) | Top outlier | Google Trends (YT) | Gap type | Score | Decision |
-|---|-------|-------|-------------|---------------------------------------|------------|-------------------|----------|-------|----------|
-| 7 | Magic Systems Weirder | "Magic Systems Should Be Weirder — With AI" | ✅ | No direct match (original angle) | N/A | N/A | Format: nobody combines weird magic + AI | 33/50 | Produce |
-| 8 | Mistborn Magic System | "Why Mistborn's Magic System Works (And How AI Can Learn)" | ✅ | 111K — Brandon Sanderson (~500K est.) | PageTurners: 62K ÷ 2K = **31x** ✅ | N/A | Segment: nobody analyzes from AI writing perspective | 36/50 | Produce |
-| 9 | Promise/Progress/Payoff | "The Promise/Progress/Payoff Framework for AI Writing" | ✅ | 639K — Brandon Sanderson (~500K est.) | Sanderson: 639K ÷ 50K = **12.8x** ✅ | N/A | Format: nobody converted to AI prompt template | 38/50 | Produce |
-| 10 | OP Characters | "Why Overpowered Characters Are Hard to Write (Even for AI)" | ✅ | 1.4M — Pavelover (242K subs) | Pavelover: 1.4M ÷ 25K = **56x** ✅✅ | avg 1 (low search, but 1.4M browse demand) | Segment: nobody covers AI failure mode with OP chars | 39/50 | Produce |
-| 11 | Zuko's Redemption Arc | "Zuko's Redemption Arc — What AI Can Learn" | ✅ | 1.8M — Hello Future Me (1.22M subs) | Hello Future Me: 1.8M ÷ 120K = **15x** ✅ | "character dev" avg 14, **"zuko character dev" +110% rising** | Format: nobody extracts AI prompt framework from Zuko | **42/50** | **PRIORITY** |
-| 12 | Worst Writing Advice | "The Worst Writing Advice for AI-Assisted Authors" | ✅ | 1.2M — Terrible Writing Advice (468K subs) | TWA: 1.2M ÷ 50K = **24x** ✅ | "writing advice" avg 6, top query: "terrible writing advice" (100) | Segment: nobody covers AI-specific bad advice | **42/50** | **PRIORITY** |
-
-### Key competitor channel data (confirmed subscriber counts)
-
-| Channel | Subs | Appears in topics |
-|---------|------|-------------------|
-| The Nerdy Novelist | 89.3K | #2, #3, #4, #5 (dominant P1 competitor) |
-| Hello Future Me | 1.22M | #10, #11 (dominant P3 competitor) |
-| Pavelover | 242K | #10 (1.4M outlier) |
-| Terrible Writing Advice | 468K | #12 (1.2M outlier) |
-| Cinema Therapy | 1.9M | #11 (1.5M views) |
-| Writing Secrets | 10K | #4, #6 (26K outlier = 26x) |
-| Bookfox | 233K | #12 (253K = 10x outlier) |
-| Thomas Creates | 39.4K | #5 (22K = 5.5x outlier) |
-| Tobi Teaches | 6.48K | #4 (5.8K = 11.6x outlier) |
-| Brandon Sanderson | ~500K est. | #8, #9, #12 (dominates Sanderson topics) |
-
-### Top 5 outlier scores (small channels with breakout videos)
-
-| Rank | Channel | Subs | Video views | Outlier score | Topic |
-|------|---------|------|-------------|---------------|-------|
-| 1 | Pavelover | 242K | 1.4M | **56x** | OP Characters |
-| 2 | Writing Secrets | 10K | 26K | **26x** | AI novel workflow |
-| 3 | Terrible Writing Advice | 468K | 1.2M | **24x** | Worst writing advice |
-| 4 | The Nerdy Novelist | 89.3K | 166K | **20.8x** | Best AI tools for fiction |
-| 5 | Hello Future Me | 1.22M | 1.8M | **15x** | Zuko psychology |
-
-> Writing Secrets (10K subs, 26K views) = most relevant outlier for our channel. Small channel, breakout video, same niche.
-
-### Google Trends (YouTube Search) summary
-
-| Term | Avg (12mo) | Trend | Key finding |
-|------|-----------|-------|-------------|
-| AI writing tools | 10 | Stable, peaked Nov 2025 (NaNoWriMo?) | Broad demand exists |
-| Sudowrite | 3 | **Rising Jun-Jul 2026** (11-12) | Good timing for Aug video |
-| NovelCrafter | 1 | Flat/low | Low search demand — rely on browse/suggested |
-| Character development | 14 | Stable | High demand |
-| Writing advice | 6 | Stable | Top query: "terrible writing advice" |
-| OP characters | 1 | Low search | But 1.4M views = browse/suggested demand |
-| "zuko character development" | Rising | **+110%** | Directly validates Topic #11 |
-
-### Content creation mechanism assignment
-
-> Each video uses 1-2 mechanisms from `CONTENT-CREATION-MECHANISMS.md`. No 2 consecutive videos share same primary mechanism = natural format variation (compliance #3).
-
-| Prod order | Video | Primary mechanism | Secondary | User contribution (framework design) |
-|-----------|-------|------------------|-----------|--------------------------------------|
-| 1 | V1: AI-Novel-Writing-Assistant | #1 Framework | #10 Story | Design evaluation criteria |
-| 2 | V7: Magic Systems Weirder | #7 Community-driven | — | Provide "weirder" angle |
-| 3 | V2: Sudowrite Review | #1 Framework | #2 Comparative | Design 10-criteria rubric (from RESEARCH-FRAMEWORKS.md) |
-| 4 | V8: Mistborn Magic System | #3 Case study | #1 Framework | Design 7-dimension magic scoring (from RESEARCH-FRAMEWORKS.md) |
-| 5 | V3: ChatGPT vs Claude | #2 Comparative | #6 Expert aggregation | Design 12-dimension fiction matrix (from RESEARCH-FRAMEWORKS.md) |
-| 6 | V9: Promise/Progress/Payoff | #6 Expert aggregation | #1 Framework | Synthesize meta-analysis, design prompt template |
-| 7 | V4: NovelCrafter vs Sudowrite | #2 Comparative | — | Use same 10-criteria rubric as V2 |
-| 8 | V10: OP Characters | #5 First principles | — | Guide assumption challenges |
-| 9 | V5: Best FREE AI Models | #0 Synthesis | — | Review synthesis, ensure angle |
-| 10 | V11: Zuko's Redemption Arc | #3 Case study | #10 Story | Extract arc beats → AI framework |
-| 11 | V6: I Gave 5 AI Tools Same Prompt | #0 Synthesis | #2 Comparative | Define test design |
-| 12 | V12: Worst Writing Advice | #4 Debunking | — | Select claims, review verdicts |
+| Old topic | Research report | Reuse for |
+|-----------|----------------|-----------|
+| Mistborn Magic System | `drafts/brief-v8-mistborn_2026-07-22_research.md` | Video #3 (Sanderson's 2nd Law + AI) — 7-dimension magic scoring + AI failure analysis |
+| ChatGPT vs Claude | `drafts/brief-v3-chatgpt-vs-claude_2026-07-22_research.md` | Future Model Comparison (craft lens) videos — 12-dimension fiction matrix |
+| Sudowrite Review | `drafts/brief-v2-sudowrite_2026-07-22_research.md` | Video #8 (Story Bible) — context retention findings + pricing data |
 
 ---
 
-## Tháng 9 — 12 videos
+## Tháng 9 — 8 videos (outline, validate before month)
 
-### P1 — Tool Review (6 videos)
+| # | Category | Title | Mechanism |
+|---|----------|-------|-----------|
+| 9 | Framework × AI | "Save the Cat + AI: Where AI Breaks Story Structure" | #1 Framework |
+| 10 | Craft Principle × AI | "Why AI Can't Write Unreliable Narrators" | #5 First principles |
+| 11 | AI Pattern Analysis | "AI Writing Tells: The 5 Patterns That Expose Machine-Generated Text" | #4 Debunking |
+| 12 | Community Problem Solve | "Stop Asking AI to 'Write Me a Chapter' — The Prompt Framework That Works" | #7 Community-driven |
+| 13 | Framework × AI | "The MICE Quotient: Why AI Can't Write Milieu Stories" | #1 Framework |
+| 14 | Craft Principle × AI | "The Tension Problem: Why AI Scenes Have No Stakes" | #5 First principles |
+| 15 | Model Comparison | "ChatGPT vs Claude for Dialogue: A Craft Analysis" | #2 Comparative |
+| 16 | Workflow Design | "How to Keep YOUR Voice When AI Writes 90% of Your Novel" | #1 Framework |
 
-| # | Topic | Title |
-|---|-------|-------|
-| 13 | NovelAI | "NovelAI Review: Is It Good for Writing Novels?" |
-| 14 | Jasper AI | "Jasper AI for Novel Writing: Worth It?" |
-| 15 | AI Dungeon | "AI Dungeon for Creative Writing: Still Worth Using?" |
-| 16 | Best AI for Character Voice | "Best AI for Character Consistency Across Chapters" |
-| 17 | Open-source AI Tools | "Best Open-Source AI Tools for Writers (Free)" |
-| 18 | AI Prompt Engineering | "AI Prompt Engineering for Novel Writing" |
+## Tháng 10 — 8 videos (outline, validate before month)
 
-### P3 — Craft Analysis (6 videos)
-
-| # | Topic | Title |
-|---|-------|-------|
-| 19 | Sanderson's Laws of Magic | "Sanderson's 3 Laws of Magic — For AI-Assisted Writing" |
-| 20 | How to Write Villains | "Why AI Writes Boring Villains (And How to Fix It)" |
-| 21 | Three-Act Structure | "The Three-Act Structure — Explained for AI Writing" |
-| 22 | Character Voice | "How to Write Distinct Character Voices (With AI Help)" |
-| 23 | Worldbuilding from Scratch | "Worldbuilding from Scratch: A Framework AI Can Follow" |
-| 24 | Foreshadowing | "Foreshadowing Techniques AI Can't Do Alone (Yet)" |
-
----
-
-## Tháng 10 — 12 videos
-
-### P1 — Tool Review (6 videos)
-
-| # | Topic | Title |
-|---|-------|-------|
-| 25 | Best AI for Worldbuilding | "Best AI Tools for Worldbuilding (Tested)" |
-| 26 | Best AI for Plot Outlining | "AI Plot Outlining Tools: Which Actually Work?" |
-| 27 | Best AI for Editing | "Best AI Tools for Novel Editing and Revision" |
-| 28 | Best AI for Dialogue | "Can AI Write Good Dialogue? (Testing 5 Tools)" |
-| 29 | Free vs Paid AI Tools | "Free vs Paid AI Writing Tools: Is It Worth Paying?" |
-| 30 | AI for Beginners | "AI Writing Tools for Beginners: Where to Start" |
-
-### P3 — Craft Analysis (6 videos)
-
-| # | Topic | Title |
-|---|-------|-------|
-| 31 | Hero's Journey | "Why the Hero's Journey Is Overused (And What AI Defaults To)" |
-| 32 | Pacing in Fiction | "Pacing in Long-Form Fiction — How AI Gets It Wrong" |
-| 33 | Plot Twists | "How to Write Plot Twists AI Can't Predict" |
-| 34 | Writing Tropes to Avoid | "Writing Tropes AI Overuses (And How to Fix Them)" |
-| 35 | How to Write Good Dialogue | "What Makes Dialogue Good? (AI vs Human Comparison)" |
-| 36 | Building Tension | "Building Tension Across Chapters: A Framework for AI" |
+| # | Category | Title | Mechanism |
+|---|----------|-------|-----------|
+| 17 | Craft Principle × AI | "Why AI Can't Write Sad Scenes (Emotional Depth Test)" | #5 First principles |
+| 18 | Framework × AI | "Sanderson's 1st Law + AI: Can AI Let Readers Predict Outcomes?" | #1 Framework |
+| 19 | AI Pattern Analysis | "Why AI Defaults to 'Delving Into the Vibrant Tapestry'" | #3 Case study |
+| 20 | Community Problem Solve | "AI Forgets Your Character's Eye Color by Chapter 80" | #7 Community-driven |
+| 21 | Framework × AI | "The Scene/Sequel Method + AI: Dwight Swain's Framework Tested" | #1 Framework |
+| 22 | Craft Principle × AI | "Why AI Action Scenes Read Like Summaries" | #5 First principles |
+| 23 | Model Comparison | "Which AI Model Maintains Character Voice Longest?" | #2 Comparative |
+| 24 | Workflow Design | "The Craft of Prompting: From Generic to Specific Character Voice" | #1 Framework |
 
 ---
 
-## Production Schedule (per month)
+## Validation status
 
-| Week | Mon | Wed | Fri |
-|------|-----|-----|-----|
-| W1 | Video 1 (P1) | Video 2 (P3) | Video 3 (P1) |
-| W2 | Video 4 (P3) | Video 5 (P1) | Video 6 (P3) |
-| W3 | Video 7 (P1) | Video 8 (P3) | Video 9 (P1) |
-| W4 | Video 10 (P3) | Video 11 (P1) | Video 12 (P3) |
+### August — 8 topics, demand validated from research
 
-> Shorts: 2-3 per video, spaced Tue/Thu/Sat
-> Devlog: daily (X + Threads)
-> Newsletter: weekly Friday
-> Reddit: 3x/week (Wed/Fri/Sat)
+All 8 topics have demand evidence from:
+- YouTube search (50 queries, 150+ results — see research sub-agent reports)
+- Reddit community mining (120+ threads, 158K members r/WritingWithAI)
+- Outlier analysis (463K "AI Writing Is Trash", 178K-196K craft videos, 639K Sanderson lectures)
+- Google Trends (character development avg 14, "zuko character development" +110% rising)
 
-## Monthly Output
-
-| Content | Count |
-|---------|-------|
-| YouTube long-form | 12 |
-| Shorts/Reels/TikTok | 24-36 |
-| X Threads | 12 |
-| Blog posts | 12 |
-| Newsletters | 4 |
-| Reddit posts | 12 |
-| Daily devlogs | 20 |
-| **Total** | **~100+** |
-
-## Validation Status
-
-### August — ALL 12 VALIDATED with research-based 5-stage process ✅
-
-> Method: YouTube autocomplete + competitor analysis (with channel subs + outlier scores) + Google Trends (YouTube Search mode) + content gap analysis (4 types) + scorecard (0-50).
-> See `RESEARCH-VALIDATION-METHODOLOGY.md` for full methodology and 25+ sources.
-
-| # | Topic | Score | Top outlier | Google Trends | Verdict |
-|---|-------|-------|------------|---------------|---------|
-| 1 | AI-Novel-Writing-Assistant | 37/50 | N/A (first-mover) | N/A | ✅ Produce |
-| 2 | Sudowrite | 37/50 | 1.6x (normal) | Rising Jun-Jul 2026 | ✅ Produce |
-| 3 | ChatGPT vs Claude | 39/50 | 20.8x ✅ | avg 10 | ✅ Produce |
-| 4 | NovelCrafter vs Sudowrite | 37/50 | 26x ✅ | Sudowrite 3, NovelCrafter 1 | ✅ Produce |
-| 5 | Best FREE AI Models | 39/50 | 20.8x ✅ | avg 10 | ✅ Produce |
-| 6 | I Gave 5 AI Tools Same Prompt | 35/50 | 26x ✅ | avg 10 | ✅ Produce (barely) |
-| 7 | Magic Systems Weirder | 33/50 | N/A (original) | N/A | ✅ Produce |
-| 8 | Mistborn Magic System | 36/50 | 31x ✅ | N/A | ✅ Produce |
-| 9 | Promise/Progress/Payoff | 38/50 | 12.8x ✅ | N/A | ✅ Produce |
-| 10 | OP Characters | 39/50 | 56x ✅✅ | avg 1 (browse demand) | ✅ Produce |
-| 11 | Zuko's Redemption Arc | **42/50** | 15x ✅ | +110% rising | ✅ **PRIORITY** |
-| 12 | Worst Writing Advice | **42/50** | 24x ✅ | avg 6, top query match | ✅ **PRIORITY** |
-
-### Key findings from proper validation
-
-1. **Topics #11 and #12 are PRIORITY** (42/50) — highest scores due to massive outlier + rising Google Trends + clear content gap
-2. **Writing Secrets (10K subs, 26K views = 26x outlier)** — most relevant data point for our channel. Small channel, same niche, breakout video. This proves the format works at our scale.
-3. **Pavelover's 56x outlier on OP Characters** — a 242K-sub channel getting 1.4M views. Topic has massive browse/suggested demand despite low search volume.
-4. **Sudowrite is rising on Google Trends** (Jun-Jul 2026) — good timing for August video
-5. **NovelCrafter has very low search demand** (avg 1) — Topic #4 should rely on browse/suggested, not search
-6. **"Zuko character development" is rising +110%** — directly validates Topic #11 timing
-7. **Previous validation was ~40% correct** — missing outlier analysis, channel subs, Google Trends YouTube mode, and scorecard entirely
-
-### September/October — 24 topics, needs validation before each month
-- Validate Sep topics: last week of August (use same 5-stage process)
+### September/October — 16 topics, validate before each month
+- Validate Sep topics: last week of August (5-stage process)
 - Validate Oct topics: last week of September
 
-## Title pivots from validation
+## Production schedule (per month)
 
-- Video #6: "I Tested 5 AI Writing Tools" → "I Gave 5 AI Tools the Same Novel Prompt" (original title too generic, direct competitor views were 13-20; pivoted to novel-specific comparison)
-- Video #12: "The Worst Writing Advice" → "The Worst Writing Advice for AI-Assisted Authors" (broad topic needs niche angle; AI-specific bad advice is untapped)
+| Week | Video 1 (Mon-Wed) | Video 2 (Thu-Fri) | Devlog | Newsletter |
+|------|-------------------|-------------------|--------|------------|
+| W1 | Video #1 | Video #2 | Daily (5) | #1 |
+| W2 | Video #3 | Video #4 | Daily (5) | #2 |
+| W3 | Video #5 | Video #6 | Daily (5) | #3 |
+| W4 | Video #7 | Video #8 | Daily (5) | #4 |
 
 ## Next step
 

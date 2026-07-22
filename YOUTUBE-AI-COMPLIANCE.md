@@ -116,7 +116,7 @@ See `CONTENT-CREATION-MECHANISMS.md` for 16 distinct content creation mechanisms
 - From scalelab.com: "Use AI as starting point for scripting, but use a human brain to review and rewrite it"
 - From earninglivingonline.com: "A point of view the script actually argues, rather than a neutral read of facts"
 
-**CONCRETE:** After AI generates draft, add at least one "hot take" per video — personal opinion/analysis from YOUR experience that AI couldn't generate from public docs.
+**CONCRETE:** After AI generates draft, the user designs an analytical framework (evaluation criteria, scoring, synthesis logic from `RESEARCH-FRAMEWORKS.md`) and the script is rewritten within that framework. Hook + thesis handwritten by user with dated personal anchor.
 
 ---
 
@@ -200,7 +200,7 @@ From earninglivingonline.com: "Research that produced something specific — a n
 - From alici.ai: "A 'deep research' channel publishing 3×/day fails on the face"
 - From eliro.pro: "Your upload schedule reflects human capacity, not automation capacity"
 
-**CONCRETE:** If publishing 3/week, ensure each video shows visible research depth (sources cited, comparisons made, analysis provided).
+**CONCRETE:** If publishing 2/week, ensure each video shows visible research depth (sources cited, comparisons made, analysis provided).
 
 ---
 

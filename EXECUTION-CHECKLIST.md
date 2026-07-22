@@ -8,16 +8,16 @@
 - [ ] **1.2** Switch agent: `/agents` → chọn "Content Manager Agent"
 - [ ] **1.3** Test: gõ `run devlog` → agent đọc git log → sinh devlog → lưu vào `drafts/`
 - [ ] **1.4** Check: mở `C:\DevWork\social-media\drafts\` → xem file devlog
-- [ ] **1.5** Test thêm: gõ `run tool review` → agent scan Reddit/GitHub → draft review → lưu file
-- [ ] **1.6** Test thêm: gõ `run craft analysis` → agent scan Reddit → draft analysis → lưu file
+- [ ] **1.5** Test thêm: gõ `validate [topic]` → agent runs 5-stage validation → scorecard output
+- [ ] **1.6** Test thêm: gõ `check` → agent reports content status
 
 → Nếu agent chạy OK → Phase 2. Nếu lỗi → đọc error, fix prompt trong `.kilo/agent/content-manager-agent.md`.
 
 ## Phase 2: Setup faceless production tools
 
-- [ ] **2.1** **ElevenLabs** — voiceover TTS (đã có key). Chọn 1 voice consistent = brand identity
-- [ ] **2.2** **Open Design** — motion graphics, visuals (cài desktop app + wire MCP vào KiloCode)
-- [ ] **2.3** **CapCut** — video assembly + auto-captions (free): https://www.capcut.com
+- [ ] **2.1** **ElevenLabs** — voiceover TTS. Settings: stability 35-45%, similarity 75-80%, style 0-15% (see `AUTHENTICITY-PIPELINE.md`). Consistent voice = brand identity
+- [ ] **2.2** **Open Design** — custom visuals + DESIGN.md brand contract (see `AUTHENTICITY-PIPELINE.md`). Voice-led: audio first → visuals match duration
+- [ ] **2.3** **CapCut** — video assembly + auto-captions (Montserrat Bold, stroke 15px) + film grain overlay + 90% hard cuts + music -22dB + normalize -14 LUFS (see `AUTHENTICITY-PIPELINE.md`)
 - [ ] **2.4** **Canva** — thumbnails, quote graphics (free): https://www.canva.com
 - [ ] **2.5** **Pexels** — stock footage (free, ONLY heavily transformed): https://www.pexels.com
 - [ ] **2.6** Tạo **Google Sheets** content tracking + compliance audit log
@@ -64,7 +64,7 @@
 - [ ] **3x/week (Mon/Wed/Fri)**: Publish long-form video + repurposed content (X thread, blog, Reddit)
 - [ ] **Tue/Thu/Sat**: Publish Shorts (spaced 3-5 days apart)
 - [ ] **Weekly (Fri)**: Newsletter
-- [ ] **Monthly (cuối tháng)**: Batch production 3-4 ngày cho 12 videos tháng sau (theo `BATCH-CONTENT-WORKFLOW.md`)
+- [ ] **Monthly (cuối tháng)**: Batch production cho 8 videos tháng sau (theo `BATCH-CONTENT-WORKFLOW.md`)
 - [ ] **Monthly**: Review analytics + retention gate
 - [ ] **Quarterly**: Review + plan next quarter
 

@@ -1,7 +1,7 @@
 # Batch Content Workflow — Faceless Channel (Compliance-First)
 
 > Faceless format: research → script → voiceover → visuals → assembly
-> 3 videos/tuần = 12/tháng. Batch produce 3-4 ngày/tháng.
+> 2 videos/tuần = 8/tháng. ~2h/day production.
 > **Compliance-first**: 14 giải pháp từ 20+ sources (xem `YOUTUBE-AI-COMPLIANCE.md`)
 > Core principle: "YouTube không ban AI. Nó ban template-replicable content with no detectable human creative direction."
 
@@ -43,11 +43,17 @@ Phase 5: Monthly Review (retention gate + compliance audit)
 
 ## Phase 0: Quarterly Planning (2h, mỗi 3 tháng)
 
-### Chọn 12 topics/tháng × 3 tháng = 36 topics
+### Chọn 8 topics/tháng × 3 tháng = 24 topics
 
-Xoay 3 pillars:
-- P1 (AI tool review): ~6/tháng
-- P3 (Craft analysis): ~6/tháng
+Direction: Craft × AI Intersection (single primary pillar). 6 content categories rotate:
+- Craft Principle × AI
+- Framework × AI
+- AI Pattern Analysis
+- Community Problem Solve
+- Model Comparison (craft lens)
+- Workflow Design
+
+Secondary: daily devlog (build-in-public social posts)
 
 ### Validate demand (20-30 min/topic)
 
@@ -153,7 +159,7 @@ Cho mỗi tháng, assign 4 different script structures (rotate):
 
 ## Phase 1: Monthly Pre-Production (4-5h)
 
-Cho 12 videos/tháng. Agent làm research + draft, user review/fix + design analytical framework.
+Cho 8 videos/tháng. Agent làm research + draft, user review/fix + design analytical framework.
 
 > **Content approach**: Pure analysis từ docs/reviews/public info — KHÔNG test tool. Writing voice = first-person analytical (confident, experiential, không secondhand-sounding). See `CONTENT-CREATION-MECHANISMS.md` for full mechanism catalog.
 
@@ -342,7 +348,7 @@ Answer YES to at least 10/12:
 | Day 1 | Script finalize 6 videos (handwritten hooks + AI draft + human rewrite) | 6-9h |
 | Day 2 | Voiceover 6 + visuals 6 + assembly 6 | 6h |
 | Day 3 | Script 6 more + voiceover 6 + visuals 6 + assembly 6 | 8h |
-| **Total** | **12 videos** | **~20-23h** |
+| **Total** | **8 videos** | **~14-16h** |
 
 ---
 
@@ -367,7 +373,7 @@ Answer YES to at least 10/12:
 - **Each X tweet standalone** (if can't earn quote-tweet, cut it)
 - **Reddit: NO product link** first 3 months
 
-### Shorts spacing for 12 videos × 2-3 Shorts = 24-36 Shorts/month
+### Shorts spacing for 8 videos × 2-3 Shorts = 16-24 Shorts/month
 - ~6-9 Shorts/week → space Mon/Wed/Fri or Tue/Thu/Sat
 
 ---
@@ -471,12 +477,12 @@ Answer YES to at least 10/12:
 | **Total** | | **~42h/tháng** |
 
 ### Monthly output
-- 12 long-form videos (compliance-first)
+- 8 long-form videos (compliance-first)
 - 24-36 Shorts/Reels/TikTok
-- 12 X threads
-- 12 blog posts
+- 8 X threads
+- 8 blog posts
 - 4 newsletters
-- 12 Reddit posts
+- 8 Reddit posts
 - 20 daily devlogs
 - **= ~100+ pieces/tháng**
 
@@ -490,12 +496,12 @@ Answer YES to at least 10/12:
 
 **14 compliance rules (need ≥11/14):**
 1. ✅ Named persona (BeDevNathan) + documented POV
-2. ✅ Script has human argument (hot take added per video)
+2. ✅ Script has analytical framework (human-designed, not AI-generated)
 3. ✅ Format variation (4 structures rotate, 3/5 elements differ)
 4. ✅ Transformative commentary (1 type per video)
 5. ✅ Original visuals (custom per scene, not shared stock)
 6. ✅ Mixed footage (≥1 non-stock/non-AI element)
-7. ✅ Cadence matches depth (3/week research-based)
+7. ✅ Cadence matches depth (2/week research-based)
 8. ✅ Disclosure (toggle + description note)
 9. ✅ Channel thesis (About + Description)
 10. ✅ Document process (drafts, notes, prompts archived)

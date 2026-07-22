@@ -77,16 +77,18 @@
 - **Open-Generative-AI** (23.848⭐): verified ready flow (cloud, 200+ models), nhưng **Open Design chốt thay** vì gộp được video + image + DESIGN.md brand trong 1 platform.
 - **Standalone HyperFrames** (đã cài): giờ **subsumed by Open Design** (cùng engine heygen). Giữ skills đã cài làm engine, nhưng primary = Open Design.
 
-## 8. Strategy v2 (đã chốt — 3 pillar user-defined)
+## 8. Strategy v3 (đã chốt — Craft × AI direction, July 2026)
 
-**Positioning**: "Dev building AI for novelists — reviewing AI writing tools, analyzing writing craft, building in public." (NOT author-first — Kindlepreneur proven non-author analyst works with author audience.)
+**Positioning**: "I analyze how AI handles writing craft — why it fails, what that reveals about craft, and how to fix it."
 
-**3 Content Pillars:**
-1. **AI tool review** (1-2/tháng) — khám phá/đánh giá AI writing tools. Insight: AI writing landscape + competitive intel cho product. Automation: agent research+draft → bạn test+fix (25min). Precedent: Kindlepreneur, Nerdy Novelist.
-2. **Daily build-in-public** (5-7/tuần) — daily devlog từ git log. Insight: build process. Automation: agent đọc git log → social-post F1 → bạn approve (1min). Precedent: levelsio, Marc Lou.
-3. **Writing novel knowledge** (1-2/tháng) — phân tích nhân vật/cốt truyện/kỹ thuật/review sách. Insight: writing craft deep. Automation: agent research+analyze+draft → bạn fix accuracy (15-30min). Precedent: HFM (1.22M), Sanderson (millions views).
+**Direction**: Craft × AI Intersection (researched from 300+ sources, scored 30/35 vs 14/35 for tool reviewer). Bridges traditional writing craft (Sanderson, MICE, Save the Cat) with AI-assisted writing. Not tool reviewer (saturated). Not pure craft (no AI). The BRIDGE.
 
-**Monthly output**: 2 tool reviews + 2 craft analyses + 20 daily devlogs + 4 newsletters = 28 pieces.
-**Không viết tiểu thuyết, không viết essay tay.** Agent sinh draft, bạn review/fix, publish thủ công.
-**Monetize**: product (primary) + affiliate (tools reviewed) + membership/course (sau) + AdSense.
-**Files**: `CONTENT-STRATEGY.md` + `CONTENT-CALENDAR.md` + `DESIGN.md` + `BATCH-CONTENT-WORKFLOW.md`.
+**Content**:
+1. **Craft × AI videos** (8/tháng, 2/week) — analytical videos taking craft principle → analyze how AI handles it → why it fails → how to fix. Pure analysis from public sources (docs, Reddit, academic). No tool testing. First-person analytical voice.
+2. **Daily build-in-public devlog** (5-7/tuần) — git log → agent → social post → approve (1min).
+
+**Monthly output**: 8 Craft × AI videos + 30 devlogs + 4 newsletters + 16 repurpose pieces = ~58 pieces.
+**Time**: ~2h/day = ~54h/month. Per video: ~3-3.5h production + 1.5h repurpose = ~5h.
+**Không test tool, không viết tiểu thuyết.** Agent research + draft, user design framework + handwritten hook + rewrite, publish thủ công.
+**Monetize**: product (primary, future) + newsletter (primary, immediate) + course (after 3 months) + AdSense (quaternary).
+**Files**: `CONTENT-STRATEGY.md` + `CONTENT-CALENDAR.md` + `DESIGN.md` + `BATCH-CONTENT-WORKFLOW.md` + `AUTHENTICITY-PIPELINE.md` + `CONTENT-CREATION-MECHANISMS.md` + `RESEARCH-FRAMEWORKS.md` + `RESEARCH-VALIDATION-METHODOLOGY.md`.
