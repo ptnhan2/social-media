@@ -221,8 +221,4 @@ Answer YES to at least 10/12:
 
 ## 6. Single Highest-Impact Technique
 
-**Write the script's HOOK and THESIS entirely by hand, with a dated personal anchor.**
-
-"Last week, I analyzed [specific thing] and found [surprising result]. Here's why it matters."
-
-That's 10 seconds. It proves a human decided what this video is about. The rest can be AI-assisted, but the opening must be yours.
+**Hook + thesis drafted by agent from real research, reviewed by user.** The hook should contain a research-based anchor ("While researching the ACL paper on Narrative Flattening, I found...") that references actual research done for the video. User reviews the Vietnamese summary to verify the research is real and the logic is correct. The authenticity comes from: (1) the research actually happened, (2) the framework is human-designed, (3) the user reviewed and approved the logic.

@@ -279,7 +279,7 @@ CTA: "Building an AI agent for novelists. Follow for updates."
 **Language**: Content = English (RPM, global audience). Agent ↔ User = Vietnamese. Mỗi script draft phải kèm Vietnamese summary per section để user check logic. Hook: user draft Vietnamese → agent translate English giữ voice.
 
 **Script authenticity requirements** (see `AUTHENTICITY-PIPELINE.md` for full details):
-- Hook + thesis: **HANDWRITTEN by user**, with dated personal anchor
+- Hook + thesis: **Agent drafts** from research + framework, with research-based anchor. User reviews Vietnamese summary for logic/accuracy.
 - Remove 7 AI-script tells: fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops
 - "Therefore/But" between sections (not "and then...")
 - Vary sentence length: short punch → longer flow → jab

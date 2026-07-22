@@ -282,7 +282,7 @@ Also save in same folder:
 
 ### Step 1: Finalize script (60-90 min) [Compliance #2]
 
-- Hook + thesis: **HANDWRITTEN by user**, with dated personal anchor
+- Hook + thesis: **Agent drafts** from research + framework, with research-based anchor. User reviews Vietnamese summary for logic/accuracy.
   - "Last week, I analyzed [specific thing] and found [surprising result]."
   - This 10 seconds proves a human decided what this video is about
 - AI drafts remaining sections from research brief
@@ -345,7 +345,7 @@ Answer YES to at least 10/12:
 
 | Day | Task | Time |
 |-----|------|------|
-| Day 1 | Script finalize 6 videos (handwritten hooks + AI draft + human rewrite) | 6-9h |
+| Day 1 | Script finalize 4 videos (agent draft + human review logic) | 4-6h |
 | Day 2 | Voiceover 6 + visuals 6 + assembly 6 | 6h |
 | Day 3 | Script 6 more + voiceover 6 + visuals 6 + assembly 6 | 8h |
 | **Total** | **8 videos** | **~14-16h** |
