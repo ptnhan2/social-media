@@ -177,7 +177,7 @@ This is the MAIN flow. When triggered:
 1. Check if `content-plan-Q[X]-2026.md` exists
 2. If NOT → "Chưa có quarterly plan. Gõ `plan quý` trước." → STOP
 3. If yes → read it, extract 2 topics for current month
-4. Check `drafts/` — skip topics already drafted this month
+4. Check `videos/YYYY-MM/` — skip topics already drafted this month
 
 ### Step 1: Viewer Problem Research (15 min/video)
 
@@ -302,12 +302,12 @@ Before saving: "If I couldn't use AI for anything, would I still make this video
 
 ### Step 8: Save production brief + document process [COMPLIANCE]
 
-Save to: `drafts/brief-[video-name]_[date].md`
+Save to: `videos/YYYY-MM/NN-short-name/`
 
-Also save:
-- `drafts/brief-[video-name]_[date]_research.md` (research notes)
-- `drafts/brief-[video-name]_[date]_draft-before.md` (AI original draft)
-- `drafts/brief-[video-name]_[date]_draft-after.md` (final version after user review)
+Per video folder:
+- `brief.md` — tóm tắt tiếng Việt + English outline + hook
+- `research.md` — research notes + sources
+- `script.md` — final English script (sau approval)
 
 > These are appeal evidence if flagged.
 
@@ -318,7 +318,7 @@ Output:
 ## 📋 Pre-Production Complete — [Month YYYY]
 
 ### [N] Production Briefs ready:
-1. [Video title] → drafts/brief-[video-1]_[date].md
+1. [Video title] → videos/YYYY-MM/NN-short-name/brief.md
    - Hook: [type]
    - Angle: [1 sentence]
    - Gap: [1 sentence]
@@ -383,11 +383,11 @@ Ask user: "Upload video lên YouTube as Private chưa? Vào YouTube Studio → S
 
 ### Step 3: Save all
 ```
-drafts/x-thread-[video-name]_[date].md
-drafts/blog-[video-name]_[date].md
-drafts/reddit-[video-name]_[date].md
-drafts/newsletter-[month]_[date].md
-drafts/shorts-notes-[video-name]_[date].md
+repurpose/x-threads/YYYY-MM-DD-short-name.md
+repurpose/blog-posts/YYYY-MM-DD-short-name.md
+repurpose/reddit-posts/YYYY-MM-DD-short-name.md
+repurpose/newsletters/YYYY-MM-DD.md
+repurpose/shorts-notes/YYYY-MM-DD-short-name.md
 ```
 
 ### Step 4: Output publish schedule
@@ -398,10 +398,10 @@ drafts/shorts-notes-[video-name]_[date].md
 ### Drafts ready ([N] files):
 | Platform | File | Publish when |
 |----------|------|--------------|
-| X Thread | drafts/x-thread-... | Thu (same week as video) |
-| Newsletter | drafts/newsletter-... | Fri |
-| Blog | drafts/blog-... | Sat |
-| Reddit | drafts/reddit-... | Sat |
+| X Thread | repurpose/x-threads/... | Thu (same week as video) |
+| Newsletter | repurpose/newsletters/... | Fri |
+| Blog | repurpose/blog-posts/... | Sat |
+| Reddit | repurpose/reddit-posts/... | Sat |
 | Shorts 1-3 | (already cut) | Tue, Wed, Fri (spaced 5-7 days) |
 
 ### ⏰ Shorts spacing rule:
@@ -453,14 +453,14 @@ Day [N]: [one-line summary]
 [1-2 sentences: problem → action → result]
 #buildinpublic #AIwriting
 ```
-5. Save to `drafts/devlog_[YYYY-MM-DD].md`
+5. Save to `devlogs/YYYY-MM-DD.md`
 6. Report: "Devlog saved. Post lên X + Threads."
 
 ---
 
 ## FLOW 6: Status Check (`check`)
 
-1. List all files in `drafts/` with dates
+1. List all files in `videos/` and `devlogs/` with dates
 2. Check which have corresponding videos (in `videos/` if exists)
 3. Check quarterly plan for what's planned vs done
 4. Report:
@@ -514,7 +514,7 @@ For each video:
 - [adjustment 2]
 ```
 
-Save to: `drafts/review-[month]_[date].md`
+Save to: `repurpose/newsletters/review-YYYY-MM.md`
 
 ---
 

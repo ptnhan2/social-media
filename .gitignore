@@ -12,6 +12,17 @@
 # YouTube search snapshots (temp research files)
 youtube-search-*.md
 
+# Production files (audio, video, images — too large for git)
+*.wav
+*.mp3
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+videos/**/assets/
+
 # Downloads (installers, etc.)
 downloads/
 

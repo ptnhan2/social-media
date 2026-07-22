@@ -262,15 +262,14 @@ Before saving: "If I couldn't use AI for anything, would I still make this video
 
 ### Step 7: Save production brief + document process [COMPLIANCE]
 
-Save to: `drafts/brief-[video-name]_[date].md`
+Save to: `videos/YYYY-MM/NN-short-name/`
 
-Also save in same folder:
-- `drafts/brief-[video-name]_[date]_research.md` (research notes + sources)
-- `drafts/brief-[video-name]_[date]_framework.md` (analytical framework design — user contribution)
-- `drafts/brief-[video-name]_[date]_draft-before.md` (AI original draft)
-- `drafts/brief-[video-name]_[date]_draft-after.md` (final version after user review)
+Per video folder:
+- `brief.md` — tóm tắt tiếng Việt (cho user review) + English outline + hook + technical info
+- `research.md` — research notes + sources + evidence
+- `script.md` — final English voiceover script (sau khi user approve)
 
-> These are appeal evidence if flagged. From dimantika.com: "Creators who successfully appealed could demonstrate specific creative choices."
+> File structure: see top of this file. These are appeal evidence if flagged.
 
 ---
 
