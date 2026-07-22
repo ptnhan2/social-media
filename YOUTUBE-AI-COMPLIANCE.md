@@ -43,6 +43,50 @@
 
 ---
 
+## Critical Case Studies (from 25+ sources on YouTube content penalties)
+
+### Success: Zenn (@Zenn0009) — Faceless AI Voice, MONETIZED ✅
+- Zero to 150K+ subscribers in ~2 months, 7.6M view video
+- Faceless, AI voice, doodle animation
+- **Why survived**: "Real research citations, genuine scripts, distinct point of view. The automation is in the production, not the thinking."
+- **Lesson**: Strong research + distinct analytical voice > production polish
+
+### Failure: Mythical Arcana — Faceless AI Voice + AI Visuals, DEMONETIZED ❌
+- Demonetized 113+ days for "inauthentic content" despite 100K+ subscribers
+- AI voice + AI visuals triggered automated flags DESPITE substantial human effort
+- Deleted flagged videos, submitted video appeal showing entire creative process
+- **STILL REJECTED** after appeal showing "undeniable proof of manual work, creativity, and unique educational value"
+- **CRITICAL RISK FOR OUR CHANNEL**: We use AI voice + AI visuals. Must compensate with:
+  1. Original analytical frameworks (unique intellectual product)
+  2. Multiple content creation mechanisms per video (not template)
+  3. Strong first-person analytical voice (not generic AI text)
+  4. Custom visuals per scene (not shared stock)
+  5. ≥1 non-AI element per video (diagrams, data charts)
+  6. Full disclosure + process documentation
+
+### Recovery: Finance Quack — Reinstated in 12 days ✅
+- Single old flagged video caused entire channel demonetization
+- Recovery: (1) Private risky videos, (2) 30-day cool-down, (3) Upload 3+ new compliant videos, (4) Submit detailed appeal
+- **Lesson**: Systematic cleanup + wait + new compliant content + detailed appeal = recovery possible
+
+## Content Synthesis Safety — 5-Step Checklist
+
+From research on transformative use and content synthesis (25+ sources):
+
+1. **Collect from multiple sources** (not just one) — 5-10+ sources minimum
+2. **Identify gaps/contradictions** — what's missing, what contradicts
+3. **Create novel analytical framework** — new categories, dimensions, scoring that don't exist in source material
+4. **Draw connections** across sources that don't reference each other
+5. **Voice-over carries the insight** — sources only illustrate, never dominate
+
+**The Replaceability Test**: "If another creator could easily download the same clips and replicate your video, your channel is at risk." — Veefly
+
+**The Transformative Test**: "Viewers can tell that there's a meaningful difference between the original video and your video." — YouTube official
+
+See `CONTENT-CREATION-MECHANISMS.md` for 16 distinct content creation mechanisms that pass these tests.
+
+---
+
 ## 14 Detailed Solutions
 
 ### 1. Named Persona with Documented POV

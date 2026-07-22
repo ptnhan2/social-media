@@ -71,6 +71,25 @@
 | OP characters | 1 | Low search | But 1.4M views = browse/suggested demand |
 | "zuko character development" | Rising | **+110%** | Directly validates Topic #11 |
 
+### Content creation mechanism assignment
+
+> Each video uses 1-2 mechanisms from `CONTENT-CREATION-MECHANISMS.md`. No 2 consecutive videos share same primary mechanism = natural format variation (compliance #3).
+
+| Prod order | Video | Primary mechanism | Secondary | User contribution (framework design) |
+|-----------|-------|------------------|-----------|--------------------------------------|
+| 1 | V1: AI-Novel-Writing-Assistant | #1 Framework | #10 Story | Design evaluation criteria |
+| 2 | V7: Magic Systems Weirder | #7 Community-driven | — | Provide "weirder" angle |
+| 3 | V2: Sudowrite Review | #1 Framework | #2 Comparative | Design 10-criteria rubric (from RESEARCH-FRAMEWORKS.md) |
+| 4 | V8: Mistborn Magic System | #3 Case study | #1 Framework | Design 7-dimension magic scoring (from RESEARCH-FRAMEWORKS.md) |
+| 5 | V3: ChatGPT vs Claude | #2 Comparative | #6 Expert aggregation | Design 12-dimension fiction matrix (from RESEARCH-FRAMEWORKS.md) |
+| 6 | V9: Promise/Progress/Payoff | #6 Expert aggregation | #1 Framework | Synthesize meta-analysis, design prompt template |
+| 7 | V4: NovelCrafter vs Sudowrite | #2 Comparative | — | Use same 10-criteria rubric as V2 |
+| 8 | V10: OP Characters | #5 First principles | — | Guide assumption challenges |
+| 9 | V5: Best FREE AI Models | #0 Synthesis | — | Review synthesis, ensure angle |
+| 10 | V11: Zuko's Redemption Arc | #3 Case study | #10 Story | Extract arc beats → AI framework |
+| 11 | V6: I Gave 5 AI Tools Same Prompt | #0 Synthesis | #2 Comparative | Define test design |
+| 12 | V12: Worst Writing Advice | #4 Debunking | — | Select claims, review verdicts |
+
 ---
 
 ## Tháng 9 — 12 videos

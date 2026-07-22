@@ -153,7 +153,25 @@ Cho mỗi tháng, assign 4 different script structures (rotate):
 
 ## Phase 1: Monthly Pre-Production (4-5h)
 
-Cho 12 videos/tháng. Agent làm research + draft, user review/fix + ADD human argument.
+Cho 12 videos/tháng. Agent làm research + draft, user review/fix + design analytical framework.
+
+> **Content approach**: Pure analysis từ docs/reviews/public info — KHÔNG test tool. Writing voice = first-person analytical (confident, experiential, không secondhand-sounding). See `CONTENT-CREATION-MECHANISMS.md` for full mechanism catalog.
+
+### Step 0: Assign Content Creation Mechanism (per video)
+
+Mỗi video dùng 1-2 cơ chế từ `CONTENT-CREATION-MECHANISMS.md`. Không 2 video liên tiếp dùng cùng cơ chế chính — tự nhiên tạo format variation (compliance #3).
+
+| Mechanism | User does | Agent does |
+|-----------|-----------|------------|
+| #1 Original Framework | Design criteria/scoring | Research evidence, fill matrix, draft |
+| #0 Content Synthesis | Review synthesis, ensure angle | Aggregate 5-10+ sources, extract insights |
+| #2 Comparative Analysis | Define criteria | Research each subject, create matrix |
+| #3 Case Study Deep-Dive | Select subject, determine lens | Deep research across sources |
+| #4 Debunking | Select claims, review verdicts | Collect claims, research evidence |
+| #5 First Principles | Guide assumption challenges | Identify assumptions, research evidence |
+| #6 Expert Aggregation | Synthesize meta-analysis | Collect expert positions, map consensus |
+| #7 Community-Driven | Select questions | Mine Reddit/forums, rank by frequency |
+| #10 Story-Driven | Ensure unique thesis | Research, identify narrative arc |
 
 ### Step 1: Viewer Problem Research (10 min/video)
 
@@ -192,11 +210,12 @@ Search topic trên YouTube. 5-7 competitor videos. Cho mỗi video:
 
 ### Step 4: Script Outline (15 min/video)
 
-Use assigned structure from Phase 0 (rotate A/B/C/D):
+Use assigned structure from Phase 0 (rotate A/B/C/D) + assigned mechanism from Step 0:
 
 ```
 TITLE: [≤60 chars]
 STRUCTURE: [A/B/C/D — different from last video]
+MECHANISM: [# from CONTENT-CREATION-MECHANISMS.md]
 HOOK: [type + first line — 15-30s]
 
 [Structure-specific sections — see Phase 0 for templates]
@@ -204,21 +223,30 @@ HOOK: [type + first line — 15-30s]
 CTA: "Building an AI agent for novelists. Follow for updates."
 ```
 
-### Step 5: Add Human Argument + Commentary [COMPLIANCE CRITICAL]
+### Step 5: Design Analytical Framework [COMPLIANCE CRITICAL]
 
-**This is the step that makes content non-interchangeable.**
+**This is the step that makes content non-interchangeable.** Human contribution = framework design, NOT "hot take."
 
-After agent draft, YOU must:
-1. **Rewrite at least 1 section** in your own voice/perspective
-2. **Add 1 "hot take"** — personal opinion/analysis from YOUR experience building AI agent that AI couldn't generate from public docs
-3. **Pick 1 commentary type** per video:
-   - Commentary (what you think + why)
-   - Critique (what's wrong with common take)
-   - Narrative (story arc, not just facts)
-   - Teaching (examples, steps, demonstrations)
-   - Synthesis (connect ideas viewers can't get elsewhere)
+> AI can generate opinions. AI cannot design a unique analytical framework that produces logical, consistent, objective analysis. That's the human contribution.
 
-> From alici.ai: "The reviewer test is whether the script has an argument a human had to decide on."
+**User must:**
+1. **Design the analytical framework** — choose evaluation criteria, define scoring, decide synthesis logic (from research in `RESEARCH-FRAMEWORKS.md`, NOT intuition)
+2. **Review the logic** — ensure framework produces objective, consistent analysis
+3. **Verify unique angle** — no other channel uses this specific framework
+
+**Agent then:**
+1. Research evidence for each criterion/dimension
+2. Fill in the framework with data from public sources (docs, reviews, community, academic)
+3. Draft voiceover text in **first-person analytical voice**
+
+**Writing voice — first-person analytical:**
+| Instead of (secondhand) | Write (first-person analytical) |
+|---|---|
+| "According to Reddit users, Sudowrite loses context after chapter 5" | "Sudowrite's context retention breaks down around chapter 5 — the story bible compresses too much, and the AI starts forgetting early character details" |
+| "The Nerdy Novelist says Claude is better for creative writing" | "Claude's advantage in fiction writing comes down to instruction adherence — it maintains constraints better across long outputs" |
+
+> From YouTube official: "We want content that we know what channel it comes from. It couldn't be on a hundred other channels."
+> From Zenn case study: "The automation is in the production, not the thinking."
 
 ### Step 6: "Would this exist without AI?" Test [COMPLIANCE]
 
@@ -231,9 +259,10 @@ Before saving: "If I couldn't use AI for anything, would I still make this video
 Save to: `drafts/brief-[video-name]_[date].md`
 
 Also save in same folder:
-- `drafts/brief-[video-name]_[date]_research.md` (research notes)
+- `drafts/brief-[video-name]_[date]_research.md` (research notes + sources)
+- `drafts/brief-[video-name]_[date]_framework.md` (analytical framework design — user contribution)
 - `drafts/brief-[video-name]_[date]_draft-before.md` (AI original draft)
-- `drafts/brief-[video-name]_[date]_draft-after.md` (your edited version with hot take)
+- `drafts/brief-[video-name]_[date]_draft-after.md` (final version after user review)
 
 > These are appeal evidence if flagged. From dimantika.com: "Creators who successfully appealed could demonstrate specific creative choices."
 

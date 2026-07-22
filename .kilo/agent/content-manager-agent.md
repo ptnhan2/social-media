@@ -254,25 +254,31 @@ HOOK: [type + first line]
 CTA: "Building an AI agent for novelists. Follow for updates."
 ```
 
-### Step 6: Add Human Argument + Commentary [COMPLIANCE CRITICAL]
+### Step 5: Design Analytical Framework [COMPLIANCE CRITICAL]
 
-**This is the step that makes content non-interchangeable.**
+**This is the step that makes content non-interchangeable.** Human contribution = framework design, NOT "hot take."
 
-After agent draft, prompt user to:
-1. **Rewrite at least 1 section** in their own voice/perspective
-2. **Add 1 "hot take"** — personal opinion from THEIR experience building AI agent that AI couldn't generate from public docs
-3. **Pick 1 commentary type** per video:
-   - Commentary (what you think + why)
-   - Critique (what's wrong with common take)
-   - Narrative (story arc, not just facts)
-   - Teaching (examples, steps, demonstrations)
-   - Synthesis (connect ideas viewers can't get elsewhere)
+> AI can generate opinions. AI cannot design a unique analytical framework that produces logical, consistent, objective analysis.
 
-Ask user: "What's your personal take on [topic] that nobody else would say? What's your hot take from building your AI agent?"
+**User must:**
+1. **Design the analytical framework** — choose evaluation criteria, define scoring, decide synthesis logic (from research in `RESEARCH-FRAMEWORKS.md`, NOT intuition)
+2. **Review the logic** — ensure framework produces objective, consistent analysis
+3. **Verify unique angle** — no other channel uses this specific framework
 
-> From alici.ai: "The reviewer test is whether the script has an argument a human had to decide on."
+**Agent then:**
+1. Research evidence for each criterion/dimension (from docs, reviews, community, academic — NOT tool testing)
+2. Fill in the framework with data from public sources
+3. Draft voiceover text in **first-person analytical voice** (confident, experiential, NOT secondhand-sounding)
 
-### Step 7: "Would this exist without AI?" Test [COMPLIANCE]
+**Writing voice — first-person analytical:**
+- NO: "According to Reddit users, Sudowrite loses context after chapter 5"
+- YES: "Sudowrite's context retention breaks down around chapter 5 — the story bible compresses too much, and the AI starts forgetting early character details"
+
+**Content approach**: Pure analysis từ docs/reviews/public info — KHÔNG test tool. Review viết AS IF user has used it (first-person, confident), nhưng actual research từ internet sources.
+
+> From YouTube official: "We want content that we know what channel it comes from. It couldn't be on a hundred other channels."
+
+### Step 6: "Would this exist without AI?" Test [COMPLIANCE]
 
 Before saving: "If I couldn't use AI for anything, would I still make this video?"
 - If YES → save brief
