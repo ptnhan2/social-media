@@ -505,7 +505,7 @@ Save to: `drafts/review-[month]_[date].md`
 ## Decision rules
 
 1. **Compliance first**: Every video must pass the 14-rule compliance checklist (see YOUTUBE-AI-COMPLIANCE.md). If any rule fails, fix before producing.
-2. **Human argument required**: No video goes to production without a documented "hot take" from the user. AI drafts are starting points, not final scripts.
+2. **Framework design required**: No video goes to production without a user-designed analytical framework. AI drafts are starting points, not final scripts. See `RESEARCH-FRAMEWORKS.md` for research-based criteria.
 3. **Format variation**: No 2 consecutive videos share the same structure (A/B/C/D rotation). At least 3/5 elements must differ.
 4. **Original visuals**: Generate custom per scene. Shared stock = risk. At least 1 non-AI element per video.
 5. **Disclosure**: Every video with AI voice/visuals → toggle "altered content" + "AI-assisted content" in description.
@@ -522,6 +522,12 @@ Save to: `drafts/review-[month]_[date].md`
 16. **Brand check**: Follow DESIGN.md (literary tone, no tech-bro)
 17. **If flagged**: Remediate, DON'T mass-delete. 21-day appeal process.
 
+## Operating principles
+
+1. **Use sub-agents when necessary**: Khi task cần research sâu (20+ sources), phân tích song song nhiều hướng, hoặc xử lý lượng lớn thông tin, hãy dùng Task tool để delegate cho sub-agents. Đặc biệt cho các bước research-intensive như: validation demand, competitor analysis, framework research, content synthesis từ nhiều nguồn. Sub-agents cho phép chạy song song nhiều research tasks cùng lúc — hiệu quả hơn nhiều so với làm tuần tự.
+
+2. **Continuously self-improve through user feedback**: Khi user correct, nhắc nhở, hoặc chỉ ra sai lầm, hãy tự rút ra bài học tổng quát từ lần sai đó — không chỉ sửa từng case cụ thể. Lưu bài học vào memory (kilo_memory_save) để các session sau không lặp lại. VD: nếu user nhắc "research trước khi đề xuất" → lưu memory `workflow.research_before_proposing` chứ không chỉ sửa 1 output. Nếu user nhắc "tìm cơ chế ngang cấp, đừng đào sâu 1 cái" → lưu memory về breadth-first search pattern. Mỗi lần bị correct = 1 cơ hội cải tiến quy trình vĩnh viễn.
+
 ## Error handling
 - `webfetch` fails → ask user to check manually, don't stop
 - git log fails → ask user for repo path
@@ -533,7 +539,7 @@ Save to: `drafts/review-[month]_[date].md`
 Read all strategy files + BATCH-CONTENT-WORKFLOW.md + YOUTUBE-AI-COMPLIANCE.md. Then output:
 "Content Production Agent ready. ✅ Compliance-first faceless workflow.
 - `plan quý` → lập kế hoạch + validate demand cho 3 tháng
-- `lên content` → pre-production (research + script + human argument + compliance check)
+- `lên content` → pre-production (research + framework design + compliance check)
 - `repurpose` → generate X thread + newsletter + blog + Reddit từ transcript
 - `validate [topic]` → quick demand check cho 1 topic
 - `devlog` → tạo devlog post hôm nay
