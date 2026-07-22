@@ -268,56 +268,81 @@ Also save in same folder:
 
 ---
 
-## Phase 2: Monthly Production — Faceless (8-12h for 12 videos)
+## Phase 2: Monthly Production — Faceless (optimized stack pipeline)
 
-### Faceless 5-step workflow per video (~60 min)
+> Full authenticity pipeline: see `AUTHENTICITY-PIPELINE.md` for detailed settings.
+> Core principle: OPTIMIZE existing stack (ElevenLabs + Open Design + CapCut), NOT replace tools.
+~3-4 hours/video (vs 1,200h Kurzgesagt vs 30min template slop)
 
-#### Step 1: Finalize script (15 min) [Compliance #2]
-- Review agent's draft + your hot take from Phase 1
+### Step 1: Finalize script (60-90 min) [Compliance #2]
+
+- Hook + thesis: **HANDWRITTEN by user**, with dated personal anchor
+  - "Last week, I analyzed [specific thing] and found [surprising result]."
+  - This 10 seconds proves a human decided what this video is about
+- AI drafts remaining sections from research brief
+- Human rewrite pass:
+  - Remove 7 AI-script tells (fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops)
+  - Vary sentence length: short punch → longer flow → jab
+  - "Therefore/But" between sections (not "and then...")
+  - Add inline visual direction: [SHOW: diagram], [TEXT: stat]
+  - Contractions, <20 words/sentence, 130-150 wpm
+  - Read aloud → fix stumbling points
 - Format 2 columns: "Voiceover Text" | "Visual Cue Ideas"
-- Each visual cue = what to show on screen at that moment
-- **Verify**: script has argument YOU decided on (not just AI output)
 
-#### Step 2: Voiceover (5 min)
-- Paste "Voiceover Text" vào ElevenLabs
-- Choose voice (consistent across all videos = brand identity) [Compliance #1]
-- Generate MP3, download
+### Step 2: Voiceover (5 min) — ElevenLabs optimized
 
-#### Step 3: Visuals (20 min) [Compliance #5, #6 — CRITICAL]
-- **Generate custom images per scene** (Open Design) — NOT shared stock
-- Visuals must match narration at SCENE level
-- **At least 1 non-stock/non-AI element** per video: screenshots, diagrams, data charts
-- If using stock (Pexels), heavily transform (color grade, composite)
-- Text overlays for key points
-- **Change visual every 3-5 seconds** (retention rule)
+- **Format script for TTS**: ellipsis `...` for pauses, ALL CAPS for emphasis, expand numbers
+- **Settings**: Stability 35-45% (LOW = natural variation), Similarity 75-80%, Style 0-15%, Speaker Boost ON
+- Generate per chunk (500-800 chars)
+- Measure duration per segment (drives visual timing)
+- If using v3: audio tags `[excited]`, `[whispers]`, `[sighs]`
 
-> From dimantika.com: "The channels that kept monetization share a common trait: their visuals don't exist anywhere else."
+### Step 3: Visuals (20 min) — Open Design [Compliance #5, #6]
 
-#### Step 4: Assembly (15 min)
-- Import voiceover MP3 as audio track
-- Place visuals on video track, timed to narration
-- Add background music (-25dB)
-- Add auto-captions (80% videos watched muted)
-- Export 1080p
+- Load DESIGN.md (same every video = brand consistency, different composition = no sameness)
+- **Voice-led**: generate visuals to MATCH measured audio durations
+- Generate per scene matching narration beats (not "close enough" stock)
+- Anti-slop engine: vision self-critique until pass
+- **Film grain overlay** (CRITICAL — masks AI "too perfect" look)
+- ≥1 non-AI element per video: diagrams, data charts, comparison matrices
+- Visual change every 1.8-2.5 seconds (retention rule)
 
-#### Step 5: Save + pre-publish compliance check [Compliance #8, #14]
-- Long-form: `videos/[video-name]-full.mp4`
-- Checklist before moving to publish:
-  - [ ] Script has human argument (hot take added)?
-  - [ ] Visuals are unique (not shared stock)?
-  - [ ] At least 1 non-AI element in footage?
-  - [ ] Format differs from last video (3/5 rule)?
-  - [ ] "Would this exist without AI?" = yes?
-  - [ ] Ready for disclosure toggle on upload?
+### Step 4: Assembly (30 min) — CapCut optimized
+
+- Import ElevenLabs MP3 as master audio track
+- Place visuals aligned to narration beats (audio sets timeline)
+- Auto-captions: Montserrat Bold, black stroke 15px, spring animation 0.1s, max 3 words on screen
+- 90% hard cuts, 10% creative transitions (fades = amateur)
+- Background music at -22dB (not -25dB — slightly louder for engagement)
+- Enhance Voice 50-70%, Normalize Loudness -14 LUFS
+- Pattern interrupts every 90-120s: text pop, music shift, silence, question
+- Color grade: consistent LUT across all clips
+- Export 1080p, 30fps, H.264
+
+### Step 5: Pre-publish authenticity check [Compliance #8, #14]
+
+Answer YES to at least 10/12:
+- [ ] Script written or heavily rewritten by human?
+- [ ] Contains analysis AI couldn't generate alone?
+- [ ] Sources cited (on screen + description)?
+- [ ] Viewer would recognize this as YOUR channel?
+- [ ] Has unique angle, not just summarizing facts?
+- [ ] Voiceover has emotional variation?
+- [ ] Visuals are custom (not shared stock)?
+- [ ] Video delivers on title/thumbnail promise?
+- [ ] Would this video still have value if AI tools didn't exist?
+- [ ] Upload frequency sustainable?
+- [ ] Creative decisions documented?
+- [ ] AI disclosure toggled?
 
 ### Batch production schedule
 
 | Day | Task | Time |
 |-----|------|------|
-| Day 1 | Script finalize 6 videos + voiceover 6 | 4h |
-| Day 2 | Visuals + assembly 6 videos + script 6 more | 6h |
-| Day 3 | Voiceover 6 + visuals + assembly 6 | 4h |
-| **Total** | **12 videos** | **~14h** |
+| Day 1 | Script finalize 6 videos (handwritten hooks + AI draft + human rewrite) | 6-9h |
+| Day 2 | Voiceover 6 + visuals 6 + assembly 6 | 6h |
+| Day 3 | Script 6 more + voiceover 6 + visuals 6 + assembly 6 | 8h |
+| **Total** | **12 videos** | **~20-23h** |
 
 ---
 

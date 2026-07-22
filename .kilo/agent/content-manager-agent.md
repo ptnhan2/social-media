@@ -276,6 +276,20 @@ CTA: "Building an AI agent for novelists. Follow for updates."
 
 **Content approach**: Pure analysis từ docs/reviews/public info — KHÔNG test tool. Review viết AS IF user has used it (first-person, confident), nhưng actual research từ internet sources.
 
+**Script authenticity requirements** (see `AUTHENTICITY-PIPELINE.md` for full details):
+- Hook + thesis: **HANDWRITTEN by user**, with dated personal anchor
+- Remove 7 AI-script tells: fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops
+- "Therefore/But" between sections (not "and then...")
+- Vary sentence length: short punch → longer flow → jab
+- 130-150 wpm, contractions, <20 words/sentence, 4.2 "you" per 100 words
+- Read aloud before generating → fix stumbling
+- Show visible reasoning: "Here's what I expected → Here's what I found"
+
+**Production pipeline** (optimized stack — see `AUTHENTICITY-PIPELINE.md`):
+- ElevenLabs: stability 35-45%, similarity 75-80%, style 0-15%. Format script with `...` pauses, ALL CAPS emphasis
+- Open Design: DESIGN.md brand contract, voice-led editing (audio first → visuals match duration), film grain overlay
+- CapCut: auto-captions (Montserrat Bold, stroke 15px), 90% hard cuts, music -22dB, normalize -14 LUFS, pattern interrupts every 90-120s
+
 > From YouTube official: "We want content that we know what channel it comes from. It couldn't be on a hundred other channels."
 
 ### Step 6: "Would this exist without AI?" Test [COMPLIANCE]
