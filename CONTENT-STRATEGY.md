@@ -42,6 +42,10 @@ Analytical videos that take a craft principle (show-don't-tell, subtext, pacing,
 
 ### Content approach
 - **No tool testing** — pure analysis from public sources (docs, reviews, Reddit, academic papers)
+- **Content language: English** (RPM cao, audience global, Craft × AI niche = English-dominated)
+- **Workflow language: Vietnamese** (agent ↔ user communication in Vietnamese, user checks logic not grammar)
+- **Script checking workflow**: Agent drafts English script + provides Vietnamese summary per section. User reviews Vietnamese summary for logic/accuracy. If OK → approve. If wrong → agent fixes.
+- **Hook**: User drafts in Vietnamese → agent translates to English preserving personal voice
 - **First-person analytical voice** — confident, experiential, NOT secondhand-sounding
 - **Review written AS IF user has used the tool** — but actual research from internet sources
 - **Research-based frameworks** — evaluation criteria from `RESEARCH-FRAMEWORKS.md`, not intuition

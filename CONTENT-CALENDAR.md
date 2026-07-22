@@ -4,6 +4,7 @@
 > Cadence: 8 videos/month (2/week) + daily devlog + weekly newsletter
 > Time: ~2h/day = ~54h/month
 > No tool testing — pure analysis from public sources
+> Content language: English | Workflow language: Vietnamese (agent provides VN summary per script section)
 
 ---
 

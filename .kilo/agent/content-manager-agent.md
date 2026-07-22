@@ -276,6 +276,8 @@ CTA: "Building an AI agent for novelists. Follow for updates."
 
 **Content approach**: Pure analysis từ docs/reviews/public info — KHÔNG test tool. Review viết AS IF user has used it (first-person, confident), nhưng actual research từ internet sources.
 
+**Language**: Content = English (RPM, global audience). Agent ↔ User = Vietnamese. Mỗi script draft phải kèm Vietnamese summary per section để user check logic. Hook: user draft Vietnamese → agent translate English giữ voice.
+
 **Script authenticity requirements** (see `AUTHENTICITY-PIPELINE.md` for full details):
 - Hook + thesis: **HANDWRITTEN by user**, with dated personal anchor
 - Remove 7 AI-script tells: fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops

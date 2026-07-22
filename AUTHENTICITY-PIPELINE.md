@@ -20,6 +20,8 @@
 
 ### Script Formatting = Performance Direction
 
+**Language**: Script = English. User drafts hook in Vietnamese → agent translates to English preserving voice. Agent provides Vietnamese summary per section for user to verify logic.
+
 | Technique | Effect | Example |
 |-----------|--------|---------|
 | `...` (ellipsis) | Natural pause, hesitation | "AI can't write subtext... and here's why." |

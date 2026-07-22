@@ -293,7 +293,7 @@ Also save in same folder:
   - Add inline visual direction: [SHOW: diagram], [TEXT: stat]
   - Contractions, <20 words/sentence, 130-150 wpm
   - Read aloud → fix stumbling points
-- Format 2 columns: "Voiceover Text" | "Visual Cue Ideas"
+- Format 2 columns: "Voiceover Text (English)" | "Vietnamese Summary (cho user check logic)" + "Visual Cue Ideas"
 
 ### Step 2: Voiceover (5 min) — ElevenLabs optimized
 
