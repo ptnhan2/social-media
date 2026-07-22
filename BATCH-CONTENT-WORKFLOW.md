@@ -295,32 +295,22 @@ Also save in same folder:
   - Read aloud → fix stumbling points
 - Format 2 columns: "Voiceover Text (English)" | "Vietnamese Summary (cho user check logic)" + "Visual Cue Ideas"
 
-### Step 2: Voiceover (5 min) — ElevenLabs optimized
+### Step 2: Voiceover + Visuals + Render (automated via HyperFrames)
 
-- **Format script for TTS**: ellipsis `...` for pauses, ALL CAPS for emphasis, expand numbers
-- **Settings**: Stability 35-45% (LOW = natural variation), Similarity 75-80%, Style 0-15%, Speaker Boost ON
-- Generate per chunk (500-800 chars)
-- Measure duration per segment (drives visual timing)
-- If using v3: audio tags `[excited]`, `[whispers]`, `[sighs]`
-
-### Step 3: Visuals (20 min) — Open Design [Compliance #5, #6]
-
-- Load DESIGN.md (same every video = brand consistency, different composition = no sameness)
-- **Voice-led**: generate visuals to MATCH measured audio durations
-- Generate per scene matching narration beats (not "close enough" stock)
-- Anti-slop engine: vision self-critique until pass
-- **Film grain overlay** (CRITICAL — masks AI "too perfect" look)
+- **HyperFrames ElevenLabs skill**: generate VO with API key
+  - Settings: stability 35-45%, similarity 75-80%, style 0-15% (verify during setup)
+  - Script formatting: `...` pauses, ALL CAPS emphasis, expand numbers
+- **HyperFrames transcribe**: Whisper word-level timestamps for auto-captions
+- **Open Design DESIGN.md**: generate visuals per scene matching narration
+- **HyperFrames render**: HTML composition → MP4 (visuals + VO + captions + film grain)
 - ≥1 non-AI element per video: diagrams, data charts, comparison matrices
-- Visual change every 1.8-2.5 seconds (retention rule)
 
-### Step 4: Assembly (30 min) — CapCut optimized
+### Step 3: Final Polish (CapCut, 15-20 min)
 
-- Import ElevenLabs MP3 as master audio track
-- Place visuals aligned to narration beats (audio sets timeline)
-- Auto-captions: Montserrat Bold, black stroke 15px, spring animation 0.1s, max 3 words on screen
-- 90% hard cuts, 10% creative transitions (fades = amateur)
-- Background music at -22dB (not -25dB — slightly louder for engagement)
+- Import HyperFrames MP4
+- Background music at -22dB
 - Enhance Voice 50-70%, Normalize Loudness -14 LUFS
+- 90% hard cuts (if needed beyond HyperFrames transitions)
 - Pattern interrupts every 90-120s: text pop, music shift, silence, question
 - Color grade: consistent LUT across all clips
 - Export 1080p, 30fps, H.264

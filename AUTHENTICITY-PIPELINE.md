@@ -160,43 +160,37 @@ Every video: same DESIGN.md, different composition → consistency without samen
    └── Write 1-page research brief
 
 2. SCRIPT (60-90 min)
-   ├── Hook + thesis: HANDWRITTEN, dated personal anchor
+   ├── Hook + thesis: Agent drafts from research + framework, with research-based anchor
    ├── AI draft remaining sections from research brief
    ├── Human rewrite: remove 7 AI tells, vary rhythm, add open loops
    ├── Add inline visual direction: [SHOW: diagram], [TEXT: stat]
    ├── "Therefore/But" between sections
    └── Read aloud → fix stumbling
 
-3. VOICEOVER (5 min)
-   ├── Format script: ellipsis pauses, ALL CAPS emphasis, expand numbers
-   ├── ElevenLabs: stability 35-45%, similarity 75-80%, style 0-15%
-   ├── Generate per chunk (500-800 chars)
-   └── Measure duration per segment
+3. VOICEOVER + VISUALS + RENDER (automated via HyperFrames)
+   ├── HyperFrames ElevenLabs skill: generate VO with API key
+   │   (Settings: stability 35-45%, similarity 75-80%, style 0-15% — verify during setup)
+   ├── HyperFrames transcribe: Whisper word-level timestamps for captions
+   ├── Open Design DESIGN.md: generate visuals per scene matching narration
+   ├── HyperFrames render: HTML composition → MP4 (visuals + VO + captions)
+   └── Film grain overlay applied
 
-4. VISUALS (20 min)
-   ├── Load DESIGN.md (same every video, different composition)
-   ├── Generate per scene matching narration beats
-   ├── Use measured audio durations as visual targets
-   └── Anti-slop engine: vision self-critique until pass
-
-5. ASSEMBLY (30 min)
-   ├── CapCut: import ElevenLabs MP3 as master audio
-   ├── Place visuals aligned to narration
-   ├── Auto-captions (Montserrat Bold, stroke 15px, spring 0.1s)
-   ├── 90% hard cuts, 10% creative transitions
-   ├── Film grain overlay (mask AI perfection)
+4. FINAL POLISH (CapCut, 15-20 min)
+   ├── Import HyperFrames MP4
    ├── Background music -22dB
    ├── Enhance Voice 50-70%, normalize -14 LUFS
-   └── Pattern interrupt every 90-120s
+   ├── 90% hard cuts (if needed beyond HyperFrames transitions)
+   ├── Pattern interrupts every 90-120s
+   └── Export 1080p, 30fps, H.264
 
-6. PUBLISH (10 min)
+5. PUBLISH (10 min)
    ├── Source links in description (Kurzgesagt model)
    ├── AI disclosure toggle ON
    ├── 1 specific CTA
    └── Respond to first comments (human signal)
 ```
 
-**Total: ~3-4 hours/video**
+**Total: ~2.5-3 hours/video** (research + script = 2h, automated render + CapCut polish = 30-45 min)
 
 ---
 
