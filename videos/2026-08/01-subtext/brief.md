@@ -22,21 +22,21 @@ Subtext là gì? Là khi nhân vật nói A nhưng ý là B. Người đọc t�
 
 Bây giờ — tưởng tượng AI là một nhân viên được train từ nhỏ rằng: "Rõ ràng = tốt. Mơ hồ = tệ. Luôn giải thích. Luôn helpful. Luôn explicit." Bạn bảo nhân viên này: "Đừng giải thích, hãy ngụ ý." Nó sẽ nhìn bạn như bạn nói nó phản bội mọi thứ nó được dạy.
 
-Và đúng vậy — đó chính xác là điều đang xảy ra. AI được train bằng RLHF (Reinforcement Learning from Human Feedback). Quá trình này reward: helpful, clear, explicit. Model học: LUÔN giải thích. Khi nó viết "she felt sadness" — nó làm ĐÚNG như được train.
+Và đúng vậy — đó chính xác là điều đang xảy ra. AI được train bằng RLHF (Reinforcement Learning from Human Feedback) — hiểu đơn giản, đây là cách AI được "dạy dỗ" từ nhỏ, giống như nuôi dạy một đứa trẻ: reward khi ngoan, punish khi hư. AI được reward khi nó helpful, clear, explicit. Model học: LUÔN giải thích. Khi nó viết "she felt sadness" — nó làm ĐÚNG như được train.
 
 Ngày xưa, writer học 5 năm 10 năm để master subtext. Bây giờ bạn bảo AI "hãy ngụ ý" trong 1 prompt. Giống như bảo một người luôn honest "đừng honest nữa" — bạn không thay đổi style, bạn đang chống lại bản chất.
 
 **Evidence (story, không phải list — dual perspective):**
 
-NailedIt.ai làm một test: cho cả Claude và ChatGPT viết cảnh một nhân vật đang buồn — nhưng không được dùng các từ "sad, cry, tears, heartbreak." Mục đích: xem AI có thể "show" nỗi buồn qua hành động thay vì "tell" qua cảm xúc không.
+NailedIt.ai — một trang test AI side-by-side, giống như blind taste test cho rượu vang — làm một test: cho cả Claude và ChatGPT viết cảnh một nhân vật đang buồn, nhưng không được dùng các từ "sad, cry, tears, heartbreak." Mục đích: xem AI có thể "show" nỗi buồn qua hành động thay vì "tell" qua cảm xúc không.
 
-Kết quả Claude: nhân vật tưới những cây đã chết từ lâu (vẫn giữ thói quen chăm sóc dù người chăm sóc đã mất), order coffee nhầm — vô thức gọi hai ly vì quen gọi cho hai người, cầm hai cốc trong tay — một cho người đã không còn. Bạn đọc cảnh này và CẢM THẤY buồn. Không cần ai nói "buồn."
+Kết quả Claude: nhân vật tưới những cây đã chết từ lâu (vẫn giữ thói quen chăm sóc dù người chăm sóc đã mất), order coffee nhầm — vô thức gọi hai ly vì quen gọi cho hai người, cầm hai cốc trong tay — một cho người đã không còn. Bạn đọc cảnh này và CẢM THẤL buồn. Không cần ai nói "buồn." Claude — trong scene ngắn này — đã làm được subtext.
 
 Kết quả ChatGPT: viết "Just like the stain on the plate, the stain on his heart would never wash away." Nghe có vẻ văn vẻ — nhưng nó GIẢI THÍCH nỗi buồn bằng ẩn dụ thay vì cho bạn CẢM nỗi buồn. Bạn đọc và nghĩ "Ồ, ẩn dụ hay." Nhưng bạn không cảm thấy gì.
 
-Khác biệt? Claude show qua hành động cụ thể — bạn infer nỗi buồn. ChatGPT tell qua metaphor — bạn đọc ẩn dụ nhưng không feel. Cả hai đều fail ở subtext thật — nhưng fail khác nhau. Claude gần hơn, nhưng vẫn chưa đủ.
+Vậy Claude thành công? Trong 1 scene — yes. Nhưng đây là vấn đề thật: bạn không viết novel 1 scene. Bạn viết 80,000 chữ. Và theo ACL — hội đồng khoa học về ngôn ngữ AI, giống như FDA nhưng cho nghiên cứu AI — paper "Narrative Flattening" (2026) chứng minh: AI càng viết dài, càng mất khả năng subtext. RLHF — cách AI được "dạy dỗ" từ nhỏ (giống như nuôi dạy đứa trẻ: reward khi ngoan, punish khi hư) — đàn áp sự mơ hồ. AI có thể override training trong scene ngắn. Nhưng càng dài, training bias càng kéo nó về "helpful, clear, explicit." Subtext dần biến mất. "She felt sadness" quay trở lại.
 
-Và đây không chỉ là chuyên gia mới thấy. Trên Reddit r/WritingWithAI — 214 upvotes, 77 comments — rất nhiều writer nói cùng một điều. Một người viết: *"It defaults to naming emotions rather than evoking them through concrete detail. 'She felt sadness' vs making the reader feel it through sensory specifics. This required the most manual rewriting."* Tạm dịch: AI gọi tên cảm xúc thay vì gợi ra cảm xúc. "Cô ấy cảm thấy buồn" thay vì làm reader tự cảm thấy buồn. Và phần này tốn nhiều công sửa nhất.
+Và đây không chỉ là chuyên gia mới thấy. Trên Reddit r/WritingWithAI — cộng đồng 158,000 writer dùng AI — 214 upvotes, 77 comments — rất nhiều writer nói cùng một điều. Một người viết: *"It defaults to naming emotions rather than evoking them through concrete detail. 'She felt sadness' vs making the reader feel it through sensory specifics. This required the most manual rewriting."* Tạm dịch: AI gọi tên cảm xúc thay vì gợi ra cảm xúc. "Cô ấy cảm thấy buồn" thay vì làm reader tự cảm thấy buồn. Và phần này tốn nhiều công sửa nhất.
 
 ACL paper "Narrative Flattening" (2026) chứng minh: RLHF đàn áp sự mơ hồ. AI theo nghĩa đen không thể KHÔNG giải thích. Càng align nhiều → writing càng ít variation. Đây không phải bug. Đây là feature.
 

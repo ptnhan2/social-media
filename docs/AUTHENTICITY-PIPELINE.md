@@ -244,7 +244,22 @@ Every video: same DESIGN.md, different composition → consistency without samen
 
 ---
 
-## 5. Six Script Patterns (rotate for variety — NOT academic templates)
+## 5. Organization Reference Rule
+
+**Khi nhắc tổ chức/chuyên nghiệp — phải giải thích vai trò bằng analogy dễ hiểu**
+
+| ❌ Đừng viết | ✅ Viết |
+|---|---|
+| "NailedIt.ai" | "NailedIt.ai — một trang test AI side-by-side, giống như blind taste test cho rượu vang" |
+| "ACL paper" | "Bài nghiên cứu từ ACL — hội đồng khoa học về ngôn ngữ AI, giống như FDA nhưng cho nghiên cứu AI" |
+| "RLHF" | "RLHF — cách AI được 'dạy dỗ' từ nhỏ, giống như nuôi dạy một đứa trẻ: reward khi ngoan, punish khi hư" |
+| "OpenAI" | "OpenAI — công ty tạo ra ChatGPT, giống như Shakespeare của thế giới AI" |
+
+Nguyên tắc: viewer không biết tổ chức này là ai → phải hiểu significance trong 1 câu. Dùng analogy từ đời thường.
+
+---
+
+## 6. Six Script Patterns (rotate for variety — NOT academic templates)
 
 > Each pattern = direction for organic flow. NOT rigid template. Still use 12 storytelling techniques.
 
