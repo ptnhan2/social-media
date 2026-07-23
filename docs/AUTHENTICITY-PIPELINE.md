@@ -131,85 +131,72 @@ Every video: same DESIGN.md, different composition → consistency without samen
 ❌ "Sanderson's Second Law states that limitations are more important than powers."
 ✅ "Here's a mistake that killed more fantasy novels than bad prose ever did. The hero is trapped. The villain is closing in. And suddenly — the hero discovers a NEW magic power. One the reader has never heard of. One that solves everything. The reader closes the book."
 
-### The 3-Beat Hook (from Zenn channel — 7.6M views)
+### Storytelling Techniques from KTTV (2.72M subs — analyzed from actual transcripts)
 
-```
-Beat 1 (Pull in): Second person, present tense, sensory detail about viewer's experience
-Beat 2 (Flip): "But..." + surprising contrast
-Beat 3 (Seal): Open loop — what we're about to explore
-```
+> These are NOT "structures" (templates). They are STORYTELLING TECHNIQUES that make content feel alive. Every video is a different emotional journey, but all use these techniques.
 
-**Example for Craft × AI:**
-- Beat 1: "You've been writing with AI for three hours. The output is grammatically perfect. Technically correct."
-- Beat 2: "And completely lifeless. You can FEEL something is off, but you can't name what."
-- Beat 3: "The problem isn't your prompt. It's not the model. It's something deeper — and once you see it, you can't unsee it."
+**1. Circular open loop + callback**
+- Mở video bằng một promise/question → kết video bằng callback đến promise đó
+- VD KTTV: Mở "nếu cuối năm này đúng thì quay lại video" → Kết "cuối năm nhớ quay lại chia sẻ"
+- Viewer cảm thấy tham gia conversation đang tiếp diễn, không phải one-way lecture
 
-### The Snap-Back Close (from Zenn, Kurzgesagt)
+**2. Anxiety cascade → relief**
+- Rapid-fire examples tạo overwhelm → THEN promise simplicity = relief
+- VD KTTV: "AI bùng nổ... rồi thì Trump đánh thuế... rồi thì Trung Quốc... Thái Lan..." → "Việc phân tích phức tạp. Thế nên mình sẽ chia sẻ 5 điều"
+- Viewer được "giải cứu" khỏi anxiety → sẵn sàng nghe
 
-Every video ends by connecting the topic back to the viewer's personal life:
+**3. Cultural reference = emotional stakes**
+- Dùng reference mà viewer đã biết/thương → create emotional investment
+- VD KTTV: "lời dặn của Bác Hồ — sánh vai các cường quốc năm châu"
+- VD cho Craft × AI: "Sanderson spent years designing Allomancy" → viewer đã biết Sanderson = emotional stake
 
-❌ "In conclusion, the 3 prompt rules are: don't name emotions, give subtext separately, use dialogue constraints."
-✅ "AI isn't broken. It's optimized for a different purpose than fiction. Your prompts bridge that gap — but only if you understand the gap exists. The model will always want to explain. Your job is to let it imply."
+**4. Personification — biến abstract thành character**
+- Abstract concept → character với tính cách
+- VD KTTV: AI = "đống thằng đệ ngang tiến sĩ", Vietnam = "ông chủ đất sống vui vẻ"
+- VD cho Craft × AI: RLHF training = "AI được dạy rằng rõ ràng = tốt, mơ hồ = tệ. Nó không thể KHÔNG giải thích — giống như bảo một người luôn honest đừng honest nữa."
 
-### web5ngay Personality Injection Techniques
+**5. Contrast as primary argument**
+- Không "AI nhanh" — là "ngày xưa 5 năm, bây giờ 1 phút"
+- Contrast IS the insight. Viewer tự hiểu, không cần explain
+- Luôn tìm cặp contrast: before/after, expectation/reality, common belief/truth
 
-From web5ngay (4.24M subs, faceless, Vietnamese):
-1. **Include yourself in the problem**: "I've made this mistake. You probably have too." — never "you people do this"
-2. **Conversational openers**: "Here's the thing...", "Look...", "I know this sounds obvious, but..."
-3. **Self-deprecating humor**: Make fun of the topic or yourself
-4. **Address viewers as individuals**: "If you're watching this, you probably..."
-5. **Admit paradox/counterintuitive**: "This sounds like a contradiction. Let me explain."
-6. **Ritual opening**: A recognizable, warm opening that signals "this is THIS channel"
+**6. Honesty through self-criticism**
+- Khen rồi chê trong cùng câu. Tạo trust vì không one-sided
+- VD KTTV: "vừa thông minh, mỗi tội đừng lười học" (khen + chê)
+- VD Craft × AI: "Claude tốt hơn ChatGPT ở subtext — nhưng vẫn chưa đủ. Cả hai đều fail."
+- "Mình chỉ DÁM cung cấp" — authority through humility, not expertise
 
-### Vui Vẻ's 3 Principles
+**7. Writing for the EAR (not eye)**
+- Onomatopoeia, slang, vivid imagery — bạn NGHE được
+- VD KTTV: "quét mã vèo vèo", "ảo lòi", "úp sọt tới khô huyết tương", "thèm nhỏ rãi"
+- VD Craft × AI (English): "AI doesn't just name emotions — it SLAPS labels on them", "the prose reads like a textbook wearing a novel's clothes"
+- Test: đọc aloud. Nếu nghe như essay → rewrite. Nếu nghe như người nói → OK.
 
-From Vui Vẻ (1.2M subs, faceless, Vietnamese): **Đơn giản, Gần gũi, Vui vẻ** (Simple, Close/Intimate, Fun)
-- Simple: complex topics made accessible
-- Close: viewer sees themselves in the content
-- Fun: warmth, not just information
+**8. Earned optimism**
+- Không "X is great!" — là "X có tiềm năng, NHƯNG phải acknowledge difficulty trước"
+- VD KTTV: toàn video nói VN có tiềm năng → kết: "không phải tự nhiên thành được, đứng im thì mơ cũng không theo"
+- VD Craft × AI: "AI không hỏng — nó được tối ưu cho mục đích khác. Prompt bridge gap — NHƯNG chỉ nếu bạn hiểu gap tồn tại."
 
-### Kurzgesagt Emotional Formula
+**9. Dual perspective**
+- Mỗi point relevant cho CẢ experts VÀ beginners
+- VD KTTV: "không chỉ tập đoàn siêu cường... mà người bình thường cũng..."
+- VD Craft × AI: "Cho dù bạn dùng Sudowrite $99/month hay ChatGPT free — cùng vấn đề: AI names emotions."
 
-From Kurzgesagt (23M subs, faceless, English):
-1. **Start with the GAP, not the answer**: Make viewer FEEL what they don't know
-2. **5-beat emotional rollercoaster**: Hook (terrifying question) → Grounding (feel smart) → Crisis (scale expands) → Pivot (why this is beautiful) → Release (small but comforted)
-3. **Earn your optimism**: Stare into the void first, THEN offer hope
-4. **Visual dissonance**: Bright/cheerful delivery of heavy topics
+**10. Urgency/deadline**
+- Tạo time pressure để viewer feel stakes
+- VD KTTV: "còn 10 năm nữa, sau 2039 già đi"
+- VD Craft × AI: "Mỗi lần AI viết 'she felt sadness' thay vì show qua hành động — reader mất trust. Và trust khó lấy lại."
 
-### The "Emotional Job" Framework
+**11. Vietnamese idioms/cultural wisdom as argument**
+- Thành ngữ/tục ngữ KHÔNG phải decoration — IS the argument
+- VD KTTV: "ăn khoai vác mai", "thượng vàng hạ cám", "một lần bất tín vạn lần bất tin"
+- For English content: use English idioms/metaphors that serve same function
+- VD: "You can't un-ring a bell" = once AI explains, you can't make it mysterious again
 
-Before writing ANY script, define:
-1. **Emotional job**: What should viewer FEEL after watching? (authority? curiosity? inspiration? understanding?)
-2. **The ONE thing**: The single belief/realization the viewer should leave with
-3. **The gap**: What they don't know they don't know
-4. **The snap-back**: How does this topic land on the viewer's own life?
-
-### Before/After Examples (Study These)
-
-**BEFORE (mechanical):**
-> "In this video, we will explore how RLHF training affects AI's ability to write subtext in fiction."
-
-**AFTER (alive):**
-> "You just spent three hours writing with AI. The grammar is perfect. The structure is sound. And something is... off. The characters say exactly what they mean. Nobody talks around anything. It reads like a textbook wearing a novel's clothes. Here's the thing — that's not a bug. It's a feature. And understanding why changes everything about how you use AI."
-
-**BEFORE (mechanical):**
-> "Sanderson's Second Law states that limitations are more important than powers in magic system design."
-
-**AFTER (alive):**
-> "Here's a mistake that killed more fantasy novels than bad prose ever did. The hero is trapped. The villain is closing in. And suddenly — the hero discovers a NEW magic power. One the reader has never heard of. One that solves everything. Brandon Sanderson noticed this pattern. And he built a law that explains exactly WHY that scene fails."
-
-### Script Writing Rules (Updated)
-
-1. **Define emotional job BEFORE writing** (not after)
-2. **Open with a scene, not a section header** — no "Section 1: Myth"
-3. **Show suffering before solution** — viewer must FEEL the problem before you explain it
-4. **Use storytelling, not lecture** — characters, tension, resolution
-5. **Include yourself in the problem** — "I've been there too"
-6. **Add friction** — admit uncertainty, acknowledge contradictions, leave some things complex
-7. **Snap-back close** — connect topic to viewer's life in final line
-8. **1-3-1 sentence rhythm** — short punch → longer elaboration → short close
-9. **Conversational language** — contractions, <20 words/sentence, "you" frequently
-10. **Read aloud** — if you stumble, rewrite. If it sounds like an essay, rewrite.
+**12. English words mixed naturally**
+- KTTV mixes "SHOW ra", "livestream", "TikTok" naturally
+- For English Craft × AI content: mix technical terms naturally, don't over-explain
+- "RLHF literally trains AI to be a helpful assistant. Fiction doesn't need a helpful assistant. It needs a mysterious one."
 
 ---
 

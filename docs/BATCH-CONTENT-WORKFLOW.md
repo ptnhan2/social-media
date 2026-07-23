@@ -144,14 +144,29 @@ Title patterns (≤60 chars — titles >60 chars mất 1/3 views):
 
 > "Build packaging BEFORE script. Title + thumbnail = creative target." — overseeros.com
 
-### Plan format rotation [Compliance #3]
-Cho mỗi tháng, assign 4 different script structures (rotate):
-- **Structure A**: Hook → Problem → 3 solutions → Verdict
-- **Structure B**: Story → Framework → Example → Application
-- **Structure C**: Comparison → Criteria → Test → Winner
-- **Structure D**: Myth → Reality → Proof → Takeaway
+### Plan emotional journey (NOT template structure) [Compliance #3]
 
-> Between any two videos, at least 3 of 5 must differ: format, thesis, footage mix, script structure, length.
+> ❌ BANNED: Academic templates (Myth→Reality→Proof→Takeaway, Hook→Problem→3 solutions→Verdict, etc.)
+> ✅ REQUIRED: Emotional journey using storytelling techniques from `docs/AUTHENTICITY-PIPELINE.md`
+
+Each video is a different emotional journey — NOT a template. Use storytelling techniques (not structures):
+- Circular open loop + callback
+- Anxiety cascade → relief
+- Cultural reference = emotional stakes
+- Personification (abstract → character)
+- Contrast as primary argument
+- Honesty through self-criticism
+- Writing for the EAR (slang, vivid imagery, onomatopoeia)
+- Earned optimism
+- Dual perspective (experts AND beginners)
+- Urgency/deadline
+
+Between any two videos, at least 3 of these must differ:
+1. Emotional journey type (anxiety→relief, curiosity→discovery, contrarian→reveal, etc.)
+2. Thesis (the main argument/perspective)
+3. Footage mix (different visual approaches)
+4. Storytelling rhythm (how beats connect — "But/Therefore" not "And then")
+5. Length (vary between 5-15 min)
 
 ### Save: `content-plan-Q[X]-Q[X+1]-2026.md`
 
@@ -216,15 +231,18 @@ Search topic trên YouTube. 5-7 competitor videos. Cho mỗi video:
 
 ### Step 4: Script Outline (15 min/video)
 
-Use assigned structure from Phase 0 (rotate A/B/C/D) + assigned mechanism from Step 0:
+Use assigned mechanism from Step 0 + emotional journey (NOT template structure):
 
 ```
 TITLE: [≤60 chars]
-STRUCTURE: [A/B/C/D — different from last video]
 MECHANISM: [# from CONTENT-CREATION-MECHANISMS.md]
-HOOK: [type + first line — 15-30s]
+EMOTIONAL JOB: [What should viewer FEEL after watching?]
+THE ONE THING: [Single belief viewer should leave with]
+THE GAP: [What they don't know they don't know]
+THE SNAP-BACK: [How does this land on viewer's life?]
+HOOK: [3-beat: Pull in → Flip → Seal — see AUTHENTICITY-PIPELINE.md]
 
-[Structure-specific sections — see Phase 0 for templates]
+[Organic flow using storytelling techniques — NO section headers, NO "firstly/secondly"]
 
 CTA: "Building an AI agent for novelists. Follow for updates."
 ```

@@ -237,19 +237,19 @@ Hook must: (1) confirm title/thumbnail promise, (2) create open loop, (3) show p
 
 ### Step 5: Script Outline (15 min/video)
 
-Use ASSIGNED structure from Phase 0 (rotate A/B/C/D — no same structure 2 videos in a row):
+Use assigned mechanism from Step 0 + emotional journey (NOT template structure):
 
-**Structure A**: Hook → Problem → 3 solutions → Verdict
-**Structure B**: Story → Framework → Example → Application
-**Structure C**: Comparison → Criteria → Test → Winner
-**Structure D**: Myth → Reality → Proof → Takeaway
+> ❌ BANNED: Academic templates (Myth→Reality→Proof→Takeaway, etc.)
+> ✅ REQUIRED: Emotional journey using storytelling techniques from `docs/AUTHENTICITY-PIPELINE.md` (12 KTTV techniques)
 
 ```
 TITLE: [≤60 chars]
-STRUCTURE: [A/B/C/D]
-HOOK: [type + first line]
+MECHANISM: [# from CONTENT-CREATION-MECHANISMS.md]
+EMOTIONAL JOB: [What should viewer FEEL?]
+THE ONE THING: [Single belief viewer leaves with]
+HOOK: [3-beat: Pull in → Flip → Seal]
 
-[Structure-specific sections]
+[Organic flow — NO section headers, NO "firstly/secondly"]
 
 CTA: "Building an AI agent for novelists. Follow for updates."
 ```
@@ -339,7 +339,7 @@ Output:
    - Hook: [type]
    - Angle: [1 sentence]
    - Gap: [1 sentence]
-   - Structure: [A/B/C/D]
+   - Emotional journey: [anxiety→relief / curiosity→discovery / contrarian→reveal / etc.]
    - Framework: [analytical framework summary]
    - Commentary type: [commentary/critique/narrative/teaching/synthesis]
 
@@ -539,7 +539,7 @@ Save to: `repurpose/newsletters/review-YYYY-MM.md`
 
 1. **Compliance first**: Every video must pass the 14-rule compliance checklist (see YOUTUBE-AI-COMPLIANCE.md). If any rule fails, fix before producing.
 2. **Framework design required**: No video goes to production without a user-designed analytical framework. AI drafts are starting points, not final scripts. See `RESEARCH-FRAMEWORKS.md` for research-based criteria.
-3. **Format variation**: No 2 consecutive videos share the same structure (A/B/C/D rotation). At least 3/5 elements must differ.
+3. **Format variation**: No 2 consecutive videos share the same emotional journey. At least 3 of 5 elements must differ (emotional journey, thesis, footage mix, storytelling rhythm, length).
 4. **Original visuals**: Generate custom per scene. Shared stock = risk. At least 1 non-AI element per video.
 5. **Disclosure**: Every video with AI voice/visuals → toggle "altered content" + "AI-assisted content" in description.
 6. **Document everything**: Save drafts (before/after), research notes, visual prompts per video. These are appeal evidence.

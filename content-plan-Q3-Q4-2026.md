@@ -18,18 +18,20 @@
 | 7 | Craft Principle × AI | "Why AI Pacing Feels Like One Speed — And How to Fix It" | #5 First principles | ProseWeave pacing test, The Invisible Pen comparison, community reports | Jenna Moreci, Abbie Emmons have huge pacing audiences, zero AI analysis |
 | 8 | Workflow Design | "How to Build a Story Bible AI Actually Follows" | #1 Framework | Reddit r/WritingWithAI (62 comments on context window), Sudowrite research report | "How to track timeline/characters across long AI book" — top question |
 
-### Mechanism rotation (compliance #3 — no 2 consecutive same)
+### Mechanism + emotional journey rotation (compliance #3 — no 2 consecutive same)
 
-| # | Mechanism | Structure |
-|---|-----------|-----------|
-| 1 | #5 First principles | D: Myth→Reality→Proof→Takeaway |
-| 2 | #3 Case study | B: Story→Framework→Example→Application |
-| 3 | #1 Framework | D: Myth→Reality→Proof→Takeaway |
-| 4 | #5 First principles | A: Hook→Problem→3 solutions→Verdict |
-| 5 | #7 Community-driven | B: Story→Framework→Example→Application |
-| 6 | #4 Debunking | D: Myth→Reality→Proof→Takeaway |
-| 7 | #5 First principles | A: Hook→Problem→3 solutions→Verdict |
-| 8 | #1 Framework | C: Comparison→Criteria→Test→Winner |
+> ❌ No template structures (A/B/C/D banned). Each video = different emotional journey using storytelling techniques from `docs/AUTHENTICITY-PIPELINE.md`.
+
+| # | Mechanism | Emotional journey |
+|---|-----------|-------------------|
+| 1 | #5 First principles | Curiosity → discovery (viewer doesn't know why AI feels off) |
+| 2 | #3 Case study | Recognition → frustration (viewer sees their own AI dialogue problems) |
+| 3 | #1 Framework | Awe → limitation (Sanderson's craft vs AI's failure) |
+| 4 | #5 First principles | Contrarian → reveal (everyone says "show don't tell" — but WHY does AI fail?) |
+| 5 | #7 Community-driven | Frustration → understanding (Reddit pain point → root cause) |
+| 6 | #4 Debunking | Surprise → pattern recognition (AI sameness explained) |
+| 7 | #5 First principles | Anxiety → relief (pacing problem → fix framework) |
+| 8 | #1 Framework | Problem → system (story bible problem → systematic solution) |
 
 ### Reusable research from old topics
 
