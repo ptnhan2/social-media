@@ -36,7 +36,7 @@ Kết quả ChatGPT: viết "Just like the stain on the plate, the stain on his 
 
 Khác biệt? Claude show qua hành động cụ thể — bạn infer nỗi buồn. ChatGPT tell qua metaphor — bạn đọc ẩn dụ nhưng không feel. Cả hai đều fail ở subtext thật — nhưng fail khác nhau. Claude gần hơn, nhưng vẫn chưa đủ.
 
-Và đây không chỉ là chuyên gia mới thấy. Reddit r/WritingWithAI — 214 upvotes, 77 comments — writer sau writer nói cùng điều: "AI names emotions thay vì evoke them. 'She felt sadness' thay vì make reader feel it. Phần này tốn nhiều công sửa nhất."
+Và đây không chỉ là chuyên gia mới thấy. Trên Reddit r/WritingWithAI — 214 upvotes, 77 comments — rất nhiều writer nói cùng một điều. Một người viết: *"It defaults to naming emotions rather than evoking them through concrete detail. 'She felt sadness' vs making the reader feel it through sensory specifics. This required the most manual rewriting."* Tạm dịch: AI gọi tên cảm xúc thay vì gợi ra cảm xúc. "Cô ấy cảm thấy buồn" thay vì làm reader tự cảm thấy buồn. Và phần này tốn nhiều công sửa nhất.
 
 ACL paper "Narrative Flattening" (2026) chứng minh: RLHF đàn áp sự mơ hồ. AI theo nghĩa đen không thể KHÔNG giải thích. Càng align nhiều → writing càng ít variation. Đây không phải bug. Đây là feature.
 
