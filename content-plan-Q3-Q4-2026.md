@@ -18,20 +18,20 @@
 | 7 | Craft Principle × AI | "Why AI Pacing Feels Like One Speed — And How to Fix It" | #5 First principles | ProseWeave pacing test, The Invisible Pen comparison, community reports | Jenna Moreci, Abbie Emmons have huge pacing audiences, zero AI analysis |
 | 8 | Workflow Design | "How to Build a Story Bible AI Actually Follows" | #1 Framework | Reddit r/WritingWithAI (62 comments on context window), Sudowrite research report | "How to track timeline/characters across long AI book" — top question |
 
-### Mechanism + emotional journey rotation (compliance #3 — no 2 consecutive same)
+### Mechanism + emotional journey + script pattern rotation (compliance #3 — no 2 consecutive same)
 
-> ❌ No template structures (A/B/C/D banned). Each video = different emotional journey using storytelling techniques from `docs/AUTHENTICITY-PIPELINE.md`.
+> 6 script patterns from `docs/AUTHENTICITY-PIPELINE.md`. NOT template structures — organic flow directions.
 
-| # | Mechanism | Emotional journey |
-|---|-----------|-------------------|
-| 1 | #5 First principles | Curiosity → discovery (viewer doesn't know why AI feels off) |
-| 2 | #3 Case study | Recognition → frustration (viewer sees their own AI dialogue problems) |
-| 3 | #1 Framework | Awe → limitation (Sanderson's craft vs AI's failure) |
-| 4 | #5 First principles | Contrarian → reveal (everyone says "show don't tell" — but WHY does AI fail?) |
-| 5 | #7 Community-driven | Frustration → understanding (Reddit pain point → root cause) |
-| 6 | #4 Debunking | Surprise → pattern recognition (AI sameness explained) |
-| 7 | #5 First principles | Anxiety → relief (pacing problem → fix framework) |
-| 8 | #1 Framework | Problem → system (story bible problem → systematic solution) |
+| # | Mechanism | Script pattern | Emotional journey |
+|---|-----------|---------------|-------------------|
+| 1 | #5 First principles | The Detective | Curiosity → discovery |
+| 2 | #3 Case study | The Comparison | Recognition → frustration |
+| 3 | #1 Framework | The Deep Dive | Awe → limitation |
+| 4 | #5 First principles | The Contrarian | Contrarian → reveal |
+| 5 | #7 Community-driven | The Cascade | Frustration → understanding |
+| 6 | #4 Debunking | The Detective | Surprise → pattern recognition |
+| 7 | #5 First principles | The Contrarian | Anxiety → relief |
+| 8 | #1 Framework | The Build | Problem → system |
 
 ### Reusable research from old topics
 

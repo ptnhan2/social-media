@@ -244,7 +244,27 @@ Every video: same DESIGN.md, different composition → consistency without samen
 
 ---
 
-## 5. Authenticity Checklist (Test Before Publishing)
+## 5. Six Script Patterns (rotate for variety — NOT academic templates)
+
+> Each pattern = direction for organic flow. NOT rigid template. Still use 12 storytelling techniques.
+
+| # | Pattern | Flow | Feel | Max/month |
+|---|---------|------|------|-----------|
+| 1 | **The Detective** | Mystery → investigate → root cause reveal → fix | "À ra là vậy" | 2 |
+| 2 | **The Contrarian** | "Everyone thinks X" → evidence against → real answer | "Mình sai từ đầu" | 2 |
+| 3 | **The Deep Dive** | Surface observation → layer 1 → layer 2 → root cause | "Sâu hơn mình tưởng" | 2 |
+| 4 | **The Comparison** | Two things side by side → what reveals → what it means | "Khác biệt nói lên tất cả" | 2 |
+| 5 | **The Cascade** | One problem → bigger problem → biggest problem | "Hóa ra vấn đề lớn hơn" | 2 |
+| 6 | **The Build** | Small observation → expand → reveal system → apply | "Từ nhỏ đến lớn" | 2 |
+
+Rules:
+- No 2 consecutive videos use same pattern
+- Define emotional job BEFORE choosing pattern
+- Pattern guides flow direction, storytelling techniques fill the content
+
+---
+
+## 6. Authenticity Checklist (Test Before Publishing)
 
 Answer YES to at least 10/12:
 
@@ -263,6 +283,6 @@ Answer YES to at least 10/12:
 
 ---
 
-## 6. Single Highest-Impact Technique
+## 7. Single Highest-Impact Technique
 
 **Hook + thesis drafted by agent from real research, reviewed by user.** The hook should contain a research-based anchor ("While researching the ACL paper on Narrative Flattening, I found...") that references actual research done for the video. User reviews the Vietnamese summary to verify the research is real and the logic is correct. The authenticity comes from: (1) the research actually happened, (2) the framework is human-designed, (3) the user reviewed and approved the logic.
