@@ -179,23 +179,24 @@ This is the MAIN flow. When triggered:
 3. If yes → read it, extract 2 topics for current month
 4. Check `videos/YYYY-MM/` — skip topics already drafted this month
 
-### Step 1: Viewer Problem Research (15 min/video)
+### Step 1: Research (multiple sub-agents in parallel — 20+ sources minimum)
 
-For each of the 2 videos, answer 7 questions:
+> **CRITICAL**: Before writing ANY script, launch 3-5 sub-agents in parallel to research different angles. Each sub-agent searches 20+ queries, finds multiple articles per query. Total: 100+ sources per video.
 
-```
-1. What does the viewer want?
-2. What are they afraid of?
-3. What have they already tried?
-4. What do they misunderstand?
-5. What would make them click immediately?
-6. What would make them feel disappointed?
-7. What result do they want by the end?
-```
+**5 research angles (run as parallel sub-agents):**
+1. **Craft theory**: What do experts say about this craft principle? (Sanderson lectures, writing books, Hello Future Me, academic literary theory)
+2. **AI behavior**: How does AI actually handle this? (ACL papers, arXiv, NC Bench, model docs, community tests)
+3. **Community pain points**: What do real writers say? (Reddit r/WritingWithAI, r/writing, forums, YouTube comments — exact quotes + upvote counts)
+4. **Existing content**: What YouTube videos exist? Views, gaps, what's missing?
+5. **Real examples**: Specific examples from books, AI outputs, comparisons — concrete evidence
 
-Example:
-- Surface topic: "Sudowrite review"
-- Real problem: "I want to use AI for my novel but every review feels sponsored. I don't know if it works for long-form fiction."
+**Each sub-agent returns:**
+- Key findings with exact quotes + named sources
+- Specific data points (numbers, percentages, study results)
+- Contradictions between sources (tension = script material)
+- Gaps: what NO source covers
+
+**Agent compiles into 1-page research brief → THEN proceed to script.**
 
 ### Step 2: Competitor Research (20 min/video)
 

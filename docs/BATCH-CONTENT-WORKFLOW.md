@@ -194,16 +194,41 @@ Mỗi video dùng 1-2 cơ chế từ `CONTENT-CREATION-MECHANISMS.md`. Không 2 
 | #7 Community-Driven | Select questions | Mine Reddit/forums, rank by frequency |
 | #10 Story-Driven | Ensure unique thesis | Research, identify narrative arc |
 
-### Step 1: Viewer Problem Research (10 min/video)
+### Step 1: Research (multiple sub-agents in parallel — 20+ sources minimum)
 
-7 câu hỏi:
-1. What does the viewer want?
-2. What are they afraid of?
-3. What have they already tried?
-4. What do they misunderstand?
-5. What would make them click immediately?
-6. What would disappoint them?
-7. What result do they want by the end?
+> **CRITICAL**: Before writing ANY script, research must cover 20+ sources across multiple angles. Use sub-agents (Task tool) running in parallel to research different aspects of the topic simultaneously.
+
+**Launch 3-5 sub-agents in parallel, each researching a different angle:**
+
+| Sub-agent | Angle | What to find |
+|-----------|-------|-------------|
+| 1 | Craft theory | What do experts (Sanderson, Hello Future Me, writing books) say about this craft principle? |
+| 2 | AI behavior | How does AI actually handle this? Academic papers (ACL, arXiv), benchmarks (NC Bench), model documentation |
+| 3 | Community pain points | What do real writers say on Reddit (r/WritingWithAI, r/writing), forums, YouTube comments? Exact quotes + engagement numbers |
+| 4 | Existing content | What YouTube videos already exist on this topic? Views, gaps, what's missing? |
+| 5 | Real examples | Specific examples from books, AI outputs, comparisons — concrete evidence to use in script |
+
+**Each sub-agent must:**
+- Search 20+ queries (not 2-3)
+- Find multiple articles per query
+- Return exact quotes, specific numbers, named sources
+- Note contradictions between sources (tension = script material)
+
+**Output per sub-agent:**
+- Key findings (1-2 sentences each)
+- Exact quotes with source attribution
+- Specific data points (numbers, percentages, study results)
+- Contradictions found between sources
+- Gaps: what NO source covers well
+
+**Agent compiles all sub-agent results into:**
+- 1-page research brief
+- Sources list (for description/credibility)
+- Best quotes (for script evidence)
+- Contradictions (for script tension)
+- Community pain points (for hook/emotional connection)
+
+**Only AFTER research is complete → proceed to Step 2 (Viewer Problem Research)**
 
 ### Step 2: Competitor Research (15 min/video)
 
