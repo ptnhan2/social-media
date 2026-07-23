@@ -26,6 +26,9 @@ videos/**/assets/
 # Downloads (installers, etc.)
 downloads/
 
+# Downloads (installers, etc.)
+downloads/
+
 # OS files
 Thumbs.db
 .DS_Store

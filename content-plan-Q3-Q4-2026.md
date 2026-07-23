@@ -2,8 +2,8 @@
 
 > Direction: Craft × AI Intersection. 8 videos/tháng (2/week).
 > Pure analysis from public sources — no tool testing. First-person analytical voice.
-> Validation: 5-stage research-based process (see `RESEARCH-VALIDATION-METHODOLOGY.md`).
-> Mechanisms: see `CONTENT-CREATION-MECHANISMS.md`. Frameworks: see `RESEARCH-FRAMEWORKS.md`.
+> Validation: 5-stage research-based process (see `docs/RESEARCH-VALIDATION-METHODOLOGY.md`).
+> Mechanisms: see `docs/CONTENT-CREATION-MECHANISMS.md`. Frameworks: see `docs/RESEARCH-FRAMEWORKS.md`.
 
 ## Tháng 8 — 8 videos
 
