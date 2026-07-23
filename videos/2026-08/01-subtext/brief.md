@@ -28,13 +28,13 @@ Ngày xưa, writer học 5 năm 10 năm để master subtext. Bây giờ bạn b
 
 **Evidence (story, không phải list — dual perspective):**
 
-NailedIt.ai cho cả Claude và ChatGPT viết cảnh buồn — không được dùng "sad, cry, tears."
+NailedIt.ai làm một test: cho cả Claude và ChatGPT viết cảnh một nhân vật đang buồn — nhưng không được dùng các từ "sad, cry, tears, heartbreak." Mục đích: xem AI có thể "show" nỗi buồn qua hành động thay vì "tell" qua cảm xúc không.
 
-Claude tưới cây đã chết. Order coffee nhầm. Cầm hai cốc — một cho người đã mất. Bạn đọc và cảm thấy buồn.
+Kết quả Claude: nhân vật tưới những cây đã chết từ lâu (vẫn giữ thói quen chăm sóc dù người chăm sóc đã mất), order coffee nhầm — vô thức gọi hai ly vì quen gọi cho hai người, cầm hai cốc trong tay — một cho người đã không còn. Bạn đọc cảnh này và CẢM THẤY buồn. Không cần ai nói "buồn."
 
-ChatGPT viết: "Just like the stain on the plate, the stain on his heart would never wash away." Bạn đọc và nghĩ: "Ồ, ẩn dụ." Nhưng bạn không cảm thấy gì.
+Kết quả ChatGPT: viết "Just like the stain on the plate, the stain on his heart would never wash away." Nghe có vẻ văn vẻ — nhưng nó GIẢI THÍCH nỗi buồn bằng ẩn dụ thay vì cho bạn CẢM nỗi buồn. Bạn đọc và nghĩ "Ồ, ẩn dụ hay." Nhưng bạn không cảm thấy gì.
 
-Khác biệt? Claude show qua hành động. ChatGPT tell qua metaphor. Cả hai đều fail ở subtext thật — nhưng fail khác nhau. Claude gần hơn, nhưng vẫn chưa đủ.
+Khác biệt? Claude show qua hành động cụ thể — bạn infer nỗi buồn. ChatGPT tell qua metaphor — bạn đọc ẩn dụ nhưng không feel. Cả hai đều fail ở subtext thật — nhưng fail khác nhau. Claude gần hơn, nhưng vẫn chưa đủ.
 
 Và đây không chỉ là chuyên gia mới thấy. Reddit r/WritingWithAI — 214 upvotes, 77 comments — writer sau writer nói cùng điều: "AI names emotions thay vì evoke them. 'She felt sadness' thay vì make reader feel it. Phần này tốn nhiều công sửa nhất."
 
