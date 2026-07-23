@@ -2,51 +2,65 @@
 
 ## Tóm tắt video (tiếng Việt — cho bạn review)
 
-### Mở đầu (Hook — 3-beat)
+### Emotional journey: Curiosity → discovery
 
-**Beat 1 (Pull in)**: Bạn vừa viết 3 tiếng với AI. Ngữ pháp hoàn hảo. Cấu trúc đúng. Bạn đọc lại... và không cảm thấy gì cả. Nhân vật nói "tôi cảm thấy buồn" thay vì cho bạn thấy họ đang buồn.
+Viewer bắt đầu với "tôi biết AI viết vô hồn nhưng không biết tại sao" → kết thúc với "À, ra là vì AI được train ngược với fiction. Và tôi biết cách bridge gap."
 
-**Beat 2 (Flip)**: Bạn nghĩ vấn đề là prompt. Nên bạn sửa prompt. Thêm "show don't tell." Thêm "không giải thích cảm xúc." Và kết quả vẫn vậy. Vẫn phẳng. Vẫn vô hồn.
+### Script flow (không section header — organic storytelling)
 
-**Beat 3 (Seal)**: Vấn đề không phải prompt của bạn. Vấn đề nằm trong cách AI được train — và một khi bạn hiểu điều đó, bạn không thể nhìn AI viết fiction như cũ nữa.
+**Mở (circular open loop + anxiety cascade):**
 
-### Nội dung chính
+Bạn viết với AI 3 tiếng. Output hoàn hảo ngữ pháp. Bạn đọc lại... và không cảm thấy gì. Nhân vật nói "tôi cảm thấy buồn" thay vì cho bạn thấy họ buồn. Bạn sửa prompt: "show don't tell." Vẫn vậy. "Don't name emotions." Vẫn vậy. "Be subtle." Vẫn. Như. Vậy.
 
-**Tại sao AI không viết được subtext?**
+Bạn bắt đầu nghĩ: có phải mình dở prompt? Hay model dở?
 
-Subtext là khi nhân vật nói A nhưng ý là B. Người đọc tự suy ra. Hemingway viết cả câu chuyện về phá thai mà không bao giờ dùng từ "phá thai." Người đọc phải tự infer. Đó là điều khiến fiction sống — nó tin người đọc đủ thông minh để tự hiểu.
+Thực ra — cả hai đều không. Và khi tôi nói cho bạn biết lý do thực sự, bạn sẽ không nhìn AI viết fiction như cũ nữa. Hãy nhớ câu này — cuối video chúng ta quay lại.
 
-AI không làm được điều này. Không phải vì nó "dumb." Mà vì nó được train bằng RLHF (Reinforcement Learning from Human Feedback) — quá trình reward AI khi nó helpful, clear, explicit. Tức là: AI được dạy rằng RÕ RÀNG = TỐT. Mơ hồ = TỆ.
+**Root cause (personification + contrast):**
 
-Nhưng subtext CẦN mơ hồ. Subtext cần nhân vật KHÔNG nói rõ. AI được train ngược lại với những gì fiction cần. Đó là feature, không phải bug.
+Subtext là gì? Là khi nhân vật nói A nhưng ý là B. Người đọc tự suy ra. Hemingway viết cả câu chuyện về phá thai mà không bao giờ dùng từ "phá thai." Người đọc phải tự infer. Đó là điều khiến fiction sống.
 
-**Bằng chứng (không phải list — là story):**
+Bây giờ — tưởng tượng AI là một nhân viên được train từ nhỏ rằng: "Rõ ràng = tốt. Mơ hồ = tệ. Luôn giải thích. Luôn helpful. Luôn explicit." Bạn bảo nhân viên này: "Đừng giải thích, hãy ngụ ý." Nó sẽ nhìn bạn như bạn nói nó phản bội mọi thứ nó được dạy.
 
-NailedIt.ai cho cả Claude và ChatGPT viết cảnh buồn — không được dùng "sad, cry, tears, heartbreak." Kết quả?
+Và đúng vậy — đó chính xác là điều đang xảy ra. AI được train bằng RLHF (Reinforcement Learning from Human Feedback). Quá trình này reward: helpful, clear, explicit. Model học: LUÔN giải thích. Khi nó viết "she felt sadness" — nó làm ĐÚNG như được train.
 
-Claude tưới cây đã chết. Order coffee nhầm. Cầm hai cốc — một cho người đã mất. Bạn ĐỌC và cảm thấy buồn.
+Ngày xưa, writer học 5 năm 10 năm để master subtext. Bây giờ bạn bảo AI "hãy ngụ ý" trong 1 prompt. Giống như bảo một người luôn honest "đừng honest nữa" — bạn không thay đổi style, bạn đang chống lại bản chất.
+
+**Evidence (story, không phải list — dual perspective):**
+
+NailedIt.ai cho cả Claude và ChatGPT viết cảnh buồn — không được dùng "sad, cry, tears."
+
+Claude tưới cây đã chết. Order coffee nhầm. Cầm hai cốc — một cho người đã mất. Bạn đọc và cảm thấy buồn.
 
 ChatGPT viết: "Just like the stain on the plate, the stain on his heart would never wash away." Bạn đọc và nghĩ: "Ồ, ẩn dụ." Nhưng bạn không cảm thấy gì.
 
-Khác biệt? Claude show qua hành động. ChatGPT tell qua metaphor. Cả hai đều fail ở subtext thật — nhưng fail theo cách khác nhau.
+Khác biệt? Claude show qua hành động. ChatGPT tell qua metaphor. Cả hai đều fail ở subtext thật — nhưng fail khác nhau. Claude gần hơn, nhưng vẫn chưa đủ.
 
-Reddit r/WritingWithAI (214 upvotes, 77 comments): "It defaults to naming emotions rather than evoking them through concrete detail. 'She felt sadness' vs making the reader feel it through sensory specifics. This required the most manual rewriting."
+Và đây không chỉ là chuyên gia mới thấy. Reddit r/WritingWithAI — 214 upvotes, 77 comments — writer sau writer nói cùng điều: "AI names emotions thay vì evoke them. 'She felt sadness' thay vì make reader feel it. Phần này tốn nhiều công sửa nhất."
 
-ACL paper "Narrative Flattening" (2026): RLHF đàn áp sự mơ hồ. AI theo nghĩa đen không thể KHÔNG giải thích. Càng align nhiều → writing càng ít variation.
+ACL paper "Narrative Flattening" (2026) chứng minh: RLHF đàn áp sự mơ hồ. AI theo nghĩa đen không thể KHÔNG giải thích. Càng align nhiều → writing càng ít variation. Đây không phải bug. Đây là feature.
 
-**Cách khắc phục:**
+**Fix (earned optimism — acknowledge difficulty trước):**
 
-3 quy tắc — nhưng không phải "tips." là cách override training bias của AI:
+Vậy — bạn phải chấp nhận sống với AI viết vô hồn mãi mãi? Không. Nhưng fix không phải "prompt hay hơn." Fix là hiểu AI được train ngược với fiction, rồi viết prompt CỤ THỂ chống lại training đó.
 
-**Quy tắc 1**: Không bao giờ để AI gọi tên cảm xúc. "Describe what the character DOES, not what they FEEL." — Đây không phải styling. Đây là trực tiếp chống lại RLHF training.
+Ba điều — nhưng đừng nghĩ đây là "tips." Đây là countermeasure. Mỗi điều trực tiếp chống lại 1 thứ RLHF dạy AI.
 
-**Quy tắc 2**: Cho AI biết subtext riêng. "The character is angry about X but will never mention X directly." — Bạn đang cho AI thông tin mà nó được train KHÔNG được giữ bí mật. Bạn phải ép nó.
+**Một**: Không bao giờ để AI gọi tên cảm xúc. "Describe what the character DOES, not what they FEEL." — Bạn đang trực tiếp chống lại training "be explicit about emotions." AI sẽ KHÔNG muốn làm điều này. Bạn phải ép.
 
-**Quy tắc 3**: Ràng buộc đối thoại. "Characters must talk about Y while the real tension is about X." — Bạn đang tạo khoảng cách giữa what-is-said và what-is-meant. Khoảng cách đó = subtext. AI không tự tạo được.
+**Hai**: Cho AI biết subtext riêng. "The character is angry about X but will never mention X directly." — AI được train để disclose, không giữ bí mật. Bạn đang bảo nó làm điều nó được dạy KHÔNG làm.
 
-### Kết (Snap-back)
+**Ba**: Ràng buộc đối thoại. "Characters must talk about Y while the real tension is about X." — Bạn tạo khoảng cách giữa what-is-said và what-is-meant. Khoảng cách đó = subtext. AI tự nhiên xóa khoảng cách đó — bạn phải tạo lại.
 
-"AI không hỏng. Nó được tối ưu cho mục đích khác fiction. Khi nó nói 'she felt sadness' — nó làm đúng như được dạy: helpful, clear, explicit. Nhưng fiction không cần helpful. Fiction cần trust. Trust rằng reader đủ thông minh để tự hiểu. Prompt của bạn không sửa AI — prompt của bạn bridge gap giữa hai mục đích đó."
+**Kết (callback + snap-back + earned optimism):**
+
+Đầu video tôi nói: khi bạn biết lý do, bạn sẽ không nhìn AI viết fiction như cũ. Đây là lý do:
+
+AI không hỏng. Nó được tối ưu để helpful, clear, explicit. Nhưng fiction không cần helpful. Fiction cần trust — trust rằng reader đủ thông minh để tự hiểu. AI sẽ luôn muốn giải thích. Nhiệm vụ của bạn là để nó ngụ ý.
+
+Prompt của bạn không sửa AI. Prompt của bạn bridge gap giữa hai mục đích đó.
+
+Và đó là điều mà 5 năm học viết không dạy bạn — vì trước AI, không ai cần học cách chống lại training. Bây giờ thì cần.
 
 ### CTA
 "Building an AI agent for novelists. Follow for updates."
@@ -57,50 +71,51 @@ ACL paper "Narrative Flattening" (2026): RLHF đàn áp sự mơ hồ. AI theo n
 
 - **Tiêu đề (English)**: "Why AI Can't Write Subtext — And the Prompt Framework That Fixes It"
 - **Cơ chế**: #5 First principles
-- **Cấu trúc**: D (Myth → Reality → Proof → Takeaway) — nhưng KHÔNG dùng section headers. Flow tự nhiên: scene → problem → root cause → evidence → fix → snap-back
-- **Độ dài**: 8-12 phút
-- **Nguồn**: ACL Narrative Flattening paper, NailedIt.ai, Reddit r/WritingWithAI (214↑, 77 comments), r/ClaudeAI
-- **Emotional job**: Viewer nên rời đi với cảm giác "À, ra là vậy" — hiểu được TẠI SAO AI viết vô hồn, không chỉ HOW to fix
-- **The ONE thing**: AI không hỏng — nó được tối ưu cho mục đích khác fiction
-- **The gap**: Viewer biết AI viết vô hồn nhưng không biết TẠI SAO (nghĩ là prompt sai)
+- **Emotional journey**: Curiosity → discovery
+- **The ONE thing**: AI không hỏng — nó được train ngược với fiction
+- **The gap**: Viewer biết AI viết vô hồn nhưng nghĩ vấn đề là prompt
 - **Snap-back**: "Fiction không cần helpful. Fiction cần trust."
+- **Callback**: Mở "khi bạn biết lý do, bạn sẽ không nhìn AI như cũ" → kết "đó là lý do"
+- **Độ dài**: 8-12 phút
+- **Nguồn**: ACL Narrative Flattening paper, NailedIt.ai, Reddit r/WritingWithAI (214↑, 77 comments)
 
 ### Hook (English — agent draft)
-"You just spent three hours writing with AI. The grammar is perfect. The structure is sound. And something is... off. Your characters say exactly what they mean. Nobody talks around anything. It reads like a textbook wearing a novel's clothes. You think the problem is your prompt. It's not. The problem is how AI was trained — and once you see it, you can't unsee it."
+"You just spent three hours writing with AI. The grammar is perfect. The structure is sound. And something is... off. Your characters say exactly what they mean. Nobody talks around anything. It reads like a textbook wearing a novel's clothes. You think the problem is your prompt. It's not. The problem is how AI was trained — and once you see it, you can't unsee it. Remember that — we'll come back to it."
 
-### Visual cues
-- Mở: Screen với AI output text, highlight "she felt sadness" → cross out
-- RLHF training loop diagram (reward → clear → explicit → repeat)
-- Side-by-side: Claude output (actions) vs ChatGPT output (metaphor) — annotated
-- Reddit quote on screen (214↑, 77 comments)
-- Prompt framework: 3 rules as visual template, each rule appearing as you explain
-- Snap-back: Split screen — "helpful/clear/explicit" (AI training) vs "trust/ambiguity/imply" (fiction craft)
+### Storytelling techniques used
+1. **Circular open loop**: "Remember that — we'll come back to it" → callback at end
+2. **Anxiety cascade**: Rapid-fire "still. still. still." creates overwhelm
+3. **Personification**: AI = employee trained since childhood to be clear/explicit
+4. **Contrast**: "5 năm học vs 1 prompt" / "Claude show vs ChatGPT tell"
+5. **Honesty**: "Claude gần hơn, nhưng vẫn chưa đủ" — doesn't oversell
+6. **Writing for ear**: "textbook wearing a novel's clothes", "AI sẽ KHÔNG muốn làm điều này"
+7. **Earned optimism**: "Bạn phải chấp nhận sống với AI vô hồn mãi?" → "Không. NHƯNG..."
+8. **Dual perspective**: "không chỉ chuyên gia — Reddit writer sau writer nói cùng điều"
 
 ---
 
 ## Vietnamese summary per section (cho user check logic)
 
-**Hook**: Bạn viết với AI 3 tiếng → output hoàn hảo nhưng vô hồn → bạn nghĩ sai prompt → sai, vấn đề là training
+**Mở**: Bạn viết với AI → output vô hồn → sửa prompt không hiệu quả → không phải lỗi prompt, không phải lỗi model → "hãy nhớ câu này, cuối video quay lại"
 
-**Root cause**: Subtext cần mơ hồ. AI được train RLHF → reward rõ ràng. AI không thể KHÔNG giải thích. Paper ACL chứng minh.
+**Root cause**: Subtext = nhân vật nói A ý B (Hemingway). AI được train RLHF = rõ ràng = tốt. AI không thể KHÔNG giải thích. "Ngày xưa 5 năm vs bây giờ 1 prompt" = Contrast. AI như nhân viên được train honest, bạn bảo đừng honest.
 
-**Evidence (story, không phải list)**: Test NailedIt — Claude show qua hành động (tưới cây chết), ChatGPT tell qua metaphor. Cả hai fail nhưng khác nhau. Reddit confirm (214↑). 
+**Evidence**: NailedIt test — Claude show qua hành động (tưới cây chết), ChatGPT tell qua metaphor. Cả hai fail nhưng khác nhau. Reddit confirm (214↑). ACL paper confirm: RLHF đàn áp mơ hồ.
 
-**Fix**: 3 quy tắc — nhưng frame là "override training bias" không phải "tips." Quy tắc 1: không cho AI gọi tên cảm xúc (chống RLHF). Quy tắc 2: cho AI subtext riêng (ép AI giữ bí mật). Quy tắc 3: ràng buộc đối thoại (tạo khoảng cách = subtext).
+**Fix**: Không phải "prompt hay hơn" — là countermeasure. (1) Không cho AI gọi tên cảm xúc [chống training "be explicit"]. (2) Cho AI subtext riêng [ép AI giữ bí mật]. (3) Ràng buộc đối thoại [tạo khoảng cách = subtext].
 
-**Snap-back**: AI không hỏng. Nó được train để helpful/clear/explicit. Fiction cần trust/ambiguity/imply. Prompt bridge gap.
+**Kết (callback)**: Đầu video nói "khi biết lý do sẽ không nhìn AI như cũ" → kết: AI được train helpful/clear/explicit. Fiction cần trust/ambiguity/imply. Prompt bridge gap. "5 năm học viết không dạy điều này — vì trước AI, không ai cần học chống training."
 
 ---
 
-## English script (for production — agent sẽ viết full từ outline trên)
+## English script (for production — agent viết full từ outline trên)
 
-Agent viết full English voiceover script dựa trên outline tiếng Việt, đảm bảo:
-- Mở bằng SCENE không phải section header
-- Show suffering trước khi explain root cause
-- Storytelling: Claude vs ChatGPT comparison như story có character
-- 3-beat hook: Pull in → Flip → Seal
-- Snap-back close
-- 1-3-1 sentence rhythm
-- "Therefore/But" giữa sections
-- 130-150 wpm, contractions, <20 words/sentence
-- Read aloud trước khi generate ElevenLabs
+Agent viết full English voiceover, đảm bảo:
+- Organic flow — KHÔNG section header
+- 12 storytelling techniques từ AUTHENTICITY-PIPELINE.md
+- 3-beat hook: Pull in (viewer's experience) → Flip (not your prompt) → Seal (remember this)
+- Contrast, personification, callback
+- "But/Therefore" giữa beats (không "and then")
+- 130-150 wpm, contractions, <20 words/sentence, 4.2 "you" per 100 words
+- Read aloud → fix stumbling
+- Vietnamese summary per section cho user verify logic
