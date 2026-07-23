@@ -278,14 +278,31 @@ CTA: "Building an AI agent for novelists. Follow for updates."
 
 **Language**: Content = English (RPM, global audience). Agent ↔ User = Vietnamese. Mỗi script draft phải kèm Vietnamese summary per section để user check logic. Hook: user draft Vietnamese → agent translate English giữ voice.
 
-**Script authenticity requirements** (see `AUTHENTICITY-PIPELINE.md` for full details):
-- Hook + thesis: **Agent drafts** from research + framework, with research-based anchor. User reviews Vietnamese summary for logic/accuracy.
+**Script authenticity requirements** (see `docs/AUTHENTICITY-PIPELINE.md` for full details):
+
+**⚠️ CRITICAL: Script must FEEL alive, not just pass compliance. Mechanical/soulless content = failed.**
+
+**Anti-mechanical rules (from web5ngay 4.24M, Vui Vẻ 1.2M, Kurzgesagt 23M research):**
+- ❌ NO section headers as openers ("Section 1: Myth") → ✅ Open with a SCENE
+- ❌ NO explaining framework before showing problem → ✅ Show suffering first
+- ❌ NO Wikipedia definitions → ✅ Storytelling with tension
+- ❌ NO "In conclusion..." → ✅ Snap-back to viewer's life
+- ❌ NO smooth/frictionless → ✅ Admit uncertainty, leave rough edges
+
+**Required techniques:**
+- 3-beat hook: Pull in (viewer's experience) → Flip (surprising contrast) → Seal (open loop)
+- Show suffering before solution — viewer FEELS the problem before you explain it
+- Include yourself in problem: "I've made this mistake too"
+- Snap-back close: connect topic to viewer's life
+- 1-3-1 sentence rhythm: short punch → longer flow → short close
+- Conversational openers: "Here's the thing...", "Look..."
+- Define emotional job BEFORE writing: what should viewer FEEL?
 - Remove 7 AI-script tells: fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops
 - "Therefore/But" between sections (not "and then...")
-- Vary sentence length: short punch → longer flow → jab
 - 130-150 wpm, contractions, <20 words/sentence, 4.2 "you" per 100 words
 - Read aloud before generating → fix stumbling
 - Show visible reasoning: "Here's what I expected → Here's what I found"
+- Vietnamese summary per section for user to verify logic
 
 **Production pipeline** (optimized stack — see `AUTHENTICITY-PIPELINE.md`):
 - ElevenLabs: stability 35-45%, similarity 75-80%, style 0-15%. Format script with `...` pauses, ALL CAPS emphasis

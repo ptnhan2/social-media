@@ -109,44 +109,107 @@ Every video: same DESIGN.md, different composition → consistency without samen
 
 ## 3. Content/Process Authenticity (No Tool Changes)
 
-### 3 Required Human Signals (YouTube 2026)
+### ⚠️ CRITICAL: "Alive" vs "Mechanical" — The Difference That Matters
 
-| Signal | How to implement with existing stack |
-|--------|-------------------------------------|
-| **Personal POV** | Hook + thesis handwritten. "Last week I analyzed X and found Y." AI can't manufacture a Tuesday in your life. |
-| **Named evidence** | "ACL 2025 paper by Wang et al. shows..." not "studies show." Source links in description. |
-| **Channel-identity continuity** | Same DESIGN.md + same ElevenLabs voice + same CapCut style = recognizable brand |
+> Research from web5ngay (4.24M subs), Vui Vẻ (1.2M subs), Kurzgesagt (23M subs), Zenn (150K+ in 2 months).
+> Passing compliance ≠ being engaging. Content must FEEL alive, not just pass review.
 
-### 7 AI-Script Tells to Remove
+| Mechanical (AVOID) | Alive (TARGET) |
+|---|---|
+| Opens with "Section 1: Myth — nhiều writer cố..." | Opens with a SCENE: "Bạn viết với AI 3 tiếng. Output hoàn hảo. Và bạn xóa hết." |
+| Explains concepts like Wikipedia definition | Shows someone SUFFERING without the concept first |
+| Evidence = list of sources | Evidence = STORY with tension and characters |
+| Ends with "3 quy tắc prompt" | Ends with snap-back to viewer's life: "AI không hỏng. Nó được tối ưu cho mục đích khác." |
+| Sounds like anyone could have made it | Sounds like only THIS channel could have made it |
+| No POV — just facts | Strong POV — "this is how I see it" |
+| Smooth, resolved, no friction | Has rough edges, admits uncertainty, leaves some things complex |
 
-1. Fake specificity ("studies show") → Named source
-2. Cliché hooks ("What if I told you...") → Personal anchor
-3. Uniform sentence rhythm → Vary: short punch → longer flow → jab
-4. Filler ("It's worth noting that...") → Delete
-5. No visual direction → Add inline: [SHOW: diagram], [TEXT: stat]
-6. Unearned authority ("experts agree") → Name the expert or cut
-7. Missing open loops → Plant questions that resolve later
+### Core Principle: "Show Suffering Before Framework"
 
-### "Therefore & But, Not And Then"
+> **DON'T explain the framework first. Show someone suffering WITHOUT it first.**
 
-- ✅ "THEREFORE AI names emotions" → "BUT you can override..."
-- ❌ "And next we'll talk about..."
+❌ "Sanderson's Second Law states that limitations are more important than powers."
+✅ "Here's a mistake that killed more fantasy novels than bad prose ever did. The hero is trapped. The villain is closing in. And suddenly — the hero discovers a NEW magic power. One the reader has never heard of. One that solves everything. The reader closes the book."
 
-### Conversational Script Rules
+### The 3-Beat Hook (from Zenn channel — 7.6M views)
 
-- Contractions: "you're" not "you are"
-- <20 words/sentence, 1 comma max
-- 130-150 wpm target
-- 4.2 "you" per 100 words (top performers average)
-- Read aloud before generating — if you stumble, rewrite
+```
+Beat 1 (Pull in): Second person, present tense, sensory detail about viewer's experience
+Beat 2 (Flip): "But..." + surprising contrast
+Beat 3 (Seal): Open loop — what we're about to explore
+```
 
-### Show Your Thinking (Visible Reasoning)
+**Example for Craft × AI:**
+- Beat 1: "You've been writing with AI for three hours. The output is grammatically perfect. Technically correct."
+- Beat 2: "And completely lifeless. You can FEEL something is off, but you can't name what."
+- Beat 3: "The problem isn't your prompt. It's not the model. It's something deeper — and once you see it, you can't unsee it."
 
-- "Here's what I expected → Here's what I found"
-- Contradictions: "ACL says X... but Reddit says Y..." → resolve
-- "3 explanations possible. Here's why 2 are wrong."
-- Dated personal anchor: "In March, when I analyzed..."
-- Name sources on screen: "Source: Wang et al. 2025, ACL"
+### The Snap-Back Close (from Zenn, Kurzgesagt)
+
+Every video ends by connecting the topic back to the viewer's personal life:
+
+❌ "In conclusion, the 3 prompt rules are: don't name emotions, give subtext separately, use dialogue constraints."
+✅ "AI isn't broken. It's optimized for a different purpose than fiction. Your prompts bridge that gap — but only if you understand the gap exists. The model will always want to explain. Your job is to let it imply."
+
+### web5ngay Personality Injection Techniques
+
+From web5ngay (4.24M subs, faceless, Vietnamese):
+1. **Include yourself in the problem**: "I've made this mistake. You probably have too." — never "you people do this"
+2. **Conversational openers**: "Here's the thing...", "Look...", "I know this sounds obvious, but..."
+3. **Self-deprecating humor**: Make fun of the topic or yourself
+4. **Address viewers as individuals**: "If you're watching this, you probably..."
+5. **Admit paradox/counterintuitive**: "This sounds like a contradiction. Let me explain."
+6. **Ritual opening**: A recognizable, warm opening that signals "this is THIS channel"
+
+### Vui Vẻ's 3 Principles
+
+From Vui Vẻ (1.2M subs, faceless, Vietnamese): **Đơn giản, Gần gũi, Vui vẻ** (Simple, Close/Intimate, Fun)
+- Simple: complex topics made accessible
+- Close: viewer sees themselves in the content
+- Fun: warmth, not just information
+
+### Kurzgesagt Emotional Formula
+
+From Kurzgesagt (23M subs, faceless, English):
+1. **Start with the GAP, not the answer**: Make viewer FEEL what they don't know
+2. **5-beat emotional rollercoaster**: Hook (terrifying question) → Grounding (feel smart) → Crisis (scale expands) → Pivot (why this is beautiful) → Release (small but comforted)
+3. **Earn your optimism**: Stare into the void first, THEN offer hope
+4. **Visual dissonance**: Bright/cheerful delivery of heavy topics
+
+### The "Emotional Job" Framework
+
+Before writing ANY script, define:
+1. **Emotional job**: What should viewer FEEL after watching? (authority? curiosity? inspiration? understanding?)
+2. **The ONE thing**: The single belief/realization the viewer should leave with
+3. **The gap**: What they don't know they don't know
+4. **The snap-back**: How does this topic land on the viewer's own life?
+
+### Before/After Examples (Study These)
+
+**BEFORE (mechanical):**
+> "In this video, we will explore how RLHF training affects AI's ability to write subtext in fiction."
+
+**AFTER (alive):**
+> "You just spent three hours writing with AI. The grammar is perfect. The structure is sound. And something is... off. The characters say exactly what they mean. Nobody talks around anything. It reads like a textbook wearing a novel's clothes. Here's the thing — that's not a bug. It's a feature. And understanding why changes everything about how you use AI."
+
+**BEFORE (mechanical):**
+> "Sanderson's Second Law states that limitations are more important than powers in magic system design."
+
+**AFTER (alive):**
+> "Here's a mistake that killed more fantasy novels than bad prose ever did. The hero is trapped. The villain is closing in. And suddenly — the hero discovers a NEW magic power. One the reader has never heard of. One that solves everything. Brandon Sanderson noticed this pattern. And he built a law that explains exactly WHY that scene fails."
+
+### Script Writing Rules (Updated)
+
+1. **Define emotional job BEFORE writing** (not after)
+2. **Open with a scene, not a section header** — no "Section 1: Myth"
+3. **Show suffering before solution** — viewer must FEEL the problem before you explain it
+4. **Use storytelling, not lecture** — characters, tension, resolution
+5. **Include yourself in the problem** — "I've been there too"
+6. **Add friction** — admit uncertainty, acknowledge contradictions, leave some things complex
+7. **Snap-back close** — connect topic to viewer's life in final line
+8. **1-3-1 sentence rhythm** — short punch → longer elaboration → short close
+9. **Conversational language** — contractions, <20 words/sentence, "you" frequently
+10. **Read aloud** — if you stumble, rewrite. If it sounds like an essay, rewrite.
 
 ---
 

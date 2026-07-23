@@ -279,20 +279,38 @@ Per video folder:
 > Core principle: OPTIMIZE existing stack (ElevenLabs + Open Design + CapCut), NOT replace tools.
 ~3-4 hours/video (vs 1,200h Kurzgesagt vs 30min template slop)
 
-### Step 1: Finalize script (60-90 min) [Compliance #2]
+### Step 1: Finalize script (60-90 min) [Compliance #2 — CRITICAL FOR AUTHENTICITY]
 
-- Hook + thesis: **Agent drafts** from research + framework, with research-based anchor. User reviews Vietnamese summary for logic/accuracy.
-  - "Last week, I analyzed [specific thing] and found [surprising result]."
-  - This 10 seconds proves a human decided what this video is about
-- AI drafts remaining sections from research brief
-- Human rewrite pass:
-  - Remove 7 AI-script tells (fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops)
-  - Vary sentence length: short punch → longer flow → jab
-  - "Therefore/But" between sections (not "and then...")
-  - Add inline visual direction: [SHOW: diagram], [TEXT: stat]
-  - Contractions, <20 words/sentence, 130-150 wpm
-  - Read aloud → fix stumbling points
-- Format 2 columns: "Voiceover Text (English)" | "Vietnamese Summary (cho user check logic)" + "Visual Cue Ideas"
+**⚠️ Script must FEEL alive, not just be logically correct. See `docs/AUTHENTICITY-PIPELINE.md` section "Alive vs Mechanical" for full guide.**
+
+**Before writing, define:**
+- Emotional job: What should viewer FEEL after watching?
+- The ONE thing: Single belief/realization viewer should leave with
+- The gap: What they don't know they don't know
+- The snap-back: How does this topic land on viewer's life?
+
+**Anti-mechanical rules (BANNED patterns):**
+- ❌ Opening with section headers ("Section 1: Myth") → ✅ Open with a SCENE
+- ❌ Explaining framework before showing problem → ✅ Show suffering first, then solution
+- ❌ Wikipedia-style definitions → ✅ Storytelling with characters and tension
+- ❌ "In conclusion..." endings → ✅ Snap-back to viewer's life
+- ❌ Smooth, resolved, frictionless → ✅ Admit uncertainty, leave rough edges
+
+**Techniques from successful faceless channels:**
+- web5ngay (4.24M): Include yourself in problem, conversational openers, self-deprecating humor
+- Vui Vẻ (1.2M): Đơn giản, Gần gũi, Vui vẻ — viewer sees themselves in content
+- Kurzgesagt (23M): Start with GAP not answer, 5-beat emotional rollercoaster, earn optimism
+
+**Script requirements:**
+- Hook + thesis: Agent drafts from research + framework, with research-based anchor
+- 3-beat hook: Pull in (viewer's experience) → Flip (surprising contrast) → Seal (open loop)
+- 1-3-1 sentence rhythm: short punch → longer elaboration → short close
+- "Therefore/But" between sections (not "and then...")
+- Remove 7 AI-script tells (fake specificity, cliché hooks, uniform rhythm, filler, no visual direction, unearned authority, missing open loops)
+- Contractions, <20 words/sentence, 130-150 wpm, 4.2 "you" per 100 words
+- Snap-back close: connect topic to viewer's life in final line
+- Read aloud → fix stumbling points
+- Format: "Voiceover Text (English)" | "Vietnamese Summary (cho user check logic)" | "Visual Cue Ideas"
 
 ### Step 2: Voiceover + Visuals + Render (automated via HyperFrames)
 
