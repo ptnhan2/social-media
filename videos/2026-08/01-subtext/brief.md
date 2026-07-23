@@ -71,6 +71,7 @@ Và đó là điều mà 5 năm học viết không dạy bạn — vì trước
 
 - **Tiêu đề (English)**: "Why AI Can't Write Subtext — And the Prompt Framework That Fixes It"
 - **Cơ chế**: #5 First principles
+- **Script pattern**: The Detective (mystery → investigate → root cause reveal → fix)
 - **Emotional journey**: Curiosity → discovery
 - **The ONE thing**: AI không hỏng — nó được train ngược với fiction
 - **The gap**: Viewer biết AI viết vô hồn nhưng nghĩ vấn đề là prompt
