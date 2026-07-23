@@ -304,6 +304,13 @@ CTA: "Building an AI agent for novelists. Follow for updates."
 - Show visible reasoning: "Here's what I expected → Here's what I found"
 - Vietnamese summary per section for user to verify logic
 
+**Step 1b: Humanize pass** (automated via `humanizer` skill — local, no API key, MIT license):
+- Run `node src/cli.js score` on English script → check AI-likeness score
+- Run `node src/cli.js humanize --autofix -f script.md` → auto-remove AI patterns
+- 28 pattern detectors: significance inflation, AI vocabulary (delve/tapestry/vibrant/crucial/seamless...), vague attributions, filler phrases, low burstiness, sentence uniformity
+- 560+ AI vocabulary terms across 3 tiers → flagged and replaced
+- After humanize: read aloud, verify still sounds natural
+
 **Production pipeline** (optimized stack — see `AUTHENTICITY-PIPELINE.md`):
 - ElevenLabs: stability 35-45%, similarity 75-80%, style 0-15%. Format script with `...` pauses, ALL CAPS emphasis
 - Open Design: DESIGN.md brand contract, voice-led editing (audio first → visuals match duration), film grain overlay

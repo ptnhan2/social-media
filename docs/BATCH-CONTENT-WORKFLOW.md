@@ -330,6 +330,36 @@ Per video folder:
 - Read aloud → fix stumbling points
 - Format: "Voiceover Text (English)" | "Vietnamese Summary (cho user check logic)" | "Visual Cue Ideas"
 
+### Step 1b: Humanize pass (automated — `humanizer` skill)
+
+> Local skill, no API key needed. MIT license. 28 pattern detectors, 560+ AI vocabulary terms, statistical analysis.
+
+After script draft, run humanize pass to remove AI writing patterns:
+
+1. **Score**: `node src/cli.js score` — check AI-likeness (0-100, lower = more human)
+2. **Analyze**: `node src/cli.js analyze -f script.md` — full report of patterns found
+3. **Autofix**: `node src/cli.js humanize --autofix -f script.md` — auto-rewrite problematic sections
+4. **Verify**: Read aloud — if anything still sounds AI, rewrite manually
+
+**28 patterns it detects (key ones):**
+- Significance inflation ("marking a pivotal moment...")
+- Vague attributions ("Experts believe", "Studies show")
+- AI vocabulary Tier 1: delve, tapestry, vibrant, crucial, seamless, robust, leverage, transformative...
+- Negative parallelisms ("It's not just X, it's Y")
+- Rule of three overuse
+- Filler phrases ("In order to" → "to")
+- Generic conclusions ("The future looks bright")
+- Chatbot artifacts ("I hope this helps!")
+- Low burstiness (AI = metronomic, human = bursts)
+- Sentence length uniformity (AI = all same length)
+
+**Always-on mode**: Add core rules to system prompt so agent ALWAYS writes human-like:
+- Ban Tier 1 vocabulary
+- Kill filler phrases
+- No sycophancy, chatbot artifacts, or generic conclusions
+- Vary sentence length, have opinions, use concrete specifics
+- If you wouldn't say it in conversation, don't write it
+
 ### Step 2: Voiceover + Visuals + Render (automated via HyperFrames)
 
 - **HyperFrames ElevenLabs skill**: generate VO with API key
