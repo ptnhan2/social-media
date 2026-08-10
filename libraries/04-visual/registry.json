@@ -1,0 +1,3830 @@
+{
+  "version": "3.0",
+  "description": "Visual Template Library v4 — only researched layout types (legacy ported layouts removed per user)",
+  "categories": [
+    "layout"
+  ],
+  "items": [
+    {
+      "id": "triptych",
+      "name": "Triptych 3-Column",
+      "category": "layout",
+      "element_count": 3,
+      "composition_type": "rule-of-thirds",
+      "narrative_role": "initial",
+      "tags": [
+        "triptych"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {
+        "x": {
+          "base": "param",
+          "range": 2
+        },
+        "y": {
+          "base": "param",
+          "range": 2
+        },
+        "rotate": {
+          "base": "param",
+          "range": 0.5
+        }
+      },
+      "provenance": {
+        "source": "research:hyperframes",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quote-card",
+      "name": "Big Quote in Torn Frame",
+      "category": "layout",
+      "element_count": 2,
+      "composition_type": "centered",
+      "narrative_role": "peak",
+      "tags": [
+        "quote"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {
+        "x": {
+          "base": "param",
+          "range": 2
+        },
+        "y": {
+          "base": "param",
+          "range": 2
+        },
+        "rotate": {
+          "base": "param",
+          "range": 0.5
+        }
+      },
+      "provenance": {
+        "source": "research:animated.top",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "timeline-strip",
+      "name": "Horizontal Timeline Strip",
+      "category": "layout",
+      "element_count": 2,
+      "composition_type": "horizontal-strip",
+      "narrative_role": "initial",
+      "tags": [
+        "timeline"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {
+        "x": {
+          "base": "param",
+          "range": 2
+        },
+        "y": {
+          "base": "param",
+          "range": 2
+        },
+        "rotate": {
+          "base": "param",
+          "range": 0.5
+        }
+      },
+      "provenance": {
+        "source": "research:hyperframes",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "split-screen-comparison",
+      "name": "Split-Screen Before/After",
+      "category": "layout",
+      "element_count": 2,
+      "composition_type": "split",
+      "narrative_role": "peak",
+      "tags": [
+        "comparison",
+        "split"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {
+        "x": {
+          "base": "param",
+          "range": 2
+        },
+        "y": {
+          "base": "param",
+          "range": 2
+        },
+        "rotate": {
+          "base": "param",
+          "range": 0.5
+        }
+      },
+      "provenance": {
+        "source": "research: hyperframes split-screen",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "layered-depth",
+      "name": "Layered Depth (3+ planes)",
+      "category": "layout",
+      "element_count": 2,
+      "composition_type": "layered",
+      "narrative_role": "establisher",
+      "tags": [
+        "depth",
+        "immersive",
+        "parallax"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {
+        "x": {
+          "base": "param",
+          "range": 2
+        },
+        "y": {
+          "base": "param",
+          "range": 2
+        }
+      },
+      "provenance": {
+        "source": "research: hyperframes layered-depth",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "focal-point-zoom",
+      "name": "Focal Point Zoom (rule-of-thirds)",
+      "category": "layout",
+      "element_count": 2,
+      "composition_type": "rule-of-thirds",
+      "narrative_role": "peak",
+      "tags": [
+        "zoom",
+        "rule-of-thirds",
+        "focus"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {
+        "x": {
+          "base": "param",
+          "range": 1
+        },
+        "y": {
+          "base": "param",
+          "range": 1
+        }
+      },
+      "provenance": {
+        "source": "research: TAR study rule-of-thirds",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "match-cut",
+      "name": "Match-Cut Transition",
+      "category": "layout",
+      "element_count": 2,
+      "composition_type": "transition",
+      "narrative_role": "release",
+      "tags": [
+        "transition",
+        "match-cut"
+      ],
+      "status": "draft",
+      "use_count": 0,
+      "reject_count": 0,
+      "used_in": [],
+      "preview": null,
+      "jitter": {},
+      "provenance": {
+        "source": "research: cinematography match-cut",
+        "date": "2026-08-04"
+      },
+      "variant_pools": {
+        "motion": {
+          "selected": "push-in",
+          "options": [
+            {
+              "id": "push-in",
+              "name": "Continuous Camera Push-In",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "photo",
+                  "params": {
+                    "from": 1,
+                    "to": 1.18
+                  }
+                },
+                {
+                  "id": "collage",
+                  "params": {
+                    "from": 1,
+                    "to": 1.12
+                  }
+                },
+                {
+                  "id": "text",
+                  "params": {
+                    "from": 1,
+                    "to": 1.06
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "drift",
+              "name": "Paper Texture Drift",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "rate": "5.5%/scene"
+                  }
+                },
+                {
+                  "id": "subtle",
+                  "params": {
+                    "rate": "3.5%/scene"
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "spring-entrance",
+              "name": "Spring Entrance (slide + settle)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "damping": 15,
+                    "stiffness": 130
+                  }
+                },
+                {
+                  "id": "bouncy",
+                  "params": {
+                    "damping": 7,
+                    "mass": 0.9,
+                    "stiffness": 150
+                  }
+                }
+              ],
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "on-twos",
+              "name": "On-Twos (12fps editorial stutter)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "ease-out",
+              "name": "EaseOut (linear clamp decel)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            },
+            {
+              "id": "settle-jitter",
+              "name": "Settle Jitter (hash-based decay)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "jitter": {
+                "rate": {
+                  "base": "param",
+                  "range": 0.3
+                }
+              }
+            }
+          ]
+        },
+        "texture": {
+          "selected": "film-grain",
+          "options": [
+            {
+              "id": "film-grain",
+              "name": "Film Grain Overlay",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "grain-22",
+                  "params": {
+                    "opacity": 0.22
+                  }
+                },
+                {
+                  "id": "grain-12",
+                  "params": {
+                    "opacity": 0.12
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "halftone-dots",
+              "name": "Halftone Dot Pattern",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "large-14",
+                  "params": {
+                    "spacing": 14,
+                    "radius": 2,
+                    "opacity": 0.1
+                  }
+                },
+                {
+                  "id": "small-7",
+                  "params": {
+                    "spacing": 7,
+                    "radius": 0.9,
+                    "opacity": 0.07
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "vignette",
+              "name": "Vignette (radial dark edges)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "standard",
+                  "params": {
+                    "opacity": 0.17
+                  }
+                },
+                {
+                  "id": "strong",
+                  "params": {
+                    "opacity": 0.25
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "chromatic-aberration",
+              "name": "Chromatic Aberration (edge RGB shift)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "sub_variants": [
+                {
+                  "id": "subtle",
+                  "params": {
+                    "opacity": 0.06
+                  }
+                },
+                {
+                  "id": "visible",
+                  "params": {
+                    "opacity": 0.09
+                  }
+                }
+              ],
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            },
+            {
+              "id": "paper-fiber",
+              "name": "Paper Fiber Noise",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "baseFrequency": "0.004 0.05",
+                "opacity": 0.05
+              },
+              "jitter": {
+                "opacity": {
+                  "base": "param",
+                  "range": 0.02
+                }
+              }
+            }
+          ]
+        },
+        "palette": {
+          "selected": "palette-dark-navy-cyan",
+          "options": [
+            {
+              "id": "palette-dark-navy-cyan",
+              "name": "Dark Navy + Cyan",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#4FC3F7",
+                "a1": "#B0BEC5",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-amber-copper",
+              "name": "Amber + Copper",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#E3B341",
+                "a1": "#C77F00",
+                "a2": "#CFD8DC"
+              }
+            },
+            {
+              "id": "palette-blood-red-ink",
+              "name": "Blood Red + Ink",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#D64541",
+                "a1": "#131313",
+                "a2": "#C77F00"
+              }
+            },
+            {
+              "id": "palette-pale-green-red",
+              "name": "Pale Green + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A5D6A7",
+                "a1": "#D64541",
+                "a2": "#E3B341"
+              }
+            },
+            {
+              "id": "palette-gold-teal",
+              "name": "Gold + Teal",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#E3B341",
+                "a1": "#2E74B5",
+                "a2": "#D64541"
+              }
+            },
+            {
+              "id": "palette-blue-yellow",
+              "name": "Blue + Yellow",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#A8D8FF",
+                "a1": "#fff200",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-violet-amber",
+              "name": "Violet + Amber",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": true,
+                "a0": "#C9A8E8",
+                "a1": "#E3B341",
+                "a2": "#FF5252"
+              }
+            },
+            {
+              "id": "palette-ink-red",
+              "name": "Ink + Red",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "dark": false,
+                "a0": "#131313",
+                "a1": "#D64541",
+                "a2": "#2E74B5"
+              }
+            }
+          ]
+        },
+        "image_renderer": {
+          "selected": "subject-cutout",
+          "options": [
+            {
+              "id": "subject-cutout",
+              "name": "Subject Cutout (rembg silhouette)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "color",
+                  "params": {
+                    "tone": "saturate(1.2) contrast(1.15)"
+                  }
+                },
+                {
+                  "id": "bw",
+                  "params": {
+                    "tone": "grayscale(1) contrast(1.2)"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "photo-card",
+              "name": "Photo Card (torn frame)",
+              "status": "approved",
+              "sub_variants": [
+                {
+                  "id": "rect",
+                  "params": {
+                    "shape": "rect"
+                  }
+                },
+                {
+                  "id": "circle",
+                  "params": {
+                    "shape": "circle"
+                  }
+                },
+                {
+                  "id": "hex",
+                  "params": {
+                    "shape": "hex"
+                  }
+                },
+                {
+                  "id": "blob",
+                  "params": {
+                    "shape": "blob"
+                  }
+                }
+              ],
+              "use_count": 1,
+              "reject_count": 0
+            },
+            {
+              "id": "full-bleed-img",
+              "name": "Full-Bleed (no frame, image = bg)",
+              "status": "approved",
+              "sub_variants": [],
+              "use_count": 0,
+              "reject_count": 0
+            }
+          ]
+        },
+        "sfx": {
+          "selected": "sfx-tick-per-item",
+          "options": [
+            {
+              "id": "sfx-tick-per-item",
+              "name": "Tick Per Item Entrance",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "keyboard_tap",
+                  "pen_tick",
+                  "ping_pop",
+                  "ting_chime",
+                  "paper_rustle",
+                  "dull_click"
+                ],
+                "vol": 0.36
+              }
+            },
+            {
+              "id": "sfx-transition-whoosh",
+              "name": "Transition Whoosh Per Scene",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "deep_whoosh",
+                  "page_flip"
+                ],
+                "vol": 0.32,
+                "offset": 0.15
+              }
+            },
+            {
+              "id": "sfx-mid-scene-fill",
+              "name": "Mid-Scene Fill (gap > 6s)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "file": "paper_rustle",
+                "vol": 0.36,
+                "threshold": 6
+              }
+            },
+            {
+              "id": "sfx-end-chimes",
+              "name": "End Chimes (video close)",
+              "status": "approved",
+              "use_count": 1,
+              "reject_count": 0,
+              "params": {
+                "files": [
+                  "soft_bell",
+                  "warm_chime"
+                ],
+                "vol": 0.4
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "stats": {
+    "total": 7,
+    "approved": 0,
+    "draft": 7,
+    "demoted": 0,
+    "layout": 7
+  }
+}

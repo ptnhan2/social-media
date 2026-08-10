@@ -168,7 +168,7 @@ From earninglivingonline.com: "Research that produced something specific — a n
 
 **HOW (specific steps):**
 - From dimantika.com: "The channels that kept monetization share a common trait: their visuals don't exist anywhere else"
-- Generate custom images per scene using AI (Open Design, Midjourney)
+- Generate custom images per scene using AI (image layer TBD — Open Design đã bỏ; Midjourney/Flux/gpt-image)
 - If using stock, heavily transform (color grade, composite, edit beyond recognition)
 - Visuals must match narration at SCENE level — not vague B-roll
 - From promptreverse.app: "Generate still scenes that match your script beats, then animate the best ones"

@@ -1,0 +1,598 @@
+{
+ "s1": [
+  {
+   "idx": 0,
+   "text": "I asked an AI to build me a magic system.",
+   "tag": "open"
+  },
+  {
+   "idx": 1,
+   "text": "Just for fun.",
+   "tag": "punch"
+  },
+  {
+   "idx": 2,
+   "text": "It gave me sixteen metals, three schools of sorcery, a currency made of souls, and a map of rules so detailed it could have been torn out of a fantasy appendix.",
+   "tag": "norm"
+  },
+  {
+   "idx": 3,
+   "text": "I stared at it.",
+   "tag": "punch"
+  },
+  {
+   "idx": 4,
+   "text": "It was beautiful.",
+   "tag": "punch"
+  },
+  {
+   "idx": 5,
+   "text": "It was also a lie.",
+   "tag": "punch"
+  },
+  {
+   "idx": 6,
+   "text": "Because here's what a hundred thousand words of AI fantasy taught me: any model can hand you powers.",
+   "tag": "norm"
+  },
+  {
+   "idx": 7,
+   "text": "Fire, lightning, blood magic, time magic, a magic where people trade years off their lives.",
+   "tag": "norm"
+  },
+  {
+   "idx": 8,
+   "text": "The powers are never the problem.",
+   "tag": "norm"
+  },
+  {
+   "idx": 9,
+   "text": "The problem is what the system costs, who it hurts, and what happens when someone cheats.",
+   "tag": "norm"
+  },
+  {
+   "idx": 10,
+   "text": "There's an actual name for this.",
+   "tag": "norm"
+  },
+  {
+   "idx": 11,
+   "text": "Brandon Sanderson, the guy who writes Mistborn, calls it the Second Law of Magic: limitations are more interesting than powers.",
+   "tag": "norm"
+  },
+  {
+   "idx": 12,
+   "text": "And once I held my AI magic system next to that law, I couldn't unsee it.",
+   "tag": "norm"
+  },
+  {
+   "idx": 13,
+   "text": "Every rule it wrote was decoration.",
+   "tag": "norm"
+  },
+  {
+   "idx": 14,
+   "text": "Every limit it listed, it forgot.",
+   "tag": "norm"
+  },
+  {
+   "idx": 15,
+   "text": "So let me show you what I mean.",
+   "tag": "norm"
+  },
+  {
+   "idx": 16,
+   "text": "And I promise, this isn't an \"AI is dumb\" video.",
+   "tag": "norm"
+  },
+  {
+   "idx": 17,
+   "text": "It's a \"here's exactly which gears grind\" video.",
+   "tag": "norm"
+  }
+ ],
+ "s2": [
+  {
+   "idx": 18,
+   "text": "First, the law itself, because it's genuinely beautiful.",
+   "tag": "open"
+  },
+  {
+   "idx": 19,
+   "text": "In Mistborn, magic runs on sixteen metals, and you drink them like medicine.",
+   "tag": "norm"
+  },
+  {
+   "idx": 20,
+   "text": "Want to push metal away from you?",
+   "tag": "question"
+  },
+  {
+   "idx": 21,
+   "text": "Burn steel.",
+   "tag": "punch"
+  },
+  {
+   "idx": 22,
+   "text": "But burning has a price.",
+   "tag": "punch"
+  },
+  {
+   "idx": 23,
+   "text": "The metal runs out, and if you flare it, it runs out faster.",
+   "tag": "norm"
+  },
+  {
+   "idx": 24,
+   "text": "Sanderson even thought about the physics: if you push on something heavy, it doesn't move.",
+   "tag": "norm"
+  },
+  {
+   "idx": 25,
+   "text": "You do.",
+   "tag": "punch"
+  },
+  {
+   "idx": 26,
+   "text": "The magic doesn't let you win.",
+   "tag": "norm"
+  },
+  {
+   "idx": 27,
+   "text": "It makes you make choices.",
+   "tag": "punch"
+  },
+  {
+   "idx": 28,
+   "text": "In Warbreaker, magic runs on color.",
+   "tag": "norm"
+  },
+  {
+   "idx": 29,
+   "text": "Literally.",
+   "tag": "punch"
+  },
+  {
+   "idx": 30,
+   "text": "Every spell drains the color out of the world around you, and there are characters who sold their soul, their Breath, one per person, and now live as hollow shells called Drab.",
+   "tag": "norm"
+  },
+  {
+   "idx": 31,
+   "text": "A Drab feels less.",
+   "tag": "punch"
+  },
+  {
+   "idx": 32,
+   "text": "That's not a power fantasy.",
+   "tag": "punch"
+  },
+  {
+   "idx": 33,
+   "text": "That's a system where power has a receipt.",
+   "tag": "norm"
+  }
+ ],
+ "s3": [
+  {
+   "idx": 34,
+   "text": "Now watch what AI does with the same assignment.",
+   "tag": "open"
+  },
+  {
+   "idx": 35,
+   "text": "I gave it a prompt: fire magic, and the cost is blood.",
+   "tag": "norm"
+  },
+  {
+   "idx": 36,
+   "text": "On page twelve, it remembers.",
+   "tag": "norm"
+  },
+  {
+   "idx": 37,
+   "text": "Casting costs blood.",
+   "tag": "punch"
+  },
+  {
+   "idx": 38,
+   "text": "By page two hundred and forty-seven, the hero is throwing fireballs like confetti, and the bill never arrives.",
+   "tag": "norm"
+  },
+  {
+   "idx": 39,
+   "text": "Sudowrite, an AI writing tool, put it brutally: \"You decided fire magic costs blood on page 12. By page 247, your protagonist is throwing fireballs like confetti at a parade. No blood. No cost. No consequences.\"",
+   "tag": "norm"
+  },
+  {
+   "idx": 40,
+   "text": "Why?",
+   "tag": "question"
+  },
+  {
+   "idx": 41,
+   "text": "Because of something called context drift.",
+   "tag": "norm"
+  },
+  {
+   "idx": 42,
+   "text": "Researchers at Microsoft and SUTD built a benchmark called Lost in Stories, and it measured exactly when AI breaks its own world rules.",
+   "tag": "norm"
+  },
+  {
+   "idx": 43,
+   "text": "Facts the story establishes at the twenty-four percent mark get contradicted at the thirty-nine percent mark.",
+   "tag": "norm"
+  },
+  {
+   "idx": 44,
+   "text": "Twenty-three percent of a story later, the rules start lying.",
+   "tag": "norm"
+  },
+  {
+   "idx": 45,
+   "text": "And there's an older result that explains it: a model remembers the beginning and end of its context really well, above ninety percent, but in the middle, recall drops to fifty or seventy percent.",
+   "tag": "norm"
+  },
+  {
+   "idx": 46,
+   "text": "Your magic system lives in the middle.",
+   "tag": "norm"
+  },
+  {
+   "idx": 47,
+   "text": "That's not a writing flaw.",
+   "tag": "punch"
+  },
+  {
+   "idx": 48,
+   "text": "That's the architecture.",
+   "tag": "punch"
+  }
+ ],
+ "s4": [
+  {
+   "idx": 49,
+   "text": "Second: weakness.",
+   "tag": "open"
+  },
+  {
+   "idx": 50,
+   "text": "Sanderson's systems have exploitable seams.",
+   "tag": "norm"
+  },
+  {
+   "idx": 51,
+   "text": "In Mistborn, atium lets you see a few seconds into the future.",
+   "tag": "norm"
+  },
+  {
+   "idx": 52,
+   "text": "It's the most expensive thing in the empire, and a piece burns in about thirty seconds.",
+   "tag": "norm"
+  },
+  {
+   "idx": 53,
+   "text": "And if two people burn atium at the same time, their futures cancel out.",
+   "tag": "norm"
+  },
+  {
+   "idx": 54,
+   "text": "There's a counterplay baked into the god metal itself.",
+   "tag": "norm"
+  },
+  {
+   "idx": 55,
+   "text": "Even pewter, the simplest metal, has a crash: burn it to ignore wounds, and when it runs out, every injury you suppressed hits you at once.",
+   "tag": "norm"
+  },
+  {
+   "idx": 56,
+   "text": "Thugs die from wounds they forgot they had.",
+   "tag": "norm"
+  },
+  {
+   "idx": 57,
+   "text": "Now ask AI for a weakness.",
+   "tag": "punch"
+  },
+  {
+   "idx": 58,
+   "text": "It'll write you a paragraph about how the magic is draining, or forbidden.",
+   "tag": "norm"
+  },
+  {
+   "idx": 59,
+   "text": "But no enemy ever exploits it, because the enemy doesn't know it either.",
+   "tag": "norm"
+  },
+  {
+   "idx": 60,
+   "text": "Each scene is generated fresh.",
+   "tag": "norm"
+  },
+  {
+   "idx": 61,
+   "text": "Nothing in the story holds the weakness in its hands long enough to use it.",
+   "tag": "norm"
+  }
+ ],
+ "s5": [
+  {
+   "idx": 62,
+   "text": "Third: skill.",
+   "tag": "open"
+  },
+  {
+   "idx": 63,
+   "text": "This one breaks my heart, because it's the difference between a system and a prop.",
+   "tag": "norm"
+  },
+  {
+   "idx": 64,
+   "text": "In Elantris, magic is drawn as symbols called Aons, and they're maps of the land.",
+   "tag": "norm"
+  },
+  {
+   "idx": 65,
+   "text": "One earthquake added a chasm to the country, and every spell in the world stopped working, for ten years.",
+   "tag": "norm"
+  },
+  {
+   "idx": 66,
+   "text": "And the closer you are to the source city, the stronger the magic.",
+   "tag": "norm"
+  },
+  {
+   "idx": 67,
+   "text": "A master can do what a novice can't.",
+   "tag": "norm"
+  },
+  {
+   "idx": 68,
+   "text": "Now look at AI's characters.",
+   "tag": "punch"
+  },
+  {
+   "idx": 69,
+   "text": "The farm boy, the old scholar, the street thief, they all cast at exactly the same level.",
+   "tag": "norm"
+  },
+  {
+   "idx": 70,
+   "text": "Because the model doesn't have a voice for skill.",
+   "tag": "norm"
+  },
+  {
+   "idx": 71,
+   "text": "It has one voice: the helpful assistant.",
+   "tag": "norm"
+  },
+  {
+   "idx": 72,
+   "text": "Everyone's magic reads like the same tutorial.",
+   "tag": "norm"
+  }
+ ],
+ "s6": [
+  {
+   "idx": 73,
+   "text": "Fourth: contract.",
+   "tag": "open"
+  },
+  {
+   "idx": 74,
+   "text": "In Stormlight Archive, the power isn't learned.",
+   "tag": "norm"
+  },
+  {
+   "idx": 75,
+   "text": "It's sworn.",
+   "tag": "punch"
+  },
+  {
+   "idx": 76,
+   "text": "You bond a spren, you speak oaths, and if you break an oath, the bond snaps and the spren dies.",
+   "tag": "norm"
+  },
+  {
+   "idx": 77,
+   "text": "There are blades in that world that are literally the corpses of broken promises.",
+   "tag": "norm"
+  },
+  {
+   "idx": 78,
+   "text": "That's consequence architecture.",
+   "tag": "norm"
+  },
+  {
+   "idx": 79,
+   "text": "AI, though?",
+   "tag": "question"
+  },
+  {
+   "idx": 80,
+   "text": "I've watched its characters break their own rules and nothing happens.",
+   "tag": "norm"
+  },
+  {
+   "idx": 81,
+   "text": "No backlash, no dead spren, no price.",
+   "tag": "norm"
+  },
+  {
+   "idx": 82,
+   "text": "The scene just moves on.",
+   "tag": "punch"
+  },
+  {
+   "idx": 83,
+   "text": "Because the model is trained to resolve tension, not to let a broken oath sit on the table and burn.",
+   "tag": "norm"
+  },
+  {
+   "idx": 84,
+   "text": "Fifth: scarcity.",
+   "tag": "punch"
+  },
+  {
+   "idx": 85,
+   "text": "The best systems are gated by logistics.",
+   "tag": "norm"
+  },
+  {
+   "idx": 86,
+   "text": "Atium is controlled by the emperor.",
+   "tag": "norm"
+  },
+  {
+   "idx": 87,
+   "text": "Stormlight leaks out of your body, and during the Weeping, the weeks of endless rain, it runs out entirely.",
+   "tag": "norm"
+  },
+  {
+   "idx": 88,
+   "text": "Magic has supply chains.",
+   "tag": "punch"
+  },
+  {
+   "idx": 89,
+   "text": "But AI magic has an infinite warehouse.",
+   "tag": "norm"
+  },
+  {
+   "idx": 90,
+   "text": "The moment the plot needs an escape, there's a forgotten artifact, a convenient storm, a power that was always there but never mentioned.",
+   "tag": "norm"
+  },
+  {
+   "idx": 91,
+   "text": "Tools like Sudowrite literally sell a feature that flags scenes where magic solves problems the reader hasn't been prepared for.",
+   "tag": "norm"
+  },
+  {
+   "idx": 92,
+   "text": "The AI is so good at deus ex machina, it needs a detector.",
+   "tag": "norm"
+  }
+ ],
+ "s7": [
+  {
+   "idx": 93,
+   "text": "So here's the synthesis, and it's the part I actually care about.",
+   "tag": "open"
+  },
+  {
+   "idx": 94,
+   "text": "Those five dimensions, cost, weakness, skill, contract, scarcity, aren't five random failures.",
+   "tag": "norm"
+  },
+  {
+   "idx": 95,
+   "text": "They're five things a language model structurally cannot hold.",
+   "tag": "norm"
+  },
+  {
+   "idx": 96,
+   "text": "Cost needs memory of page twelve.",
+   "tag": "norm"
+  },
+  {
+   "idx": 97,
+   "text": "Weakness needs a persistent state that survives the scene.",
+   "tag": "norm"
+  },
+  {
+   "idx": 98,
+   "text": "Skill needs differentiated voices, and the model has one voice.",
+   "tag": "norm"
+  },
+  {
+   "idx": 99,
+   "text": "Contract needs consequences, and it's trained to smooth everything over.",
+   "tag": "norm"
+  },
+  {
+   "idx": 100,
+   "text": "Scarcity needs restraint, and restraint is the exact opposite of helpful.",
+   "tag": "norm"
+  },
+  {
+   "idx": 101,
+   "text": "Five gears, and they all grind for the same reason.",
+   "tag": "norm"
+  },
+  {
+   "idx": 102,
+   "text": "It was never a prompt problem.",
+   "tag": "norm"
+  },
+  {
+   "idx": 103,
+   "text": "No prompt is going to give a model a spine.",
+   "tag": "norm"
+  }
+ ],
+ "s8": [
+  {
+   "idx": 104,
+   "text": "Which brings me to the fix, and I want to end on something useful, not just a diagnosis.",
+   "tag": "open"
+  },
+  {
+   "idx": 105,
+   "text": "The community already found the workaround, even if nobody framed it this way.",
+   "tag": "norm"
+  },
+  {
+   "idx": 106,
+   "text": "People say AI novels start lying to themselves around chapter fifteen or twenty.",
+   "tag": "norm"
+  },
+  {
+   "idx": 107,
+   "text": "And the fix they keep landing on is a story bible: a document outside the story that holds every rule, every cost, every dead character, and checking the output against it, scene by scene.",
+   "tag": "norm"
+  },
+  {
+   "idx": 108,
+   "text": "That's not a hack.",
+   "tag": "punch"
+  },
+  {
+   "idx": 109,
+   "text": "That's the Second Law, enforced from the outside, because the model can't enforce it from the inside.",
+   "tag": "norm"
+  },
+  {
+   "idx": 110,
+   "text": "So next time an AI hands you a beautiful magic system with sixteen metals and a currency of souls, count the limitations.",
+   "tag": "norm"
+  },
+  {
+   "idx": 111,
+   "text": "Ask what it costs, who can use it, what happens when someone cheats, and where the fuel comes from.",
+   "tag": "norm"
+  },
+  {
+   "idx": 112,
+   "text": "If the answers are \"nothing, everyone, nothing, and anywhere,\" you're not holding a magic system.",
+   "tag": "norm"
+  },
+  {
+   "idx": 113,
+   "text": "You're holding a special effect.",
+   "tag": "norm"
+  },
+  {
+   "idx": 114,
+   "text": "Sanderson spent a career proving the difference.",
+   "tag": "norm"
+  },
+  {
+   "idx": 115,
+   "text": "And now, for the first time, we get to watch a machine fail the same test, in the same five places, every single time.",
+   "tag": "norm"
+  }
+ ]
+}

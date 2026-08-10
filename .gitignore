@@ -1,5 +1,10 @@
-# Dependencies
-.kilo/node_modules/
+﻿# Dependencies
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
 
 # Kilo internal (memory, cache — not content)
 .kilo/memory/
@@ -21,10 +26,12 @@ youtube-search-*.md
 *.jpeg
 *.webp
 *.gif
-videos/**/assets/
+projects/**/assets/
+remotion-composer/renders/
+remotion-composer/build/
 
-# Downloads (installers, etc.)
-downloads/
+# Archive: openmontage = third-party reference (own LICENSE, huge, regenerable)
+archive/openmontage/
 
 # Downloads (installers, etc.)
 downloads/
@@ -32,6 +39,10 @@ downloads/
 # OS files
 Thumbs.db
 .DS_Store
+
+# Environment (API keys — NEVER commit)
+.env
+.env.local
 
 # Editor
 *.swp

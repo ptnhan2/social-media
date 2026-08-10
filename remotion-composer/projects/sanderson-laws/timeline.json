@@ -1,0 +1,946 @@
+{
+ "s1": [
+  {
+   "idx": 0,
+   "text": "I asked an AI to build me a magic system.",
+   "start": 0.0,
+   "end": 2.72,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 1,
+   "text": "Just for fun.",
+   "start": 3.07,
+   "end": 4.67,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 2,
+   "text": "It gave me sixteen metals, three schools of sorcery, a currency made of souls, and a map of rules so detailed it could have been torn out of a fantasy appendix.",
+   "start": 5.22,
+   "end": 16.02,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 3,
+   "text": "I stared at it.",
+   "start": 16.14,
+   "end": 17.66,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 4,
+   "text": "It was beautiful.",
+   "start": 18.21,
+   "end": 19.65,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 5,
+   "text": "It was also a lie.",
+   "start": 20.2,
+   "end": 22.2,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 6,
+   "text": "Because here's what a hundred thousand words of AI fantasy taught me: any model can hand you powers.",
+   "start": 22.75,
+   "end": 29.15,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 7,
+   "text": "Fire, lightning, blood magic, time magic, a magic where people trade years off their lives.",
+   "start": 29.27,
+   "end": 36.87,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 8,
+   "text": "The powers are never the problem.",
+   "start": 36.99,
+   "end": 38.67,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 9,
+   "text": "The problem is what the system costs, who it hurts, and what happens when someone cheats.",
+   "start": 38.79,
+   "end": 44.23,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 10,
+   "text": "There's an actual name for this.",
+   "start": 44.35,
+   "end": 46.11,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 11,
+   "text": "Brandon Sanderson, the guy who writes Mistborn, calls it the Second Law of Magic: limitations are more interesting than powers.",
+   "start": 46.23,
+   "end": 54.63,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 12,
+   "text": "And once I held my AI magic system next to that law, I couldn't unsee it.",
+   "start": 54.75,
+   "end": 59.39,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 13,
+   "text": "Every rule it wrote was decoration.",
+   "start": 59.51,
+   "end": 61.75,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 14,
+   "text": "Every limit it listed, it forgot.",
+   "start": 61.87,
+   "end": 64.19,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 15,
+   "text": "So let me show you what I mean.",
+   "start": 64.31,
+   "end": 65.91,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 16,
+   "text": "And I promise, this isn't an \"AI is dumb\" video.",
+   "start": 66.03,
+   "end": 69.39,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 17,
+   "text": "It's a \"here's exactly which gears grind\" video.",
+   "start": 69.51,
+   "end": 72.39,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ],
+ "s2": [
+  {
+   "idx": 18,
+   "text": "First, the law itself, because it's genuinely beautiful.",
+   "start": 73.59,
+   "end": 76.71,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 19,
+   "text": "In Mistborn, magic runs on sixteen metals, and you drink them like medicine.",
+   "start": 77.06,
+   "end": 82.18,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 20,
+   "text": "Want to push metal away from you?",
+   "start": 82.3,
+   "end": 84.14,
+   "tag": "question",
+   "speed": 0.9
+  },
+  {
+   "idx": 21,
+   "text": "Burn steel.",
+   "start": 84.44,
+   "end": 85.8,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 22,
+   "text": "But burning has a price.",
+   "start": 86.35,
+   "end": 87.87,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 23,
+   "text": "The metal runs out, and if you flare it, it runs out faster.",
+   "start": 88.42,
+   "end": 92.1,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 24,
+   "text": "Sanderson even thought about the physics: if you push on something heavy, it doesn't move.",
+   "start": 92.22,
+   "end": 98.06,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 25,
+   "text": "You do.",
+   "start": 98.18,
+   "end": 99.22,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 26,
+   "text": "The magic doesn't let you win.",
+   "start": 99.77,
+   "end": 101.61,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 27,
+   "text": "It makes you make choices.",
+   "start": 101.73,
+   "end": 103.65,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 28,
+   "text": "In Warbreaker, magic runs on color.",
+   "start": 104.2,
+   "end": 106.92,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 29,
+   "text": "Literally.",
+   "start": 107.04,
+   "end": 108.56,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 30,
+   "text": "Every spell drains the color out of the world around you, and there are characters who sold their soul, their Breath, one per person, and now live as hollow shells called Drab.",
+   "start": 109.11,
+   "end": 120.47,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 31,
+   "text": "A Drab feels less.",
+   "start": 120.59,
+   "end": 122.75,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 32,
+   "text": "That's not a power fantasy.",
+   "start": 123.3,
+   "end": 124.82,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 33,
+   "text": "That's a system where power has a receipt.",
+   "start": 125.37,
+   "end": 127.53,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ],
+ "s3": [
+  {
+   "idx": 34,
+   "text": "Now watch what AI does with the same assignment.",
+   "start": 128.73,
+   "end": 131.61,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 35,
+   "text": "I gave it a prompt: fire magic, and the cost is blood.",
+   "start": 131.96,
+   "end": 135.96,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 36,
+   "text": "On page twelve, it remembers.",
+   "start": 136.08,
+   "end": 138.24,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 37,
+   "text": "Casting costs blood.",
+   "start": 138.36,
+   "end": 140.36,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 38,
+   "text": "By page two hundred and forty-seven, the hero is throwing fireballs like confetti, and the bill never arrives.",
+   "start": 140.91,
+   "end": 147.63,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 39,
+   "text": "Sudowrite, an AI writing tool, put it brutally: \"You decided fire magic costs blood on page 12. By page 247, your protagonist is throwing fireballs like confetti at a parade. No blood. No cost. No consequences.\"",
+   "start": 147.75,
+   "end": 165.27,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 40,
+   "text": "Why?",
+   "start": 165.39,
+   "end": 166.75,
+   "tag": "question",
+   "speed": 0.9
+  },
+  {
+   "idx": 41,
+   "text": "Because of something called context drift.",
+   "start": 167.05,
+   "end": 169.69,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 42,
+   "text": "Researchers at Microsoft and SUTD built a benchmark called Lost in Stories, and it measured exactly when AI breaks its own world rules.",
+   "start": 169.81,
+   "end": 179.09,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 43,
+   "text": "Facts the story establishes at the twenty-four percent mark get contradicted at the thirty-nine percent mark.",
+   "start": 179.21,
+   "end": 185.77,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 44,
+   "text": "Twenty-three percent of a story later, the rules start lying.",
+   "start": 185.89,
+   "end": 189.57,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 45,
+   "text": "And there's an older result that explains it: a model remembers the beginning and end of its context really well, above ninety percent, but in the middle, recall drops to fifty or seventy percent.",
+   "start": 189.69,
+   "end": 201.85,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 46,
+   "text": "Your magic system lives in the middle.",
+   "start": 201.97,
+   "end": 203.89,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 47,
+   "text": "That's not a writing flaw.",
+   "start": 204.01,
+   "end": 205.93,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 48,
+   "text": "That's the architecture.",
+   "start": 206.48,
+   "end": 208.24,
+   "tag": "punch",
+   "speed": 0.85
+  }
+ ],
+ "s4": [
+  {
+   "idx": 49,
+   "text": "Second: weakness.",
+   "start": 209.44,
+   "end": 211.2,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 50,
+   "text": "Sanderson's systems have exploitable seams.",
+   "start": 211.55,
+   "end": 214.27,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 51,
+   "text": "In Mistborn, atium lets you see a few seconds into the future.",
+   "start": 214.39,
+   "end": 218.07,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 52,
+   "text": "It's the most expensive thing in the empire, and a piece burns in about thirty seconds.",
+   "start": 218.19,
+   "end": 223.23,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 53,
+   "text": "And if two people burn atium at the same time, their futures cancel out.",
+   "start": 223.35,
+   "end": 227.75,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 54,
+   "text": "There's a counterplay baked into the god metal itself.",
+   "start": 227.87,
+   "end": 230.67,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 55,
+   "text": "Even pewter, the simplest metal, has a crash: burn it to ignore wounds, and when it runs out, every injury you suppressed hits you at once.",
+   "start": 230.79,
+   "end": 240.95,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 56,
+   "text": "Thugs die from wounds they forgot they had.",
+   "start": 241.07,
+   "end": 243.55,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 57,
+   "text": "Now ask AI for a weakness.",
+   "start": 243.67,
+   "end": 245.83,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 58,
+   "text": "It'll write you a paragraph about how the magic is draining, or forbidden.",
+   "start": 246.38,
+   "end": 250.38,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 59,
+   "text": "But no enemy ever exploits it, because the enemy doesn't know it either.",
+   "start": 250.5,
+   "end": 254.9,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 60,
+   "text": "Each scene is generated fresh.",
+   "start": 255.02,
+   "end": 257.02,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 61,
+   "text": "Nothing in the story holds the weakness in its hands long enough to use it.",
+   "start": 257.14,
+   "end": 261.38,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ],
+ "s5": [
+  {
+   "idx": 62,
+   "text": "Third: skill.",
+   "start": 262.58,
+   "end": 264.5,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 63,
+   "text": "This one breaks my heart, because it's the difference between a system and a prop.",
+   "start": 264.85,
+   "end": 269.17,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 64,
+   "text": "In Elantris, magic is drawn as symbols called Aons, and they're maps of the land.",
+   "start": 269.29,
+   "end": 274.89,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 65,
+   "text": "One earthquake added a chasm to the country, and every spell in the world stopped working, for ten years.",
+   "start": 275.01,
+   "end": 281.41,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 66,
+   "text": "And the closer you are to the source city, the stronger the magic.",
+   "start": 281.53,
+   "end": 284.81,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 67,
+   "text": "A master can do what a novice can't.",
+   "start": 284.93,
+   "end": 287.09,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 68,
+   "text": "Now look at AI's characters.",
+   "start": 287.21,
+   "end": 289.13,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 69,
+   "text": "The farm boy, the old scholar, the street thief, they all cast at exactly the same level.",
+   "start": 289.68,
+   "end": 295.6,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 70,
+   "text": "Because the model doesn't have a voice for skill.",
+   "start": 295.72,
+   "end": 298.12,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 71,
+   "text": "It has one voice: the helpful assistant.",
+   "start": 298.24,
+   "end": 300.72,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 72,
+   "text": "Everyone's magic reads like the same tutorial.",
+   "start": 300.84,
+   "end": 303.64,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ],
+ "s6": [
+  {
+   "idx": 73,
+   "text": "Fourth: contract.",
+   "start": 304.84,
+   "end": 306.6,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 74,
+   "text": "In Stormlight Archive, the power isn't learned.",
+   "start": 306.95,
+   "end": 309.99,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 75,
+   "text": "It's sworn.",
+   "start": 310.11,
+   "end": 311.23,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 76,
+   "text": "You bond a spren, you speak oaths, and if you break an oath, the bond snaps and the spren dies.",
+   "start": 311.78,
+   "end": 318.42,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 77,
+   "text": "There are blades in that world that are literally the corpses of broken promises.",
+   "start": 318.54,
+   "end": 322.78,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 78,
+   "text": "That's consequence architecture.",
+   "start": 322.9,
+   "end": 324.66,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 79,
+   "text": "AI, though?",
+   "start": 324.78,
+   "end": 326.22,
+   "tag": "question",
+   "speed": 0.9
+  },
+  {
+   "idx": 80,
+   "text": "I've watched its characters break their own rules and nothing happens.",
+   "start": 326.52,
+   "end": 331.0,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 81,
+   "text": "No backlash, no dead spren, no price.",
+   "start": 331.12,
+   "end": 334.88,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 82,
+   "text": "The scene just moves on.",
+   "start": 335.0,
+   "end": 336.52,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 83,
+   "text": "Because the model is trained to resolve tension, not to let a broken oath sit on the table and burn.",
+   "start": 337.07,
+   "end": 342.83,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 84,
+   "text": "Fifth: scarcity.",
+   "start": 342.95,
+   "end": 344.95,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 85,
+   "text": "The best systems are gated by logistics.",
+   "start": 345.5,
+   "end": 347.98,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 86,
+   "text": "Atium is controlled by the emperor.",
+   "start": 348.1,
+   "end": 349.94,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 87,
+   "text": "Stormlight leaks out of your body, and during the Weeping, the weeks of endless rain, it runs out entirely.",
+   "start": 350.06,
+   "end": 356.7,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 88,
+   "text": "Magic has supply chains.",
+   "start": 356.82,
+   "end": 358.58,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 89,
+   "text": "But AI magic has an infinite warehouse.",
+   "start": 359.13,
+   "end": 361.77,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 90,
+   "text": "The moment the plot needs an escape, there's a forgotten artifact, a convenient storm, a power that was always there but never mentioned.",
+   "start": 361.89,
+   "end": 370.93,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 91,
+   "text": "Tools like Sudowrite literally sell a feature that flags scenes where magic solves problems the reader hasn't been prepared for.",
+   "start": 371.05,
+   "end": 378.57,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 92,
+   "text": "The AI is so good at deus ex machina, it needs a detector.",
+   "start": 378.69,
+   "end": 382.77,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ],
+ "s7": [
+  {
+   "idx": 93,
+   "text": "So here's the synthesis, and it's the part I actually care about.",
+   "start": 383.97,
+   "end": 387.57,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 94,
+   "text": "Those five dimensions, cost, weakness, skill, contract, scarcity, aren't five random failures.",
+   "start": 387.92,
+   "end": 396.16,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 95,
+   "text": "They're five things a language model structurally cannot hold.",
+   "start": 396.28,
+   "end": 399.64,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 96,
+   "text": "Cost needs memory of page twelve.",
+   "start": 399.76,
+   "end": 401.84,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 97,
+   "text": "Weakness needs a persistent state that survives the scene.",
+   "start": 401.96,
+   "end": 405.32,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 98,
+   "text": "Skill needs differentiated voices, and the model has one voice.",
+   "start": 405.44,
+   "end": 409.36,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 99,
+   "text": "Contract needs consequences, and it's trained to smooth everything over.",
+   "start": 409.48,
+   "end": 413.88,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 100,
+   "text": "Scarcity needs restraint, and restraint is the exact opposite of helpful.",
+   "start": 414.0,
+   "end": 418.56,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 101,
+   "text": "Five gears, and they all grind for the same reason.",
+   "start": 418.68,
+   "end": 421.64,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 102,
+   "text": "It was never a prompt problem.",
+   "start": 421.76,
+   "end": 423.92,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 103,
+   "text": "No prompt is going to give a model a spine.",
+   "start": 424.04,
+   "end": 426.36,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ],
+ "s8": [
+  {
+   "idx": 104,
+   "text": "Which brings me to the fix, and I want to end on something useful, not just a diagnosis.",
+   "start": 427.56,
+   "end": 432.92,
+   "tag": "open",
+   "speed": 0.9
+  },
+  {
+   "idx": 105,
+   "text": "The community already found the workaround, even if nobody framed it this way.",
+   "start": 433.27,
+   "end": 437.59,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 106,
+   "text": "People say AI novels start lying to themselves around chapter fifteen or twenty.",
+   "start": 437.71,
+   "end": 442.99,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 107,
+   "text": "And the fix they keep landing on is a story bible: a document outside the story that holds every rule, every cost, every dead character, and checking the output against it, scene by scene.",
+   "start": 443.11,
+   "end": 455.83,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 108,
+   "text": "That's not a hack.",
+   "start": 455.95,
+   "end": 457.23,
+   "tag": "punch",
+   "speed": 0.85
+  },
+  {
+   "idx": 109,
+   "text": "That's the Second Law, enforced from the outside, because the model can't enforce it from the inside.",
+   "start": 457.78,
+   "end": 463.46,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 110,
+   "text": "So next time an AI hands you a beautiful magic system with sixteen metals and a currency of souls, count the limitations.",
+   "start": 463.58,
+   "end": 471.42,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 111,
+   "text": "Ask what it costs, who can use it, what happens when someone cheats, and where the fuel comes from.",
+   "start": 471.54,
+   "end": 478.1,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 112,
+   "text": "If the answers are \"nothing, everyone, nothing, and anywhere,\" you're not holding a magic system.",
+   "start": 478.22,
+   "end": 484.94,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 113,
+   "text": "You're holding a special effect.",
+   "start": 485.06,
+   "end": 486.82,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 114,
+   "text": "Sanderson spent a career proving the difference.",
+   "start": 486.94,
+   "end": 489.42,
+   "tag": "norm",
+   "speed": 0.95
+  },
+  {
+   "idx": 115,
+   "text": "And now, for the first time, we get to watch a machine fail the same test, in the same five places, every single time.",
+   "start": 489.54,
+   "end": 497.38,
+   "tag": "norm",
+   "speed": 0.95
+  }
+ ]
+}
