@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <rect width="960" height="540" fill="#111923"/>
+  <circle cx="660" cy="220" r="142" fill="#1e2e39" stroke="#61d7e8" stroke-width="4"/>
+  <path d="M586 234c42-18 53-52 53-88 0-31 23-60 57-60 38 0 65 28 65 67v24c0 22 15 34 34 42-16 15-36 22-59 22h-24c-25 0-37 17-44 46h-89z" fill="#283e49" stroke="#f2b84b" stroke-width="5"/>
+  <path d="M452 482c26-95 89-137 188-137s162 42 188 137" fill="#18252e" stroke="#61d7e8" stroke-width="5"/>
+  <path d="M142 134h262M142 176h190M142 218h224" stroke="#8199a4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M142 306h248v72H142z" fill="#432e28" stroke="#ec6a5e" stroke-width="3"/>
+  <text x="142" y="351" fill="#f8ded9" font-family="monospace" font-size="20" letter-spacing="3">MAKE IT HUMAN</text>
+  <text x="142" y="464" fill="#f2b84b" font-family="Georgia,serif" font-size="28">a frame can hold a thought</text>
+</svg>

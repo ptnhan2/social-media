@@ -1,0 +1,188 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { resolve, sep } from "path";
+import { createProjectStore } from "../shared/isaacverse/store";
+import { dispatchLocalOperation } from "../shared/isaacverse/operations";
+import { createKiloHandoff, listKiloHandoffs, updateKiloHandoff } from "../shared/isaacverse/handoff";
+
+const PUBLIC_DIR = resolve("C:/DevWork/social-media/remotion-composer/public");
+const UPLOADS = resolve(PUBLIC_DIR, "uploads");
+const PROJECTS_ROOT = resolve("C:/DevWork/social-media/projects");
+const PROJECT_STORE = createProjectStore(PROJECTS_ROOT);
+const RULES_ROOT = resolve("C:/DevWork/social-media/libraries/04-visual/feedback-rules");
+mkdirSync(UPLOADS, { recursive: true });
+
+const sendJson = (res: any, status: number, value: unknown) => {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify(value));
+};
+
+const readBody = (req: any, res: any, done: (body: any) => void) => {
+  let body = "";
+  req.on("data", (chunk: Buffer) => body += chunk.toString());
+  req.on("end", () => {
+    try { done(JSON.parse(body || "{}")); }
+    catch { sendJson(res, 400, { error: "Request body must be valid JSON" }); }
+  });
+};
+
+export default defineConfig({
+  // Shared IsaacVerse components live one directory above this app. Force all
+  // Remotion imports through the app copy so Player and Audio share one context.
+  resolve: { dedupe: ["react", "react-dom", "remotion", "@remotion/media"] },
+  // Serve remotion-composer/public (fonts, images, cutouts) as static assets
+  publicDir: PUBLIC_DIR,
+  plugins: [
+    react(),
+    {
+      name: "isaacverse-composer-api",
+      configureServer(server) {
+        server.middlewares.use("/api/project/load", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const projectId = url.searchParams.get("projectId") || "isaacverse-final";
+          try { sendJson(res, 200, PROJECT_STORE.load(projectId)); }
+          catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+        });
+        server.middlewares.use("/api/project/save", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, PROJECT_STORE.saveSourceDocs(body.projectId, body.videoDoc, body.editDoc, body.assetManifest)); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/feedback", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, PROJECT_STORE.saveFeedback(body.projectId, body.feedback)); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/patch", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, PROJECT_STORE.savePatch(body.projectId, body.patch)); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/qa", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, PROJECT_STORE.saveQA(body.projectId, body.report)); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/review-queue", (req, res) => {
+          if (req.method === "GET") {
+            const url = new URL(req.url || "/", "http://composer.local");
+            const projectId = url.searchParams.get("projectId") || "isaacverse-final";
+            try { sendJson(res, 200, PROJECT_STORE.getReviewQueue(projectId)); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+            return;
+          }
+          if (req.method !== "POST") { sendJson(res, 405, { error: "GET or POST required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, PROJECT_STORE.saveReviewQueue(body.projectId, body.entries || [])); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/version", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const result = body.action === "rollback"
+                ? PROJECT_STORE.rollbackVersion(body.projectId, body.targetVersion, body.expectedBaseVersion)
+                : PROJECT_STORE.saveVersion(body.projectId, body.editDoc, body.expectedBaseVersion);
+              sendJson(res, 200, result);
+            } catch (error) { sendJson(res, 409, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/kilo/inbox", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const projectId = url.searchParams.get("projectId") || "isaacverse-final";
+          try { sendJson(res, 200, listKiloHandoffs(PROJECT_STORE.projectDir(projectId))); }
+          catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+        });
+        server.middlewares.use("/api/kilo/handoff", (req, res) => {
+          if (req.method === "PATCH") {
+            readBody(req, res, (body) => {
+              try { sendJson(res, 200, updateKiloHandoff(PROJECT_STORE.projectDir(body.projectId), body.requestId, body.changes || {})); }
+              catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+            });
+            return;
+          }
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST or PATCH required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, createKiloHandoff(PROJECT_STORE.projectDir(body.projectId), body.request)); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/artifact", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const projectId = url.searchParams.get("projectId") || "isaacverse-final";
+          const relative = url.searchParams.get("path") || "";
+          try {
+            if (!relative || relative.includes("..") || /^[a-zA-Z]:/.test(relative)) throw new Error("Artifact path must be project-relative");
+            const project = PROJECT_STORE.projectDir(projectId);
+            const file = resolve(project, relative);
+            if (!file.startsWith(`${project}${sep}`)) throw new Error("Artifact path escapes project");
+            const extension = file.toLowerCase().split(".").pop();
+            const contentType = extension === "mp4" ? "video/mp4" : extension === "wav" ? "audio/wav" : extension === "png" ? "image/png" : "application/octet-stream";
+            res.setHeader("Content-Type", contentType);
+            res.end(readFileSync(file));
+          } catch (error) { sendJson(res, 404, { error: error instanceof Error ? error.message : String(error) }); }
+        });
+        server.middlewares.use("/api/agent/operate", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const snapshot = PROJECT_STORE.load(body.projectId);
+              if (!snapshot.editDoc) { sendJson(res, 400, { error: "Project has no edit document" }); return; }
+              if (body.operation === "apply_patch") {
+                const saved = PROJECT_STORE.applyPatch(body.projectId, body.patch, body.expectedBaseVersion || snapshot.state.currentVersion);
+                sendJson(res, 200, { operation: body.operation, status: "ok", projectId: body.projectId, version: saved.version, editDoc: saved.editDoc });
+                return;
+              }
+              if (body.operation === "rollback_patch") {
+                const saved = PROJECT_STORE.rollbackVersion(body.projectId, body.targetVersion, body.expectedBaseVersion || snapshot.state.currentVersion);
+                sendJson(res, 200, { operation: body.operation, status: "ok", projectId: body.projectId, version: saved.version, editDoc: saved.editDoc });
+                return;
+              }
+              if (body.operation === "promote_feedback_rule") {
+                if (body.confirm !== true) { sendJson(res, 400, { error: "Explicit confirm=true is required to promote a future rule" }); return; }
+                mkdirSync(RULES_ROOT, { recursive: true });
+                const ruleId = `${String(body.projectId)}-${String(body.category || "custom")}-${String(body.treatmentId || "treatment")}`.replace(/[^a-zA-Z0-9._-]/g, "_");
+                const rule = { id: ruleId, videoId: body.projectId, category: body.category || "custom", treatmentId: body.treatmentId, note: body.note || "", createdAt: new Date().toISOString(), status: "active", scope: "future_rule" };
+                writeFileSync(resolve(RULES_ROOT, `${ruleId}.json`), `${JSON.stringify(rule, null, 2)}\n`, "utf8");
+                sendJson(res, 200, { operation: body.operation, status: "ok", projectId: body.projectId, rule });
+                return;
+              }
+              const result = dispatchLocalOperation(snapshot.editDoc, body);
+              if (result.patch) PROJECT_STORE.savePatch(body.projectId, result.patch);
+              sendJson(res, result.status === "rejected" ? 400 : 200, result);
+            } catch (error) { sendJson(res, 409, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        // Upload an image (base64) → save to public/uploads → return its URL.
+        // Review-tool only: lets you drop a test image onto the canvas without a build step.
+        server.middlewares.use("/api/upload", (req, res) => {
+          if (req.method !== "POST") { res.statusCode = 405; res.end("405"); return; }
+          let body = ""; req.on("data", c => body += c);
+          req.on("end", () => {
+            try {
+              const { name, data } = JSON.parse(body);
+              const base64 = String(data).replace(/^data:[^;]+;base64,/, "");
+              const safe = String(name).replace(/[^a-zA-Z0-9._-]/g, "_");
+              writeFileSync(resolve(UPLOADS, safe), Buffer.from(base64, "base64"));
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ url: `/uploads/${safe}` }));
+            } catch (e) {
+              res.statusCode = 500; res.end("500");
+            }
+          });
+        });
+      },
+    },
+  ],
+});

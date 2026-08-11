@@ -1,0 +1,12 @@
+{
+  "failures": [],
+  "warnings": [],
+  "media": {
+    "durationSec": 30.058667,
+    "videoStreams": 1,
+    "audioStreams": 1,
+    "format": "mov,mp4,m4a,3gp,3g2,mj2"
+  },
+  "visionReviewRequired": true,
+  "status": "PASS_WITH_VISION_REVIEW"
+}

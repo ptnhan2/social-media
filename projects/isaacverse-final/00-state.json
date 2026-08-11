@@ -1,0 +1,65 @@
+{
+  "projectId": "isaacverse-final",
+  "pipelineVersion": "2026-08-11-isaacverse-v1",
+  "sourceOfTruth": {
+    "videoDoc": "04-video-doc.json",
+    "editDoc": "05-edit-doc.json",
+    "assetManifest": "assets/asset-manifest.json"
+  },
+  "stage": "composer-revamp",
+  "status": "in_progress",
+  "completedStages": [
+    "contract",
+    "project-store",
+    "json-project",
+    "render-window",
+    "agent-operations",
+    "composer",
+    "canvas-editor",
+    "quality-gate",
+    "audio-dubbing",
+    "thumbnail-compliance",
+    "e2e-pilot",
+    "master",
+    "evidence-audit",
+    "review-slice-contract",
+    "range-first-live",
+    "multimodal-selection",
+    "kilo-file-handoff",
+    "single-composer-migration",
+    "review-queue"
+  ],
+  "currentVersion": "v004",
+  "lastSuccessfulCommand": "npm run render:master --prefix remotion-composer",
+  "lastSuccessfulAt": "2026-08-11T08:51:19.046609+00:00",
+  "artifacts": {
+    "draftWindows": [
+      "renders/windows/beat03-before.mp4",
+      "renders/windows/beat03-after.mp4"
+    ],
+    "master": "renders/master_1080p.mp4",
+    "qaReports": [
+      "qa/structural-master-v004.json",
+      "qa/diagnosis-master-v004.json",
+      "thumbnail/qa-final-v004.json"
+    ],
+    "thumbnail": "thumbnail/final.png",
+    "dubbing": [
+      "dubbing/beat-grid.json",
+      "dubbing/dub-plan.json",
+      "dubbing/stems/voice-stem.wav",
+      "dubbing/stems/music-sfx-stem.wav"
+    ],
+    "publishManifest": "publish/publish-manifest-v004.json"
+  },
+  "providerPolicy": {
+    "paidProvidersAllowed": false,
+    "reason": "Final local pilot must be reproducible without an implicit paid API call.",
+    "externalCalls": []
+  },
+  "nextAction": "Create a real Composer Kilo handoff, run /review-pending in the Kilo session, then verify the returned diagnosis/patch/evidence loop.",
+  "resume": {
+    "command": "python tools/project/project_store.py resume --project projects/isaacverse-final",
+    "rule": "Read this file, validate source documents, continue at the first incomplete stage, and preserve approved artifacts."
+  }
+}

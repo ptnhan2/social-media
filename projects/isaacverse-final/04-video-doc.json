@@ -1,0 +1,153 @@
+{
+  "id": "isaacverse-final",
+  "seriesId": "isaacverse",
+  "idea": "A polished timeline can hide the actual editing decision.",
+  "commonGoal": {
+    "viewer": "Understand how to make an edit carry meaning instead of merely carrying motion.",
+    "creator": "Show a repeatable story-first editing method without turning it into a generic tutorial.",
+    "aligned": true
+  },
+  "surfaceProblem": "Editors keep polishing timelines that still feel empty.",
+  "deeperProblem": "The edit is being treated as a sequence of effects instead of a sequence of decisions.",
+  "thumbnailPromise": "The timeline is not the edit.",
+  "audienceAvatars": [
+    { "id": "builder", "description": "A creator who can make clean graphics but struggles with meaning.", "knowledgeLevel": "intermediate", "desiredTransformation": "Choose visuals from the story before choosing effects." },
+    { "id": "first-editor", "description": "A beginner who thinks a better timeline automatically makes a better video.", "knowledgeLevel": "beginner", "desiredTransformation": "See the difference between polish and a meaningful cut." }
+  ],
+  "transformation": {
+    "start": "I need more motion to make this feel alive.",
+    "end": "I need a clearer decision for every frame, then motion can support it."
+  },
+  "grandStoryLink": "Tools become useful when they help people notice what matters.",
+  "compliance": {
+    "channelPersona": "A builder who explains editing decisions from inside the production system.",
+    "format": "argumentative visual essay",
+    "transformativeLayer": "commentary and a decision-based editing framework",
+    "originalVisuals": true,
+    "nonAiElements": ["original diagrams", "local SVG evidence graphics", "local SAPI narration"],
+    "disclosureRequired": true,
+    "disclosureText": "This video includes AI-assisted production and synthetic narration.",
+    "creativeProcessPath": "03-script.md",
+    "sourceCount": 0,
+    "wouldExistWithoutAi": true,
+    "formatVariationReviewed": false,
+    "visualDNA": "Near-black stage, amber decision accents, cyan evidence lines, serif claims, and restrained motion.",
+    "remediationPlan": "Keep the project files, audit the last 30 uploads, remediate repetitive patterns, and appeal with evidence instead of deleting history.",
+    "distributionPlan": "YouTube is a distribution surface; the underlying production system and research artifacts remain owned project assets."
+  },
+  "thumbnail": { "src": "thumbnail/final.png", "title": "The timeline is not the edit", "testStatus": "passed" },
+  "beats": [
+    {
+      "id": "final-beat-01",
+      "sceneId": "final-scene-01",
+      "shotIds": ["final-shot-01"],
+      "journeySlot": "status_quo",
+      "startSec": 0,
+      "durationSec": 3.5,
+      "transcript": "The polished timeline can still hide the real problem.",
+      "narrativeFunction": "name the false solution",
+      "treatment": { "id": "chapter-card", "params": { "title": "The timeline is not the edit", "subtitle": "it is only the evidence", "accent": "#f2b84b" }, "assets": [] },
+      "elements": [{ "id": "final-beat-01:title", "role": "title", "kind": "text", "sourcePath": "treatment.params.title" }],
+      "motionPhases": [{ "id": "final-beat-01:phase-in", "name": "quiet reveal", "startSec": 0, "durationSec": 1.2, "purpose": "let the claim land" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-02",
+      "sceneId": "final-scene-01",
+      "shotIds": ["final-shot-02"],
+      "journeySlot": "call",
+      "startSec": 3.5,
+      "durationSec": 3.5,
+      "transcript": "A cut is not a gap between clips. It is a decision.",
+      "narrativeFunction": "reframe the unit of editing",
+      "treatment": { "id": "semantic-diagram", "params": { "title": "A cut is a decision", "kicker": "the smallest useful unit", "centerLabel": "meaning", "nodes": [{ "id": "signal", "label": "Signal", "detail": "what changed", "x": 24, "y": 52, "activeFrom": 0.2, "color": "#61d7e8" }, { "id": "choice", "label": "Choice", "detail": "what stays", "x": 50, "y": 52, "activeFrom": 0.8, "color": "#f2b84b" }, { "id": "meaning", "label": "Meaning", "detail": "what the viewer gets", "x": 76, "y": 52, "activeFrom": 1.4, "color": "#ec6a5e" }], "edges": [{ "from": "signal", "to": "choice", "revealAt": 0.6 }, { "from": "choice", "to": "meaning", "revealAt": 1.2 }] }, "assets": [] },
+      "elements": [{ "id": "final-beat-02:node-signal", "role": "node", "kind": "node", "sourcePath": "treatment.params.nodes[0]" }, { "id": "final-beat-02:node-choice", "role": "node", "kind": "node", "sourcePath": "treatment.params.nodes[1]" }, { "id": "final-beat-02:node-meaning", "role": "node", "kind": "node", "sourcePath": "treatment.params.nodes[2]" }],
+      "motionPhases": [{ "id": "final-beat-02:phase-reveal", "name": "decision chain", "startSec": 0.2, "durationSec": 2.4, "purpose": "connect evidence to meaning" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-03",
+      "sceneId": "final-scene-02",
+      "shotIds": ["final-shot-03"],
+      "journeySlot": "assistance",
+      "startSec": 7,
+      "durationSec": 3.5,
+      "transcript": "The screen is useful only when it proves the decision.",
+      "narrativeFunction": "show evidence in context",
+      "treatment": { "id": "screen-proof-in-world", "params": { "caption": "make the evidence part of the scene", "focusRect": { "x": 18, "y": 20, "w": 55, "h": 30 } }, "assets": [{ "id": "final-control-room", "kind": "screen", "src": "isaacverse-final/control-room.svg" }, { "id": "final-human-profile", "kind": "character", "src": "isaacverse-final/human-profile.svg" }] },
+      "elements": [{ "id": "final-beat-03:screen", "role": "proof-screen", "kind": "screen", "sourcePath": "treatment.assets[0]" }, { "id": "final-beat-03:character", "role": "observer", "kind": "asset", "sourcePath": "treatment.assets[1]" }],
+      "motionPhases": [{ "id": "final-beat-03:phase-focus", "name": "focus proof", "startSec": 0, "durationSec": 2.8, "purpose": "make the decision inspectable" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-04",
+      "sceneId": "final-scene-02",
+      "shotIds": ["final-shot-04"],
+      "journeySlot": "departure",
+      "startSec": 10.5,
+      "durationSec": 3.5,
+      "transcript": "Start with the story, then place the voice, evidence, and cut.",
+      "narrativeFunction": "give a repeatable process",
+      "treatment": { "id": "process-timeline", "params": { "title": "Build from the decision", "activeStep": 2, "steps": [{ "label": "Story", "detail": "name the change", "color": "#61d7e8" }, { "label": "Voice", "detail": "protect the rhythm", "color": "#f2b84b" }, { "label": "Evidence", "detail": "show the proof", "color": "#ec6a5e" }, { "label": "Cut", "detail": "make it land", "color": "#a98bff" }] }, "assets": [] },
+      "elements": [{ "id": "final-beat-04:step-story", "role": "step", "kind": "step", "sourcePath": "treatment.params.steps[0]" }, { "id": "final-beat-04:step-cut", "role": "step", "kind": "step", "sourcePath": "treatment.params.steps[3]" }],
+      "motionPhases": [{ "id": "final-beat-04:phase-flow", "name": "workflow reveal", "startSec": 0.2, "durationSec": 2.6, "purpose": "turn the reframe into action" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-05",
+      "sceneId": "final-scene-03",
+      "shotIds": ["final-shot-05"],
+      "journeySlot": "trials",
+      "startSec": 14,
+      "durationSec": 4.5,
+      "transcript": "Two edits can use the same tools and still tell different stories.",
+      "narrativeFunction": "compare the meaningful choice",
+      "treatment": { "id": "candidate-comparison", "params": { "title": "Same tools, different story", "criteria": "Which take makes the decision visible?", "selectedIndex": 1, "candidates": [{ "label": "Polish", "detail": "clean, but generic", "src": "isaacverse-final/control-room.svg", "color": "#ec6a5e" }, { "label": "Decision", "detail": "specific, more human", "src": "isaacverse-final/paper-signal.svg", "color": "#f2b84b" }, { "label": "Noise", "detail": "busy, no change", "src": "isaacverse-final/noise-field.svg", "color": "#61d7e8" }] }, "assets": [] },
+      "elements": [{ "id": "final-beat-05:candidate-01", "role": "candidate", "kind": "asset", "sourcePath": "treatment.params.candidates[0]" }, { "id": "final-beat-05:candidate-02", "role": "candidate", "kind": "asset", "sourcePath": "treatment.params.candidates[1]" }, { "id": "final-beat-05:candidate-03", "role": "candidate", "kind": "asset", "sourcePath": "treatment.params.candidates[2]" }],
+      "motionPhases": [{ "id": "final-beat-05:phase-compare", "name": "candidate compare", "startSec": 0.2, "durationSec": 3.2, "purpose": "make taste a visible decision" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-06",
+      "sceneId": "final-scene-03",
+      "shotIds": ["final-shot-06"],
+      "journeySlot": "crisis",
+      "startSec": 18.5,
+      "durationSec": 4,
+      "transcript": "When every frame tries to impress, the viewer cannot see what changed.",
+      "narrativeFunction": "name the failure mode",
+      "treatment": { "id": "cinematic-metaphor", "params": { "label": "the invisible problem", "subtitle": "noise can look like progress", "mode": "cinematic" }, "assets": [{ "id": "final-noise-field", "kind": "image", "src": "isaacverse-final/noise-field.svg" }] },
+      "elements": [{ "id": "final-beat-06:metaphor", "role": "metaphor", "kind": "image", "sourcePath": "treatment.assets[0]" }],
+      "motionPhases": [{ "id": "final-beat-06:phase-collapse", "name": "collapse the noise", "startSec": 0, "durationSec": 3, "purpose": "make the cost of excess felt" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-07",
+      "sceneId": "final-scene-04",
+      "shotIds": ["final-shot-07"],
+      "journeySlot": "reward",
+      "startSec": 22.5,
+      "durationSec": 3.5,
+      "transcript": "Make the next frame answer the question raised by the last one.",
+      "narrativeFunction": "deliver the usable rule",
+      "treatment": { "id": "host-reflection-cinematic", "params": { "subtitle": "make the next frame answer the last one", "lightSide": "right" }, "assets": [{ "id": "final-human-profile", "kind": "character", "src": "isaacverse-final/human-profile.svg" }] },
+      "elements": [{ "id": "final-beat-07:host", "role": "host", "kind": "asset", "sourcePath": "treatment.assets[0]" }],
+      "motionPhases": [{ "id": "final-beat-07:phase-reflect", "name": "quiet reflection", "startSec": 0.2, "durationSec": 2.5, "purpose": "turn technique into a human rule" }],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-08",
+      "sceneId": "final-scene-04",
+      "shotIds": ["final-shot-08"],
+      "journeySlot": "resolution",
+      "startSec": 26,
+      "durationSec": 4,
+      "transcript": "Choose the decision first. Then let the frame move.",
+      "narrativeFunction": "resolve with a memorable rule",
+      "treatment": { "id": "chapter-card", "params": { "title": "Choose the decision first", "subtitle": "then let the frame move", "accent": "#61d7e8" }, "assets": [] },
+      "elements": [{ "id": "final-beat-08:title", "role": "title", "kind": "text", "sourcePath": "treatment.params.title" }],
+      "motionPhases": [{ "id": "final-beat-08:phase-hold", "name": "intentional stop", "startSec": 0, "durationSec": 3.2, "purpose": "make the stop worth waiting for" }],
+      "audioCues": []
+    }
+  ]
+}

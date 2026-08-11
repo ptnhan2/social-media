@@ -1,0 +1,147 @@
+{
+  "videoId": "isaacverse-final",
+  "status": "pass_with_review",
+  "disclosure": "This video includes AI-assisted production and synthetic narration.",
+  "findings": [
+    {
+      "rule": 1,
+      "id": "named-persona",
+      "title": "Named persona with documented POV",
+      "status": "pass",
+      "value": "A builder who explains editing decisions from inside the production system.",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 2,
+      "id": "human-argument",
+      "title": "Script contains a human argument",
+      "status": "pass",
+      "value": "commentary and a decision-based editing framework",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 3,
+      "id": "format-variation",
+      "title": "Format differs from the previous video",
+      "status": "review",
+      "value": false,
+      "evidencePaths": []
+    },
+    {
+      "rule": 4,
+      "id": "commentary-layer",
+      "title": "Transformative commentary layer exists",
+      "status": "pass",
+      "value": "commentary and a decision-based editing framework",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 5,
+      "id": "original-visuals",
+      "title": "Original visuals are present",
+      "status": "pass",
+      "value": true,
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 6,
+      "id": "mixed-footage",
+      "title": "At least one non-AI/non-stock element exists",
+      "status": "pass",
+      "value": [
+        "original diagrams",
+        "local SVG evidence graphics",
+        "local SAPI narration"
+      ],
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 7,
+      "id": "cadence-depth",
+      "title": "Cadence matches claimed depth",
+      "status": "review",
+      "value": null,
+      "evidencePaths": []
+    },
+    {
+      "rule": 8,
+      "id": "disclosure",
+      "title": "AI-assisted production disclosure is ready",
+      "status": "pass",
+      "value": true,
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 9,
+      "id": "channel-thesis",
+      "title": "Channel thesis is documented",
+      "status": "pass",
+      "value": "A builder who explains editing decisions from inside the production system.",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 10,
+      "id": "creative-process",
+      "title": "Creative process evidence is archived",
+      "status": "pass",
+      "value": "03-script.md",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 11,
+      "id": "visual-dna",
+      "title": "Visual identity is declared",
+      "status": "pass",
+      "value": "Near-black stage, amber decision accents, cyan evidence lines, serif claims, and restrained motion.",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 12,
+      "id": "remediation",
+      "title": "Remediation record exists",
+      "status": "pass",
+      "value": "Keep the project files, audit the last 30 uploads, remediate repetitive patterns, and appeal with evidence instead of deleting history.",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 13,
+      "id": "distribution",
+      "title": "YouTube is treated as distribution",
+      "status": "pass",
+      "value": "YouTube is a distribution surface; the underlying production system and research artifacts remain owned project assets.",
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    },
+    {
+      "rule": 14,
+      "id": "would-exist-without-ai",
+      "title": "Video passes the would-exist-without-AI test",
+      "status": "pass",
+      "value": true,
+      "evidencePaths": [
+        "projects\\isaacverse-final\\04-video-doc.json"
+      ]
+    }
+  ]
+}

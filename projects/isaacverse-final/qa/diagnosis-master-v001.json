@@ -1,0 +1,122 @@
+{
+  "status": "fail",
+  "mode": "master",
+  "video": "projects\\isaacverse-final\\renders\\master_1080p.mp4",
+  "media": {
+    "durationSec": 30.058667,
+    "videoStreams": 1,
+    "audioStreams": 1,
+    "width": 1920,
+    "height": 1080
+  },
+  "audio": {
+    "meanVolumeDb": -21.3,
+    "maxVolumeDb": -3.9
+  },
+  "freeze": {
+    "ratio": 0.7607345661735432,
+    "maxDurationSec": 4.0,
+    "events": [
+      {
+        "startSec": 0.4,
+        "endSec": 3.5,
+        "durationSec": 3.1
+      },
+      {
+        "startSec": 3.733333,
+        "endSec": 4.933333,
+        "durationSec": 1.2
+      },
+      {
+        "startSec": 4.933333,
+        "endSec": 7.0,
+        "durationSec": 2.066667
+      },
+      {
+        "startSec": 7.433333,
+        "endSec": 8.2,
+        "durationSec": 0.766667
+      },
+      {
+        "startSec": 8.2,
+        "endSec": 10.5,
+        "durationSec": 2.3
+      },
+      {
+        "startSec": 10.733333,
+        "endSec": 14.066667,
+        "durationSec": 3.333333
+      },
+      {
+        "startSec": 14.5,
+        "endSec": 18.5,
+        "durationSec": 4.0
+      },
+      {
+        "startSec": 19.066667,
+        "endSec": 19.633333,
+        "durationSec": 0.566667
+      },
+      {
+        "startSec": 19.633333,
+        "endSec": 20.533333,
+        "durationSec": 0.9
+      },
+      {
+        "startSec": 20.533333,
+        "endSec": 22.5,
+        "durationSec": 1.966667
+      },
+      {
+        "startSec": 23.333333,
+        "endSec": 23.933333,
+        "durationSec": 0.6
+      },
+      {
+        "startSec": 23.933333,
+        "endSec": 25.266667,
+        "durationSec": 1.333333
+      },
+      {
+        "startSec": 25.266667,
+        "endSec": 26.0,
+        "durationSec": 0.733333
+      }
+    ]
+  },
+  "frames": {
+    "sampleCount": 60.0,
+    "motionMean": 0.02518863309513135,
+    "sharpnessMean": 0.005320397246396169,
+    "saturationMean": 0.03176914369687438,
+    "edgeDensityMean": 0.043830814404884906
+  },
+  "failures": [
+    {
+      "id": "freeze-ratio",
+      "message": "Freeze ratio 0.761 exceeds master threshold",
+      "evidencePaths": [
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0001.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0002.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0003.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0004.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0005.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0006.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0007.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0008.png"
+      ]
+    }
+  ],
+  "warnings": [],
+  "evidencePaths": [
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0001.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0002.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0003.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0004.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0005.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0006.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0007.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-0f3f3l3w\\frames\\frame-0008.png"
+  ],
+  "visionReviewRequired": true
+}

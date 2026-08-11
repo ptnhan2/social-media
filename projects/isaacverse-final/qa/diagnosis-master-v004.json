@@ -1,0 +1,142 @@
+{
+  "status": "pass_with_review",
+  "mode": "master",
+  "video": "projects\\isaacverse-final\\renders\\master_1080p.mp4",
+  "media": {
+    "durationSec": 30.058667,
+    "videoStreams": 1,
+    "audioStreams": 1,
+    "width": 1920,
+    "height": 1080
+  },
+  "audio": {
+    "meanVolumeDb": -21.3,
+    "maxVolumeDb": -3.9
+  },
+  "freeze": {
+    "ratio": 0.5367280924333738,
+    "maxDurationSec": 2.3,
+    "events": [
+      {
+        "startSec": 1.433333,
+        "endSec": 1.933333,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 1.933333,
+        "endSec": 2.433333,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 2.9,
+        "endSec": 3.4,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 3.733333,
+        "endSec": 4.566667,
+        "durationSec": 0.833333
+      },
+      {
+        "startSec": 4.566667,
+        "endSec": 5.766667,
+        "durationSec": 1.2
+      },
+      {
+        "startSec": 5.766667,
+        "endSec": 6.9,
+        "durationSec": 1.133333
+      },
+      {
+        "startSec": 7.433333,
+        "endSec": 8.166667,
+        "durationSec": 0.733333
+      },
+      {
+        "startSec": 8.166667,
+        "endSec": 8.8,
+        "durationSec": 0.633333
+      },
+      {
+        "startSec": 8.8,
+        "endSec": 9.3,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 10.733333,
+        "endSec": 11.366667,
+        "durationSec": 0.633333
+      },
+      {
+        "startSec": 11.366667,
+        "endSec": 12.666667,
+        "durationSec": 1.3
+      },
+      {
+        "startSec": 12.666667,
+        "endSec": 13.766667,
+        "durationSec": 1.1
+      },
+      {
+        "startSec": 19.2,
+        "endSec": 21.5,
+        "durationSec": 2.3
+      },
+      {
+        "startSec": 21.5,
+        "endSec": 22.433333,
+        "durationSec": 0.933333
+      },
+      {
+        "startSec": 22.966667,
+        "endSec": 23.7,
+        "durationSec": 0.733333
+      },
+      {
+        "startSec": 23.7,
+        "endSec": 24.266667,
+        "durationSec": 0.566667
+      },
+      {
+        "startSec": 26.8,
+        "endSec": 27.3,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 27.3,
+        "endSec": 27.833333,
+        "durationSec": 0.533333
+      },
+      {
+        "startSec": 28.766667,
+        "endSec": 29.266667,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 29.266667,
+        "endSec": 29.766667,
+        "durationSec": 0.5
+      }
+    ]
+  },
+  "frames": {
+    "sampleCount": 60.0,
+    "motionMean": 0.035200625433097196,
+    "sharpnessMean": 0.005868366977665573,
+    "saturationMean": 0.035309156868606806,
+    "edgeDensityMean": 0.05026561122689036
+  },
+  "failures": [],
+  "warnings": [],
+  "evidencePaths": [
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0001.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0002.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0003.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0004.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0005.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0006.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0007.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-zej3pjim\\frames\\frame-0008.png"
+  ],
+  "visionReviewRequired": true
+}

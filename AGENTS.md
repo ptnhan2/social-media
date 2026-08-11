@@ -1,86 +1,101 @@
-﻿# AGENTS.md — Content Production Agent (auto-load)
+# AGENTS.md — IsaacVerse Content Production Agent
 
-> **Read `AGENT_GUIDE.md` for full detail.** This file = summary, loaded every session.
-> **PIPELINE_VERSION: `2026-08-04-v3`** — fully standalone workflow (openmontage archived).
+> Read `AGENT_GUIDE.md` for full detail.
+> **PIPELINE_VERSION: `2026-08-11-isaacverse-v1`**
+> Target: IsaacVerse-quality story-driven videos. Vox is retired.
 
-## Project Status (2026-08-04)
+## Current Status
 
-**Active:** "Sanderson's 2nd Law + AI" — Vox-style explainer (~497s), v10 design system.
-- Phase 1 ✅ (research + framework + script + humanize 2/100)
-- Phase 2: gate 0 FAIL on 30s@540p segment (freeze 16%, sat 0.123, sharpness 0.018)
-- Architecture: `libraries/` (8 branches) + `remotion-composer/shared/` (engine + layouts) + `layout-lab/` (web app)
+- IsaacVerse reference audit and treatment fixtures exist under `research/isaacverse/`.
+- Final local acceptance project is complete with human-review status: `projects/isaacverse-final/`.
+- Final persisted version: `v004`; acceptance report: `projects/isaacverse-final/FINAL-REPORT.json`.
+- Final master: `projects/isaacverse-final/renders/master_1080p.mp4`.
+- Composer loads the persisted project and supports surgical feedback, window render, apply, rollback, canvas beat editing, alternatives, similar batches, and future rules.
+- Current Composer revamp: range-first live review, multimodal `ReviewSlice` targets, and Kilo filesystem handoff are implemented; a real `/review-pending` model run is the next external acceptance step.
+- Canonical pipeline: `docs/PIPELINE-ISAACVERSE.md`.
+- Final runbook: `docs/FINAL-RUNBOOK-ISAACVERSE.md`.
+- Gap B resolution: `docs/GAP-B-RESOLUTION.md`.
+- Replication contract: `research/isaacverse/REPLICATION-SPEC.md`.
+- Feedback UI contract: `docs/FEEDBACK-UI-SPEC.md`.
 
-**Frozen (do NOT learn from — user said "phèn"):** 01-subtext, 02-ai-dialogue.
+## Core Concepts
 
-**Render loop:** plan full video, render only 30s @ 360-540p → gate → user → master.
-
-## How to Continue
-
-1. Read this file (you are).
-2. Read `AGENT_GUIDE.md` (phase detail, libraries, tools, gates, migration).
-3. Read `AGENT_GUIDE.md` (phase detail, libraries, tools, gates, migration).
-4. Read `skills/INDEX.md` (84 project-local skills — read relevant one before calling any tool).
-5. Read `libraries/README.md` (8-branch architecture + protocol).
-6. For Vox work: read `docs/vox-pipeline/playbook.md` + run `gate_vox.py`.
-7. Before calling ANY API tool: check `skills/INDEX.md` → read `skills/<name>/SKILL.md` first.
+- `VideoDoc`: story, audience, deeper problem, transformation, journey beats.
+- `SemanticBeat`: one narrative moment with transcript, treatment, assets and audio cues.
+- `SemanticTreatment`: reusable shot sequence with purpose, phases, assets, motion, text and audio.
+- `EditDoc`: timeline-ready beats and audio plan consumed by Remotion.
+- `Composer`: production UI for full multi-scene videos and surgical fixes.
+- `Treatment Lab`: internal evidence/review surface; not the production unit.
 
 ## Trigger Routing
 
-| User says | Phase | Key action |
+| User says | Phase | Action |
 |---|---|---|
-| `lên content` | 1 | research → framework (USER gate) → script → humanize |
-| `produce` | 2 | libraries/04-visual → compose → gate → render 30s |
-| `produce vox` | 2V | Vox editorial (gate_vox.py 0 FAIL) |
-| `repurpose` | 3 | transcript → X/blog/Reddit/shorts |
-| `tiếp tục` | resume | read `00-state.md` → continue |
-| `check` | utility | list all videos + state |
-| `devlog` | utility | git log → post |
+| `lên content` | Story | research → audience/goal → deeper problem → hero journey → script |
+| `produce` | Production | VideoDoc → voice → assets → treatments → edit/audio → gate → draft |
+| `audit isaacverse` | Research | download/source audit → frame/audio/transcript evidence → grammar |
+| `review` | Composer | show scenes/beats/shots → feedback UI → patch → draft diff |
+| `repurpose` | Repurpose | transcript → X/blog/Reddit/shorts |
+| `tiếp tục` | Resume | read project state and current todo; continue without restarting |
+| `check` | Utility | list projects, renders, gates and current state |
 
-## Phase Gates (must ✅ before next phase)
+## Non-negotiable Rules
 
-- **Phase 0**: scorecard ≥ 25
-- **Phase 1**: research 20+ + framework (USER) + script + humanize ≤30 + "exist w/o AI?"=yes
-- **Phase 2**: gate 0 FAIL + 14-rule compliance + disclosure
-- **Phase 3**: transcript available
+1. **Story before effects**: every video has a transformation, surface problem, deeper problem and beat structure.
+2. **Semantic treatments, not generic effect catalogs**: never select `glow`/`zoom` without narrative purpose.
+3. **Audio is a first-class plan**: VO, music, SFX and ambience use event cues and density; no automatic one-SFX-per-element.
+4. **Agent orchestration**: configured agents may generate/capture/resolve/edit assets through external providers; record provenance and validate outputs.
+5. **Human gate only where necessary**: approval, taste, licensing and compliance. Do not delegate ordinary asset work to the user.
+6. **Feedback is UI-first**: users select scene/beat/shot/element in Composer; agent diagnoses and patches the selected scope. Chat is optional.
+7. **Surgical edits**: patch stable IDs and render the affected window; do not rebuild the whole video for a local complaint.
+8. **Draft loop**: plan full video, render only a 30s window at 360–540p → vision/audio QA → patch → repeat → master after approval.
+9. **Evidence before catalog**: a treatment becomes approved only after frame/audio evidence, deterministic fixture render and acceptance checks.
+10. **Compliance first**: disclosure and the 14-rule YouTube checklist remain mandatory.
+11. **Read skills before tools**: check `skills/INDEX.md` and read the relevant `skills/<name>/SKILL.md` before TTS, image, music, video, FFmpeg or browser APIs.
+12. **Vox is retired**: do not use Vox primitives, Vox layouts, `variant_pools`, `gate_vox.py` or Vox style as active production guidance.
 
-## Essential Rules
-
-1. **Compliance first**: 14-rule checklist + disclosure toggle + "AI-assisted content".
-2. **Libraries**: import from `remotion-composer/shared/` — do NOT copy code per-video.
-3. **Only approved layouts**: registry status = `approved` (not draft/demoted).
-4. **Sort by use_count**: least-used layouts first (avoid repetition).
-5. **Jitter**: params have `base ± range` → random per scene (anti mass-produced).
-6. **Render loop**: 30s @ 360-540p → gate → user → master. Never full render before approval.
-7. **Stance**: host INSIDE ("I/we/you"), not essayist ("The AI/It").
-8. **Framework**: USER designs — agent stops, presents, waits.
-9. **Do NOT follow archive/openmontage-AGENT_GUIDE.md** — follow root `AGENT_GUIDE.md`.
-10. **Read skill before calling tool**: check `skills/INDEX.md` → read the matching `skills/<name>/SKILL.md` BEFORE calling any API tool (TTS, image gen, music, ffmpeg, etc.). The skill has vendor-specific prompting guidance that dramatically improves output quality.
-
-## Render Commands
+## Canonical Commands
 
 ```powershell
-# Gate
-python docs\vox-pipeline\gate_vox.py
-python docs\vox-pipeline\gate_vox.py --video <mp4> --no-duration
+# New-project local draft, exact 640x360
+cd remotion-composer
+npm run produce:pilot
 
-# Bundle
-cd remotion-composer && npx remotion bundle projects/<project>/index.tsx
+# Surgical affected-window render
+node scripts/render-window.mjs --project isaacverse-final --start 7 --end 10.5 --quality draft
 
-# Draft 30s
-npx remotion render build <CompId> renders\draft_seg30s.mp4 --frames=0-900 --scale=0.5 --concurrency=8 --x264-preset=ultrafast --crf=32 --gl=angle
+# Local Remotion master (only after draft approval and QA)
+npm run render:master
 
-# Master
-npx remotion render build <CompId> renders\master_1080p.mp4 --scale=1 --concurrency=8 --x264-preset=medium --crf=18 --gl=angle
+# Persisted resume/check
+cd ..
+python tools/project/project_store.py resume --project projects/isaacverse-final
 ```
 
-## File Naming
+## Project Structure
 
-Each project `projects/<slug>/` (video) or `projects/devlogs/` (devlog posts):
-- Video: `00-state.md` → `01-research*.md` → `02-brief.md` → `03-script.md` → `artifacts/` → `assets/` → `master_1080p.mp4`
-- Devlog: `YYYY-MM-DD.md` per post (pipeline TBD — git log → commit → write → save)
-
-**Before web research**: read `research/INDEX.md` → check if topic already researched → skip if current → follow chain if superseded → research + add to INDEX if not found.
+```text
+projects/<slug>/
+├── 00-state.json
+├── 01-research/
+├── 02-story/
+├── 03-script/
+├── 04-video-doc.json
+├── 05-edit-doc.json
+├── assets/
+├── feedback/
+├── patches/
+├── qa/
+└── renders/
+```
 
 ## Language
 
-Agent ↔ User = **Vietnamese**. Content (scripts, videos) = **English**. Keep English for framework/concept names + technical keywords.
+Agent ↔ user = Vietnamese. Scripts, code-facing schemas and video content = English unless explicitly requested otherwise.
+
+## Operational Learnings
+
+- Remotion frame ranges are inclusive: a 30-second 30fps composition uses `0-899`; window end uses `ceil(endSec * fps) - 1`.
+- The draft preset must use exact `0.3333333333333333`; `0.3333` produces a non-integer 359.964px height and Remotion rejects it.
+- JSON patches update `projects/<slug>/05-edit-doc.json`; run `node remotion-composer/scripts/sync-project-public.mjs <slug>` before Remotion renders because `ProjectLoader` fetches the public copy.
+- Shared Remotion modules live above `composer-app`; Vite must dedupe `react`, `react-dom`, `remotion`, and `@remotion/media` or Player/Audio contexts split at runtime.

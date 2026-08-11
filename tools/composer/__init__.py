@@ -1,0 +1,1 @@
+"""Structured Composer operation adapters."""

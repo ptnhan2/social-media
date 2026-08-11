@@ -3,8 +3,16 @@
   "version": "1.0.0",
   "description": "Remotion composition renderer for OpenMontage animated explainer videos",
   "scripts": {
-    "start": "npx remotion studio",
-    "build": "npx remotion render src/index.tsx Explainer out/video.mp4",
+    "start": "npx remotion studio projects/isaacverse-final/index.tsx",
+    "composer": "npm --prefix composer-app run dev",
+    "build": "npm run render:master",
+    "test": "node --test scripts/render-window.test.mjs",
+    "produce:pilot": "node scripts/render-project.mjs --project isaacverse-final --quality draft",
+    "render:window": "node scripts/render-window.mjs",
+    "render:master": "node scripts/render-project.mjs --project isaacverse-final --quality master",
+    "check:project": "python ../tools/project/project_store.py check --project ../projects/isaacverse-final",
+    "resume": "python ../tools/project/project_store.py resume --project ../projects/isaacverse-final",
+    "qa:pilot": "python ../tools/quality/isaacverse_gate.py --video-doc ../projects/isaacverse-final/04-video-doc.json --edit-doc ../projects/isaacverse-final/05-edit-doc.json --video ../projects/isaacverse-final/renders/draft_360p.mp4 --draft --output ../projects/isaacverse-final/qa/structural-draft.json && python ../tools/quality/isaacverse_qa.py --video ../projects/isaacverse-final/renders/draft_360p.mp4 --mode draft --output ../projects/isaacverse-final/qa/diagnosis-draft.json",
     "upgrade": "npx remotion upgrade"
   },
   "dependencies": {

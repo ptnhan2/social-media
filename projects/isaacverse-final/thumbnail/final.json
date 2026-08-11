@@ -1,0 +1,11 @@
+{
+  "id": "thumbnail-single-claim",
+  "src": "projects\\isaacverse-final\\thumbnail\\final.png",
+  "type": "single-claim",
+  "title": "The timeline is not the edit",
+  "qaStatus": "pending",
+  "dimensions": {
+    "width": 1280,
+    "height": 720
+  }
+}

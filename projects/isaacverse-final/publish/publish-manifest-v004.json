@@ -1,0 +1,37 @@
+{
+  "videoId": "isaacverse-final",
+  "masterSrc": "projects\\isaacverse-final\\renders\\master_1080p.mp4",
+  "thumbnailSrc": "projects\\isaacverse-final\\thumbnail\\final.png",
+  "title": "The timeline is not the edit",
+  "description": "Choose the decision first. Then let the frame move.\n\nAI-assisted production and synthetic narration are disclosed in this package.",
+  "captions": [],
+  "dubs": [
+    {
+      "language": "vi",
+      "voiceSrc": null,
+      "mixSrc": "projects\\isaacverse-final\\dubbing\\stems\\music-sfx-stem.wav",
+      "aligned": false,
+      "status": "planned",
+      "notes": [
+        "External dubbing provider not invoked; voice stem is ready for an explicit provider call."
+      ]
+    },
+    {
+      "language": "en",
+      "voiceSrc": null,
+      "mixSrc": "projects\\isaacverse-final\\dubbing\\stems\\music-sfx-stem.wav",
+      "aligned": false,
+      "status": "planned",
+      "notes": [
+        "External dubbing provider not invoked; voice stem is ready for an explicit provider call."
+      ]
+    }
+  ],
+  "complianceReportPath": "projects\\isaacverse-final\\publish\\compliance-report-v004.json",
+  "gateReportPath": "projects\\isaacverse-final\\qa\\structural-master-v004.json",
+  "status": "dry_run",
+  "upload": {
+    "attempted": false,
+    "reason": "YouTube OAuth/API call was not invoked in the local final run."
+  }
+}

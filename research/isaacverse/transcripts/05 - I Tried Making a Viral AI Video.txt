@@ -1,0 +1,324 @@
+In this video, I'm going to teach you step-bystep how to create a YouTube automation video using I found an amazing AI tool that [music] can generate 10 short videos every 30 minutes.
+Today, I'll be showing you how to recreate the fastest way to create.
+We're going to use two AI.
+[music] I hate AI videos.
+Open any social media and start scrolling.
+Half of the videos you'll see are made with AI.
+An AI voice commenting on a funny video.
+An AI text that's showing a random motivational quote.
+AI image slideshow.
+A video with AI script, AI voiceover, [music] AI captions, AI footage, AI music.
+They're breaking the internet.
+And I'm not okay with it because they're soulless, boring, inconsistent.
+They make us dumb.
+So that they could take over the world.
+I don't know.
+Maybe.
+But it's AI.
+You know, the biggest revolution in human history since the invention [music] of Bitcoin.
+So what?
+Think about it.
+Isn't there a better way to use it?
+There has to be a better way to use it, right?
+We just need [music] to find it.
+He was right.
+So I spent the next few months searching all over the internet to find a way to make better AI videos.
+And after dodging around 1,000 videos teaching how to make 300 shorts in [music] 30 minutes with Chad GBT and Canva, I think we got something.
+It turns out it's not a brand new thing.
+People have been making cinematic AI videos for the last few years, but they all have some big problems.
+[music] The art style in each shot looks completely different.
+The characters don't look the same.
+The story is too AI generated, and most importantly, they don't [music] get views.
+We need to fix them all.
+Here's the plan.
+I will try to create a video with AI completely from scratch, upload it to a new channel and see how many views I can get.
+Before starting this video, I asked you guys for ideas.
+Here are all the cool video concepts that you came up with.
+Animated scenes with full emotions and add some emotions.
+Emotions.
+Okay.
+Emotions.
+Consistent.
+Characters.
+Editing.
+Show me your edit.
+Editing.
+I like pterodactyls.
+If you have a pterodactyl in the movie, I will watch it.
+All right, pterodactyls.
+A I got you, man.
+Thanks [music] to everybody for sending their ideas.
+Now, the next step.
+Wait, what?
+[screaming] [music] I know this guy.
+Nope.
+Now, these are great ideas, but we need more [music] context.
+I wrote the story with Chat GPT's ideas and tweaked some parts a [music] little bit.
+It turned out pretty well.
+You can pause to read it, but we're going to see it at the end anyways.
+So, now I already made a video about thumbnails.
+But since we're making a video with AI, we got to make an AI thumbnail, too.
+So, ladies and gentlemen, introducing the channel's very first sponsor, Pixels.
+It's an AI image generator that's trained specifically on YouTube thumbnails so that with a single prompt it can generate stuff like this or this or this.
+All right, let's create our thumbnail.
+Our video is going to be about time travel.
+So create a dramatic thumbnail with turbulent close up on a running bearded ginger man centered in the middle on his feet.
+He has a slight dinosaur background the overall motion going on.
+Pretty impressive for 10 seconds of work.
+[music] Even if you know how to create it in Photoshop, it would take hours to create something like this.
+But it doesn't stop here.
+You can click this button and edit the thumbnail with your own words.
+Let's add some muscles [music] to our guide.
+Ah, that's a bit too much.
+Perfect.
+If you have a face in the thumbnail, [music] like this one, you can replace it with your own face by just clicking this button.
+You can even search for a thumbnail concept that already worked on YouTube and [music] just paste the video link here.
+The AI will analyze it and come up with a slightly different [music] concept.
+Pixels recently released a new feature for helping you generate titles as well.
+Just write what you have in mind and it will come up with really impressive [music] title variations.
+They're constantly improving the algorithm with the new pixels 2.0 updates.
+[music] The results look 10 times more impressive.
+You can even add a custom text to the thumbnail, a feature that almost no other AI tool is able to do at this point.
+It has more features coming soon like adding your own photos, [music] even creating a thumbnail from your sketch.
+You can check out Pixels with the link in description and with the code Isaac, you'll get a 50% discount for the first month or use Isaac year for 33% on the yearly plan.
+It's only valid for [music] the first 200 people, so go use it while you still can.
+So, thank you Pixels [music] for sponsoring this video.
+Now that we got our title and thumbnail, let's move on to the next step.
+Before doing anything else, we need to plan what we want to create.
+So, I used my impressive drawing skills to make this thing called storyboard.
+Almost every [music] professional filmmaker uses this technique to plan their shots before actually taking it.
+So, why not make it for AI films?
+[music] The key is that it has to be easy to understand.
+After a few hours of work, here's what they look like.
+There are dozens of AI video generators [music] out there, but the most popular ones are called Stable Diffusion, Pick a Labs, Runway, and Sora.
+The results from this one look great, but it's not released to the public yet, [music] so we can't use it.
+Stable diffusion looks like a bit.
+It makes the videos using your computer's and the UI looks a bit okay.
+It's [music] too complicated.
+These two are almost the same thing with only slight differences in style.
+Basically, Runway is more cinematic while Piccolabs has [music] more cartoonish vibes.
+I gave them the exact same prompt, and these are the videos they made.
+I like the Runway style, though.
+You can try both [music] and see which one works for you.
+But it's not important for now because after this video, you can use any software with the same principles.
+So instead of breaking down all the technical [music] stuff about the software, we will just learn what we need and focus on turning the ideas into videos.
+As you might guess, you can generate videos in three different ways.
+From text, from an image, and from a video.
+We don't have a video yet, so [music] text to video is nice for generating quick B-rolls for your videos, but it's hard to predict the results if you're looking for a consistent style and characters.
+So, the plan is we will generate images using AI and animate it with another AI.
+It's going to be a piece of cake.
+No god, that doesn't make any sense.
+I'm going to use MidJourney here because everyone says it's the best image generator out there, but you can use any software you want.
+First, get a subscription.
+Go to Discord, create a new server, and add the MidJourney bot to the server.
+That way, you can see all the images you generate in a single place.
+Now it's time to see what this thing can do.
+Write slash imagagic and uh I haven't used it for a while.
+Let me catch up with the updates.
+I read all the update notes they shared on their Discord.
+I know boring stuff.
+Then I watched a few hundred videos on how to use.
+Here are some cool channels I found the most valuable information from.
+I tried to apply what I learned to the actual software.
+And to be honest, most of the images turned out bad, creepy, even kind of suspicious.
+But with practice, they started to get pretty good.
+And a few hundred attempts later, here's the strategy I came up with to generate the scenes.
+First, type / settings and choose midjourney version 6 or whatever is the latest version right now.
+Then, experiment with the most basic prompts you can think of and see what they do.
+At the end of each prompt, add- if you want to generate them in landscape mode, or- arx6 for short.
+Now, after each image, we get some buttons below.
+The ones at the top increase the resolution and the bottom line creates slightly different variations.
+When you upscale the one you like, more buttons appear.
+Just try them once and you'll figure out what they do.
+All right, these are a good starting point, but it isn't really possible to control much of the results this way.
+We need to get more specific.
+We can tell the AI where we want our character.
+Instead of asking it to generate an image of a bearded ginger man, we can add a background based on our story.
+Now, let's add one more person to the shot.
+Tell where you want them to stand in the shot and what they do.
+After getting the basics, the next step is adding more details.
+You can do it by adding some adjectives and writing more detailed character description.
+That was the last prompt we wrote.
+Let's see what else we can add.
+A charismatic 30-year-old adventurer man is watching the Giza pyramid in ancient Egypt while his dog wanders around.
+man has a lean and a long ginger hair, wearing a light gray shirt with black cargo pyramid is made of glass.
+All right, let that sink in.
+We can add much more details to our prompts like time of the day, season, color scheme, and so on.
+Most of the characters made by Midjourney lack emotion in their faces.
+I mean, is this guy happy, confused, confident?
+None of them.
+He just exists.
+So, it's always nice to specify the character's emotion in your prompt.
+Happy, sad, scared, angry, confused, disgusted, [music] jealous, guilty, fury.
+You know what I mean?
+In an actual movie, each shot has a certain camera angle.
+That's what makes them look cinematic.
+We can get a similar effect by writing some keywords to our prompt.
+I like this one.
+It's all up to what style you're looking for.
+Speaking of styles, you probably noticed almost every single image has a different style.
+Some are realistic, others are more animation-like or illustration.
+It's cool, but when we animate these, we can't really make them look like a part of a single video.
+So, we need to give them a single style.
+AI image generators usually make photos in between realistic and [music] animated looks.
+I don't know what it's called, but it kind of became the signature of AI.
+If you want to avoid this style, you may go towards either side [music] or try totally different art styles to get something unique.
+First, let's go with the realistic.
+You can add a movie genre to give it a certain vibe.
+fantasy, sci-fi, comedy, I don't know, or a director name that has his own style, like Wes Anderson, who's known for his symmetric shots and weird colors.
+Tim Burton, Edgar Wright, James Cameron, Spielberg, or any director you like.
+I don't know much about cameras, but I saw most people like to add a camera type [music] in their prompts like that.
+Or we can go the opposite way and get more animated style with words like Pixar, animation, [music] or 3D.
+Other styles can be oil paintings, watercolors, anime, comics, 2D cartoons, surreal, van, cubism, cyber, black and white, renissance, pencil art, sketch, Japanese art, I don't know.
+There are countless art styles you can choose from.
+Pick the one you like and add it to your prompt.
+But wait, it's still AI.
+And AI is not consistent.
+Even if you write the exact same [music] prompt, it will give slightly different styles each time.
+But don't worry, there's a solution for that.
+[music] It turns out you can give Midjourney a reference image to look for.
+So it would generate all other images with a [music] similar style.
+Now I want you to give your full attention to this point because we're about to get a bit technical.
+Hey, turn off the music.
+All right, you got this.
+You got this.
+Let's take this shot.
+Upscale.
+Upscale again.
+Open in browser.
+Download.
+Upload to Discord.
+Now write your prompt as usual.
+Then just like d- AR16x9, write d- [music] sf.
+Hit space and drop your image next to it.
+That was a style reference.
+It will copy its style to the new image.
+We need to learn a few more parameters.
+D- [music] S is called stylize value.
+It shows how much midjourney can add its imagination to your image.
+The default [music] is 100 and the maximum value is a 1,000.
+Let's try something like 500 dash ca value.
+It's like the unpredictability of the results.
+Zero makes them almost the same.
+And the shots get different as [music] long as you increase this value up to 100.
+Style raw minimizes the improvisation and only follows [music] your prompt.
+With all this knowledge, hopefully you can get any image in your mind with the best [music] accuracy.
+But the biggest problem is still there since the very beginning.
+This is not the same guy.
+If we want to make a video out of these, we need a consistent character throughout all the results.
+Yeah, that's the hard part.
+What's your plan?
+Hey, you have a plan, right?
+Look, I'm going to be honest.
+I watched all the tutorials about that, but none of them gets the perfect result.
+The images always turn [music] out slightly different each time, and the process is too complex.
+I don't want that.
+I actually don't know what to do at this point.
+Don't worry, man.
+There's still time.
+You can figure it out.
+Can I?
+Yeah, I can.
+I couldn't figure it out.
+Maybe I should move on to another tutorial.
+A tutorial about [music] how I edit.
+Nah, nobody would watch that.
+Having a bad day.
+Yeah, I [music] think we had this conversation before.
+Don't even start.
+Yeah, I'm not here to give you a motivational speech this time.
+[music] Just wanted to know how's your AI project going.
+Uh, not good, man.
+It's clear it's not going to work out.
+It's not the end of the world if I'm not going to check off everything on the list, right?
+[music] I'll just accept and move on.
+Hey, hey, hey.
+No.
+Look, you have to finish this video.
+You hear me?
+Otherwise, why is it that important for you anyways?
+That's not the point.
+If you were going to quit, why did you come this far?
+I don't know.
+It's time to finish what we started.
+So with this new feature, just like d- sref, we can give a reference character to our prompt by typing d-cref.
+so it can generate scenes with the same character every time.
+First, we need a reference character to use in all our images.
+To do that, generate your character based on what you learned until this point.
+A like '90s anime style portrait of a 30-year-old bearded ginger man with green eyes.
+The man is wearing a light gray shirt.
+Here's the crucial part.
+Split into four images shot from different angles.
+It will give you something like this.
+Upscale the one you like.
+Take screenshots of each angle and upload it to Discord.
+Now, it gets a bit technical.
+Stay with me.
+We can still use Cref command and paste each image link one by one.
+But doing that for every single image can be a bit annoying if you're going to do it a 100 times.
+So we're going to create our own command.
+Sounds complicated, but all we're going to do is instead of Cref and links next to it, we will create a custom keyword so that when we write it, it will understand we mean this command.
+Write/prefer option set.
+Inside the option box, write your character's name.
+Click plus one and select value.
+Here write the command d- cref and paste your reference image links.
+Now each time I write dash- Isaac, it will create the image based on the these images.
+Finally, of course, you don't need to use all of these in all your prompts, but by using as much detail as possible, you'll get closer to the image in your head, which I guess is the main purpose of AI tools, isn't it?
+Anyways, I repeated the same process for the rest of the shot.
+And here are the images we're going to use.
+Yeah, you better be watching this, man.
+I got a pterodactyl for you.
+Now, we need to turn these into actual videos.
+Uh uh, we're a bit behind the schedule.
+The video part turned out to be easier than I expected.
+As I said in the beginning, I used Runway for that part.
+It gives you some free credits, but you're probably going to need a subscription after some point.
+Anyways, here's what I [music] did.
+This is the main page.
+When you open up your account, click on generate videos and choose Gen 2 image [music] to video.
+After uploading the image you generated in Midjourney, write your prompt.
+Unlike Midjourney, I saw it works best if you write very simple prompts like the man looking up because we already did most of the heavy lifting [music] with images.
+Here we need to adjust the camera motion and motion brush tools based on our scene.
+Camera motion is well controls the motion of the whole shot.
+Tweak them slightly based on your image and move on to the motion brush tool.
+This is where the magic happens.
+Choose the specific parts you want to move and brush them with different colors like head, hands, the entire character, dog, sky, and building.
+Then use these sliders to decide which direction [music] you want them to move.
+Again, don't go too extreme with these or you might [music] get some extreme results.
+Before hitting generate, tick this check box to get the final video with higher FPS and I mean, it's not bad at all for a raw video, but it's going to get better.
+I repeated the same process for the rest of the images.
+A quick note from the future.
+I actually tried animating the rest of the shots, but even though the first few videos were quite nice, as soon as I tried some illustration style images, yeah, I mean, what's that?
+However, when I tried the same thing with PALabs, it handled it way better.
+The settings here are almost the same as runway, so the learning curve is a few minutes.
+So, [music] realistic or 3D images for runway, cartoon or anime style for PALabs.
+Now, we can continue.
+And lastly, I used 11 Labs to get the voiceovers needed for the story, just like the voice you're listening to right now.
+And yeah, if you didn't realize it's AI until this point, welcome to the club.
+There's a link in the description if you want to try it yourself.
+Now, we need to edit them together.
+I will make a full guide on editing soon.
+So, it's just a quick overview of what I did to edit this video.
+Step one, put the voiceovers into order and cut the pauses.
+Step two, find a nice music that fits in the story and add it to the timeline.
+Step three, add the AI generated video clips based on the voice over and music.
+Try to keep the flow between music and the visuals.
+Step four, add zooms, camera movements, and transitions if needed.
+Step five, add extra details like smoke, dust, or lighting overlays.
+Step six, add some sound effects to important points.
+If you're new to this, just use a popular sound effect pack from YouTube.
+Or if you need something [music] more specific, again, search for it on YouTube.
+Step seven, cover everything with an adjustment layer and add the lummetric color effect on it.
+Play with the colors to get the vibe you want.
+Step eight, if you want more cinematic look, add a crop effect on the adjustment layer and increase the top and bottom values.
+Step nine, export the final video.
+It's showtime.
+It's been 1 week since I released the video, but before showing the results, we need to talk.
+So, the AI video and all that is cool, but the real question is, where are you going to use these?
+Is making story videos like these a good idea?
+Probably not.
+Wait, so all that stuff was for nothing?
+Hey, did you really pay attention to the entire video?
+[music] [music] Heat.
+Heat.
+[music]

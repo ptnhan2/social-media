@@ -31,7 +31,7 @@ export const CREAM_TEXT = "#F5F0E8";
 export const DARK_BG = "#171A1C";
 
 // CUTOUT_OK — images that have rembg cutout versions (project-specific;
-// override per-video if needed). Listed here for LayoutLab previews.
+// override per-video if needed). Shared visual primitives for Composer treatments.
 export const CUTOUT_OK = [
   "scene-1.png", "scene-3.png", "scene-4.png", "scene-6.png", "scene-7.png",
   "scene-11.png", "scene-12.png", "scene-13.png", "scene-15.png", "scene-21.png",

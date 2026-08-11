@@ -1,0 +1,22 @@
+{
+  "id": "patch-isaacverse-final-final-beat-03-1786437580751",
+  "videoId": "isaacverse-final",
+  "baseVersion": "v003",
+  "reason": "The proof needs a human point of view.",
+  "operations": [
+    {
+      "op": "replaceTreatment",
+      "beatId": "final-beat-03",
+      "treatmentId": "host-reflection-cinematic",
+      "params": {
+        "subtitle": "The screen is useful only when it proves the decision.",
+        "lightSide": "left"
+      }
+    }
+  ],
+  "affectedRange": {
+    "startSec": 7,
+    "endSec": 10.5
+  },
+  "status": "applied"
+}

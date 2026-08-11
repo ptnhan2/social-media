@@ -1,0 +1,190 @@
+{
+  "vtt": "research\\isaacverse\\transcripts\\03 - How I Actually Make AI Voice Sound Real.en.vtt",
+  "frames": [
+    {
+      "timestamp_s": 0.0,
+      "active_text": "",
+      "nearest_text": ""
+    },
+    {
+      "timestamp_s": 30.0,
+      "active_text": "Good. Good? What's good about that? Have you",
+      "nearest_text": "Good. Good? What's good about that? Have you"
+    },
+    {
+      "timestamp_s": 60.0,
+      "active_text": "",
+      "nearest_text": "rabbit hole of AI voice generators."
+    },
+    {
+      "timestamp_s": 90.0,
+      "active_text": "Really, like, why does your brain think you're listening to a real person right",
+      "nearest_text": "Really, like, why does your brain think you're listening to a real person right"
+    },
+    {
+      "timestamp_s": 120.0,
+      "active_text": "You probably heard that cutting all the pauses in your video boosts retention.",
+      "nearest_text": "You probably heard that cutting all the pauses in your video boosts retention."
+    },
+    {
+      "timestamp_s": 150.0,
+      "active_text": "script is also a powerful way to make your AI voice sound more realistic.",
+      "nearest_text": "script is also a powerful way to make your AI voice sound more realistic."
+    },
+    {
+      "timestamp_s": 180.0,
+      "active_text": "each of this in a minute while creating the actual voiceover. But before that,",
+      "nearest_text": "each of this in a minute while creating the actual voiceover. But before that,"
+    },
+    {
+      "timestamp_s": 210.0,
+      "active_text": "been using it since I started this channel, and you're seeing or hearing",
+      "nearest_text": "been using it since I started this channel, and you're seeing or hearing"
+    },
+    {
+      "timestamp_s": 240.0,
+      "active_text": "future videos, that voice. So, don't just click the first one you see and",
+      "nearest_text": "future videos, that voice. So, don't just click the first one you see and"
+    },
+    {
+      "timestamp_s": 270.0,
+      "active_text": "",
+      "nearest_text": "voice, then instant voice clone, and upload a sample."
+    },
+    {
+      "timestamp_s": 300.0,
+      "active_text": "the hell out of here. Seems like no AI can say it like the",
+      "nearest_text": "the hell out of here. Seems like no AI can say it like the"
+    },
+    {
+      "timestamp_s": 330.0,
+      "active_text": "ElevenLabs? Well, the voice you're hearing right now isn't from the voice",
+      "nearest_text": "ElevenLabs? Well, the voice you're hearing right now isn't from the voice"
+    },
+    {
+      "timestamp_s": 360.0,
+      "active_text": "right? In the voices tab, click create a voice and voice design. When I created",
+      "nearest_text": "right? In the voices tab, click create a voice and voice design. When I created"
+    },
+    {
+      "timestamp_s": 390.0,
+      "active_text": "teleport? Imagine the possibilities. No more",
+      "nearest_text": "teleport? Imagine the possibilities. No more"
+    },
+    {
+      "timestamp_s": 420.0,
+      "active_text": "that, so and after listening to it for a few minutes, something will feel",
+      "nearest_text": "that, so and after listening to it for a few minutes, something will feel"
+    },
+    {
+      "timestamp_s": 450.0,
+      "active_text": "First off, put the script down slowly. We have to choose a voice model first.",
+      "nearest_text": "First off, put the script down slowly. We have to choose a voice model first."
+    },
+    {
+      "timestamp_s": 480.0,
+      "active_text": "hopefully, it will be more stable in the future versions. But it's not really",
+      "nearest_text": "hopefully, it will be more stable in the future versions. But it's not really"
+    },
+    {
+      "timestamp_s": 510.0,
+      "active_text": "What did we needed for a realistic voice? Changing tone and speed, pauses,",
+      "nearest_text": "What did we needed for a realistic voice? Changing tone and speed, pauses,"
+    },
+    {
+      "timestamp_s": 540.0,
+      "active_text": "example, this is how it sounded like before making the changes. Say my name.",
+      "nearest_text": "example, this is how it sounded like before making the changes. Say my name."
+    },
+    {
+      "timestamp_s": 570.0,
+      "active_text": "a few sentences at a time? Couldn't we do the entire script at once? Well, we",
+      "nearest_text": "a few sentences at a time? Couldn't we do the entire script at once? Well, we"
+    },
+    {
+      "timestamp_s": 600.0,
+      "active_text": "editing part. With every batch we generate, we get a slightly different",
+      "nearest_text": "editing part. With every batch we generate, we get a slightly different"
+    },
+    {
+      "timestamp_s": 630.0,
+      "active_text": "organized. Now, we can move on to the next step.",
+      "nearest_text": "organized. Now, we can move on to the next step."
+    },
+    {
+      "timestamp_s": 660.0,
+      "active_text": "Let's listen to each one. But, the real magic happens when you chop some parts",
+      "nearest_text": "Let's listen to each one. But, the real magic happens when you chop some parts"
+    },
+    {
+      "timestamp_s": 690.0,
+      "active_text": "cutting the pauses. Use [music] the second line to start the next sentence",
+      "nearest_text": "cutting the pauses. Use [music] the second line to start the next sentence"
+    },
+    {
+      "timestamp_s": 720.0,
+      "active_text": "now. Is it really that hard to make a speed",
+      "nearest_text": "now. Is it really that hard to make a speed"
+    },
+    {
+      "timestamp_s": 750.0,
+      "active_text": "frequencies, or just drag and drop the preset I made. I also added a few fun",
+      "nearest_text": "frequencies, or just drag and drop the preset I made. I also added a few fun"
+    },
+    {
+      "timestamp_s": 780.0,
+      "active_text": "compilation, yeah, you should be fine. But, should you be fine? I mean, should",
+      "nearest_text": "compilation, yeah, you should be fine. But, should you be fine? I mean, should"
+    },
+    {
+      "timestamp_s": 810.0,
+      "active_text": "I don't know. It feels like cheating. It feels like I'm becoming a fraud, dude.",
+      "nearest_text": "I don't know. It feels like cheating. It feels like I'm becoming a fraud, dude."
+    },
+    {
+      "timestamp_s": 840.0,
+      "active_text": "I was so obsessed with how I sound, I was forgetting the most important part,",
+      "nearest_text": "I was so obsessed with how I sound, I was forgetting the most important part,"
+    },
+    {
+      "timestamp_s": 870.0,
+      "active_text": "you learned, this isn't [music] just about finding a voice. There's a bigger",
+      "nearest_text": "you learned, this isn't [music] just about finding a voice. There's a bigger"
+    },
+    {
+      "timestamp_s": 900.0,
+      "active_text": "2023. &gt;&gt; Exactly. Ruhi Cennet, Mark Rober, Joe",
+      "nearest_text": "2023. &gt;&gt; Exactly. Ruhi Cennet, Mark Rober, Joe"
+    },
+    {
+      "timestamp_s": 930.0,
+      "active_text": "&gt;&gt; see the potential?",
+      "nearest_text": "&gt;&gt; see the potential?"
+    },
+    {
+      "timestamp_s": 960.0,
+      "active_text": "let's take my last video. I already dubbed it into Spanish and Hindi, so",
+      "nearest_text": "let's take my last video. I already dubbed it into Spanish and Hindi, so"
+    },
+    {
+      "timestamp_s": 990.0,
+      "active_text": "language and upload that voice-over we just exported. Hit generate and um go",
+      "nearest_text": "language and upload that voice-over we just exported. Hit generate and um go"
+    },
+    {
+      "timestamp_s": 1020.0,
+      "active_text": "crispy [music] and export just the audio.",
+      "nearest_text": "crispy [music] and export just the audio."
+    },
+    {
+      "timestamp_s": 1050.0,
+      "active_text": "country. Keep repeating it for other languages as well and you tripled your",
+      "nearest_text": "country. Keep repeating it for other languages as well and you tripled your"
+    },
+    {
+      "timestamp_s": 1080.0,
+      "active_text": "Wow. That's",
+      "nearest_text": "Wow. That's"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "status": "fail",
+  "mode": "master",
+  "video": "projects\\isaacverse-final\\renders\\master_1080p.mp4",
+  "media": {
+    "durationSec": 30.058667,
+    "videoStreams": 1,
+    "audioStreams": 1,
+    "width": 1920,
+    "height": 1080
+  },
+  "audio": {
+    "meanVolumeDb": -21.3,
+    "maxVolumeDb": -3.9
+  },
+  "freeze": {
+    "ratio": 0.8150727375901268,
+    "maxDurationSec": 3.466667,
+    "events": [
+      {
+        "startSec": 0.566667,
+        "endSec": 1.166667,
+        "durationSec": 0.6
+      },
+      {
+        "startSec": 1.166667,
+        "endSec": 3.5,
+        "durationSec": 2.333333
+      },
+      {
+        "startSec": 3.733333,
+        "endSec": 4.866667,
+        "durationSec": 1.133333
+      },
+      {
+        "startSec": 4.866667,
+        "endSec": 7.0,
+        "durationSec": 2.133333
+      },
+      {
+        "startSec": 7.433333,
+        "endSec": 9.633333,
+        "durationSec": 2.2
+      },
+      {
+        "startSec": 9.633333,
+        "endSec": 10.5,
+        "durationSec": 0.866667
+      },
+      {
+        "startSec": 10.733333,
+        "endSec": 12.7,
+        "durationSec": 1.966667
+      },
+      {
+        "startSec": 12.7,
+        "endSec": 14.066667,
+        "durationSec": 1.366667
+      },
+      {
+        "startSec": 14.5,
+        "endSec": 15.0,
+        "durationSec": 0.5
+      },
+      {
+        "startSec": 15.0,
+        "endSec": 15.633333,
+        "durationSec": 0.633333
+      },
+      {
+        "startSec": 15.633333,
+        "endSec": 16.233333,
+        "durationSec": 0.6
+      },
+      {
+        "startSec": 16.233333,
+        "endSec": 16.8,
+        "durationSec": 0.566667
+      },
+      {
+        "startSec": 16.8,
+        "endSec": 17.366667,
+        "durationSec": 0.566667
+      },
+      {
+        "startSec": 17.366667,
+        "endSec": 18.5,
+        "durationSec": 1.133333
+      },
+      {
+        "startSec": 19.033333,
+        "endSec": 22.5,
+        "durationSec": 3.466667
+      },
+      {
+        "startSec": 22.933333,
+        "endSec": 24.366667,
+        "durationSec": 1.433333
+      },
+      {
+        "startSec": 24.366667,
+        "endSec": 26.0,
+        "durationSec": 1.633333
+      },
+      {
+        "startSec": 26.333333,
+        "endSec": 27.7,
+        "durationSec": 1.366667
+      }
+    ]
+  },
+  "frames": {
+    "sampleCount": 60.0,
+    "motionMean": 0.02719916058654466,
+    "sharpnessMean": 0.005487020449557652,
+    "saturationMean": 0.0319859634929647,
+    "edgeDensityMean": 0.04442916936656101
+  },
+  "failures": [
+    {
+      "id": "freeze-ratio",
+      "message": "Freeze ratio 0.815 exceeds master threshold",
+      "evidencePaths": [
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0001.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0002.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0003.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0004.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0005.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0006.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0007.png",
+        "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0008.png"
+      ]
+    }
+  ],
+  "warnings": [],
+  "evidencePaths": [
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0001.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0002.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0003.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0004.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0005.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0006.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0007.png",
+    "C:\\Users\\DELL\\AppData\\Local\\Temp\\isaacverse-qa-07jz8e3_\\frames\\frame-0008.png"
+  ],
+  "visionReviewRequired": true
+}

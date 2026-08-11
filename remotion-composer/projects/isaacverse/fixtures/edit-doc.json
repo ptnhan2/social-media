@@ -1,0 +1,35 @@
+{
+  "id": "agent-fixture-edit-doc",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "beat-journey",
+      "journeySlot": "trials",
+      "startSec": 0,
+      "durationSec": 4,
+      "transcript": "The process has three steps.",
+      "narrativeFunction": "explain a process relationship",
+      "treatment": {
+        "id": "semantic-diagram",
+        "params": {
+          "title": "The process",
+          "kicker": "three steps",
+          "centerLabel": "the edit",
+          "nodes": [
+            { "id": "one", "label": "Sketch", "x": 24, "y": 50, "activeFrom": 0.2 },
+            { "id": "two", "label": "Create", "x": 50, "y": 50, "activeFrom": 0.8 },
+            { "id": "three", "label": "Animate", "x": 76, "y": 50, "activeFrom": 1.4 }
+          ],
+          "edges": [
+            { "from": "one", "to": "two", "revealAt": 0.6 },
+            { "from": "two", "to": "three", "revealAt": 1.2 }
+          ]
+        },
+        "assets": []
+      },
+      "audioCues": []
+    }
+  ]
+}

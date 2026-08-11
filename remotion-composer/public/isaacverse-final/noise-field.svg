@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <rect width="960" height="540" fill="#0b1017"/>
+  <g opacity=".55" fill="none" stroke-linecap="round">
+    <path d="M-20 430C120 310 170 520 310 380S500 230 620 360s180 80 360-70" stroke="#ec6a5e" stroke-width="7"/>
+    <path d="M-20 455C120 335 170 545 310 405S500 255 620 385s180 80 360-70" stroke="#f2b84b" stroke-width="3"/>
+    <path d="M-20 405C120 285 170 495 310 355S500 205 620 335s180 80 360-70" stroke="#61d7e8" stroke-width="3"/>
+  </g>
+  <g fill="#dce7eb" opacity=".86">
+    <circle cx="118" cy="118" r="3"/><circle cx="204" cy="194" r="2"/><circle cx="396" cy="90" r="3"/><circle cx="548" cy="152" r="2"/><circle cx="780" cy="94" r="3"/><circle cx="850" cy="260" r="2"/>
+  </g>
+  <rect x="110" y="84" width="430" height="74" rx="8" fill="#151d27" stroke="#40515f"/>
+  <text x="136" y="130" fill="#f4f7f7" font-family="Georgia,serif" font-size="30">noise feels like progress</text>
+  <text x="112" y="485" fill="#61d7e8" font-family="monospace" font-size="17" letter-spacing="3">STOP. FIND THE DECISION.</text>
+</svg>

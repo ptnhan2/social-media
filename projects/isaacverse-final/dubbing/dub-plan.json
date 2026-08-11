@@ -1,0 +1,30 @@
+{
+  "stems": {
+    "voiceSrc": "projects\\isaacverse-final\\dubbing\\stems\\voice-stem.wav",
+    "musicSfxSrc": "projects\\isaacverse-final\\dubbing\\stems\\music-sfx-stem.wav",
+    "durationSec": 30.0
+  },
+  "dubs": [
+    {
+      "language": "vi",
+      "voiceSrc": null,
+      "mixSrc": "projects\\isaacverse-final\\dubbing\\stems\\music-sfx-stem.wav",
+      "aligned": false,
+      "status": "planned",
+      "notes": [
+        "External dubbing provider not invoked; voice stem is ready for an explicit provider call."
+      ]
+    },
+    {
+      "language": "en",
+      "voiceSrc": null,
+      "mixSrc": "projects\\isaacverse-final\\dubbing\\stems\\music-sfx-stem.wav",
+      "aligned": false,
+      "status": "planned",
+      "notes": [
+        "External dubbing provider not invoked; voice stem is ready for an explicit provider call."
+      ]
+    }
+  ],
+  "providerCalls": []
+}

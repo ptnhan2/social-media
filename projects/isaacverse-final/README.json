@@ -1,0 +1,24 @@
+{
+  "projectId": "isaacverse-final",
+  "purpose": "A from-scratch, local-only IsaacVerse production-system acceptance project.",
+  "notDerivedFrom": [
+    "remotion-composer/projects/isaacverse/Root.tsx",
+    "retired Vox scene data"
+  ],
+  "workflow": [
+    "story",
+    "voice",
+    "assets",
+    "treatments",
+    "edit",
+    "draft-window",
+    "qa",
+    "feedback-patch",
+    "master",
+    "thumbnail-dubbing-publish-package"
+  ],
+  "localRun": {
+    "composer": "cd remotion-composer/composer-app; npm run dev",
+    "check": "python tools/project/project_store.py check --project projects/isaacverse-final"
+  }
+}

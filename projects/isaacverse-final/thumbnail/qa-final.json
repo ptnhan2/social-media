@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "dimensions": {
+    "width": 1280,
+    "height": 720
+  },
+  "contrastProxy": 0.1382431983947754,
+  "safeArea": {
+    "left": 62,
+    "top": 74,
+    "right": 1218,
+    "bottom": 646
+  },
+  "findings": []
+}

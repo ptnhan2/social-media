@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <rect width="960" height="540" fill="#e9e0cd"/>
+  <path d="M0 64h960M0 126h960M0 188h960M0 250h960M0 312h960M0 374h960M0 436h960M0 498h960" stroke="#b7aa94" stroke-width="2" opacity=".48"/>
+  <path d="M80 414C218 370 220 154 350 190s127 214 255 129 166-195 276-101" fill="none" stroke="#283b45" stroke-width="12"/>
+  <path d="M81 414C218 370 220 154 350 190" fill="none" stroke="#ec6a5e" stroke-width="20" opacity=".75"/>
+  <circle cx="80" cy="414" r="15" fill="#f2b84b"/><circle cx="350" cy="190" r="15" fill="#61d7e8"/><circle cx="605" cy="319" r="15" fill="#ec6a5e"/><circle cx="881" cy="218" r="15" fill="#a98bff"/>
+  <text x="78" y="90" fill="#283b45" font-family="Georgia,serif" font-size="32">the useful frame is a choice</text>
+  <text x="80" y="482" fill="#283b45" font-family="monospace" font-size="17" letter-spacing="3">KEEP THE SIGNAL. CUT THE NOISE.</text>
+</svg>
