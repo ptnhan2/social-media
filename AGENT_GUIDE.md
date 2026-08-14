@@ -1,6 +1,10 @@
-# AGENT_GUIDE.md — IsaacVerse Production Guide
+# AGENT_GUIDE.md — Video Agent Harness (IsaacVerse domain)
 
 ## Mission
+
+**Primary (chốt 2026-08-15): build a self-improving video agent harness — an own product.** See `docs/EVOLUTION-HARNESS-ISAACVERSE.md`. The harness learns from feedback + tutorials and progresses toward a standard of beauty + editing skill, able to diverge from Isaac style. Foundation: LangChain Deep Agents (self-host, model-agnostic). Kilocode is a dev tool while the harness is built — not the long-term runtime. Keep all domain logic + data portable (plain code + JSON + MCP).
+
+The IsaacVerse production grammar below is the **domain the harness operates on and evolves** — not the end product anymore:
 
 Build an agent-operated video production system that can reproduce the quality grammar observed in IsaacVerse:
 
@@ -211,8 +215,5 @@ Only an explicit `Apply as future rule` promotes a local fix into a treatment ru
 
 Do not use as active guidance:
 
-- `docs/vox-pipeline/`;
-- `gate_vox.py`;
-- `shared/primitives.tsx` Vox primitives;
-- legacy spatial layout components and variant-pool workflow;
+- retired Vox-style guidance and legacy spatial layout components;
 - raw popularity or use count as the primary creative selection mechanism.
