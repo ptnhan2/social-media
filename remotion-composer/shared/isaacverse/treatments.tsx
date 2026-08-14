@@ -184,6 +184,19 @@ export type ChapterCardProps = {
   holdFrom?: number;
 };
 
+export const chapterCardTitleLayout = (title: string): React.CSSProperties => {
+  const longTitle = title.trim().length > 22;
+  return {
+    width: "86%",
+    maxWidth: "86%",
+    margin: "0 auto",
+    fontSize: longTitle ? 82 : 96,
+    lineHeight: 1.08,
+    letterSpacing: longTitle ? "0.04em" : "0.08em",
+    overflowWrap: "break-word",
+  };
+};
+
 /** A restrained chapter reset: black negative space, one semantic word, one light cue. */
 export const ChapterCard: React.FC<ChapterCardProps> = ({ title, subtitle, accent = AMBER, holdFrom = 0 }) => {
   const frame = useCurrentFrame();
@@ -195,7 +208,7 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({ title, subtitle, accen
   return (
     <AbsoluteFill style={{ backgroundColor: BLACK, justifyContent: "center", alignItems: "center", color: PAPER }}>
       <div style={{ textAlign: "center", opacity: inProgress, transform: `scale(${wordScale})` }}>
-        <div style={{ fontFamily: "Arial, sans-serif", fontSize: 96, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase", textShadow: `0 0 22px ${accent}55` }}>{title}</div>
+        <div style={{ ...chapterCardTitleLayout(title), fontFamily: "Arial, sans-serif", fontWeight: 900, textTransform: "uppercase", textAlign: "center", textShadow: `0 0 22px ${accent}55` }}>{title}</div>
         <div style={{ height: 5, background: accent, boxShadow: `0 0 18px ${accent}`, width: `${lineProgress * 190}px`, margin: "20px auto 0" }} />
         {subtitle ? <div style={{ marginTop: 18, fontFamily: "Arial, sans-serif", fontSize: 20, letterSpacing: "0.06em", color: secondaryColor(accent), textTransform: "uppercase", opacity: 0.8 }}>{subtitle}</div> : null}
       </div>

@@ -1,0 +1,31 @@
+{
+  "id": "patch-editor-motion-1786610514537",
+  "videoId": "isaacverse-final",
+  "baseVersion": "v016",
+  "reason": "Update motion phase final-beat-01:phase-in cameraScale.",
+  "operations": [
+    {
+      "op": "updateBeat",
+      "beatId": "final-beat-01",
+      "changes": {
+        "motionPhases": [
+          {
+            "id": "final-beat-01:phase-in",
+            "name": "quiet reveal",
+            "startSec": 0,
+            "durationSec": 1.2,
+            "purpose": "let the claim land",
+            "params": {
+              "cameraScale": 2.5
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "affectedRange": {
+    "startSec": 0,
+    "endSec": 3.5
+  },
+  "status": "applied"
+}

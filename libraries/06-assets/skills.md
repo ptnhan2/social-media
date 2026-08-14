@@ -1,6 +1,6 @@
 ﻿# Mined Skills — 06-assets
 
-> Knowledge extracted from openmontage skills (2026-08-04).
+> Knowledge curated for the current production pipeline (2026-08-12).
 > Source: skills/ (164 files mined, 9 relevant to this branch).
 
 ## stock-sourcing-usage
@@ -136,4 +136,4 @@
 - Consistency ≠ same prompt every time: keep a recognizable world while letting each beat feel fresh.
 - Pitfalls: high-variance gen when deterministic works, rebuilding the same title/label system repeatedly, hiding failed asset paths, treating TTS as raw text-to-audio (needs pauses/emphasis cues).
 **What we already do differently:**
-- We already enforce "copy vs import" discipline via `shared/layouts/` + `shared/primitives.tsx`. The public/ staging + seed-management crossfade recipe is new and applies if we adopt anime_scene.
+- Asset staging follows the semantic Composer asset manifest and local provenance rules. The public/ staging + seed-management crossfade recipe is new and applies if we adopt anime_scene.

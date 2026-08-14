@@ -1,0 +1,19 @@
+{
+  "id": "feedback-1786567831991",
+  "videoId": "isaacverse-final-edit",
+  "version": "v009",
+  "scope": "beat",
+  "target": {
+    "reviewSliceId": "isaacverse-final:final-beat-02:beat:range",
+    "beatId": "final-beat-02",
+    "shotId": "final-shot-02",
+    "startSec": 3.5,
+    "endSec": 7
+  },
+  "category": "too-busy",
+  "modality": "story,pacing,visual,voice,caption,music,sfx,mix",
+  "note": "",
+  "status": "open",
+  "applyScope": "this_instance",
+  "createdAt": "2026-08-12T20:50:31.991Z"
+}

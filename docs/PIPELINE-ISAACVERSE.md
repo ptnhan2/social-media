@@ -18,7 +18,7 @@
 - ❌ vox registry: 7 researched layouts (triptych/quote-card/...).
 - ❌ gate_vox criteria → thay bằng quality gate mới (giữ cơ chế runtime-check tool).
 - ✅ GIỮ: Composer semantic canvas editor, mechanism research, skills/, tools/ infrastructure.
-- `docs/vox-pipeline/` → archive.
+- Retired reference material is not part of the active pipeline.
 
 ## 2. Core reframe: BEAT-driven, không layout-driven
 Vox = layout (sắp xếp không gian) per scene. IsaacVerse = **beat** (narrative moment) per edit-unit. Video = chuỗi beat. Mỗi beat gộp: narrative role + script + voice directive + edit category + motion + sfx + asset. Pipeline compose beat → timeline → render.
@@ -99,7 +99,7 @@ Post-generation, trước render master. FAIL = quay lại stage lỗi.
 - `tools/` → voice (chop-combine), edit-assembly, sound-placement, thumbnail, quality-gate.
 - `skills/` → giữ (ElevenLabs TTS, image gen, ffmpeg...) — đã align.
 - `projects/<slug>/` → `script.json` (VideoDoc) + `voice/` + `edit/` + `renders/` + `master_1080p.mp4`.
-- `docs/PIPELINE-ISAACVERSE.md` → doc này (canonical). `docs/vox-pipeline/` → archive.
+- `docs/PIPELINE-ISAACVERSE.md` → doc này (canonical).
 - `remotion-composer/` → renderer + animation templates (Remotion comps) + Composer live review/editor.
 
 ## 8. Build phases
@@ -108,7 +108,7 @@ Post-generation, trước render master. FAIL = quay lại stage lỗi.
 - **P3 Voice (S3)**: per-sentence gen + N takes + chop-combine metric + EQ preset + dubbing.
 - **P4 Catalog + retrieval**: motion/sfx/edit/thumb templates với metadata, AI retrieve per beat.
 - **P5 Edit assembly + sound (S4+S5)**: color-code → layer → beat-cut → animation/text-pop/overlay → focus-consistency → SFX placement → Lumetri. (Renderer = Remotion comps.)
-- **P6 Quality gate (S7)**: structural + voice + sound + edit + anti-soulless checks (gate_vox evolve).
+- **P6 Quality gate (S7)**: structural + voice + sound + edit + anti-soulless checks.
 - **P7 Thumbnail (S6)** + render/publish/dub (S8).
 - Composer live editor — direct manipulation and Kilo handoff operate on semantic beat elements.
 

@@ -1,4 +1,5 @@
 import type { IsaacVerseEditDoc, SemanticBeat, TreatmentId } from "./types";
+import type { EditorDoc } from "./editor";
 import type { AssetManifest, FeedbackRecord, VideoDoc } from "./schema";
 
 export type ValidationIssue = { path: string; message: string };
@@ -129,11 +130,46 @@ export function validateEditPatch(value: unknown): ValidationIssue[] {
     if (!isObject(operation) || !isNonEmptyString(operation.op)) { issues.push({ path, message: "patch operation and op are required" }); return; }
     if (operation.op === "updateBeat" && (!isNonEmptyString(operation.beatId) || !isObject(operation.changes))) issues.push({ path, message: "updateBeat requires beatId and changes" });
     else if (operation.op === "replaceTreatment" && (!isNonEmptyString(operation.beatId) || !isNonEmptyString(operation.treatmentId))) issues.push({ path, message: "replaceTreatment requires beatId and treatmentId" });
+    else if (operation.op === "addElement" && (!isNonEmptyString(operation.beatId) || !isObject(operation.element) || !isNonEmptyString(operation.element.id))) issues.push({ path, message: "addElement requires beatId and element id" });
+    else if (operation.op === "addAsset" && (!isObject(operation.asset) || !isNonEmptyString(operation.asset.id) || !isNonEmptyString(operation.asset.src))) issues.push({ path, message: "addAsset requires asset id and src" });
     else if (operation.op === "updateElement" && (!isNonEmptyString(operation.beatId) || !isNonEmptyString(operation.elementId) || !isNonEmptyString(operation.path))) issues.push({ path, message: "updateElement requires beatId, elementId, and path" });
     else if (operation.op === "replaceAsset" && (!isNonEmptyString(operation.assetId) || !isNonEmptyString(operation.replacementAssetId))) issues.push({ path, message: "replaceAsset requires asset IDs" });
     else if (operation.op === "updateAudioCue" && (!isNonEmptyString(operation.beatId) || !isNonEmptyString(operation.cueId) || !isObject(operation.changes))) issues.push({ path, message: "updateAudioCue requires beatId, cueId, and changes" });
     else if (operation.op === "removeAudioCue" && (!isNonEmptyString(operation.beatId) || !isNonEmptyString(operation.cueId))) issues.push({ path, message: "removeAudioCue requires beatId and cueId" });
-    else if (!["updateBeat", "replaceTreatment", "updateElement", "replaceAsset", "updateAudioCue", "removeAudioCue"].includes(operation.op)) issues.push({ path: `${path}.op`, message: `unknown patch operation: ${operation.op}` });
+    else if (!["updateBeat", "replaceTreatment", "addElement", "addAsset", "updateElement", "replaceAsset", "updateAudioCue", "removeAudioCue"].includes(operation.op)) issues.push({ path: `${path}.op`, message: `unknown patch operation: ${operation.op}` });
+  });
+  return issues;
+}
+
+export function validateEditorDoc(value: unknown): ValidationIssue[] {
+  if (!isObject(value)) return [{ path: "$", message: "EditorDoc must be an object" }];
+  const editor = value as Partial<EditorDoc>;
+  const issues: ValidationIssue[] = [];
+  if (!isNonEmptyString(editor.id)) issues.push({ path: "$.id", message: "editor id is required" });
+  if (!isNonEmptyString(editor.projectId)) issues.push({ path: "$.projectId", message: "editor projectId is required" });
+  if (!isFiniteNumber(editor.fps) || editor.fps <= 0) issues.push({ path: "$.fps", message: "editor fps must be positive" });
+  if (!isFiniteNumber(editor.durationSec) || editor.durationSec <= 0) issues.push({ path: "$.durationSec", message: "editor duration must be positive" });
+  if (!Array.isArray(editor.tracks) || editor.tracks.length === 0) {
+    issues.push({ path: "$.tracks", message: "editor must contain at least one source-backed track" });
+    return issues;
+  }
+  const assets = Array.isArray(editor.assets) ? editor.assets : [];
+  const trackIds = new Set<string>();
+  editor.tracks.forEach((track, index) => {
+    const path = `$.tracks[${index}]`;
+    if (!isObject(track)) { issues.push({ path, message: "track must be an object" }); return; }
+    if (!isNonEmptyString(track.id) || trackIds.has(track.id)) issues.push({ path: `${path}.id`, message: "track id is required and must be unique" });
+    if (isNonEmptyString(track.id)) trackIds.add(track.id);
+    if (!isObject(track.source) || !isNonEmptyString(track.source.kind)) issues.push({ path: `${path}.source`, message: "track source binding is required" });
+    if (track.source?.kind === "asset" && (!isNonEmptyString(track.source.assetId) || !assets.some((asset) => asset.id === track.source?.assetId))) issues.push({ path: `${path}.source.assetId`, message: "asset-bound track must reference an existing editor asset" });
+    if (!Array.isArray(track.accepts) || !isObject(track.capabilities)) issues.push({ path, message: "track accepts and capabilities are required" });
+    if (!Array.isArray(track.clips) || (track.clips.length === 0 && !(isObject(track.metadata) && track.metadata.userCreated === true))) issues.push({ path: `${path}.clips`, message: "empty phantom tracks are not allowed" });
+    (track.clips || []).forEach((clip, clipIndex) => {
+      const clipPath = `${path}.clips[${clipIndex}]`;
+      if (!isObject(clip) || !isNonEmptyString(clip.id)) issues.push({ path: `${clipPath}.id`, message: "clip id is required" });
+      if (isObject(clip) && (!isObject(clip.range) || !isFiniteNumber(clip.range.startSec) || !isFiniteNumber(clip.range.endSec) || clip.range.endSec <= clip.range.startSec)) issues.push({ path: `${clipPath}.range`, message: "clip range must be positive" });
+      if (isObject(clip) && clip.trackId !== track.id) issues.push({ path: `${clipPath}.trackId`, message: "clip must belong to its containing track" });
+    });
   });
   return issues;
 }
@@ -189,3 +225,4 @@ export const assertValidVideoDoc = (value: VideoDoc) => assertValid(value, valid
 export const assertValidAssetManifest = (value: AssetManifest) => assertValid(value, validateAssetManifest(value), "AssetManifest");
 export const assertValidFeedback = (value: FeedbackRecord) => assertValid(value, validateFeedback(value), "FeedbackRecord");
 export const assertValidPatch = <T>(value: T) => assertValid(value, validateEditPatch(value), "EditPatch");
+export const assertValidEditorDoc = (value: EditorDoc) => assertValid(value, validateEditorDoc(value), "EditorDoc");

@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch } from "fs";
 import { resolve, sep } from "path";
+import { spawn, spawnSync } from "child_process";
 import { createProjectStore } from "../shared/isaacverse/store";
 import { dispatchLocalOperation } from "../shared/isaacverse/operations";
 import { createKiloHandoff, listKiloHandoffs, updateKiloHandoff } from "../shared/isaacverse/handoff";
@@ -9,7 +10,7 @@ import { createKiloHandoff, listKiloHandoffs, updateKiloHandoff } from "../share
 const PUBLIC_DIR = resolve("C:/DevWork/social-media/remotion-composer/public");
 const UPLOADS = resolve(PUBLIC_DIR, "uploads");
 const PROJECTS_ROOT = resolve("C:/DevWork/social-media/projects");
-const PROJECT_STORE = createProjectStore(PROJECTS_ROOT);
+const PROJECT_STORE = createProjectStore(PROJECTS_ROOT, PUBLIC_DIR);
 const RULES_ROOT = resolve("C:/DevWork/social-media/libraries/04-visual/feedback-rules");
 mkdirSync(UPLOADS, { recursive: true });
 
@@ -18,6 +19,10 @@ const sendJson = (res: any, status: number, value: unknown) => {
   res.setHeader("Content-Type", "application/json");
   res.end(JSON.stringify(value));
 };
+
+const COMPOSER_ROOT = resolve("C:/DevWork/social-media/remotion-composer");
+const WORKSPACE_ROOT = resolve("C:/DevWork/social-media");
+const renderJobs = new Map<string, { status: "rendering" | "done" | "error"; startedAt: number; outputPath: string; message?: string }>();
 
 const readBody = (req: any, res: any, done: (body: any) => void) => {
   let body = "";
@@ -50,6 +55,20 @@ export default defineConfig({
           readBody(req, res, (body) => {
             try { sendJson(res, 200, PROJECT_STORE.saveSourceDocs(body.projectId, body.videoDoc, body.editDoc, body.assetManifest)); }
             catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/editor", (req, res) => {
+          if (req.method === "GET") {
+            const url = new URL(req.url || "/", "http://composer.local");
+            const projectId = url.searchParams.get("projectId") || "isaacverse-final";
+            try { sendJson(res, 200, PROJECT_STORE.load(projectId).editorDoc || null); }
+            catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+            return;
+          }
+          if (req.method !== "POST") { sendJson(res, 405, { error: "GET or POST required" }); return; }
+          readBody(req, res, (body) => {
+            try { sendJson(res, 200, PROJECT_STORE.saveEditor(body.projectId, body.editorDoc, body.expectedEditVersion)); }
+            catch (error) { sendJson(res, 409, { error: error instanceof Error ? error.message : String(error) }); }
           });
         });
         server.middlewares.use("/api/project/feedback", (req, res) => {
@@ -181,6 +200,100 @@ export default defineConfig({
               res.statusCode = 500; res.end("500");
             }
           });
+        });
+        server.middlewares.use("/api/render/status", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const jobId = url.searchParams.get("jobId") || "";
+          const projectId = url.searchParams.get("projectId") || "isaacverse-final";
+          const job = renderJobs.get(jobId);
+          if (!job) { sendJson(res, 404, { error: "Unknown render job" }); return; }
+          sendJson(res, 200, {
+            status: job.status,
+            elapsedSec: Math.round((Date.now() - job.startedAt) / 1000),
+            message: job.message,
+            outputUrl: job.status === "done" ? `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(job.outputPath)}` : undefined,
+          });
+        });
+        server.middlewares.use("/api/render", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "isaacverse-final");
+              const snapshot = PROJECT_STORE.load(projectId);
+              const durationSec = typeof snapshot.editorDoc?.durationSec === "number" ? snapshot.editorDoc.durationSec : 0;
+              if (durationSec <= 0) throw new Error("Project editor document has no duration");
+              const quality = typeof body.quality === "string" ? body.quality : "draft";
+              const scale = typeof body.scale === "number" && body.scale > 0 ? body.scale : undefined;
+              const sync = spawnSync(process.execPath, ["scripts/sync-project-public.mjs", projectId], { cwd: COMPOSER_ROOT, windowsHide: true, stdio: "ignore" });
+              if (sync.status !== 0) throw new Error("Failed to sync project files before render");
+              const jobId = `job-${Date.now()}`;
+              const outputRel = `renders/exports/${projectId}-${quality}-${jobId}.mp4`;
+              const outputPath = resolve(WORKSPACE_ROOT, "projects", projectId, outputRel);
+              mkdirSync(resolve(WORKSPACE_ROOT, "projects", projectId, "renders", "exports"), { recursive: true });
+              const args = ["scripts/render-window.mjs", "--project", projectId, "--start", "0", "--end", String(durationSec), "--quality", quality, "--padding", "0", "--output", outputPath];
+              if (scale !== undefined) args.push("--scale", String(scale));
+              const child = spawn(process.execPath, args, { cwd: COMPOSER_ROOT, windowsHide: true, stdio: "ignore" });
+              const job = { status: "rendering" as const, startedAt: Date.now(), outputPath: outputRel };
+              renderJobs.set(jobId, job);
+              child.on("exit", (code) => {
+                const current = renderJobs.get(jobId);
+                if (current) {
+                  current.status = code === 0 ? "done" : "error";
+                  if (code !== 0) current.message = `Remotion exited with code ${code}`;
+                }
+              });
+              child.on("error", (error) => {
+                const current = renderJobs.get(jobId);
+                if (current) { current.status = "error"; current.message = error.message; }
+              });
+              sendJson(res, 200, { jobId, outputPath: outputRel });
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        // --- Project list ---
+        server.middlewares.use("/api/projects/list", (_req, res) => {
+          try { sendJson(res, 200, PROJECT_STORE.listProjects()); }
+          catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+        });
+        // --- Create blank project ---
+        server.middlewares.use("/api/projects/create", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "").trim();
+              if (!projectId || !/^[a-zA-Z0-9._-]+$/.test(projectId)) { sendJson(res, 400, { error: "Invalid project ID" }); return; }
+              const snapshot = PROJECT_STORE.createBlankProject(projectId);
+              sendJson(res, 200, { projectId, state: snapshot.state });
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        // --- SSE: file-system change notifications ---
+        const sseClients = new Set<import("http").ServerResponse>();
+        let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+        const changedProjects = new Set<string>();
+        try {
+          watch(PROJECTS_ROOT, { recursive: true }, (_event, filename) => {
+            if (!filename) return;
+            const projectId = filename.split(/[\\/]/)[0];
+            if (projectId && /^[a-zA-Z0-9._-]+$/.test(projectId)) changedProjects.add(projectId);
+            if (debounceTimer) clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+              for (const pid of changedProjects) {
+                for (const client of sseClients) {
+                  client.write(`data: change:${pid}\n\n`);
+                }
+              }
+              changedProjects.clear();
+              debounceTimer = null;
+            }, 200);
+          });
+        } catch { /* fs.watch not available */ }
+        server.middlewares.use("/api/sse", (req, res) => {
+          if (req.headers.accept !== "text/event-stream") { sendJson(res, 400, { error: "SSE requires Accept: text/event-stream" }); return; }
+          res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" });
+          res.write("data: connected\n\n");
+          sseClients.add(res);
+          req.on("close", () => { sseClients.delete(res); });
         });
       },
     },

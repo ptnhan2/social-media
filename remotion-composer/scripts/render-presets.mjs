@@ -5,6 +5,18 @@ export const PRESETS = {
     x264Preset: "ultrafast",
     crf: "32",
   },
+  standard: {
+    scale: "0.5",
+    concurrency: "2",
+    x264Preset: "fast",
+    crf: "24",
+  },
+  high: {
+    scale: "1",
+    concurrency: "2",
+    x264Preset: "medium",
+    crf: "20",
+  },
   master: {
     scale: "1",
     concurrency: "2",

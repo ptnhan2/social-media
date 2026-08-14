@@ -56,6 +56,7 @@ describe("canonical IsaacVerse contracts", () => {
       reason: "Make the title readable.",
       operations: [
         { op: "updateElement", beatId: "beat-01", elementId: "beat-01:title", path: "color", value: "#f2b84b" },
+        { op: "addElement", beatId: "beat-01", element: { id: "beat-01:uploaded", role: "uploaded asset", kind: "image", geometry: { x: 20, y: 30, width: 200, height: 120 }, metadata: { assetSrc: "/uploads/test.png" } } },
         { op: "replaceAsset", assetId: "asset-old", replacementAssetId: "asset-new" },
         { op: "updateAudioCue", beatId: "beat-01", cueId: "cue-01", changes: { gain: -12 } },
       ],
@@ -64,6 +65,20 @@ describe("canonical IsaacVerse contracts", () => {
     };
 
     expect(validateEditPatch(patch)).toEqual([]);
+  });
+
+  it("adds a new canvas asset as an override element", () => {
+    const after = applyPatch(doc(), {
+      id: "patch-add-element",
+      videoId: "isaacverse-final",
+      baseVersion: "v001",
+      reason: "Place uploaded asset.",
+      operations: [{ op: "addElement", beatId: "beat-01", element: { id: "beat-01:uploaded", role: "uploaded asset", kind: "image", geometry: { x: 20, y: 30, width: 200, height: 120 }, metadata: { assetSrc: "/uploads/test.png" } } }],
+      affectedRange: { startSec: 0, endSec: 4 },
+      status: "draft",
+    });
+
+    expect(after.beats[0].elements?.find((element) => element.id === "beat-01:uploaded")?.metadata?.canvasOverride).toBe(true);
   });
 
   it("applies canonical element and beat operations without changing other beats", () => {
@@ -82,6 +97,24 @@ describe("canonical IsaacVerse contracts", () => {
 
     expect(after.beats[0].elements?.[0].metadata?.color).toBe("#61d7e8");
     expect(after.beats).toHaveLength(1);
+  });
+
+  it("marks nested geometry patches as canvas overrides", () => {
+    const before = doc();
+    before.beats[0].elements![0].geometry = { x: 10, y: 20, width: 300, height: 80, rotation: 0 };
+
+    const after = applyPatch(before, {
+      id: "patch-geometry-field",
+      videoId: "isaacverse-final",
+      baseVersion: "v001",
+      reason: "Nudge the title into the safe area.",
+      operations: [{ op: "updateElement", beatId: "beat-01", elementId: "beat-01:title", path: "geometry.x", value: 80 }],
+      affectedRange: { startSec: 0, endSec: 4 },
+      status: "draft",
+    });
+
+    expect(after.beats[0].elements?.[0].geometry?.x).toBe(80);
+    expect(after.beats[0].elements?.[0].metadata?.canvasOverride).toBe(true);
   });
 
   it("reflows downstream beats and transitions when a duration patch changes timing", () => {

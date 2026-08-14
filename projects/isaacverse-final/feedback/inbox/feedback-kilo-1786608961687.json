@@ -1,0 +1,36 @@
+{
+  "id": "feedback-kilo-1786608961687",
+  "projectId": "isaacverse-final",
+  "version": "v013",
+  "slice": {
+    "id": "isaacverse-final:final-beat-01:beat:range",
+    "videoId": "isaacverse-final",
+    "source": "beat",
+    "label": "status_quo: name the false solution",
+    "target": {
+      "sceneId": "final-scene-01",
+      "beatId": "final-beat-01",
+      "startSec": 0,
+      "endSec": 3.5
+    },
+    "startSec": 0,
+    "endSec": 3.5,
+    "modalities": [
+      "story",
+      "pacing",
+      "visual",
+      "voice",
+      "caption",
+      "music",
+      "sfx",
+      "mix"
+    ],
+    "transcript": "The polished timeline can still hide the real problem.",
+    "status": "unreviewed"
+  },
+  "category": "too-busy",
+  "modality": "story",
+  "requestedAction": "diagnose_and_patch",
+  "status": "pending",
+  "createdAt": "2026-08-13T08:16:01.687Z"
+}

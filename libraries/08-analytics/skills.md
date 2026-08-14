@@ -1,6 +1,6 @@
 ﻿# Mined Skills — 08-analytics
 
-> Knowledge extracted from openmontage skills (2026-08-04).
+> Knowledge curated for the current production pipeline (2026-08-12).
 > Source: skills/ (164 files mined, 2 relevant to this branch).
 
 ## long-form

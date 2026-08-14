@@ -1,0 +1,72 @@
+{
+  "id": "feedback-real-kilo-001",
+  "category": "motion-too-flat",
+  "slice": {
+    "videoId": "isaacverse-final",
+    "source": "motion-phase",
+    "id": "isaacverse-final:final-beat-03:motion-phase:final-beat-03:phase-focus",
+    "startSec": 7,
+    "label": "focus proof",
+    "endSec": 9.8,
+    "target": {
+      "motionPhaseId": "final-beat-03:phase-focus",
+      "beatId": "final-beat-03",
+      "startSec": 7,
+      "endSec": 9.8
+    },
+    "status": "previewed",
+    "modalities": [
+      "motion",
+      "visual"
+    ]
+  },
+  "version": "v004",
+  "projectId": "isaacverse-final",
+  "createdAt": "2026-08-11T20:44:30.6422706Z",
+  "status": "applied",
+  "claimedAt": "2026-08-12T06:10:00Z",
+  "requestedAction": "diagnose_and_patch",
+  "modality": "motion",
+  "note": "Keep the proof readable while adding a restrained movement phase.",
+  "result": {
+    "diagnosis": "Motion-too-flat in 7.0-9.8s (beat final-beat-03, phase final-beat-03:phase-focus, modality motion). Root cause: the phase declares purpose and duration (startSec 0, durationSec 2.8) but carries no camera params, so BeatCamera (EditVideo.tsx BeatCamera) falls back to the default requestedScale 1.12 and targetScale = Math.max(1.12, 1.12) = 1.12. The ramp is spread across the full beat (phaseEndFrame uses Math.round(beat.durationSec * fps) = 105 frames, not the phase end 84 frames), diluting the push. Additionally the HostReflectionShot treatment runs an internal counter-motion (push interpolates 1.06 -> 1.0 over the first 4s) that settles out while the camera pushes in, so the net perceived motion is near static. QA freeze evidence corroborates: diagnosis-master-v004.json reports three contiguous freeze events covering 7.43-9.3s in this exact window. Patch: give the phase a restrained cameraScale (1.2) that the renderer already consumes (phase.params.cameraScale); no dead params added. Post-run renderer note: the Kilo diagnosis was generated against v004 before the cameraPhaseFrames correction; final v009 now ends the camera ramp at the declared phase end (84 frames), and the after artifact points to the v009 render.",
+    "patch": {
+      "id": "patch-isaacverse-final-final-beat-03-motion-too-flat",
+      "videoId": "isaacverse-final",
+      "baseVersion": "v004",
+      "reason": "motion-too-flat: phase final-beat-03:phase-focus carries no camera params so BeatCamera falls back to the weak default push (1.12) and the treatment's internal counter-zoom settles it out; add a restrained phase cameraScale (1.2) so the proof stays readable while the movement reads as intentional.",
+      "operations": [
+        {
+          "op": "updateBeat",
+          "beatId": "final-beat-03",
+          "changes": {
+            "motionPhases": [
+              {
+                "id": "final-beat-03:phase-focus",
+                "name": "focus proof",
+                "startSec": 0,
+                "durationSec": 2.8,
+                "purpose": "make the decision inspectable",
+                "params": {
+                  "cameraScale": 1.2
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "affectedRange": {
+        "startSec": 7,
+        "endSec": 9.8
+      },
+      "status": "draft"
+    },
+    "beforePath": "renders/windows/kilo-motion-before-v004.mp4",
+    "afterPath": "renders/windows/kilo-motion-after-v009.mp4",
+    "evidencePaths": [
+      "renders/windows/kilo-motion-before-v004.mp4",
+      "renders/windows/kilo-motion-after-v009.mp4"
+    ],
+    "completedAt": "2026-08-12T06:13:52Z"
+  }
+}

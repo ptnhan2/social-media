@@ -46,8 +46,7 @@ export const createKiloHandoff = (projectRoot: string, request: FeedbackRequest)
     "",
     "User note:",
     request.note || "(none)",
-    "",
-  ].join("\\n");
+  ].join("\n");
   writeJson(paths.requestPath, request);
   fs.writeFileSync(paths.promptPath, `${prompt}\n`, "utf8");
   return { request, ...paths };

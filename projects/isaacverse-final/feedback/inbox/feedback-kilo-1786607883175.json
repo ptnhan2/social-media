@@ -1,0 +1,36 @@
+{
+  "id": "feedback-kilo-1786607883175",
+  "projectId": "isaacverse-final",
+  "version": "v011",
+  "slice": {
+    "id": "isaacverse-final:final-beat-02:beat:range",
+    "videoId": "isaacverse-final",
+    "source": "beat",
+    "label": "call: reframe the unit of editing",
+    "target": {
+      "sceneId": "final-scene-01",
+      "beatId": "final-beat-02",
+      "startSec": 3.5,
+      "endSec": 7
+    },
+    "startSec": 3.5,
+    "endSec": 7,
+    "modalities": [
+      "story",
+      "pacing",
+      "visual",
+      "voice",
+      "caption",
+      "music",
+      "sfx",
+      "mix"
+    ],
+    "transcript": "A cut is not a gap between clips. It is a decision.",
+    "status": "unreviewed"
+  },
+  "category": "too-busy",
+  "modality": "story",
+  "requestedAction": "diagnose_and_patch",
+  "status": "pending",
+  "createdAt": "2026-08-13T07:58:03.175Z"
+}

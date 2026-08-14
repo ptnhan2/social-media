@@ -1,6 +1,6 @@
 ﻿# Mined Skills — 01-topic
 
-> Knowledge extracted from openmontage skills (2026-08-04).
+> Knowledge curated for the current production pipeline (2026-08-12).
 > Source: skills/ (164 files mined, 3 relevant to this branch).
 
 ## video-reference-analyst
@@ -47,4 +47,4 @@
 - Choose a reuse strategy upfront: recurring motifs, layout system, transition family, typography hierarchy.
 - Quality gate: mode explicit, visual path feasible, project designed for reuse, honest about missing tools.
 **What we already do differently:**
-- We don't do a dedicated animation pipeline today; our Vox variant (2V) covers motion-graphics/karaoke. The mode-classification + reuse-strategy thinking applies if we add animated video styles.
+- IsaacVerse uses dedicated semantic motion treatments selected by narrative purpose; topic research must supply the evidence each treatment needs.

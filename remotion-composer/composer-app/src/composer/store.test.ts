@@ -4,6 +4,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import type { EditPatch, FeedbackRecord, QAReport } from "../../../shared/isaacverse/schema";
 import type { IsaacVerseEditDoc } from "../../../shared/isaacverse/types";
+import type { EditorDoc } from "../../../shared/isaacverse/editor";
 import { createProjectStore } from "../../../shared/isaacverse/store";
 
 const temporaryRoots: string[] = [];
@@ -83,5 +84,36 @@ describe("durable IsaacVerse project store", () => {
     expect(saved.version).toBe("v002");
     expect(saved.editDoc.beats[0].durationSec).toBe(3.5);
     expect(store.load("final-project").state.currentVersion).toBe("v002");
+  });
+
+  it("syncs saved versions to the optional Remotion public copy", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "isaacverse-store-"));
+    const publicRoot = fs.mkdtempSync(path.join(os.tmpdir(), "isaacverse-public-"));
+    temporaryRoots.push(root, publicRoot);
+    fs.mkdirSync(path.join(publicRoot, "final-project"), { recursive: true });
+    const store = createProjectStore(root, publicRoot);
+
+    store.ensureProject("final-project");
+    store.saveVersion("final-project", editDoc(), "v000");
+
+    const publicDoc = JSON.parse(fs.readFileSync(path.join(publicRoot, "final-project", "05-edit-doc.json"), "utf8")) as IsaacVerseEditDoc;
+    expect(publicDoc.version).toBe("v001");
+    store.saveEditor("final-project", { id: "editor:final-project", projectId: "final-project", width: 1920, height: 1080, fps: 30, durationSec: 4, tracks: [{ id: "video-main", kind: "video", name: "Main video", order: 0, locked: false, muted: false, solo: false, hidden: false, source: { kind: "project", projectRef: "semantic-beats" }, accepts: ["image", "video"], capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false }, clips: [{ id: "clip-01", kind: "beat", trackId: "video-main", range: { startSec: 0, endSec: 4 }, label: "clip", source: { beatId: "beat-01" }, linkedClipIds: [], locked: false, muted: false, hidden: false, metadata: {} }] }], revision: { baseEditVersion: "v001", revision: 1, updatedAt: "2026-08-12T00:00:00.000Z" } }, "v001");
+    expect(fs.existsSync(path.join(publicRoot, "final-project", "editor/current.json"))).toBe(true);
+  });
+
+  it("persists an editor timeline revision separately from the semantic edit doc", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "isaacverse-store-"));
+    temporaryRoots.push(root);
+    const store = createProjectStore(root);
+    store.ensureProject("final-project");
+    const timeline: EditorDoc = { id: "editor:final-project", projectId: "final-project", width: 1920, height: 1080, fps: 30, durationSec: 4, tracks: [{ id: "video-main", kind: "video", name: "Main video", order: 0, locked: false, muted: false, solo: false, hidden: false, source: { kind: "project", projectRef: "semantic-beats" }, accepts: ["image", "video"], capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false }, clips: [{ id: "clip-01", kind: "beat", trackId: "video-main", range: { startSec: 0, endSec: 4 }, label: "clip", source: { beatId: "beat-01" }, linkedClipIds: [], locked: false, muted: false, hidden: false, metadata: {} }] }], revision: { baseEditVersion: "v000", revision: 1, updatedAt: "2026-08-12T00:00:00.000Z" } };
+
+    const saved = store.saveEditor("final-project", timeline, "v000");
+    const loaded = store.load("final-project");
+
+    expect(saved.revision.revision).toBe(1);
+    expect(loaded.editorDoc?.id).toBe("editor:final-project");
+    expect(loaded.editorDoc?.revision.baseEditVersion).toBe("v000");
   });
 });

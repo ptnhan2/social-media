@@ -58,12 +58,12 @@ export const runRemotion = (args, { dryRun = false } = {}) => {
   return { command, args, status: result.status ?? 0 };
 };
 
-export function buildWindowRender({ slug, composition, entry, editDocPath, startSec, endSec, quality = "draft", output, paddingSec = 0.45, dryRun = false }) {
+export function buildWindowRender({ slug, composition, entry, editDocPath, startSec, endSec, quality = "draft", output, paddingSec = 0.45, scale, dryRun = false }) {
   const info = projectInfo(slug, editDocPath);
   const window = computeWindow({ startSec, endSec, fps: info.fps, durationSec: info.durationSec, paddingSec });
   const qualityPreset = preset(quality);
   const outputPath = output || path.join(workspaceRoot, "projects", slug, "renders", "windows", `${slug}-${quality}-${window.startSec.toFixed(2)}-${window.endSec.toFixed(2)}.mp4`);
-  const args = ["render", entry || `projects/${slug}/index.tsx`, composition || `${slug}-30s`, outputPath, `--frames=${window.startFrame}-${window.endFrame}`, `--scale=${qualityPreset.scale}`, `--concurrency=${qualityPreset.concurrency}`, `--x264-preset=${qualityPreset.x264Preset}`, `--crf=${qualityPreset.crf}`, "--gl=angle"];
+  const args = ["render", entry || `projects/${slug}/index.tsx`, composition || `${slug}-30s`, outputPath, `--frames=${window.startFrame}-${window.endFrame}`, `--scale=${typeof scale === "number" && scale > 0 ? scale : qualityPreset.scale}`, `--concurrency=${qualityPreset.concurrency}`, `--x264-preset=${qualityPreset.x264Preset}`, `--crf=${qualityPreset.crf}`, "--gl=angle"];
   return { ...window, outputPath, command: runRemotion(args, { dryRun }), args };
 }
 
@@ -84,6 +84,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToP
     quality: args.quality || "draft",
     output: args.output,
     paddingSec: args.padding === undefined ? 0.45 : Number(args.padding),
+    scale: args.scale === undefined ? undefined : Number(args.scale),
     dryRun: Boolean(args.dryRun),
   });
   console.log(JSON.stringify(result, null, 2));

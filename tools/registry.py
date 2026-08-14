@@ -1,5 +1,4 @@
-"""Tool Registry — discovers tools in tools/ and surfaces agent_skills.
-Simplified from openmontage's tool_registry.py."""
+"""Tool Registry — discovers tools in tools/ and surfaces agent_skills."""
 from __future__ import annotations
 import importlib, inspect, pkgutil
 from pathlib import Path

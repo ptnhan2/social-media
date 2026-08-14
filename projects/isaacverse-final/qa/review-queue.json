@@ -1,0 +1,19 @@
+{
+  "projectId": "isaacverse-final",
+  "version": "v009",
+  "entries": [
+    {
+      "sliceId": "isaacverse-final:final-beat-03:motion-phase:final-beat-03:phase-focus",
+      "status": "approved",
+      "updatedAt": "2026-08-12T06:55:05.508Z"
+    }
+  ],
+  "rollup": {
+    "slices": 61,
+    "approved": 1,
+    "needsFix": 0,
+    "unreviewed": 60,
+    "blocked": 0
+  },
+  "updatedAt": "2026-08-12T07:34:59.503Z"
+}

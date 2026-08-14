@@ -1,0 +1,18 @@
+{
+  "id": "feedback-kilo-1786608961687",
+  "videoId": "isaacverse-final-edit",
+  "version": "v013",
+  "scope": "beat",
+  "target": {
+    "reviewSliceId": "isaacverse-final:final-beat-01:beat:range",
+    "beatId": "final-beat-01",
+    "startSec": 0,
+    "endSec": 3.5
+  },
+  "category": "too-busy",
+  "modality": "story",
+  "note": "",
+  "status": "open",
+  "applyScope": "this_instance",
+  "createdAt": "2026-08-13T08:16:01.687Z"
+}

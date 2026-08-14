@@ -2,9 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import type { AssetManifest, EditPatch, FeedbackRecord, QAReport, VideoDoc } from "./schema";
 import type { IsaacVerseEditDoc } from "./types";
+import type { EditorDoc } from "./editor";
 import { deriveReviewSlices, reviewRollup, type ReviewQueue, type ReviewQueueEntry } from "./review";
 import { applyPatch } from "./feedback";
-import { assertValidEditDoc, assertValidFeedback, assertValidPatch, assertValidVideoDoc } from "./validate";
+import { assertValidEditDoc, assertValidEditorDoc, assertValidFeedback, assertValidPatch, assertValidVideoDoc } from "./validate";
 
 export type ProjectState = {
   projectId: string;
@@ -25,6 +26,7 @@ export type ProjectSnapshot = {
   videoDoc?: VideoDoc;
   editDoc?: IsaacVerseEditDoc;
   assetManifest?: AssetManifest;
+  editorDoc?: EditorDoc;
   feedback: FeedbackRecord[];
   patches: EditPatch[];
   qaReports: QAReport[];
@@ -70,9 +72,25 @@ const listJson = <T>(directory: string): T[] => {
 
 export class ProjectStore {
   readonly rootDir: string;
+  readonly publicRoot?: string;
 
-  constructor(rootDir: string) {
+  constructor(rootDir: string, publicRoot?: string) {
     this.rootDir = path.resolve(rootDir);
+    this.publicRoot = publicRoot ? path.resolve(publicRoot) : undefined;
+  }
+
+  private syncPublicEditDoc(projectId: string, editDoc: IsaacVerseEditDoc) {
+    if (!this.publicRoot) return;
+    const destination = path.resolve(this.publicRoot, safeId(projectId), "05-edit-doc.json");
+    if (destination !== this.publicRoot && !destination.startsWith(`${this.publicRoot}${path.sep}`)) throw new Error("Public project path escapes store root");
+    writeJsonAtomic(destination, editDoc);
+  }
+
+  private syncPublicEditorDoc(projectId: string, editorDoc: EditorDoc) {
+    if (!this.publicRoot) return;
+    const destination = path.resolve(this.publicRoot, safeId(projectId), "editor", "current.json");
+    if (destination !== this.publicRoot && !destination.startsWith(`${this.publicRoot}${path.sep}`)) throw new Error("Public editor path escapes store root");
+    writeJsonAtomic(destination, editorDoc);
   }
 
   projectDir(projectId: string) {
@@ -82,9 +100,75 @@ export class ProjectStore {
     return project;
   }
 
+  listProjects(): { id: string; title: string; stage: string; version: string; hasEditDoc: boolean; hasVideoDoc: boolean; updatedAt: string }[] {
+    if (!fs.existsSync(this.rootDir)) return [];
+    return fs.readdirSync(this.rootDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && /^[a-zA-Z0-9._-]+$/.test(entry.name))
+      .map((entry) => {
+        const dir = path.join(this.rootDir, entry.name);
+        const state = readJson<ProjectState>(path.join(dir, "00-state.json"));
+        const editDoc = readJson<IsaacVerseEditDoc>(path.join(dir, "05-edit-doc.json"));
+        const videoDoc = readJson<VideoDoc>(path.join(dir, "04-video-doc.json"));
+        const editorFile = path.join(dir, "editor", "current.json");
+        const editorMtime = fs.existsSync(editorFile) ? fs.statSync(editorFile).mtime.toISOString() : undefined;
+        const editMtime = fs.existsSync(path.join(dir, "05-edit-doc.json")) ? fs.statSync(path.join(dir, "05-edit-doc.json")).mtime.toISOString() : undefined;
+        return {
+          id: entry.name,
+          title: videoDoc?.idea || editDoc?.videoId || entry.name,
+          stage: state?.stage || "unknown",
+          version: state?.currentVersion || "v000",
+          hasEditDoc: Boolean(editDoc),
+          hasVideoDoc: Boolean(videoDoc),
+          updatedAt: editorMtime || editMtime || state?.lastSuccessfulAt || new Date(0).toISOString(),
+        };
+      })
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  }
+
+  createBlankProject(projectId: string): ProjectSnapshot {
+    const safeProjectId = safeId(projectId);
+    const project = this.ensureProject(safeProjectId);
+    const editDocPath = path.join(project, "05-edit-doc.json");
+    if (!fs.existsSync(editDocPath)) {
+      const blankEditDoc: IsaacVerseEditDoc = {
+        id: `${safeProjectId}-edit`,
+        videoId: safeProjectId,
+        version: "v001",
+        width: 1920,
+        height: 1080,
+        fps: 30,
+        beats: [{
+          id: `${safeProjectId}-beat-01`,
+          journeySlot: "call",
+          startSec: 0,
+          durationSec: 5,
+          transcript: "",
+          narrativeFunction: "New beat",
+          treatment: { id: "chapter-card", params: { title: "New Project" }, assets: [] },
+          audioCues: [],
+        }],
+        assets: [],
+        shots: [],
+        scenes: [],
+        audioPlan: { voice: [], music: [], ambience: [], beats: [], master: { limiter: true } },
+        transitions: [],
+        colorGrade: { preset: "none", intensity: 0 },
+      };
+      writeJsonAtomic(editDocPath, blankEditDoc);
+      writeJsonAtomic(path.join(project, "edit", "current.json"), blankEditDoc);
+      writeJsonAtomic(path.join(project, "edit", "versions", "v001.json"), { ...blankEditDoc, version: "v001" });
+      this.syncPublicEditDoc(safeProjectId, blankEditDoc);
+    }
+    const state = readJson<ProjectState>(path.join(project, "00-state.json"));
+    if (state) {
+      writeJsonAtomic(path.join(project, "00-state.json"), { ...state, stage: "edit", currentVersion: "v001", nextAction: "Edit the timeline in Composer." });
+    }
+    return this.load(safeProjectId);
+  }
+
   ensureProject(projectId: string) {
     const project = this.projectDir(projectId);
-    for (const relative of ["edit/versions", "feedback/inbox", "patches", "qa", "renders/windows", "assets", "thumbnail", "dubbing", "publish"]) fs.mkdirSync(path.join(project, relative), { recursive: true });
+    for (const relative of ["edit/versions", "editor/versions", "feedback/inbox", "patches", "qa", "renders/windows", "assets", "thumbnail", "dubbing", "publish"]) fs.mkdirSync(path.join(project, relative), { recursive: true });
     if (!fs.existsSync(path.join(project, "00-state.json"))) {
       writeJsonAtomic(path.join(project, "00-state.json"), {
         projectId,
@@ -120,6 +204,7 @@ export class ProjectStore {
       videoDoc: readJson<VideoDoc>(path.join(project, "04-video-doc.json")),
       editDoc: readJson<IsaacVerseEditDoc>(path.join(project, "edit/current.json")) ?? readJson<IsaacVerseEditDoc>(path.join(project, "05-edit-doc.json")),
       assetManifest: readJson<AssetManifest>(path.join(project, "assets/asset-manifest.json")),
+      editorDoc: readJson<EditorDoc>(path.join(project, "editor/current.json")),
       feedback: listJson<FeedbackRecord>(path.join(project, "feedback")),
       patches: listJson<EditPatch>(path.join(project, "patches")),
       qaReports: listJson<QAReport>(path.join(project, "qa")),
@@ -136,7 +221,21 @@ export class ProjectStore {
     writeJsonAtomic(path.join(project, "04-video-doc.json"), videoDoc);
     writeJsonAtomic(path.join(project, "05-edit-doc.json"), editDoc);
     writeJsonAtomic(path.join(project, "edit/current.json"), editDoc);
+    this.syncPublicEditDoc(projectId, editDoc);
     return this.load(projectId);
+  }
+
+  saveEditor(projectId: string, editorDoc: EditorDoc, expectedEditVersion?: string) {
+    const project = this.ensureProject(projectId);
+    assertValidEditorDoc(editorDoc);
+    const state = readJson<ProjectState>(path.join(project, "00-state.json"));
+    if (!state) throw new Error(`Missing project state: ${projectId}`);
+    if (expectedEditVersion && state.currentVersion !== expectedEditVersion) throw new Error(`Stale editor base version: expected ${expectedEditVersion}, current ${state.currentVersion}`);
+    const updated = { ...editorDoc, projectId, revision: { ...editorDoc.revision, updatedAt: new Date().toISOString() } };
+    writeJsonAtomic(path.join(project, "editor/versions", `r${String(updated.revision.revision).padStart(3, "0")}.json`), updated);
+    writeJsonAtomic(path.join(project, "editor/current.json"), updated);
+    this.syncPublicEditorDoc(projectId, updated);
+    return updated;
   }
 
   saveVersion(projectId: string, editDoc: IsaacVerseEditDoc, expectedBaseVersion?: string): SaveVersionResult {
@@ -153,6 +252,7 @@ export class ProjectStore {
     writeJsonAtomic(path.join(project, "edit/current.json"), versioned);
     writeJsonAtomic(path.join(project, "05-edit-doc.json"), versioned);
     writeJsonAtomic(path.join(project, "00-state.json"), state);
+    this.syncPublicEditDoc(projectId, versioned);
     return { version, editDoc: versioned, state };
   }
 
@@ -187,6 +287,8 @@ export class ProjectStore {
   }
 
   getReviewQueue(projectId: string): ReviewQueue {
+    const project = this.projectDir(projectId);
+    if (!fs.existsSync(path.join(project, "00-state.json"))) throw new Error(`Unknown project: ${projectId}`);
     const snapshot = this.load(projectId);
     if (snapshot.reviewQueue) return snapshot.reviewQueue;
     const slices = snapshot.editDoc ? deriveReviewSlices(snapshot.editDoc) : [];
@@ -212,4 +314,4 @@ export class ProjectStore {
   }
 }
 
-export const createProjectStore = (rootDir: string) => new ProjectStore(rootDir);
+export const createProjectStore = (rootDir: string, publicRoot?: string) => new ProjectStore(rootDir, publicRoot);

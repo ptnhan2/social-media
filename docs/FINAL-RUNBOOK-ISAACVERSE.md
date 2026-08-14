@@ -4,7 +4,9 @@
 
 Project: `projects/isaacverse-final/`
 
-Current version: `v004`
+Current version: `v009`
+
+Current editable timeline revision: `projects/isaacverse-final/editor/current.json`
 
 State: `projects/isaacverse-final/00-state.json`
 
@@ -52,20 +54,20 @@ python tools/quality/isaacverse_gate.py --video-doc projects/isaacverse-final/04
 python tools/quality/isaacverse_qa.py --video projects/isaacverse-final/renders/master_1080p.mp4 --mode master --output projects/isaacverse-final/qa/diagnosis-master.json
 ```
 
-The final v004 master has:
+The final v009 master has:
 
 - 1920x1080 video;
 - 30.058667 seconds;
 - one video stream and one audio stream;
-- calibrated freeze ratio `0.5367`;
+- calibrated freeze ratio `0.5334` and maximum freeze event `2.3s`;
 - no deterministic media-QA failures;
 - structural gate `PASS_WITH_VISION_REVIEW`.
 
 ## Final Artifacts
 
 - Master: `projects/isaacverse-final/renders/master_1080p.mp4`
-- Before window: `projects/isaacverse-final/renders/windows/beat03-before.mp4`
-- After window: `projects/isaacverse-final/renders/windows/beat03-after.mp4`
+- Kilo before window: `projects/isaacverse-final/renders/windows/kilo-motion-before-v004.mp4`
+- Kilo after window: `projects/isaacverse-final/renders/windows/kilo-motion-after-v009.mp4`
 - Thumbnail: `projects/isaacverse-final/thumbnail/final.png`
 - Compliance: `projects/isaacverse-final/publish/compliance-report-v004.json`
 - Publish dry-run: `projects/isaacverse-final/publish/publish-manifest-v004.json`
@@ -77,3 +79,5 @@ The final v004 master has:
 - Vision/taste approval is still a human gate.
 - YouTube OAuth upload was not invoked. The publish manifest is truthful `dry_run`, not a false upload claim.
 - Compliance remains `pass_with_review` for format variation and cadence evidence.
+- Thumbnail, compliance, dubbing, and publish-manifest files retain their truthful v004 provenance because the v009 change is scoped to one motion phase.
+- The persisted editor timeline has additional local revisions for editor-surface acceptance; those revisions are not yet promoted into a fresh final report until the fresh-project editor gate passes.

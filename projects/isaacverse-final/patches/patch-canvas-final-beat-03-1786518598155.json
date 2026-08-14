@@ -1,0 +1,26 @@
+{
+  "id": "patch-canvas-final-beat-03-1786518598155",
+  "videoId": "isaacverse-final",
+  "baseVersion": "v006",
+  "reason": "Apply direct canvas edits to the selected beat.",
+  "operations": [
+    {
+      "op": "updateElement",
+      "beatId": "final-beat-03",
+      "elementId": "final-beat-03:screen",
+      "path": "geometry",
+      "value": {
+        "x": 161,
+        "y": 77,
+        "width": 650,
+        "height": 370,
+        "rotation": -2
+      }
+    }
+  ],
+  "affectedRange": {
+    "startSec": 7,
+    "endSec": 10.5
+  },
+  "status": "applied"
+}

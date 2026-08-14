@@ -4,7 +4,9 @@
     "postiz": {
       "type": "remote",
       "url": "http://localhost:4007/api/mcp",
-      "headers": { "Authorization": "Bearer FILL_POSTIZ_API_KEY" },
+      "headers": {
+        "Authorization": "Bearer FILL_POSTIZ_API_KEY"
+      },
       "enabled": false
     },
     "open-design": {
@@ -21,5 +23,6 @@
       },
       "enabled": true
     }
-  }
+  },
+  "snapshot": false
 }

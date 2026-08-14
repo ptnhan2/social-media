@@ -3,7 +3,11 @@
 import React from "react";
 import type { CanvasElement, TextEffect } from "./types";
 import { CANVAS_W, CANVAS_H } from "./types";
-import { ARCHIVO, INK, CREAM, DARK_BG } from "../../../shared/primitives";
+
+const ARCHIVO = "'Archivo Black', 'Arial Black', sans-serif";
+const INK = "#131313";
+const CREAM = "#F5F0E8";
+const DARK_BG = "#171A1C";
 
 const fontOf = (f?: string) => f ?? ARCHIVO;
 
@@ -86,17 +90,25 @@ const LineView: React.FC<{ el: CanvasElement }> = ({ el }) => (
   </svg>
 );
 
+const MissingAsset: React.FC<{ el: CanvasElement }> = ({ el }) => <div data-missing-asset={el.id} style={{ width: "100%", height: "100%", display: "grid", placeItems: "center", padding: 10, boxSizing: "border-box", border: "1px dashed #ec6a5e", background: "rgba(236,106,94,.12)", color: "#ffd1cc", font: "10px 'Roboto Mono', monospace", textAlign: "center" }}>Missing asset<br />{el.name || el.id}</div>;
+
+const AssetImage: React.FC<{ el: CanvasElement; style: React.CSSProperties }> = ({ el, style }) => {
+  const [failed, setFailed] = React.useState(!el.src);
+  React.useEffect(() => setFailed(!el.src), [el.src]);
+  return failed ? <MissingAsset el={el} /> : <img src={el.src} alt="" draggable={false} onError={() => setFailed(true)} style={style} />;
+};
+
 const ImageView: React.FC<{ el: CanvasElement }> = ({ el }) => {
   const tone = el.filter ?? "grayscale(0.65) sepia(0.2) contrast(1.06) brightness(0.99)";
   const tf = `${el.flipH ? "scaleX(-1)" : ""} ${el.flipV ? "scaleY(-1)" : ""}`.trim();
-  if (el.imgRender === "full-bleed") return <img src={el.src} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: el.fit ?? "cover", filter: tone, transform: tf || undefined }} />;
+  if (el.imgRender === "full-bleed") return <AssetImage el={el} style={{ width: "100%", height: "100%", objectFit: el.fit ?? "cover", filter: tone, transform: tf || undefined }} />;
   if (el.imgRender === "photo-card") return (
     <div style={{ width: "100%", height: "100%", background: "#F7F1E2", padding: "3%", borderRadius: 4, boxShadow: "0 4px 6px rgba(0,0,0,.3), 0 20px 38px rgba(0,0,0,.22)", transform: "rotate(-1.2deg)" }}>
-      <img src={el.src} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: el.fit ?? "cover", filter: tone, borderRadius: 2 }} />
+      <AssetImage el={el} style={{ width: "100%", height: "100%", objectFit: el.fit ?? "cover", filter: tone, borderRadius: 2 }} />
     </div>
   );
   return <div style={{ width: "100%", height: "100%", filter: "drop-shadow(0 0 3px rgba(250,247,239,.95)) drop-shadow(0 4px 6px rgba(0,0,0,.3)) drop-shadow(0 22px 40px rgba(0,0,0,.24))" }}>
-    <img src={el.src} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: el.fit ?? "contain", filter: tone, transform: tf || undefined }} />
+    <AssetImage el={el} style={{ width: "100%", height: "100%", objectFit: el.fit ?? "contain", filter: tone, transform: tf || undefined }} />
   </div>;
 };
 

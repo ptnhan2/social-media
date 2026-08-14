@@ -1,6 +1,7 @@
 import React from "react";
 import { cancelRender, continueRender, delayRender, staticFile } from "remotion";
 import type { IsaacVerseEditDoc } from "./types";
+import type { EditorDoc } from "./editor";
 import { IsaacVerseEditVideo } from "./EditVideo";
 
 const resolveSource = (source: string) => source.startsWith("http://") || source.startsWith("https://") || source.startsWith("data:") ? source : staticFile(source.replace(/^\/+/, ""));
@@ -11,21 +12,22 @@ const normalizeSources = (value: unknown): unknown => {
   return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, key === "src" && typeof child === "string" ? resolveSource(child) : normalizeSources(child)]));
 };
 
-export const ProjectLoader: React.FC<{ src: string }> = ({ src }) => {
+export const ProjectLoader: React.FC<{ src: string; editorSrc?: string }> = ({ src, editorSrc }) => {
   const [doc, setDoc] = React.useState<IsaacVerseEditDoc | null>(null);
+  const [editor, setEditor] = React.useState<EditorDoc | null>(null);
   const [error, setError] = React.useState<string | null>(null);
-  const handle = React.useMemo(() => delayRender(`Loading edit document: ${src}`), [src]);
+  const handle = React.useMemo(() => delayRender(`Loading edit document: ${src}`), [src, editorSrc]);
 
   React.useEffect(() => {
     let cancelled = false;
-    fetch(resolveSource(src))
-      .then((response) => { if (!response.ok) throw new Error(`EditDoc request failed: ${response.status}`); return response.json(); })
-      .then((payload) => { if (cancelled) return; setDoc(normalizeSources(payload) as IsaacVerseEditDoc); continueRender(handle); })
+    const editorPayload = editorSrc ? fetch(resolveSource(editorSrc)).then((response) => response.ok ? response.json() : null) : Promise.resolve(null);
+    Promise.all([fetch(resolveSource(src)).then((response) => { if (!response.ok) throw new Error(`EditDoc request failed: ${response.status}`); return response.json(); }), editorPayload])
+      .then(([payload, editorValue]) => { if (cancelled) return; setDoc(normalizeSources(payload) as IsaacVerseEditDoc); setEditor(editorValue ? normalizeSources(editorValue) as EditorDoc : null); continueRender(handle); })
       .catch((reason: unknown) => { if (cancelled) return; const message = reason instanceof Error ? reason.message : String(reason); setError(message); cancelRender(new Error(message)); });
     return () => { cancelled = true; };
-  }, [handle, src]);
+  }, [editorSrc, handle, src]);
 
   if (error) return <div style={{ color: "#ec6a5e", padding: 40, fontFamily: "monospace" }}>Project loader error: {error}</div>;
   if (!doc) return <div style={{ color: "#61d7e8", padding: 40, fontFamily: "monospace" }}>Loading project…</div>;
-  return <IsaacVerseEditVideo doc={doc} />;
+  return <IsaacVerseEditVideo doc={doc} editor={editor ?? undefined} />;
 };

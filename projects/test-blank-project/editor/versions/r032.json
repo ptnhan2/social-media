@@ -1,0 +1,229 @@
+{
+  "id": "editor:test-blank-project",
+  "projectId": "test-blank-project",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationSec": 5,
+  "tracks": [
+    {
+      "id": "video-main",
+      "kind": "video",
+      "name": "Main track",
+      "order": 0,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "semantic-beats"
+      },
+      "accepts": [
+        "image",
+        "video"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "clip:beat:test-blank-project-beat-01",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 0.07602002472182079,
+            "endSec": 5
+          },
+          "label": "New beat",
+          "source": {
+            "beatId": "test-blank-project-beat-01"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-1",
+      "kind": "overlay",
+      "name": "Overlay 1",
+      "order": 4,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "test-blank-project-beat-01:title",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 0,
+            "endSec": 5
+          },
+          "label": "New Project",
+          "source": {
+            "beatId": "test-blank-project-beat-01",
+            "elementId": "test-blank-project-beat-01:title"
+          },
+          "parentClipId": "clip:beat:test-blank-project-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "test-blank-project-beat-01:title",
+            "type": "text",
+            "x": 0.06979166666666667,
+            "y": 0.35185185185185186,
+            "w": 0.8604166666666667,
+            "h": 0.2037037037037037,
+            "text": "New Project",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 96,
+            "fontWeight": 900,
+            "fontFamily": "Arial, sans-serif",
+            "textAlign": "center",
+            "textTransform": "uppercase",
+            "color": "#f4e8cf",
+            "textShadow": "0 0 22px #f2b84b55",
+            "animIn": "scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-2",
+      "kind": "overlay",
+      "name": "Overlay 2",
+      "order": 5,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "test-blank-project-beat-01:accent-line",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 0.2,
+            "endSec": 5
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "test-blank-project-beat-01",
+            "elementId": "test-blank-project-beat-01:accent-line"
+          },
+          "parentClipId": "clip:beat:test-blank-project-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "test-blank-project-beat-01:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5740740740740741,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "#f2b84b",
+            "boxShadow": "0 0 18px #f2b84b",
+            "animIn": "scale",
+            "animDurationSec": 0.65,
+            "startSec": 0.2,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    }
+  ],
+  "markers": [
+    {
+      "id": "marker:beat:test-blank-project-beat-01",
+      "kind": "beat",
+      "range": {
+        "startSec": 0,
+        "endSec": 5
+      },
+      "label": "New beat",
+      "source": {
+        "beatId": "test-blank-project-beat-01"
+      }
+    }
+  ],
+  "assets": [],
+  "revision": {
+    "baseEditVersion": "v001",
+    "revision": 32,
+    "updatedAt": "2026-08-14T14:58:10.661Z"
+  }
+}

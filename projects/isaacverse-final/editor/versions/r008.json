@@ -1,0 +1,4018 @@
+{
+  "id": "editor:isaacverse-final",
+  "projectId": "isaacverse-final",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationSec": 30,
+  "tracks": [
+    {
+      "id": "video-main",
+      "kind": "video",
+      "name": "Main track",
+      "order": 0,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "semantic-beats"
+      },
+      "accepts": [
+        "image",
+        "video"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "clip:beat:final-beat-01",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 0,
+            "endSec": 3.5
+          },
+          "label": "name the false solution",
+          "source": {
+            "beatId": "final-beat-01"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "The polished timeline can still hide the real problem.",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-02",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "reframe the unit of editing",
+          "source": {
+            "beatId": "final-beat-02"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "A cut is not a gap between clips. It is a decision.",
+            "treatmentId": "semantic-diagram"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-03",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "show evidence in context",
+          "source": {
+            "beatId": "final-beat-03"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "The screen is useful only when it proves the decision.",
+            "treatmentId": "host-reflection-cinematic"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-04:part-a",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 12
+          },
+          "label": "give a repeatable process",
+          "source": {
+            "beatId": "final-beat-04"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Start with the story, then place the voice, evidence, and cut.",
+            "treatmentId": "process-timeline",
+            "splitFrom": "clip:beat:final-beat-04",
+            "splitPart": "a"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-04:part-b",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 12,
+            "endSec": 14
+          },
+          "label": "give a repeatable process",
+          "source": {
+            "beatId": "final-beat-04"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Start with the story, then place the voice, evidence, and cut.",
+            "treatmentId": "process-timeline",
+            "splitFrom": "clip:beat:final-beat-04",
+            "splitPart": "b"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-05",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "compare the meaningful choice",
+          "source": {
+            "beatId": "final-beat-05"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Two edits can use the same tools and still tell different stories.",
+            "treatmentId": "candidate-comparison"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-06",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "name the failure mode",
+          "source": {
+            "beatId": "final-beat-06"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "When every frame tries to impress, the viewer cannot see what changed.",
+            "treatmentId": "cinematic-metaphor"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-07",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "deliver the usable rule",
+          "source": {
+            "beatId": "final-beat-07"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Make the next frame answer the question raised by the last one.",
+            "treatmentId": "host-reflection-cinematic"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-08",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 26,
+            "endSec": 30
+          },
+          "label": "resolve with a memorable rule",
+          "source": {
+            "beatId": "final-beat-08"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Choose the decision first. Then let the frame move.",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-bg",
+      "kind": "overlay",
+      "name": "Overlay 1",
+      "order": 1,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-bg"
+      },
+      "accepts": [
+        "image",
+        "video"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "final-beat-03:bg-image",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "bg-image",
+          "source": {
+            "beatId": "final-beat-03",
+            "elementId": "final-beat-03:bg-image"
+          },
+          "parentClipId": "clip:beat:final-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-03:bg-image",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "src": "isaacverse-final/human-profile.svg",
+            "z": 1,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "saturate(.72) contrast(1.18) brightness(.72)",
+            "animIn": "fade",
+            "animDurationSec": 0.5,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-03:light-overlay",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "light-overlay",
+          "source": {
+            "beatId": "final-beat-03",
+            "elementId": "final-beat-03:light-overlay"
+          },
+          "parentClipId": "clip:beat:final-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-03:light-overlay",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 3,
+            "opacity": 0.7,
+            "background": "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-03:vignette",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "vignette",
+          "source": {
+            "beatId": "final-beat-03",
+            "elementId": "final-beat-03:vignette"
+          },
+          "parentClipId": "clip:beat:final-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-03:vignette",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 4,
+            "opacity": 1,
+            "background": "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:bg-image",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "bg-image",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:bg-image"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-06:bg-image",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "src": "isaacverse-final/noise-field.svg",
+            "z": 1,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "saturate(.76) contrast(1.18) brightness(.72)",
+            "animIn": "fade",
+            "animDurationSec": 0.7,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:vignette",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "vignette",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:vignette"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-06:vignette",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 3,
+            "opacity": 1,
+            "background": "radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, #f2b84b22, transparent 55%)",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-07:bg-image",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "bg-image",
+          "source": {
+            "beatId": "final-beat-07",
+            "elementId": "final-beat-07:bg-image"
+          },
+          "parentClipId": "clip:beat:final-beat-07",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-07:bg-image",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "src": "isaacverse-final/human-profile.svg",
+            "z": 1,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "saturate(.72) contrast(1.18) brightness(.72)",
+            "animIn": "fade",
+            "animDurationSec": 0.5,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-07:light-overlay",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "light-overlay",
+          "source": {
+            "beatId": "final-beat-07",
+            "elementId": "final-beat-07:light-overlay"
+          },
+          "parentClipId": "clip:beat:final-beat-07",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-07:light-overlay",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 3,
+            "opacity": 0.7,
+            "background": "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-07:vignette",
+          "kind": "element",
+          "trackId": "visual-bg",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "vignette",
+          "source": {
+            "beatId": "final-beat-07",
+            "elementId": "final-beat-07:vignette"
+          },
+          "parentClipId": "clip:beat:final-beat-07",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-07:vignette",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 4,
+            "opacity": 1,
+            "background": "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-content",
+      "kind": "overlay",
+      "name": "Overlay 2",
+      "order": 2,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-content"
+      },
+      "accepts": [
+        "image",
+        "video"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "final-beat-02:center-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "center-label",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:center-label"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-02:center-label",
+            "type": "shape",
+            "x": 0.3697916666666667,
+            "y": 0.32407407407407407,
+            "w": 0.2604166666666667,
+            "h": 0.46296296296296297,
+            "z": 5,
+            "opacity": 1,
+            "borderRadius": 250,
+            "borderWidth": 2,
+            "borderColor": "#f2b84b88",
+            "background": "rgba(97,215,232,0.06)",
+            "boxShadow": "0 0 38px #f2b84b28",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:center-label-text",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "meaning",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:center-label-text"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:center-label-text",
+            "type": "text",
+            "x": 0.3958333333333333,
+            "y": 0.4351851851851852,
+            "w": 0.20833333333333334,
+            "h": 0.24074074074074073,
+            "text": "meaning",
+            "z": 6,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "#61d7e8",
+            "textAlign": "center",
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:footer",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "follow the thread",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:footer"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:footer",
+            "type": "text",
+            "x": 0.6979166666666666,
+            "y": 0.9166666666666666,
+            "w": 0.2604166666666667,
+            "h": 0.027777777777777776,
+            "text": "follow the thread",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 14,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "rgba(244,232,207,0.45)",
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-03:letterbox-top",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "letterbox-top",
+          "source": {
+            "beatId": "final-beat-03",
+            "elementId": "final-beat-03:letterbox-top"
+          },
+          "parentClipId": "clip:beat:final-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-03:letterbox-top",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 0.07962962962962963,
+            "z": 6,
+            "opacity": 1,
+            "background": "#07090d",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-03:letterbox-bottom",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "letterbox-bottom",
+          "source": {
+            "beatId": "final-beat-03",
+            "elementId": "final-beat-03:letterbox-bottom"
+          },
+          "parentClipId": "clip:beat:final-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-03:letterbox-bottom",
+            "type": "shape",
+            "x": 0,
+            "y": 0.8796296296296297,
+            "w": 1,
+            "h": 0.12037037037037036,
+            "z": 6,
+            "opacity": 1,
+            "background": "#07090d",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:progress-track",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "progress-track",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:progress-track"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:progress-track",
+            "type": "shape",
+            "x": 0.09010416666666667,
+            "y": 0.4601851851851852,
+            "w": 0.8197916666666667,
+            "h": 0.002777777777777778,
+            "z": 5,
+            "opacity": 1,
+            "background": "rgba(244,232,207,.2)",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:progress-fill",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "progress-fill",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:progress-fill"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:progress-fill",
+            "type": "shape",
+            "x": 0.09010416666666667,
+            "y": 0.4601851851851852,
+            "w": 0.61484375,
+            "h": 0.002777777777777778,
+            "z": 6,
+            "opacity": 1,
+            "background": "#f2b84b",
+            "boxShadow": "0 0 16px #f2b84b",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-0-dot",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-0-dot",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-0-dot"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-0-dot",
+            "type": "shape",
+            "x": 0.0828125,
+            "y": 0.44722222222222224,
+            "w": 0.010416666666666666,
+            "h": 0.018518518518518517,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 50,
+            "background": "#61d7e8",
+            "boxShadow": "0 0 12px #61d7e888",
+            "borderWidth": 3,
+            "borderColor": "#07090d",
+            "animIn": "scale",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-0-box",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-0-box",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-0-box"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-0-box",
+            "type": "shape",
+            "x": 0.043229166666666666,
+            "y": 0.49074074074074076,
+            "w": 0.09375,
+            "h": 0.07407407407407407,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#61d7e888",
+            "borderRadius": 8,
+            "background": "rgba(7,9,13,.76)",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-0-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "Story",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-0-label"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-0-label",
+            "type": "text",
+            "x": 0.0484375,
+            "y": 0.5018518518518519,
+            "w": 0.08333333333333333,
+            "h": 0.023148148148148147,
+            "text": "Story",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#61d7e8",
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-0-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "name the change",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-0-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-0-detail",
+            "type": "text",
+            "x": 0.0484375,
+            "y": 0.5277777777777778,
+            "w": 0.08333333333333333,
+            "h": 0.032407407407407406,
+            "text": "name the change",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-1-dot",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-1-dot",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-1-dot"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-1-dot",
+            "type": "shape",
+            "x": 0.3560763888888889,
+            "y": 0.44722222222222224,
+            "w": 0.010416666666666666,
+            "h": 0.018518518518518517,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 50,
+            "background": "#f2b84b",
+            "boxShadow": "0 0 12px #f2b84b88",
+            "borderWidth": 3,
+            "borderColor": "#07090d",
+            "animIn": "scale",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-1-box",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-1-box",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-1-box"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-1-box",
+            "type": "shape",
+            "x": 0.3164930555555555,
+            "y": 0.49074074074074076,
+            "w": 0.09375,
+            "h": 0.07407407407407407,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#f2b84b88",
+            "borderRadius": 8,
+            "background": "rgba(7,9,13,.76)",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-1-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "Voice",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-1-label"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-1-label",
+            "type": "text",
+            "x": 0.3217013888888889,
+            "y": 0.5018518518518519,
+            "w": 0.08333333333333333,
+            "h": 0.023148148148148147,
+            "text": "Voice",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#f2b84b",
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-1-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "protect the rhythm",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-1-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-1-detail",
+            "type": "text",
+            "x": 0.3217013888888889,
+            "y": 0.5277777777777778,
+            "w": 0.08333333333333333,
+            "h": 0.032407407407407406,
+            "text": "protect the rhythm",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-2-dot",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-2-dot",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-2-dot"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-2-dot",
+            "type": "shape",
+            "x": 0.6293402777777778,
+            "y": 0.44722222222222224,
+            "w": 0.014583333333333334,
+            "h": 0.025925925925925925,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 50,
+            "background": "#ec6a5e",
+            "boxShadow": "0 0 24px #ec6a5e",
+            "borderWidth": 3,
+            "borderColor": "#07090d",
+            "animIn": "scale",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-2-box",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-2-box",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-2-box"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-2-box",
+            "type": "shape",
+            "x": 0.5897569444444444,
+            "y": 0.49074074074074076,
+            "w": 0.09375,
+            "h": 0.07407407407407407,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ec6a5e",
+            "borderRadius": 8,
+            "background": "#ec6a5e18",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-2-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "Evidence",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-2-label"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-2-label",
+            "type": "text",
+            "x": 0.5949652777777777,
+            "y": 0.5018518518518519,
+            "w": 0.08333333333333333,
+            "h": 0.023148148148148147,
+            "text": "Evidence",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#ec6a5e",
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-2-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "show the proof",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-2-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-2-detail",
+            "type": "text",
+            "x": 0.5949652777777777,
+            "y": 0.5277777777777778,
+            "w": 0.08333333333333333,
+            "h": 0.032407407407407406,
+            "text": "show the proof",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-3-dot",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-3-dot",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-3-dot"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-3-dot",
+            "type": "shape",
+            "x": 0.9026041666666667,
+            "y": 0.44722222222222224,
+            "w": 0.010416666666666666,
+            "h": 0.018518518518518517,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 50,
+            "background": "#a98bff",
+            "boxShadow": "0 0 12px #a98bff88",
+            "borderWidth": 3,
+            "borderColor": "#07090d",
+            "animIn": "scale",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-3-box",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step-3-box",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-3-box"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-04:step-3-box",
+            "type": "shape",
+            "x": 0.8630208333333333,
+            "y": 0.49074074074074076,
+            "w": 0.09375,
+            "h": 0.07407407407407407,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#a98bff88",
+            "borderRadius": 8,
+            "background": "rgba(7,9,13,.76)",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-3-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "Cut",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-3-label"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-3-label",
+            "type": "text",
+            "x": 0.8682291666666667,
+            "y": 0.5018518518518519,
+            "w": 0.08333333333333333,
+            "h": 0.023148148148148147,
+            "text": "Cut",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#a98bff",
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:step-3-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "make it land",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:step-3-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:step-3-detail",
+            "type": "text",
+            "x": 0.8682291666666667,
+            "y": 0.5277777777777778,
+            "w": 0.08333333333333333,
+            "h": 0.032407407407407406,
+            "text": "make it land",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:footer",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "step 3 / 4",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:footer"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:footer",
+            "type": "text",
+            "x": 0.71875,
+            "y": 0.9166666666666666,
+            "w": 0.2604166666666667,
+            "h": 0.027777777777777776,
+            "text": "step 3 / 4",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 14,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "rgba(244,232,207,.5)",
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-0-card",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "candidate-0-card",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-0-card"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-05:candidate-0-card",
+            "type": "shape",
+            "x": 0.06979166666666667,
+            "y": 0.2796296296296296,
+            "w": 0.2670138888888889,
+            "h": 0.6018518518518519,
+            "z": 5,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ec6a5e55",
+            "borderRadius": 10,
+            "background": "rgba(7,9,13,.76)",
+            "boxShadow": "none",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-0-img",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "candidate-0-img",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-0-img"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-05:candidate-0-img",
+            "type": "image",
+            "x": 0.07083333333333333,
+            "y": 0.2814814814814815,
+            "w": 0.26493055555555556,
+            "h": 0.4074074074074074,
+            "src": "isaacverse-final/control-room.svg",
+            "z": 6,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "grayscale(.65) brightness(.7)",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-0-badge",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "alternative",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-0-badge"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-0-badge",
+            "type": "text",
+            "x": 0.07604166666666666,
+            "y": 0.29074074074074074,
+            "w": 0.0625,
+            "h": 0.023148148148148147,
+            "text": "alternative",
+            "z": 7,
+            "opacity": 1,
+            "fontSize": 13,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "#f4e8cf",
+            "background": "rgba(0,0,0,.68)",
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-0-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "Polish",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-0-label"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-0-label",
+            "type": "text",
+            "x": 0.07708333333333334,
+            "y": 0.5185185185185185,
+            "w": 0.25243055555555555,
+            "h": 0.027777777777777776,
+            "text": "Polish",
+            "z": 7,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "color": "#ec6a5e",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-0-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "clean, but generic",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-0-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-0-detail",
+            "type": "text",
+            "x": 0.07708333333333334,
+            "y": 0.5509259259259259,
+            "w": 0.25243055555555555,
+            "h": 0.05555555555555555,
+            "text": "clean, but generic",
+            "z": 7,
+            "opacity": 0.7,
+            "fontSize": 13,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.35,
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-1-card",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "candidate-1-card",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-1-card"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-05:candidate-1-card",
+            "type": "shape",
+            "x": 0.34618055555555555,
+            "y": 0.2796296296296296,
+            "w": 0.2670138888888889,
+            "h": 0.6018518518518519,
+            "z": 6,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#f2b84b",
+            "borderRadius": 10,
+            "background": "#f2b84b18",
+            "boxShadow": "0 0 24px #f2b84b44",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-1-img",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "candidate-1-img",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-1-img"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-05:candidate-1-img",
+            "type": "image",
+            "x": 0.3472222222222222,
+            "y": 0.2814814814814815,
+            "w": 0.26493055555555556,
+            "h": 0.4074074074074074,
+            "src": "isaacverse-final/paper-signal.svg",
+            "z": 7,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "none",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-1-badge",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "selected",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-1-badge"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-1-badge",
+            "type": "text",
+            "x": 0.3524305555555555,
+            "y": 0.29074074074074074,
+            "w": 0.0625,
+            "h": 0.023148148148148147,
+            "text": "selected",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 13,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "#f2b84b",
+            "background": "rgba(0,0,0,.68)",
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-1-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "Decision",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-1-label"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-1-label",
+            "type": "text",
+            "x": 0.3534722222222222,
+            "y": 0.5185185185185185,
+            "w": 0.25243055555555555,
+            "h": 0.027777777777777776,
+            "text": "Decision",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "color": "#f2b84b",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-1-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "specific, more human",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-1-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-1-detail",
+            "type": "text",
+            "x": 0.3534722222222222,
+            "y": 0.5509259259259259,
+            "w": 0.25243055555555555,
+            "h": 0.05555555555555555,
+            "text": "specific, more human",
+            "z": 8,
+            "opacity": 0.7,
+            "fontSize": 13,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.35,
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-2-card",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "candidate-2-card",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-2-card"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-05:candidate-2-card",
+            "type": "shape",
+            "x": 0.6225694444444444,
+            "y": 0.2796296296296296,
+            "w": 0.2670138888888889,
+            "h": 0.6018518518518519,
+            "z": 7,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#61d7e855",
+            "borderRadius": 10,
+            "background": "rgba(7,9,13,.76)",
+            "boxShadow": "none",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-2-img",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "candidate-2-img",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-2-img"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-05:candidate-2-img",
+            "type": "image",
+            "x": 0.6236111111111111,
+            "y": 0.2814814814814815,
+            "w": 0.26493055555555556,
+            "h": 0.4074074074074074,
+            "src": "isaacverse-final/noise-field.svg",
+            "z": 8,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "grayscale(.65) brightness(.7)",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-2-badge",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "alternative",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-2-badge"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-2-badge",
+            "type": "text",
+            "x": 0.6288194444444444,
+            "y": 0.29074074074074074,
+            "w": 0.0625,
+            "h": 0.023148148148148147,
+            "text": "alternative",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 13,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "#f4e8cf",
+            "background": "rgba(0,0,0,.68)",
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-2-label",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "Noise",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-2-label"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-2-label",
+            "type": "text",
+            "x": 0.6298611111111111,
+            "y": 0.5185185185185185,
+            "w": 0.25243055555555555,
+            "h": 0.027777777777777776,
+            "text": "Noise",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "color": "#61d7e8",
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:candidate-2-detail",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "busy, no change",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:candidate-2-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:candidate-2-detail",
+            "type": "text",
+            "x": 0.6298611111111111,
+            "y": 0.5509259259259259,
+            "w": 0.25243055555555555,
+            "h": 0.05555555555555555,
+            "text": "busy, no change",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 13,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.35,
+            "animIn": "slide-up",
+            "animDurationSec": 0.6,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-07:letterbox-top",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "letterbox-top",
+          "source": {
+            "beatId": "final-beat-07",
+            "elementId": "final-beat-07:letterbox-top"
+          },
+          "parentClipId": "clip:beat:final-beat-07",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-07:letterbox-top",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 0.07962962962962963,
+            "z": 6,
+            "opacity": 1,
+            "background": "#07090d",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-07:letterbox-bottom",
+          "kind": "element",
+          "trackId": "visual-content",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "letterbox-bottom",
+          "source": {
+            "beatId": "final-beat-07",
+            "elementId": "final-beat-07:letterbox-bottom"
+          },
+          "parentClipId": "clip:beat:final-beat-07",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-07:letterbox-bottom",
+            "type": "shape",
+            "x": 0,
+            "y": 0.8796296296296297,
+            "w": 1,
+            "h": 0.12037037037037036,
+            "z": 6,
+            "opacity": 1,
+            "background": "#07090d",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-text",
+      "kind": "overlay",
+      "name": "Overlay 3",
+      "order": 3,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-text"
+      },
+      "accepts": [
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "final-beat-01:title",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 0,
+            "endSec": 3.5
+          },
+          "label": "The timeline is not the edit",
+          "source": {
+            "beatId": "final-beat-01",
+            "elementId": "final-beat-01:title"
+          },
+          "parentClipId": "clip:beat:final-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-01:title",
+            "type": "text",
+            "x": 0.06979166666666667,
+            "y": 0.35185185185185186,
+            "w": 0.8604166666666667,
+            "h": 0.2037037037037037,
+            "text": "The timeline is not the edit",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 96,
+            "fontWeight": 900,
+            "fontFamily": "Arial, sans-serif",
+            "textAlign": "center",
+            "textTransform": "uppercase",
+            "color": "#f4e8cf",
+            "textShadow": "0 0 22px #f2b84b55",
+            "animIn": "scale",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-01:accent-line",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 0,
+            "endSec": 3.5
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "final-beat-01",
+            "elementId": "final-beat-01:accent-line"
+          },
+          "parentClipId": "clip:beat:final-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-01:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5740740740740741,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "#f2b84b",
+            "boxShadow": "0 0 18px #f2b84b",
+            "animIn": "scale",
+            "animDurationSec": 0.65,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-01:subtitle",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 0,
+            "endSec": 3.5
+          },
+          "label": "it is only the evidence",
+          "source": {
+            "beatId": "final-beat-01",
+            "elementId": "final-beat-01:subtitle"
+          },
+          "parentClipId": "clip:beat:final-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-01:subtitle",
+            "type": "text",
+            "x": 0.15,
+            "y": 0.6111111111111112,
+            "w": 0.7,
+            "h": 0.05555555555555555,
+            "text": "it is only the evidence",
+            "z": 12,
+            "opacity": 0.8,
+            "fontSize": 20,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textAlign": "center",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.2,
+            "color": "#61d7e8",
+            "animIn": "fade",
+            "animDurationSec": 0.8,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:kicker",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "the smallest useful unit",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:kicker"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:kicker",
+            "type": "text",
+            "x": 0.04479166666666667,
+            "y": 0.05740740740740741,
+            "w": 0.4166666666666667,
+            "h": 0.027777777777777776,
+            "text": "the smallest useful unit",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 3.2,
+            "color": "#61d7e8",
+            "animIn": "fade",
+            "animDurationSec": 0.55,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:title",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "A cut is a decision",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:title"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:title",
+            "type": "text",
+            "x": 0.04479166666666667,
+            "y": 0.08796296296296297,
+            "w": 0.625,
+            "h": 0.05555555555555555,
+            "text": "A cut is a decision",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 46,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "animIn": "fade",
+            "animDurationSec": 0.55,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:accent-line",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:accent-line"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-02:accent-line",
+            "type": "shape",
+            "x": 0.04479166666666667,
+            "y": 0.15555555555555556,
+            "w": 0.057291666666666664,
+            "h": 0.003703703703703704,
+            "z": 12,
+            "opacity": 1,
+            "background": "#f2b84b",
+            "boxShadow": "0 0 14px #f2b84b",
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-0-box",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "node-0-box",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-0-box"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-02:node-0-box",
+            "type": "shape",
+            "x": 0.16968749999999996,
+            "y": 0.47370370370370374,
+            "w": 0.140625,
+            "h": 0.09259259259259259,
+            "z": 10,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#61d7e8",
+            "background": "rgba(7,9,13,0.84)",
+            "borderRadius": 10,
+            "boxShadow": "0 0 18px #61d7e838",
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-0-label",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "Signal",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-0-label"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:node-0-label",
+            "type": "text",
+            "x": 0.17749999999999996,
+            "y": 0.48111111111111116,
+            "w": 0.125,
+            "h": 0.027777777777777776,
+            "text": "Signal",
+            "z": 11,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#61d7e8",
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-0-detail",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "what changed",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-0-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:node-0-detail",
+            "type": "text",
+            "x": 0.17749999999999996,
+            "y": 0.5107407407407407,
+            "w": 0.125,
+            "h": 0.046296296296296294,
+            "text": "what changed",
+            "z": 11,
+            "opacity": 0.78,
+            "fontSize": 14,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.35,
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-1-box",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "node-1-box",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-1-box"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-02:node-1-box",
+            "type": "shape",
+            "x": 0.4296875,
+            "y": 0.47370370370370374,
+            "w": 0.140625,
+            "h": 0.09259259259259259,
+            "z": 10,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#f2b84b",
+            "background": "rgba(7,9,13,0.84)",
+            "borderRadius": 10,
+            "boxShadow": "0 0 18px #f2b84b38",
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-1-label",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "Choice",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-1-label"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:node-1-label",
+            "type": "text",
+            "x": 0.4375,
+            "y": 0.48111111111111116,
+            "w": 0.125,
+            "h": 0.027777777777777776,
+            "text": "Choice",
+            "z": 11,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#f2b84b",
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-1-detail",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "what stays",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-1-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:node-1-detail",
+            "type": "text",
+            "x": 0.4375,
+            "y": 0.5107407407407407,
+            "w": 0.125,
+            "h": 0.046296296296296294,
+            "text": "what stays",
+            "z": 11,
+            "opacity": 0.78,
+            "fontSize": 14,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.35,
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-2-box",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "node-2-box",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-2-box"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-02:node-2-box",
+            "type": "shape",
+            "x": 0.6896875,
+            "y": 0.47370370370370374,
+            "w": 0.140625,
+            "h": 0.09259259259259259,
+            "z": 10,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ec6a5e",
+            "background": "rgba(7,9,13,0.84)",
+            "borderRadius": 10,
+            "boxShadow": "0 0 18px #ec6a5e38",
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-2-label",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "Meaning",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-2-label"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:node-2-label",
+            "type": "text",
+            "x": 0.6975,
+            "y": 0.48111111111111116,
+            "w": 0.125,
+            "h": 0.027777777777777776,
+            "text": "Meaning",
+            "z": 11,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "color": "#ec6a5e",
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-02:node-2-detail",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 3.5,
+            "endSec": 7
+          },
+          "label": "what the viewer gets",
+          "source": {
+            "beatId": "final-beat-02",
+            "elementId": "final-beat-02:node-2-detail"
+          },
+          "parentClipId": "clip:beat:final-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-02:node-2-detail",
+            "type": "text",
+            "x": 0.6975,
+            "y": 0.5107407407407407,
+            "w": 0.125,
+            "h": 0.046296296296296294,
+            "text": "what the viewer gets",
+            "z": 11,
+            "opacity": 0.78,
+            "fontSize": 14,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "lineHeight": 1.35,
+            "animIn": "scale",
+            "animDurationSec": 0.75,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-03:subtitle",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 7,
+            "endSec": 10.5
+          },
+          "label": "The screen is useful only when",
+          "source": {
+            "beatId": "final-beat-03",
+            "elementId": "final-beat-03:subtitle"
+          },
+          "parentClipId": "clip:beat:final-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-03:subtitle",
+            "type": "text",
+            "x": 0,
+            "y": 0.8888888888888888,
+            "w": 1,
+            "h": 0.10185185185185185,
+            "text": "The screen is useful only when it proves the decision.",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 27,
+            "fontStyle": "italic",
+            "fontFamily": "Georgia, serif",
+            "textAlign": "center",
+            "color": "#f2b84b",
+            "textShadow": "0 2px 8px #000",
+            "animIn": "fade",
+            "animDurationSec": 0.5,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:label",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "workflow",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:label"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:label",
+            "type": "text",
+            "x": 0.03958333333333333,
+            "y": 0.05740740740740741,
+            "w": 0.3125,
+            "h": 0.027777777777777776,
+            "text": "workflow",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 17,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 3.2,
+            "color": "#f2b84b",
+            "animIn": "fade",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-04:title",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 10.5,
+            "endSec": 14
+          },
+          "label": "Build from the decision",
+          "source": {
+            "beatId": "final-beat-04",
+            "elementId": "final-beat-04:title"
+          },
+          "parentClipId": "clip:beat:final-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-04:title",
+            "type": "text",
+            "x": 0.03958333333333333,
+            "y": 0.08796296296296297,
+            "w": 0.625,
+            "h": 0.05555555555555555,
+            "text": "Build from the decision",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 48,
+            "fontWeight": 900,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "animIn": "fade",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:label",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "compare",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:label"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:label",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.05,
+            "w": 0.3125,
+            "h": 0.027777777777777776,
+            "text": "compare",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 17,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 3.2,
+            "color": "#f2b84b",
+            "animIn": "fade",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:title",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "Same tools, different story",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:title"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:title",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.08055555555555556,
+            "w": 0.625,
+            "h": 0.05092592592592592,
+            "text": "Same tools, different story",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 44,
+            "fontWeight": 900,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "animIn": "fade",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-05:criteria",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 14,
+            "endSec": 18.5
+          },
+          "label": "Which take makes the decision ",
+          "source": {
+            "beatId": "final-beat-05",
+            "elementId": "final-beat-05:criteria"
+          },
+          "parentClipId": "clip:beat:final-beat-05",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-05:criteria",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.12962962962962962,
+            "w": 0.625,
+            "h": 0.027777777777777776,
+            "text": "Which take makes the decision visible?",
+            "z": 10,
+            "opacity": 0.68,
+            "fontSize": 18,
+            "fontFamily": "Arial, sans-serif",
+            "color": "#f4e8cf",
+            "animIn": "fade",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:label",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "the invisible problem",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:label"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-06:label",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.05,
+            "w": 0.3125,
+            "h": 0.027777777777777776,
+            "text": "the invisible problem",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 800,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 2.6,
+            "color": "#f2b84b",
+            "textShadow": "0 2px 10px #000",
+            "animIn": "fade",
+            "animDurationSec": 0.7,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:subtitle",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "noise can look like progress",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:subtitle"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-06:subtitle",
+            "type": "text",
+            "x": 0,
+            "y": 0.8398148148148148,
+            "w": 1,
+            "h": 0.16018518518518518,
+            "text": "noise can look like progress",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 28,
+            "fontStyle": "italic",
+            "fontFamily": "Georgia, serif",
+            "textAlign": "center",
+            "color": "#f2b84b",
+            "textShadow": "0 2px 8px #000",
+            "animIn": "fade",
+            "animDurationSec": 0.7,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-07:subtitle",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 22.5,
+            "endSec": 26
+          },
+          "label": "make the next frame answer the",
+          "source": {
+            "beatId": "final-beat-07",
+            "elementId": "final-beat-07:subtitle"
+          },
+          "parentClipId": "clip:beat:final-beat-07",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-07:subtitle",
+            "type": "text",
+            "x": 0,
+            "y": 0.8888888888888888,
+            "w": 1,
+            "h": 0.10185185185185185,
+            "text": "make the next frame answer the last one",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 27,
+            "fontStyle": "italic",
+            "fontFamily": "Georgia, serif",
+            "textAlign": "center",
+            "color": "#f2b84b",
+            "textShadow": "0 2px 8px #000",
+            "animIn": "fade",
+            "animDurationSec": 0.5,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-08:title",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 26,
+            "endSec": 30
+          },
+          "label": "Choose the decision first",
+          "source": {
+            "beatId": "final-beat-08",
+            "elementId": "final-beat-08:title"
+          },
+          "parentClipId": "clip:beat:final-beat-08",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-08:title",
+            "type": "text",
+            "x": 0.06979166666666667,
+            "y": 0.35185185185185186,
+            "w": 0.8604166666666667,
+            "h": 0.2037037037037037,
+            "text": "Choose the decision first",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 96,
+            "fontWeight": 900,
+            "fontFamily": "Arial, sans-serif",
+            "textAlign": "center",
+            "textTransform": "uppercase",
+            "color": "#f4e8cf",
+            "textShadow": "0 0 22px #61d7e855",
+            "animIn": "scale",
+            "animDurationSec": 0.45,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-08:accent-line",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 26,
+            "endSec": 30
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "final-beat-08",
+            "elementId": "final-beat-08:accent-line"
+          },
+          "parentClipId": "clip:beat:final-beat-08",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-08:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5740740740740741,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "#61d7e8",
+            "boxShadow": "0 0 18px #61d7e8",
+            "animIn": "scale",
+            "animDurationSec": 0.65,
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-08:subtitle",
+          "kind": "element",
+          "trackId": "visual-text",
+          "range": {
+            "startSec": 26,
+            "endSec": 30
+          },
+          "label": "then let the frame move",
+          "source": {
+            "beatId": "final-beat-08",
+            "elementId": "final-beat-08:subtitle"
+          },
+          "parentClipId": "clip:beat:final-beat-08",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-08:subtitle",
+            "type": "text",
+            "x": 0.15,
+            "y": 0.6111111111111112,
+            "w": 0.7,
+            "h": 0.05555555555555555,
+            "text": "then let the frame move",
+            "z": 12,
+            "opacity": 0.8,
+            "fontSize": 20,
+            "fontWeight": 700,
+            "fontFamily": "Arial, sans-serif",
+            "textAlign": "center",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.2,
+            "color": "#f2b84b",
+            "animIn": "fade",
+            "animDurationSec": 0.8,
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "voice",
+      "kind": "voice",
+      "name": "Audio 1",
+      "order": 4,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "audio-plan.voice"
+      },
+      "accepts": [
+        "audio"
+      ],
+      "capabilities": {
+        "visual": false,
+        "audio": true,
+        "canvas": false,
+        "trim": true,
+        "split": true,
+        "gain": true,
+        "fade": true,
+        "mute": true,
+        "solo": true
+      },
+      "clips": [
+        {
+          "id": "clip:voice:isaacverse-final:voice",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 0,
+            "endSec": 30
+          },
+          "label": "Voiceover",
+          "source": {},
+          "color": "cyan",
+          "metadata": {
+            "src": "isaacverse-final/audio/voice-bed.wav",
+            "transcript": "The polished timeline can still hide the real problem. A cut is not a gap between clips. It is a decision. The screen is useful only when it proves the decision. Start with the story, then place the voice, evidence, and cut. Two edits can use the same tools and still tell different stories. When every frame tries to impress, the viewer cannot see what changed. Make the next frame answer the question raised by the last one. Choose the decision first. Then let the frame move.",
+            "segmentId": "isaacverse-final:voice"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "kind": "music",
+      "name": "Audio 2",
+      "order": 5,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "audio-plan.music"
+      },
+      "accepts": [
+        "audio"
+      ],
+      "capabilities": {
+        "visual": false,
+        "audio": true,
+        "canvas": false,
+        "trim": true,
+        "split": true,
+        "gain": true,
+        "fade": true,
+        "mute": true,
+        "solo": true
+      },
+      "clips": [
+        {
+          "id": "clip:music:isaacverse-final:music",
+          "kind": "music",
+          "trackId": "music",
+          "range": {
+            "startSec": 0,
+            "endSec": 30
+          },
+          "label": "Music bed",
+          "source": {},
+          "color": "amber",
+          "metadata": {
+            "src": "isaacverse-final/audio/music-bed.wav",
+            "gainDb": -20,
+            "density": "normal",
+            "beatGrid": [],
+            "duckZones": [
+              {
+                "startSec": 0,
+                "endSec": 3.5,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 3.5,
+                "endSec": 7,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 7,
+                "endSec": 10.5,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 10.5,
+                "endSec": 14,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 14,
+                "endSec": 18.5,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 18.5,
+                "endSec": 22.5,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 22.5,
+                "endSec": 26,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              },
+              {
+                "startSec": 26,
+                "endSec": 30,
+                "bus": "music",
+                "gainDb": -10,
+                "attackSec": 0.08,
+                "releaseSec": 0.25
+              }
+            ],
+            "trackId": "isaacverse-final:music"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "sfx",
+      "kind": "sfx",
+      "name": "Audio 3",
+      "order": 6,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "audio-plan.sfx"
+      },
+      "accepts": [
+        "audio"
+      ],
+      "capabilities": {
+        "visual": false,
+        "audio": true,
+        "canvas": false,
+        "trim": true,
+        "split": true,
+        "gain": true,
+        "fade": true,
+        "mute": true,
+        "solo": true
+      },
+      "clips": [
+        {
+          "id": "clip:sfx:final-beat-02:cue",
+          "kind": "audio-event",
+          "trackId": "sfx",
+          "range": {
+            "startSec": 3.68,
+            "endSec": 4.03
+          },
+          "label": "emphasis",
+          "source": {
+            "beatId": "final-beat-02",
+            "audioCueId": "final-beat-02:cue"
+          },
+          "color": "violet",
+          "metadata": {
+            "src": "isaacverse-final/audio/soft-hit.wav",
+            "gainDb": -15,
+            "reason": "emphasis"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:sfx:final-beat-05:cue",
+          "kind": "audio-event",
+          "trackId": "sfx",
+          "range": {
+            "startSec": 14.18,
+            "endSec": 14.53
+          },
+          "label": "reveal",
+          "source": {
+            "beatId": "final-beat-05",
+            "audioCueId": "final-beat-05:cue"
+          },
+          "color": "violet",
+          "metadata": {
+            "src": "isaacverse-final/audio/soft-hit.wav",
+            "gainDb": -15,
+            "reason": "reveal"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:sfx:final-beat-08:cue",
+          "kind": "audio-event",
+          "trackId": "sfx",
+          "range": {
+            "startSec": 26.18,
+            "endSec": 26.53
+          },
+          "label": "emphasis",
+          "source": {
+            "beatId": "final-beat-08",
+            "audioCueId": "final-beat-08:cue"
+          },
+          "color": "violet",
+          "metadata": {
+            "src": "isaacverse-final/audio/soft-hit.wav",
+            "gainDb": -15,
+            "reason": "emphasis"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    }
+  ],
+  "markers": [
+    {
+      "id": "marker:beat:final-beat-01",
+      "kind": "beat",
+      "range": {
+        "startSec": 0,
+        "endSec": 3.5
+      },
+      "label": "name the false solution",
+      "source": {
+        "beatId": "final-beat-01"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-01",
+      "kind": "shot",
+      "range": {
+        "startSec": 0,
+        "endSec": 3.5
+      },
+      "label": "name the false solution",
+      "source": {
+        "beatId": "final-beat-01",
+        "shotId": "final-shot-01"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-01:phase-in",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 0,
+        "endSec": 1.2
+      },
+      "label": "quiet reveal",
+      "source": {
+        "beatId": "final-beat-01",
+        "shotId": "final-shot-01",
+        "motionPhaseId": "final-beat-01:phase-in"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-02",
+      "kind": "beat",
+      "range": {
+        "startSec": 3.5,
+        "endSec": 7
+      },
+      "label": "reframe the unit of editing",
+      "source": {
+        "beatId": "final-beat-02"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-02",
+      "kind": "shot",
+      "range": {
+        "startSec": 3.5,
+        "endSec": 7
+      },
+      "label": "reframe the unit of editing",
+      "source": {
+        "beatId": "final-beat-02",
+        "shotId": "final-shot-02"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-02:phase-reveal",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 3.7,
+        "endSec": 6.1
+      },
+      "label": "decision chain",
+      "source": {
+        "beatId": "final-beat-02",
+        "shotId": "final-shot-02",
+        "motionPhaseId": "final-beat-02:phase-reveal"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-03",
+      "kind": "beat",
+      "range": {
+        "startSec": 7,
+        "endSec": 10.5
+      },
+      "label": "show evidence in context",
+      "source": {
+        "beatId": "final-beat-03"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-03",
+      "kind": "shot",
+      "range": {
+        "startSec": 7,
+        "endSec": 10.5
+      },
+      "label": "show evidence in context",
+      "source": {
+        "beatId": "final-beat-03",
+        "shotId": "final-shot-03"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-03:phase-focus",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 7,
+        "endSec": 9.8
+      },
+      "label": "focus proof",
+      "source": {
+        "beatId": "final-beat-03",
+        "shotId": "final-shot-03",
+        "motionPhaseId": "final-beat-03:phase-focus"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-04",
+      "kind": "beat",
+      "range": {
+        "startSec": 10.5,
+        "endSec": 14
+      },
+      "label": "give a repeatable process",
+      "source": {
+        "beatId": "final-beat-04"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-04",
+      "kind": "shot",
+      "range": {
+        "startSec": 10.5,
+        "endSec": 14
+      },
+      "label": "give a repeatable process",
+      "source": {
+        "beatId": "final-beat-04",
+        "shotId": "final-shot-04"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-04:phase-flow",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 10.7,
+        "endSec": 13.299999999999999
+      },
+      "label": "workflow reveal",
+      "source": {
+        "beatId": "final-beat-04",
+        "shotId": "final-shot-04",
+        "motionPhaseId": "final-beat-04:phase-flow"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-05",
+      "kind": "beat",
+      "range": {
+        "startSec": 14,
+        "endSec": 18.5
+      },
+      "label": "compare the meaningful choice",
+      "source": {
+        "beatId": "final-beat-05"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-05",
+      "kind": "shot",
+      "range": {
+        "startSec": 14,
+        "endSec": 18.5
+      },
+      "label": "compare the meaningful choice",
+      "source": {
+        "beatId": "final-beat-05",
+        "shotId": "final-shot-05"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-05:phase-compare",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 14.2,
+        "endSec": 17.4
+      },
+      "label": "candidate compare",
+      "source": {
+        "beatId": "final-beat-05",
+        "shotId": "final-shot-05",
+        "motionPhaseId": "final-beat-05:phase-compare"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-06",
+      "kind": "beat",
+      "range": {
+        "startSec": 18.5,
+        "endSec": 22.5
+      },
+      "label": "name the failure mode",
+      "source": {
+        "beatId": "final-beat-06"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-06",
+      "kind": "shot",
+      "range": {
+        "startSec": 18.5,
+        "endSec": 22.5
+      },
+      "label": "name the failure mode",
+      "source": {
+        "beatId": "final-beat-06",
+        "shotId": "final-shot-06"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-06:phase-collapse",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 18.5,
+        "endSec": 21.5
+      },
+      "label": "collapse the noise",
+      "source": {
+        "beatId": "final-beat-06",
+        "shotId": "final-shot-06",
+        "motionPhaseId": "final-beat-06:phase-collapse"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-07",
+      "kind": "beat",
+      "range": {
+        "startSec": 22.5,
+        "endSec": 26
+      },
+      "label": "deliver the usable rule",
+      "source": {
+        "beatId": "final-beat-07"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-07",
+      "kind": "shot",
+      "range": {
+        "startSec": 22.5,
+        "endSec": 26
+      },
+      "label": "deliver the usable rule",
+      "source": {
+        "beatId": "final-beat-07",
+        "shotId": "final-shot-07"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-07:phase-reflect",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 22.7,
+        "endSec": 25.2
+      },
+      "label": "quiet reflection",
+      "source": {
+        "beatId": "final-beat-07",
+        "shotId": "final-shot-07",
+        "motionPhaseId": "final-beat-07:phase-reflect"
+      }
+    },
+    {
+      "id": "marker:beat:final-beat-08",
+      "kind": "beat",
+      "range": {
+        "startSec": 26,
+        "endSec": 30
+      },
+      "label": "resolve with a memorable rule",
+      "source": {
+        "beatId": "final-beat-08"
+      }
+    },
+    {
+      "id": "marker:shot:final-shot-08",
+      "kind": "shot",
+      "range": {
+        "startSec": 26,
+        "endSec": 30
+      },
+      "label": "resolve with a memorable rule",
+      "source": {
+        "beatId": "final-beat-08",
+        "shotId": "final-shot-08"
+      }
+    },
+    {
+      "id": "marker:motion:final-beat-08:phase-hold",
+      "kind": "motion-phase",
+      "range": {
+        "startSec": 26,
+        "endSec": 29.2
+      },
+      "label": "intentional stop",
+      "source": {
+        "beatId": "final-beat-08",
+        "shotId": "final-shot-08",
+        "motionPhaseId": "final-beat-08:phase-hold"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-01",
+      "kind": "transition",
+      "range": {
+        "startSec": 3.5,
+        "endSec": 3.7800000000000002
+      },
+      "label": "fade",
+      "source": {
+        "transitionId": "final-transition-01"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-02",
+      "kind": "transition",
+      "range": {
+        "startSec": 7,
+        "endSec": 7.48
+      },
+      "label": "light-leak",
+      "source": {
+        "transitionId": "final-transition-02"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-03",
+      "kind": "transition",
+      "range": {
+        "startSec": 10.5,
+        "endSec": 10.78
+      },
+      "label": "fade",
+      "source": {
+        "transitionId": "final-transition-03"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-04",
+      "kind": "transition",
+      "range": {
+        "startSec": 14,
+        "endSec": 14.48
+      },
+      "label": "light-leak",
+      "source": {
+        "transitionId": "final-transition-04"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-05",
+      "kind": "transition",
+      "range": {
+        "startSec": 18.5,
+        "endSec": 18.78
+      },
+      "label": "fade",
+      "source": {
+        "transitionId": "final-transition-05"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-06",
+      "kind": "transition",
+      "range": {
+        "startSec": 22.5,
+        "endSec": 22.98
+      },
+      "label": "light-leak",
+      "source": {
+        "transitionId": "final-transition-06"
+      }
+    },
+    {
+      "id": "marker:transition:final-transition-07",
+      "kind": "transition",
+      "range": {
+        "startSec": 26,
+        "endSec": 26.28
+      },
+      "label": "fade",
+      "source": {
+        "transitionId": "final-transition-07"
+      }
+    }
+  ],
+  "assets": [
+    {
+      "id": "final-noise-field",
+      "name": "final-noise-field",
+      "src": "isaacverse-final/noise-field.svg",
+      "kind": "image",
+      "provenance": "project"
+    }
+  ],
+  "revision": {
+    "baseEditVersion": "v021",
+    "revision": 8,
+    "updatedAt": "2026-08-14T13:11:52.357Z"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "projectId": "test-blank-project",
+  "pipelineVersion": "2026-08-11-isaacverse-v1",
+  "stage": "edit",
+  "status": "in_progress",
+  "completedStages": [],
+  "currentVersion": "v001",
+  "nextAction": "Edit the timeline in Composer."
+}

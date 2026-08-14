@@ -36,7 +36,7 @@ been removed.
 - [x] Add Kilo inbox API and Composer polling.
 - [x] Define result contract containing diagnosis, patch, before/after paths, and evidence paths.
 - [x] Load returned patches into Composer live preview and serve persisted artifacts.
-- [ ] Run one real Kilo `/review-pending` request after the user triggers it; do not simulate model output.
+- [x] Run one real Kilo `/review-pending` request after the user triggers it; do not simulate model output.
 
 ## Semantic Canvas
 
@@ -54,9 +54,32 @@ been removed.
 - [x] Remove old app, demo composition, and legacy canvas panels not used by Composer.
 - [x] Audit source/docs/JSON for zero legacy editor references.
 
+## Editable Timeline Expansion
+
+- [x] Define persisted `EditorDoc` tracks, clips, source references, selection, playhead, and revisions.
+- [x] Project semantic beats, elements, audio, SFX, and transitions into source-linked timeline clips.
+- [x] Replace the review-only timeline with ruler, playhead, clip blocks, sub-lanes, zoom, and keyboard seek.
+- [x] Persist split, ripple, track state, audio state, transition state, and undo/redo revisions.
+- [x] Feed persisted editor ranges and audio overrides into Remotion rendering.
+- [x] Synchronize timeline selection with direct beat canvas and element timing controls.
+- [x] Complete asset replacement, crop/fit persistence, missing-asset handling, and drag placement acceptance.
+- [x] Add committed browser E2E and accessibility/performance acceptance for editing operations.
+- [ ] Run fresh-project editor acceptance from `v000` before regenerating final master/report.
+
+## Workspace Shell Simplification
+
+- [x] Replace the three-column review dashboard with a fixed video-editor
+  workspace containing preview, selection inspector, and bottom timeline.
+- [x] Keep preview and timeline visible together at desktop, medium, and mobile
+  viewport sizes without page-level scrolling.
+- [x] Keep agent edit actions next to the current selection and collapse review
+  metadata, history, and batch workflows by default.
+- [x] Overlay direct canvas editing on the live preview with a contained,
+  responsive semantic canvas.
+
 ## Final Acceptance
 
-- [ ] Run one real Kilo-assisted multimodal fix through inbox, diagnosis, patch, live preview, evidence range, apply, and rollback.
-- [ ] Run direct canvas edit and verify persisted reload.
-- [ ] Run draft/master render and structural/media QA without changing thresholds to hide failures.
-- [ ] Refresh `FINAL-REPORT.json` only after the real Kilo flow is evidenced.
+- [x] Run one real Kilo-assisted multimodal fix through inbox, diagnosis, patch, live preview, evidence range, apply, and rollback.
+- [x] Run direct canvas edit and verify persisted reload.
+- [x] Run draft/master render and structural/media QA without changing thresholds to hide failures.
+- [x] Refresh `FINAL-REPORT.json` only after the real Kilo flow is evidenced.

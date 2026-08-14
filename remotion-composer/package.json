@@ -1,12 +1,12 @@
 {
-  "name": "openmontage-remotion-composer",
+  "name": "isaacverse-composer",
   "version": "1.0.0",
-  "description": "Remotion composition renderer for OpenMontage animated explainer videos",
+  "description": "Remotion composition renderer and Composer runtime for IsaacVerse videos",
   "scripts": {
     "start": "npx remotion studio projects/isaacverse-final/index.tsx",
     "composer": "npm --prefix composer-app run dev",
     "build": "npm run render:master",
-    "test": "node --test scripts/render-window.test.mjs",
+    "test": "npm --prefix composer-app test && node --test scripts/render-window.test.mjs",
     "produce:pilot": "node scripts/render-project.mjs --project isaacverse-final --quality draft",
     "render:window": "node scripts/render-window.mjs",
     "render:master": "node scripts/render-project.mjs --project isaacverse-final --quality master",

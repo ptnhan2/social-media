@@ -1,6 +1,6 @@
 ﻿# Mined Skills — 02-framework
 
-> Knowledge extracted from openmontage skills (2026-08-04).
+> Knowledge curated for the current production pipeline (2026-08-12).
 > Source: skills/ (164 files mined, 6 relevant to this branch).
 
 ## explainer/research-director
@@ -87,4 +87,4 @@
 - Cost note: Manim/Remotion/diagram_gen are FREE — primary cost is TTS + AI images; justify expensive AI video when free alternatives exist.
 - Don't distinguish-but-confuse image_animation vs clip_video: image-based = stills + Remotion motion; clip-based = actual AI-generated clips.
 **What we already do differently:**
-- Our 2V Vox pipeline is closest (paper-collage + kinetic typography + karaoke). The approach-matrix + mode-selection + reuse-strategy discipline is a model for expanding visual styles beyond layouts.
+- The IsaacVerse pipeline is the active reference: semantic treatments, narrative-purpose retrieval, live Composer review, and multimodal patch history replace fixed visual variants.

@@ -1,12 +1,14 @@
 import type { EditPatch, FeedbackRecord } from "../../../shared/isaacverse/schema";
 import type { OperationRequest, OperationResult } from "../../../shared/isaacverse/operations";
 import type { IsaacVerseEditDoc } from "../../../shared/isaacverse/types";
+import type { EditorDoc } from "../../../shared/isaacverse/editor";
 import type { FeedbackRequest, ReviewQueue, ReviewQueueEntry } from "../../../shared/isaacverse/review";
 
 export type ProjectSnapshot = {
   projectId: string;
   state: { currentVersion: string; [key: string]: unknown };
   editDoc?: IsaacVerseEditDoc;
+  editorDoc?: EditorDoc;
   feedback: FeedbackRecord[];
   patches: EditPatch[];
   qaReports: unknown[];
@@ -21,6 +23,8 @@ const requestJson = async <T>(url: string, init?: RequestInit): Promise<T> => {
 };
 
 export const loadProject = (projectId: string) => requestJson<ProjectSnapshot>(`/api/project/load?projectId=${encodeURIComponent(projectId)}`);
+
+export const saveEditor = (projectId: string, editorDoc: EditorDoc, expectedEditVersion: string) => requestJson<EditorDoc>("/api/project/editor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, editorDoc, expectedEditVersion }) });
 
 export const operate = (request: OperationRequest) => requestJson<OperationResult>("/api/agent/operate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) });
 
@@ -43,3 +47,26 @@ export const artifactUrl = (projectId: string, relativePath: string) => `/api/pr
 export const loadReviewQueue = (projectId: string) => requestJson<ReviewQueue>(`/api/project/review-queue?projectId=${encodeURIComponent(projectId)}`);
 
 export const saveReviewQueue = (projectId: string, entries: ReviewQueueEntry[]) => requestJson<ReviewQueue>("/api/project/review-queue", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, entries }) });
+
+export type ProjectListItem = {
+  id: string;
+  title: string;
+  stage: string;
+  version: string;
+  hasEditDoc: boolean;
+  hasVideoDoc: boolean;
+  updatedAt: string;
+};
+
+export const listProjects = () => requestJson<ProjectListItem[]>(`/api/projects/list`);
+
+export const createProject = (projectId: string) => requestJson<{ projectId: string; state: Record<string, unknown> }>("/api/projects/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId }) });
+
+export const subscribeToChanges = (onProjectChanged: (projectId: string) => void): (() => void) => {
+  const es = new EventSource("/api/sse");
+  es.onmessage = (event) => {
+    const match = String(event.data).match(/^change:(.+)$/);
+    if (match) onProjectChanged(match[1]);
+  };
+  return () => es.close();
+};

@@ -1,0 +1,1070 @@
+{
+  "id": "isaacverse-final-edit",
+  "videoId": "isaacverse-final",
+  "version": "v014",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "final-beat-01",
+      "sceneId": "final-scene-01",
+      "shotIds": [
+        "final-shot-01"
+      ],
+      "journeySlot": "status_quo",
+      "startSec": 0,
+      "durationSec": 3.5,
+      "transcript": "The polished timeline can still hide the real problem.",
+      "narrativeFunction": "name the false solution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "The timeline is not the edit",
+          "subtitle": "it is only the evidence",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [
+        {
+          "id": "final-beat-01:title",
+          "role": "title",
+          "kind": "text",
+          "sourcePath": "treatment.params.title",
+          "geometry": {
+            "x": 120,
+            "y": 90,
+            "width": 700,
+            "height": 110,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-01:phase-in",
+          "name": "quiet reveal",
+          "startSec": 0,
+          "durationSec": 1.2,
+          "purpose": "let the claim land",
+          "params": {
+            "cameraScale": 1.25
+          }
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-02",
+      "sceneId": "final-scene-01",
+      "shotIds": [
+        "final-shot-02"
+      ],
+      "journeySlot": "call",
+      "startSec": 3.5,
+      "durationSec": 3.5,
+      "transcript": "A cut is not a gap between clips. It is a decision.",
+      "narrativeFunction": "reframe the unit of editing",
+      "treatment": {
+        "id": "semantic-diagram",
+        "params": {
+          "title": "A cut is a decision",
+          "kicker": "the smallest useful unit",
+          "centerLabel": "meaning",
+          "nodes": [
+            {
+              "id": "signal",
+              "label": "Signal",
+              "detail": "what changed",
+              "x": 24,
+              "y": 52,
+              "activeFrom": 0.2,
+              "color": "#61d7e8"
+            },
+            {
+              "id": "choice",
+              "label": "Choice",
+              "detail": "what stays",
+              "x": 50,
+              "y": 52,
+              "activeFrom": 0.8,
+              "color": "#f2b84b"
+            },
+            {
+              "id": "meaning",
+              "label": "Meaning",
+              "detail": "what the viewer gets",
+              "x": 76,
+              "y": 52,
+              "activeFrom": 1.4,
+              "color": "#ec6a5e"
+            }
+          ],
+          "edges": [
+            {
+              "from": "signal",
+              "to": "choice",
+              "revealAt": 0.6
+            },
+            {
+              "from": "choice",
+              "to": "meaning",
+              "revealAt": 1.2
+            }
+          ]
+        },
+        "assets": []
+      },
+      "elements": [
+        {
+          "id": "final-beat-02:node-signal",
+          "role": "node",
+          "kind": "node",
+          "sourcePath": "treatment.params.nodes[0]",
+          "geometry": {
+            "x": 120.39999999999998,
+            "y": 235.8,
+            "width": 220,
+            "height": 90,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        },
+        {
+          "id": "final-beat-02:node-choice",
+          "role": "node",
+          "kind": "node",
+          "sourcePath": "treatment.params.nodes[1]",
+          "geometry": {
+            "x": 370,
+            "y": 235.8,
+            "width": 220,
+            "height": 90,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        },
+        {
+          "id": "final-beat-02:node-meaning",
+          "role": "node",
+          "kind": "node",
+          "sourcePath": "treatment.params.nodes[2]",
+          "geometry": {
+            "x": 619.6,
+            "y": 235.8,
+            "width": 220,
+            "height": 90,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-02:phase-reveal",
+          "name": "decision chain",
+          "startSec": 0.2,
+          "durationSec": 2.4,
+          "purpose": "connect evidence to meaning"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-03",
+      "sceneId": "final-scene-02",
+      "shotIds": [
+        "final-shot-03"
+      ],
+      "journeySlot": "assistance",
+      "startSec": 7,
+      "durationSec": 3.5,
+      "transcript": "The screen is useful only when it proves the decision.",
+      "narrativeFunction": "show evidence in context",
+      "treatment": {
+        "id": "host-reflection-cinematic",
+        "params": {
+          "subtitle": "The screen is useful only when it proves the decision.",
+          "lightSide": "left"
+        },
+        "assets": [
+          {
+            "id": "final-control-room",
+            "kind": "screen",
+            "src": "isaacverse-final/control-room.svg"
+          },
+          {
+            "id": "final-human-profile",
+            "kind": "character",
+            "src": "isaacverse-final/human-profile.svg"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "id": "final-beat-03:screen",
+          "role": "proof-screen",
+          "kind": "screen",
+          "sourcePath": "treatment.assets[0]",
+          "geometry": {
+            "x": 125,
+            "y": 65,
+            "width": 650,
+            "height": 370,
+            "rotation": -2
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        },
+        {
+          "id": "final-beat-03:character",
+          "role": "observer",
+          "kind": "asset",
+          "sourcePath": "treatment.assets[1]",
+          "geometry": {
+            "x": 700,
+            "y": 245,
+            "width": 210,
+            "height": 250,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-03:phase-focus",
+          "name": "focus proof",
+          "startSec": 0,
+          "durationSec": 2.8,
+          "purpose": "make the decision inspectable"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-04",
+      "sceneId": "final-scene-02",
+      "shotIds": [
+        "final-shot-04"
+      ],
+      "journeySlot": "departure",
+      "startSec": 10.5,
+      "durationSec": 3.5,
+      "transcript": "Start with the story, then place the voice, evidence, and cut.",
+      "narrativeFunction": "give a repeatable process",
+      "treatment": {
+        "id": "process-timeline",
+        "params": {
+          "title": "Build from the decision",
+          "activeStep": 2,
+          "steps": [
+            {
+              "label": "Story",
+              "detail": "name the change",
+              "color": "#61d7e8"
+            },
+            {
+              "label": "Voice",
+              "detail": "protect the rhythm",
+              "color": "#f2b84b"
+            },
+            {
+              "label": "Evidence",
+              "detail": "show the proof",
+              "color": "#ec6a5e"
+            },
+            {
+              "label": "Cut",
+              "detail": "make it land",
+              "color": "#a98bff"
+            }
+          ]
+        },
+        "assets": []
+      },
+      "elements": [
+        {
+          "id": "final-beat-04:step-story",
+          "role": "step",
+          "kind": "step",
+          "sourcePath": "treatment.params.steps[0]",
+          "geometry": {
+            "x": 100,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        },
+        {
+          "id": "final-beat-04:step-cut",
+          "role": "step",
+          "kind": "step",
+          "sourcePath": "treatment.params.steps[3]",
+          "geometry": {
+            "x": 360,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-04:phase-flow",
+          "name": "workflow reveal",
+          "startSec": 0.2,
+          "durationSec": 2.6,
+          "purpose": "turn the reframe into action"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-05",
+      "sceneId": "final-scene-03",
+      "shotIds": [
+        "final-shot-05"
+      ],
+      "journeySlot": "trials",
+      "startSec": 14,
+      "durationSec": 4.5,
+      "transcript": "Two edits can use the same tools and still tell different stories.",
+      "narrativeFunction": "compare the meaningful choice",
+      "treatment": {
+        "id": "candidate-comparison",
+        "params": {
+          "title": "Same tools, different story",
+          "criteria": "Which take makes the decision visible?",
+          "selectedIndex": 1,
+          "candidates": [
+            {
+              "label": "Polish",
+              "detail": "clean, but generic",
+              "src": "isaacverse-final/control-room.svg",
+              "color": "#ec6a5e"
+            },
+            {
+              "label": "Decision",
+              "detail": "specific, more human",
+              "src": "isaacverse-final/paper-signal.svg",
+              "color": "#f2b84b"
+            },
+            {
+              "label": "Noise",
+              "detail": "busy, no change",
+              "src": "isaacverse-final/noise-field.svg",
+              "color": "#61d7e8"
+            }
+          ]
+        },
+        "assets": []
+      },
+      "elements": [
+        {
+          "id": "final-beat-05:candidate-01",
+          "role": "candidate",
+          "kind": "asset",
+          "sourcePath": "treatment.params.candidates[0]",
+          "geometry": {
+            "x": 100,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        },
+        {
+          "id": "final-beat-05:candidate-02",
+          "role": "candidate",
+          "kind": "asset",
+          "sourcePath": "treatment.params.candidates[1]",
+          "geometry": {
+            "x": 360,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        },
+        {
+          "id": "final-beat-05:candidate-03",
+          "role": "candidate",
+          "kind": "asset",
+          "sourcePath": "treatment.params.candidates[2]",
+          "geometry": {
+            "x": 620,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-05:phase-compare",
+          "name": "candidate compare",
+          "startSec": 0.2,
+          "durationSec": 3.2,
+          "purpose": "make taste a visible decision"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-06",
+      "sceneId": "final-scene-03",
+      "shotIds": [
+        "final-shot-06"
+      ],
+      "journeySlot": "crisis",
+      "startSec": 18.5,
+      "durationSec": 4,
+      "transcript": "When every frame tries to impress, the viewer cannot see what changed.",
+      "narrativeFunction": "name the failure mode",
+      "treatment": {
+        "id": "cinematic-metaphor",
+        "params": {
+          "label": "the invisible problem",
+          "subtitle": "noise can look like progress",
+          "mode": "cinematic"
+        },
+        "assets": [
+          {
+            "id": "final-noise-field",
+            "kind": "image",
+            "src": "isaacverse-final/noise-field.svg"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "id": "final-beat-06:metaphor",
+          "role": "metaphor",
+          "kind": "image",
+          "sourcePath": "treatment.assets[0]",
+          "geometry": {
+            "x": 80,
+            "y": 80,
+            "width": 800,
+            "height": 390,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-06:phase-collapse",
+          "name": "collapse the noise",
+          "startSec": 0,
+          "durationSec": 3,
+          "purpose": "make the cost of excess felt"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-07",
+      "sceneId": "final-scene-04",
+      "shotIds": [
+        "final-shot-07"
+      ],
+      "journeySlot": "reward",
+      "startSec": 22.5,
+      "durationSec": 3.5,
+      "transcript": "Make the next frame answer the question raised by the last one.",
+      "narrativeFunction": "deliver the usable rule",
+      "treatment": {
+        "id": "host-reflection-cinematic",
+        "params": {
+          "subtitle": "make the next frame answer the last one",
+          "lightSide": "right"
+        },
+        "assets": [
+          {
+            "id": "final-human-profile",
+            "kind": "character",
+            "src": "isaacverse-final/human-profile.svg"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "id": "final-beat-07:host",
+          "role": "host",
+          "kind": "asset",
+          "sourcePath": "treatment.assets[0]",
+          "geometry": {
+            "x": 700,
+            "y": 245,
+            "width": 210,
+            "height": 250,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-07:phase-reflect",
+          "name": "quiet reflection",
+          "startSec": 0.2,
+          "durationSec": 2.5,
+          "purpose": "turn technique into a human rule"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "final-beat-08",
+      "sceneId": "final-scene-04",
+      "shotIds": [
+        "final-shot-08"
+      ],
+      "journeySlot": "resolution",
+      "startSec": 26,
+      "durationSec": 4,
+      "transcript": "Choose the decision first. Then let the frame move.",
+      "narrativeFunction": "resolve with a memorable rule",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "Choose the decision first",
+          "subtitle": "then let the frame move",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [
+        {
+          "id": "final-beat-08:title",
+          "role": "title",
+          "kind": "text",
+          "sourcePath": "treatment.params.title",
+          "geometry": {
+            "x": 120,
+            "y": 90,
+            "width": 700,
+            "height": 110,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
+        }
+      ],
+      "motionPhases": [
+        {
+          "id": "final-beat-08:phase-hold",
+          "name": "intentional stop",
+          "startSec": 0,
+          "durationSec": 3.2,
+          "purpose": "make the stop worth waiting for"
+        }
+      ],
+      "audioCues": []
+    }
+  ],
+  "assets": [
+    {
+      "id": "final-control-room",
+      "kind": "screen",
+      "src": "isaacverse-final/control-room.svg"
+    },
+    {
+      "id": "final-human-profile",
+      "kind": "character",
+      "src": "isaacverse-final/human-profile.svg"
+    },
+    {
+      "id": "final-noise-field",
+      "kind": "image",
+      "src": "isaacverse-final/noise-field.svg"
+    },
+    {
+      "id": "final-human-profile",
+      "kind": "character",
+      "src": "isaacverse-final/human-profile.svg"
+    }
+  ],
+  "shots": [
+    {
+      "id": "final-shot-01",
+      "beatId": "final-beat-01",
+      "startSec": 0,
+      "durationSec": 3.5,
+      "purpose": "name the false solution",
+      "elementIds": [
+        "final-beat-01:title"
+      ]
+    },
+    {
+      "id": "final-shot-02",
+      "beatId": "final-beat-02",
+      "startSec": 3.5,
+      "durationSec": 3.5,
+      "purpose": "reframe the unit of editing",
+      "elementIds": [
+        "final-beat-02:node-signal",
+        "final-beat-02:node-choice",
+        "final-beat-02:node-meaning"
+      ]
+    },
+    {
+      "id": "final-shot-03",
+      "beatId": "final-beat-03",
+      "startSec": 7,
+      "durationSec": 3.5,
+      "purpose": "show evidence in context",
+      "elementIds": [
+        "final-beat-03:screen",
+        "final-beat-03:character"
+      ]
+    },
+    {
+      "id": "final-shot-04",
+      "beatId": "final-beat-04",
+      "startSec": 10.5,
+      "durationSec": 3.5,
+      "purpose": "give a repeatable process",
+      "elementIds": [
+        "final-beat-04:step-story",
+        "final-beat-04:step-cut"
+      ]
+    },
+    {
+      "id": "final-shot-05",
+      "beatId": "final-beat-05",
+      "startSec": 14,
+      "durationSec": 4.5,
+      "purpose": "compare the meaningful choice",
+      "elementIds": [
+        "final-beat-05:candidate-01",
+        "final-beat-05:candidate-02",
+        "final-beat-05:candidate-03"
+      ]
+    },
+    {
+      "id": "final-shot-06",
+      "beatId": "final-beat-06",
+      "startSec": 18.5,
+      "durationSec": 4,
+      "purpose": "name the failure mode",
+      "elementIds": [
+        "final-beat-06:metaphor"
+      ]
+    },
+    {
+      "id": "final-shot-07",
+      "beatId": "final-beat-07",
+      "startSec": 22.5,
+      "durationSec": 3.5,
+      "purpose": "deliver the usable rule",
+      "elementIds": [
+        "final-beat-07:host"
+      ]
+    },
+    {
+      "id": "final-shot-08",
+      "beatId": "final-beat-08",
+      "startSec": 26,
+      "durationSec": 4,
+      "purpose": "resolve with a memorable rule",
+      "elementIds": [
+        "final-beat-08:title"
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "final-scene-01",
+      "index": 1,
+      "startSec": 0,
+      "durationSec": 7,
+      "beatIds": [
+        "final-beat-01",
+        "final-beat-02"
+      ],
+      "shotIds": [
+        "final-shot-01",
+        "final-shot-02"
+      ]
+    },
+    {
+      "id": "final-scene-02",
+      "index": 2,
+      "startSec": 7,
+      "durationSec": 7,
+      "beatIds": [
+        "final-beat-03",
+        "final-beat-04"
+      ],
+      "shotIds": [
+        "final-shot-03",
+        "final-shot-04"
+      ]
+    },
+    {
+      "id": "final-scene-03",
+      "index": 3,
+      "startSec": 14,
+      "durationSec": 8.5,
+      "beatIds": [
+        "final-beat-05",
+        "final-beat-06"
+      ],
+      "shotIds": [
+        "final-shot-05",
+        "final-shot-06"
+      ]
+    },
+    {
+      "id": "final-scene-04",
+      "index": 4,
+      "startSec": 22.5,
+      "durationSec": 7.5,
+      "beatIds": [
+        "final-beat-07",
+        "final-beat-08"
+      ],
+      "shotIds": [
+        "final-shot-07",
+        "final-shot-08"
+      ]
+    }
+  ],
+  "treatmentUsage": {
+    "chapter-card": {
+      "beatIds": [
+        "final-beat-01",
+        "final-beat-08"
+      ],
+      "count": 2
+    },
+    "semantic-diagram": {
+      "beatIds": [
+        "final-beat-02"
+      ],
+      "count": 1
+    },
+    "screen-proof-in-world": {
+      "beatIds": [
+        "final-beat-03"
+      ],
+      "count": 1
+    },
+    "process-timeline": {
+      "beatIds": [
+        "final-beat-04"
+      ],
+      "count": 1
+    },
+    "candidate-comparison": {
+      "beatIds": [
+        "final-beat-05"
+      ],
+      "count": 1
+    },
+    "cinematic-metaphor": {
+      "beatIds": [
+        "final-beat-06"
+      ],
+      "count": 1
+    },
+    "host-reflection-cinematic": {
+      "beatIds": [
+        "final-beat-07"
+      ],
+      "count": 1
+    }
+  },
+  "audioPlan": {
+    "voice": [
+      {
+        "id": "isaacverse-final:voice",
+        "src": "isaacverse-final/audio/voice-bed.wav",
+        "startSec": 0,
+        "endSec": 30,
+        "transcript": "The polished timeline can still hide the real problem. A cut is not a gap between clips. It is a decision. The screen is useful only when it proves the decision. Start with the story, then place the voice, evidence, and cut. Two edits can use the same tools and still tell different stories. When every frame tries to impress, the viewer cannot see what changed. Make the next frame answer the question raised by the last one. Choose the decision first. Then let the frame move."
+      }
+    ],
+    "music": [
+      {
+        "id": "isaacverse-final:music",
+        "src": "isaacverse-final/audio/music-bed.wav",
+        "startSec": 0,
+        "endSec": 30,
+        "gainDb": -20,
+        "density": "normal"
+      }
+    ],
+    "ambience": [],
+    "beats": [
+      {
+        "beatId": "final-beat-01",
+        "density": "sparse",
+        "sfx": [],
+        "duckZones": [
+          {
+            "startSec": 0,
+            "endSec": 3.5,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-02",
+        "density": "normal",
+        "sfx": [
+          {
+            "id": "final-beat-02:cue",
+            "src": "isaacverse-final/audio/soft-hit.wav",
+            "atSec": 3.68,
+            "durationSec": 0.35,
+            "gainDb": -15,
+            "reason": "emphasis"
+          }
+        ],
+        "duckZones": [
+          {
+            "startSec": 3.5,
+            "endSec": 7,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-03",
+        "density": "normal",
+        "sfx": [],
+        "duckZones": [
+          {
+            "startSec": 7,
+            "endSec": 10.5,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-04",
+        "density": "normal",
+        "sfx": [],
+        "duckZones": [
+          {
+            "startSec": 10.5,
+            "endSec": 14,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-05",
+        "density": "normal",
+        "sfx": [
+          {
+            "id": "final-beat-05:cue",
+            "src": "isaacverse-final/audio/soft-hit.wav",
+            "atSec": 14.18,
+            "durationSec": 0.35,
+            "gainDb": -15,
+            "reason": "reveal"
+          }
+        ],
+        "duckZones": [
+          {
+            "startSec": 14,
+            "endSec": 18.5,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-06",
+        "density": "normal",
+        "sfx": [],
+        "duckZones": [
+          {
+            "startSec": 18.5,
+            "endSec": 22.5,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-07",
+        "density": "normal",
+        "sfx": [],
+        "duckZones": [
+          {
+            "startSec": 22.5,
+            "endSec": 26,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      },
+      {
+        "beatId": "final-beat-08",
+        "density": "sparse",
+        "sfx": [
+          {
+            "id": "final-beat-08:cue",
+            "src": "isaacverse-final/audio/soft-hit.wav",
+            "atSec": 26.18,
+            "durationSec": 0.35,
+            "gainDb": -15,
+            "reason": "emphasis"
+          }
+        ],
+        "duckZones": [
+          {
+            "startSec": 26,
+            "endSec": 30,
+            "bus": "music",
+            "gainDb": -10,
+            "attackSec": 0.08,
+            "releaseSec": 0.25
+          }
+        ],
+        "preservePauses": true
+      }
+    ],
+    "master": {
+      "targetLufs": -16,
+      "maxTruePeakDbfs": -1,
+      "limiter": true
+    }
+  },
+  "transitions": [
+    {
+      "id": "final-transition-01",
+      "atSec": 3.5,
+      "durationSec": 0.28,
+      "type": "fade",
+      "accent": "#61d7e8"
+    },
+    {
+      "id": "final-transition-02",
+      "atSec": 7,
+      "durationSec": 0.48,
+      "type": "light-leak",
+      "accent": "#f2b84b"
+    },
+    {
+      "id": "final-transition-03",
+      "atSec": 10.5,
+      "durationSec": 0.28,
+      "type": "fade",
+      "accent": "#ec6a5e"
+    },
+    {
+      "id": "final-transition-04",
+      "atSec": 14,
+      "durationSec": 0.48,
+      "type": "light-leak",
+      "accent": "#a98bff"
+    },
+    {
+      "id": "final-transition-05",
+      "atSec": 18.5,
+      "durationSec": 0.28,
+      "type": "fade",
+      "accent": "#61d7e8"
+    },
+    {
+      "id": "final-transition-06",
+      "atSec": 22.5,
+      "durationSec": 0.48,
+      "type": "light-leak",
+      "accent": "#f2b84b"
+    },
+    {
+      "id": "final-transition-07",
+      "atSec": 26,
+      "durationSec": 0.28,
+      "type": "fade",
+      "accent": "#ec6a5e"
+    }
+  ],
+  "colorGrade": {
+    "preset": "cinematic",
+    "intensity": 0.2
+  }
+}

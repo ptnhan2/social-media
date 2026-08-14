@@ -1,6 +1,6 @@
 ﻿# Mined Skills — 03-script
 
-> Knowledge extracted from openmontage skills (2026-08-04).
+> Knowledge curated for the current production pipeline (2026-08-12).
 > Source: skills/ (164 files mined, 8 relevant to this branch).
 
 ## storytelling
@@ -107,7 +107,7 @@
 - Choose a reuse strategy upfront: recurring motifs, layout system, transition family, typography hierarchy.
 - Quality gate: mode explicit, visual path feasible, project designed for reuse, honest about missing tools.
 **What we already do differently:**
-- We don't do a dedicated animation pipeline today; our Vox variant (2V) covers motion-graphics/karaoke. The mode-classification + reuse-strategy thinking applies if we add animated video styles.
+- IsaacVerse uses a semantic treatment pipeline for motion-graphics and captions. Mode classification and reuse strategy must follow narrative purpose, not a fixed visual variant.
 
 ## animation/script-director
 **Summary:** Scripts are written in animation beats (statement / demonstration / transformation / comparison / conclusion — one clear visual idea per section) with writing style dictated by animation mode (Manim = precise/mathematical, Remotion = data-driven, AI video = descriptive/evocative). On-screen text is kept tight (max 8 words titles, 15 words descriptions), and visual holds are budgeted (3-4s breathing room per 10s of narration) so motion can land.
@@ -121,4 +121,4 @@
 - Research integration: ≥2 data points woven in, hook grounded in most surprising finding, ≥1 misconception addressed, cite sources naturally, never invent stats.
 - Distinguish captions (narration transcribed) from on-screen text (designed content part of the animation) — they are not the same thing.
 **What we already do differently:**
-- N/A — new discipline for animation/vox-style scripting; our Vox karaoke captions map to the "on-screen text vs captions" distinction.
+- Motion scripting remains tied to the selected beat, treatment phases, and caption role.

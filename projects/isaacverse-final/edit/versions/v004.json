@@ -31,7 +31,18 @@
           "id": "final-beat-01:title",
           "role": "title",
           "kind": "text",
-          "sourcePath": "treatment.params.title"
+          "sourcePath": "treatment.params.title",
+          "geometry": {
+            "x": 120,
+            "y": 90,
+            "width": 700,
+            "height": 110,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -111,19 +122,52 @@
           "id": "final-beat-02:node-signal",
           "role": "node",
           "kind": "node",
-          "sourcePath": "treatment.params.nodes[0]"
+          "sourcePath": "treatment.params.nodes[0]",
+          "geometry": {
+            "x": 120.39999999999998,
+            "y": 235.8,
+            "width": 220,
+            "height": 90,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         },
         {
           "id": "final-beat-02:node-choice",
           "role": "node",
           "kind": "node",
-          "sourcePath": "treatment.params.nodes[1]"
+          "sourcePath": "treatment.params.nodes[1]",
+          "geometry": {
+            "x": 370,
+            "y": 235.8,
+            "width": 220,
+            "height": 90,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         },
         {
           "id": "final-beat-02:node-meaning",
           "role": "node",
           "kind": "node",
-          "sourcePath": "treatment.params.nodes[2]"
+          "sourcePath": "treatment.params.nodes[2]",
+          "geometry": {
+            "x": 619.6,
+            "y": 235.8,
+            "width": 220,
+            "height": 90,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -172,13 +216,35 @@
           "id": "final-beat-03:screen",
           "role": "proof-screen",
           "kind": "screen",
-          "sourcePath": "treatment.assets[0]"
+          "sourcePath": "treatment.assets[0]",
+          "geometry": {
+            "x": 125,
+            "y": 65,
+            "width": 650,
+            "height": 370,
+            "rotation": -2
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         },
         {
           "id": "final-beat-03:character",
           "role": "observer",
           "kind": "asset",
-          "sourcePath": "treatment.assets[1]"
+          "sourcePath": "treatment.assets[1]",
+          "geometry": {
+            "x": 700,
+            "y": 245,
+            "width": 210,
+            "height": 250,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -238,13 +304,35 @@
           "id": "final-beat-04:step-story",
           "role": "step",
           "kind": "step",
-          "sourcePath": "treatment.params.steps[0]"
+          "sourcePath": "treatment.params.steps[0]",
+          "geometry": {
+            "x": 100,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         },
         {
           "id": "final-beat-04:step-cut",
           "role": "step",
           "kind": "step",
-          "sourcePath": "treatment.params.steps[3]"
+          "sourcePath": "treatment.params.steps[3]",
+          "geometry": {
+            "x": 360,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -303,19 +391,52 @@
           "id": "final-beat-05:candidate-01",
           "role": "candidate",
           "kind": "asset",
-          "sourcePath": "treatment.params.candidates[0]"
+          "sourcePath": "treatment.params.candidates[0]",
+          "geometry": {
+            "x": 100,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         },
         {
           "id": "final-beat-05:candidate-02",
           "role": "candidate",
           "kind": "asset",
-          "sourcePath": "treatment.params.candidates[1]"
+          "sourcePath": "treatment.params.candidates[1]",
+          "geometry": {
+            "x": 360,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         },
         {
           "id": "final-beat-05:candidate-03",
           "role": "candidate",
           "kind": "asset",
-          "sourcePath": "treatment.params.candidates[2]"
+          "sourcePath": "treatment.params.candidates[2]",
+          "geometry": {
+            "x": 620,
+            "y": 100,
+            "width": 220,
+            "height": 80,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -360,7 +481,18 @@
           "id": "final-beat-06:metaphor",
           "role": "metaphor",
           "kind": "image",
-          "sourcePath": "treatment.assets[0]"
+          "sourcePath": "treatment.assets[0]",
+          "geometry": {
+            "x": 80,
+            "y": 80,
+            "width": 800,
+            "height": 390,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -404,7 +536,18 @@
           "id": "final-beat-07:host",
           "role": "host",
           "kind": "asset",
-          "sourcePath": "treatment.assets[0]"
+          "sourcePath": "treatment.assets[0]",
+          "geometry": {
+            "x": 700,
+            "y": 245,
+            "width": 210,
+            "height": 250,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [
@@ -443,7 +586,18 @@
           "id": "final-beat-08:title",
           "role": "title",
           "kind": "text",
-          "sourcePath": "treatment.params.title"
+          "sourcePath": "treatment.params.title",
+          "geometry": {
+            "x": 120,
+            "y": 90,
+            "width": 700,
+            "height": 110,
+            "rotation": 0
+          },
+          "metadata": {
+            "canvasOverride": false,
+            "canvasGeometryVersion": "semantic-v2"
+          }
         }
       ],
       "motionPhases": [

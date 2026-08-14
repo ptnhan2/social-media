@@ -47,10 +47,17 @@ const updateBeat = (beat: SemanticBeat, operations: EditPatchOperation[]): Seman
       params: operation.params ?? current.treatment.params,
     },
   };
+  if (operation.op === "addElement") return {
+    ...current,
+    elements: [...(current.elements || []), { ...operation.element, metadata: { ...(operation.element.metadata || {}), canvasOverride: true } }],
+  };
   if (operation.op === "updateElement") {
+    const element = current.elements?.find((candidate) => candidate.id === operation.elementId);
+    const updatedElement = element ? setPath(element, operation.path, operation.value) : undefined;
+    const updatesGeometry = operation.path === "geometry" || operation.path.startsWith("geometry.");
     return {
       ...current,
-      elements: current.elements?.map((element) => element.id === operation.elementId ? setPath(element, operation.path, operation.value) : element),
+      elements: current.elements?.map((candidate) => candidate.id === operation.elementId ? (updatedElement && updatesGeometry ? { ...updatedElement, metadata: { ...updatedElement.metadata, canvasOverride: true } } : updatedElement || candidate) : candidate),
     };
   }
   if (operation.op === "updateAudioCue") {
@@ -76,6 +83,7 @@ const replaceAssetInBeat = (beat: SemanticBeat, assetId: string, replacementAsse
 
 export const applyPatch = (doc: IsaacVerseEditDoc, patch: EditPatch): IsaacVerseEditDoc => {
   let reflow = 0;
+  let assets = doc.assets;
   let beats = doc.beats.map((originalBeat) => {
     const operations = patch.operations.filter((operation) => "beatId" in operation && operation.beatId === originalBeat.id);
     const updated = updateBeat(originalBeat, operations);
@@ -90,11 +98,14 @@ export const applyPatch = (doc: IsaacVerseEditDoc, patch: EditPatch): IsaacVerse
     return original ? { endSec: original.startSec + original.durationSec, delta: Number(operation.changes.durationSec) - original.durationSec } : null;
   }).filter((change): change is { endSec: number; delta: number } => Boolean(change));
   let transitions = doc.transitions;
+  for (const operation of patch.operations) {
+    if (operation.op === "addAsset") assets = [...(assets || []).filter((asset) => asset.id !== operation.asset.id), operation.asset];
+  }
   if (transitions && durationChanges.length) transitions = transitions.map((transition) => ({ ...transition, atSec: transition.atSec + durationChanges.filter((change) => transition.atSec >= change.endSec).reduce((sum, change) => sum + change.delta, 0) }));
   for (const operation of patch.operations) {
-    if (operation.op === "replaceAsset") beats = beats.map((beat) => replaceAssetInBeat(beat, operation.assetId, operation.replacementAssetId, doc));
+    if (operation.op === "replaceAsset") beats = beats.map((beat) => replaceAssetInBeat(beat, operation.assetId, operation.replacementAssetId, { ...doc, assets }));
   }
-  return { ...doc, version: patch.id, beats, transitions };
+  return { ...doc, version: patch.id, assets, beats, transitions };
 };
 
 export const findBeat = (doc: IsaacVerseEditDoc, beatId: string): SemanticBeat | undefined => doc.beats.find((beat) => beat.id === beatId);

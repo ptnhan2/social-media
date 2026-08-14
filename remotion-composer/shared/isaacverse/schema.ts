@@ -1,5 +1,5 @@
 import type { AudioPlan } from "./audio";
-import type { AssetKind, IsaacVerseEditDoc, SemanticBeat, TreatmentId } from "./types";
+import type { AssetKind, AssetRef, IsaacVerseEditDoc, SemanticBeat, SemanticElement, TreatmentId } from "./types";
 
 export type JourneySlot =
   | "status_quo"
@@ -197,6 +197,8 @@ export type FeedbackRecord = {
 export type EditPatchOperation =
   | { op: "updateBeat"; beatId: string; changes: Record<string, unknown> }
   | { op: "replaceTreatment"; beatId: string; treatmentId: TreatmentId; params?: Record<string, unknown> }
+  | { op: "addElement"; beatId: string; element: SemanticElement }
+  | { op: "addAsset"; asset: AssetRef }
   | { op: "updateElement"; beatId: string; elementId: string; path: string; value: unknown }
   | { op: "replaceAsset"; assetId: string; replacementAssetId: string }
   | { op: "updateAudioCue"; beatId: string; cueId: string; changes: Record<string, unknown> }

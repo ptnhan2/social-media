@@ -1,4 +1,4 @@
-"""BaseTool — simplified from openmontage's 480-line version.
+"""BaseTool — shared interface for local production tools.
 Keeps the ESSENTIAL interface: agent_skills wire, execute(), ToolResult, .env loading."""
 from __future__ import annotations
 import os, time, subprocess
@@ -10,7 +10,6 @@ from enum import Enum
 
 def _load_dotenv() -> None:
     """Load .env from project root into os.environ (once at import)."""
-    # Try root .env, then openmontage/.env (fallback during migration)
     for env_path in [Path.cwd() / ".env", Path(__file__).resolve().parent.parent / ".env"]:
         if not env_path.is_file():
             continue

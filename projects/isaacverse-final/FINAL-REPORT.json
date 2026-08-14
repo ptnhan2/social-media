@@ -1,8 +1,8 @@
 {
   "projectId": "isaacverse-final",
   "status": "complete_with_human_review",
-  "version": "v004",
-  "currentWorkflowStatus": "composer_revamp_in_progress",
+  "version": "v009",
+  "currentWorkflowStatus": "clip_first_track_contract_accepted_with_human_review",
   "currentWorkflowPlan": "docs/COMPOSER-REVAMP-PLAN.md",
   "acceptance": {
     "newProjectBoundary": true,
@@ -16,17 +16,31 @@
     "draftAndMasterQA": true,
     "localVoiceMusicSfx": true,
     "thumbnailCompliance": true,
-    "publishDryRun": true
+    "publishDryRun": true,
+    "realKiloHandoff": true,
+    "reviewQueueApproval": true,
+    "publicCopySynced": true,
+    "editableTimeline": true,
+    "editorOperations": true,
+    "editorBrowserE2E": true,
+    "freshEditorAcceptance": true,
+    "clipFirstTrackContract": true,
+    "sourceBoundTracks": true
   },
   "artifacts": {
     "draftWindows": [
-      "renders/windows/beat03-before.mp4",
-      "renders/windows/beat03-after.mp4"
+      "renders/windows/kilo-motion-before-v004.mp4",
+      "renders/windows/kilo-motion-after-v009.mp4",
+      "renders/windows/clip-first-track-contract-0-12.mp4"
     ],
     "master": "renders/master_1080p.mp4",
     "qaReports": [
-      "qa/structural-master-v004.json",
-      "qa/diagnosis-master-v004.json",
+      "qa/structural-draft.json",
+      "qa/diagnosis-draft.json",
+      "qa/structural-draft.json",
+      "qa/diagnosis-draft.json",
+      "qa/structural-master-track-contract.json",
+      "qa/diagnosis-master-track-contract.json",
       "thumbnail/qa-final-v004.json"
     ],
     "thumbnail": "thumbnail/final.png",
@@ -39,16 +53,22 @@
     "publishManifest": "publish/publish-manifest-v004.json"
   },
   "checksums": {
-    "renders/master_1080p.mp4": "309ac29563829de0382e3943d8421f1010d2a6990a35eaf21045439bfd917845",
-    "renders/windows/beat03-before.mp4": "0189fa8223b349a95deebaa0ab8faad78529fa61cf76c9da37f1e573ef0d014f",
-    "renders/windows/beat03-after.mp4": "69cedb08e52f650fd5543b7b8e3290b583b25b9209e9fe7f9814630a2b4538ff",
+    "renders/master_1080p.mp4": "FC7F41E24603C6E03A159F4CD5F27A6B7C9254CAEF3B5A79CD11F452CD9E9F47",
+    "renders/draft_360p.mp4": "753772A7E50F81C291CD4B52EA24E14A0A8E4ACE609FA3872E75C24EFD0ADEE2",
+    "renders/windows/kilo-motion-before-v004.mp4": "59C0E9F30C990BEFF7D4BF74BC6E3E21998D23B586A13C5EB1AFCCC81737BD8A",
+    "renders/windows/kilo-motion-after-v009.mp4": "3ADA3A85FBF8C46CBC825C0A2DF826F8182187DCCF7B7ADA34617026AE930965",
     "thumbnail/final.png": "57ae619bcd4dd212ade714dae286cf3ad546187624696fe8e0c9e1059c95932c"
   },
   "humanReview": [
     "Vision/taste review remains mandatory by project policy.",
     "Structural gate carries a warning because this is a 30-second pilot with 8 semantic beats rather than a full 12-slot long-form video.",
     "Compliance report is pass_with_review for format variation and cadence evidence.",
+    "Thumbnail, compliance, dubbing, and publish-manifest artifacts remain the validated v004 downstream outputs because v009 changes only the motion phase; they were not relabeled or regenerated.",
     "YouTube OAuth upload was intentionally not invoked.",
-    "The next phase is not marked complete until a real Kilo session processes a pending Composer handoff and writes a verified result."
+    "A real Kilo session processed feedback-real-kilo-001; its diagnosis, scoped patch, affected-window evidence, apply/rollback lineage, and review approval are persisted.",
+    "The clean editor revision zero passed desktop/mobile browser smoke, split/ripple/undo/reload E2E, fresh 360p draft QA, fresh 1080p master QA, and project-store validation.",
+    "The clip-first track contract was validated with source-bound visual/text/audio rows, marker-only semantic context, source track add/delete E2E, and fresh track-contract renders.",
+    "The clean editor baseline is revision zero over the existing semantic EditDoc v009; it is an editor acceptance baseline, not a newly authored narrative VideoDoc from semantic v000.",
+    "Vision/taste approval remains mandatory before publish; YouTube OAuth upload was not invoked."
   ]
 }

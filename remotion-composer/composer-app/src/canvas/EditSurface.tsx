@@ -9,6 +9,7 @@ import { CANVAS_W, CANVAS_H } from "./types";
 
 export interface EditSurfaceProps {
   elements: CanvasElement[];
+  scale?: number;
   grain?: number;
   vignette?: number;
   selectedIds: string[];
@@ -16,9 +17,10 @@ export interface EditSurfaceProps {
   onLive: (updater: (els: CanvasElement[]) => CanvasElement[]) => void;
   onGestureStart: () => void;
   onGestureEnd: () => void;
+  onDropAsset?: (src: string, x: number, y: number) => void;
 }
 
-export const EditSurface: React.FC<EditSurfaceProps> = ({ elements, grain, vignette, selectedIds, onSelect, onLive, onGestureStart, onGestureEnd }) => {
+export const EditSurface: React.FC<EditSurfaceProps> = ({ elements, scale = 1, grain, vignette, selectedIds, onSelect, onLive, onGestureStart, onGestureEnd, onDropAsset }) => {
   const stageRef = React.useRef<HTMLDivElement>(null);
   const elRefs = React.useRef<Record<string, HTMLElement>>({});
   const moveableRef = React.useRef<Moveable>(null);
@@ -58,11 +60,18 @@ export const EditSurface: React.FC<EditSurfaceProps> = ({ elements, grain, vigne
 
   return (
     <div className="edit-surface-wrap">
-      <div className="editor-stage-scroll" onPointerDown={(e) => {
+      <div className="editor-stage-scroll" style={scale === 1 ? undefined : { width: CANVAS_W * scale, height: CANVAS_H * scale }} onDragOver={(event) => { if (onDropAsset && event.dataTransfer.types.includes("application/x-isaacverse-asset")) event.preventDefault(); }} onDrop={(event) => {
+        if (!onDropAsset) return;
+        const src = event.dataTransfer.getData("application/x-isaacverse-asset");
+        const rect = stageRef.current?.getBoundingClientRect();
+        if (!src || !rect) return;
+        event.preventDefault();
+        onDropAsset(src, Math.max(0, Math.min(CANVAS_W - 220, (event.clientX - rect.left) / rect.width * CANVAS_W - 110)), Math.max(0, Math.min(CANVAS_H - 160, (event.clientY - rect.top) / rect.height * CANVAS_H - 80)));
+      }} onPointerDown={(e) => {
         const t = e.target as HTMLElement;
         if (!t.closest("[data-el-id]") && !t.closest(".moveable-control-box")) onSelect([], false);
       }}>
-        <CanvasStage elements={elements} grain={grain} vignette={vignette} interactive selectedIds={selectedIds}
+          <CanvasStage elements={elements} scale={scale} grain={grain} vignette={vignette} interactive selectedIds={selectedIds}
           stageRef={stageRef} handlers={{ onElementPointerDown: handleElementPointerDown }}>
           <RefBridge stageRef={stageRef} elRefs={elRefs} />
           {editingText && <TextInlineEditor id={editingText} elements={elements} onLive={onLive} onGestureStart={onGestureStart} onGestureEnd={onGestureEnd} onDone={() => setEditingText(null)} />}

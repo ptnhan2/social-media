@@ -30,6 +30,9 @@ projects/**/assets/
 remotion-composer/renders/
 remotion-composer/build/
 
+# Build output (Vite/dist)
+**/dist/
+
 # Archive: openmontage = third-party reference (own LICENSE, huge, regenerable)
 archive/openmontage/
 

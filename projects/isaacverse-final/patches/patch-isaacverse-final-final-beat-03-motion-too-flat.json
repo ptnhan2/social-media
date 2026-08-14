@@ -1,0 +1,31 @@
+{
+  "id": "patch-isaacverse-final-final-beat-03-motion-too-flat",
+  "videoId": "isaacverse-final",
+  "baseVersion": "v008",
+  "reason": "motion-too-flat: apply the Kilo-scoped cameraScale fix to the current persisted version.",
+  "operations": [
+    {
+      "op": "updateBeat",
+      "beatId": "final-beat-03",
+      "changes": {
+        "motionPhases": [
+          {
+            "id": "final-beat-03:phase-focus",
+            "name": "focus proof",
+            "startSec": 0,
+            "durationSec": 2.8,
+            "purpose": "make the decision inspectable",
+            "params": {
+              "cameraScale": 1.2
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "affectedRange": {
+    "startSec": 7,
+    "endSec": 9.8
+  },
+  "status": "applied"
+}

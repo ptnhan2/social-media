@@ -29,7 +29,9 @@ describe("Kilo file handoff", () => {
     const files = listKiloHandoffs(root);
 
     expect(fs.existsSync(result.requestPath)).toBe(true);
-    expect(fs.readFileSync(result.promptPath, "utf8")).toContain("diagnose_and_patch");
+    const prompt = fs.readFileSync(result.promptPath, "utf8");
+    expect(prompt).toContain("diagnose_and_patch");
+    expect(prompt.split("\n").length).toBeGreaterThan(10);
     expect(files).toHaveLength(1);
     expect(files[0].slice.target.motionPhaseId).toBe("phase-01");
   });
@@ -57,5 +59,25 @@ describe("Kilo file handoff", () => {
     expect(result.status).toBe("previewed");
     expect(result.result?.patch?.id).toBe("patch-002");
     expect(result.result?.afterPath).toContain("feedback-002-after.mp4");
+  });
+
+  it("skips one corrupt inbox file without hiding valid requests", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "kilo-handoff-corrupt-"));
+    roots.push(root);
+    const request: FeedbackRequest = {
+      id: "feedback-valid",
+      projectId: "final-project",
+      version: "v004",
+      slice: { id: "slice-valid", videoId: "final-project", source: "beat", label: "beat", target: { beatId: "beat-01", startSec: 0, endSec: 1 }, startSec: 0, endSec: 1, modalities: ["visual"], status: "unreviewed" },
+      category: "custom",
+      modality: "visual",
+      requestedAction: "inspect_only",
+      status: "pending",
+      createdAt: "2026-08-12T00:00:00.000Z",
+    };
+    createKiloHandoff(root, request);
+    fs.writeFileSync(path.join(root, "feedback", "inbox", "corrupt.json"), "{not-json", "utf8");
+
+    expect(listKiloHandoffs(root).map((item) => item.id)).toEqual(["feedback-valid"]);
   });
 });

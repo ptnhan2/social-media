@@ -60,6 +60,14 @@ describe("ReviewSlice derivation", () => {
     expect(deriveReviewSlices(doc).map((slice) => slice.id)).toEqual(deriveReviewSlices(doc).map((slice) => slice.id));
   });
 
+  it("uses the atomic target ID before a parent shot ID", () => {
+    const slices = deriveReviewSlices(doc);
+
+    expect(slices.find((slice) => slice.source === "motion-phase")?.id).toBe("review-video:beat-01:motion-phase:beat-01:push");
+    expect(slices.find((slice) => slice.source === "audio-event")?.id).toBe("review-video:beat-01:audio-event:cue-01");
+    expect(slices.find((slice) => slice.source === "voice")?.id).toBe("review-video:beat-01:voice:shot-01");
+  });
+
   it("converts a selected live range to inclusive Player frames", () => {
     const slice = deriveReviewSlices(doc).find((candidate) => candidate.source === "shot")!;
     expect(frameRangeForReviewSlice(slice, 30, 10)).toEqual({ inFrame: 60, outFrame: 179 });

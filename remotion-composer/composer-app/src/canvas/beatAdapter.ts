@@ -62,15 +62,19 @@ export const editBeatToCanvas = (beat: SemanticBeat): CanvasElement[] => {
 
 export const canvasElementsToPatch = (beat: SemanticBeat, elements: CanvasElement[]): EditPatch => {
   const sourceById = new Map((beat.elements || []).map((element) => [element.id, element]));
-  const operations = elements.flatMap((element) => {
+  const operations = elements.flatMap((element, index): EditPatch["operations"] => {
     if (!element.sourceElementId || element.sourceElementId.endsWith(":background")) return [];
     const source = sourceById.get(element.sourceElementId);
-    if (!source) return [];
     const value = { x: element.x, y: element.y, width: element.w, height: element.h, rotation: element.rotation };
-    const original = source.geometry ?? { x: 0, y: 0, width: 0, height: 0, rotation: 0 };
+    if (!source) {
+      const kind: SemanticElement["kind"] = element.type === "video" ? "video" : element.type === "shape" ? "shape" : "image";
+      return [{ op: "addElement" as const, beatId: beat.id, element: { id: element.sourceElementId, role: element.name || "uploaded asset", kind, geometry: value, metadata: { assetSrc: element.src, fit: element.fit, canvasOverride: true } } }];
+    }
+    const original = geometryFor(source, index);
     const geometryChanged = value.x !== original.x || value.y !== original.y || value.width !== original.width || value.height !== original.height || value.rotation !== (original.rotation ?? 0);
     const result: EditPatch["operations"] = geometryChanged ? [{ op: "updateElement", beatId: beat.id, elementId: source.id, path: "geometry", value }] : [];
     if (element.type === "text" && element.text !== displayValue(valueAtPath(beat, source.sourcePath), source.role)) result.push({ op: "updateElement", beatId: beat.id, elementId: source.id, path: "metadata.text", value: element.text ?? "" });
+    if ((element.type === "image" || element.type === "video") && element.fit && element.fit !== source.metadata?.fit) result.push({ op: "updateElement", beatId: beat.id, elementId: source.id, path: "metadata.fit", value: element.fit });
     return result;
   });
   return {
@@ -82,4 +86,8 @@ export const canvasElementsToPatch = (beat: SemanticBeat, elements: CanvasElemen
     affectedRange: { startSec: beat.startSec, endSec: beat.startSec + beat.durationSec },
     status: "draft",
   };
+};
+
+export const hasCanvasChanges = (beat: SemanticBeat, elements: CanvasElement[]): boolean => {
+  return canvasElementsToPatch(beat, elements).operations.length > 0;
 };

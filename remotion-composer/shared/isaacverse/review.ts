@@ -1,5 +1,6 @@
 import type { SemanticBeat, SemanticElement, SemanticScene, SemanticShot, IsaacVerseEditDoc } from "./types";
 import type { EditPatch } from "./schema";
+import { frameRangeForSeconds } from "./editorTime";
 
 export type ReviewSource = "beat" | "shot" | "motion-phase" | "element" | "audio-event" | "voice" | "music" | "transition" | "custom";
 
@@ -82,7 +83,8 @@ const videoIdOf = (doc: IsaacVerseEditDoc) => doc.videoId || doc.id;
 
 const makeSlice = (doc: IsaacVerseEditDoc, beat: SemanticBeat, source: ReviewSource, label: string, target: ReviewTarget, modalities: ReviewModality[], startSec: number, endSec: number, parentId?: string, constrainToBeat = true): ReviewSlice => {
   const range = constrainToBeat ? clampRange(startSec, endSec, beat.startSec, beatEnd(beat)) : { startSec, endSec: Math.max(startSec + 0.05, endSec) };
-  return { id: `${videoIdOf(doc)}:${target.beatId || beat.id}:${source}:${target.elementId || target.shotId || target.motionPhaseId || target.audioCueId || target.transitionId || "range"}`, videoId: videoIdOf(doc), parentId, source, label, target: { ...target, startSec: range.startSec, endSec: range.endSec }, startSec: range.startSec, endSec: range.endSec, modalities, transcript: beat.transcript, status: "unreviewed" };
+  const atomicTargetId = source === "element" ? target.elementId : source === "shot" ? target.shotId : source === "motion-phase" ? target.motionPhaseId : source === "audio-event" ? target.audioCueId : source === "voice" ? target.audioCueId || target.shotId : source === "music" ? target.audioCueId || target.shotId : source === "transition" ? target.transitionId : undefined;
+  return { id: `${videoIdOf(doc)}:${target.beatId || beat.id}:${source}:${atomicTargetId || "range"}`, videoId: videoIdOf(doc), parentId, source, label, target: { ...target, startSec: range.startSec, endSec: range.endSec }, startSec: range.startSec, endSec: range.endSec, modalities, transcript: beat.transcript, status: "unreviewed" };
 };
 
 export const deriveReviewSlices = (doc: IsaacVerseEditDoc): ReviewSlice[] => {
@@ -136,9 +138,8 @@ export const getReviewSelection = (doc: IsaacVerseEditDoc, sliceId: string): Rev
 };
 
 export const frameRangeForReviewSlice = (slice: ReviewSlice, fps: number, durationSec: number) => {
-  const startSec = Math.max(0, Math.min(durationSec, slice.startSec));
-  const endSec = Math.max(startSec + 1 / fps, Math.min(durationSec, slice.endSec));
-  return { inFrame: Math.floor(startSec * fps), outFrame: Math.max(0, Math.ceil(endSec * fps) - 1) };
+  const range = frameRangeForSeconds(slice, fps, durationSec);
+  return { inFrame: range.startFrame, outFrame: range.endFrame };
 };
 
 export const reviewRollup = (slices: ReviewSlice[], entries: ReviewQueueEntry[]) => {

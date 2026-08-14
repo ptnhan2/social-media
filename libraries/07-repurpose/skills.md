@@ -1,6 +1,6 @@
 ﻿# Mined Skills — 07-repurpose
 
-> Knowledge extracted from openmontage skills (2026-08-04).
+> Knowledge curated for the current production pipeline (2026-08-12).
 > Source: skills/ (164 files mined, 3 relevant to this branch).
 
 ## explainer/publish-director
@@ -42,7 +42,7 @@
 - Thumbnail concept must match the final visual system — generic metadata ignoring animation style and thumbnails unrelated to final frames are failures.
 - Exports labeled by purpose and platform; package usable without extra manual work.
 **What we already do differently:**
-- N/A beyond general publish discipline; the mode-matched packaging principle applies to future animation/vox publishes.
+- Repurposed packaging must preserve the source beat/slice meaning and use the Composer's persisted captions, audio, and provenance metadata.
 
 ---
 

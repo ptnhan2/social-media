@@ -6,7 +6,7 @@
     "dev": "vite --port 5174",
     "build": "vite build",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit --strict --skipLibCheck --target ES2021 --module ESNext --moduleResolution bundler --jsx react-jsx src/composer/ComposerReview.tsx"
+    "typecheck": "tsc --noEmit --strict --skipLibCheck --target ES2021 --module ESNext --moduleResolution bundler --jsx react-jsx src/composer/VideoEditor.tsx src/composer/LeftRail.tsx src/composer/PropertiesPanel.tsx src/canvas/InteractiveCanvas.tsx src/editor/EditorTimeline.tsx src/editor/editorOperations.ts"
   },
   "dependencies": {
     "@remotion/media": "^4.0.484",
