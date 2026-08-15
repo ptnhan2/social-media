@@ -8,6 +8,7 @@
 ## Current Status
 
 - **PIVOT (2026-08-15): project is now building a video agent harness as an own product**, not producing videos via Kilocode. Direction locked in `docs/EVOLUTION-HARNESS-ISAACVERSE.md`: a self-improving agent harness around the Remotion editor that learns from feedback + tutorials and progresses toward a standard of beauty + editing skill, able to diverge from Isaac style. Foundation: LangChain Deep Agents (self-host). The items below remain the domain baseline the harness operates on / evolves.
+- **Harness build progress (2026-08-15)**: 8/8 treatments evolvable via style knobs. Python harness (`harness/`) with DeepSeek, 7 tools, governance (write-gate + minSupport), skills (editing-craft + style-knobs), CompositeBackend, MemorySaver checkpointer. Agent verified working. Full todo list at `docs/HARNESS-TODOLIST.md`.
 - IsaacVerse reference audit and treatment fixtures exist under `research/isaacverse/`.
 - Final local acceptance baseline exists with human-review status: `projects/isaacverse-final/`.
 - Final persisted version: `v009`; acceptance report: `projects/isaacverse-final/FINAL-REPORT.json`.
