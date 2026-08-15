@@ -1,149 +1,117 @@
-"""Harness tools — bridge between the Deep Agent and the Remotion renderer."""
+"""Harness tools — bridge between the Deep Agent and the Remotion renderer.
+
+All project file paths use /workspace/ prefix (mapped to FilesystemBackend root_dir=PROJECT_ROOT).
+The agent reads files via built-in read_file (supports video multimodal).
+"""
 
 from __future__ import annotations
 
 import json
 import os
 import subprocess
+import time
 
 from langchain.tools import tool
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RENDERER_DIR = os.path.join(PROJECT_ROOT, "remotion-composer")
-STYLE_FILE = os.path.join(PROJECT_ROOT, "libraries", "04-visual", "isaacverse-style.json")
+STYLE_REL = "libraries/04-visual/isaacverse-style.json"
 
 
 @tool
 def render_window(project_slug: str, start_sec: float, end_sec: float, quality: str = "draft") -> str:
-    """Render a video window for the given project.
+    """Render a video window. Returns the video path under /workspace/ for read_file.
 
     Args:
-        project_slug: Project folder name under projects/ (e.g. 'isaacverse-final').
+        project_slug: Project folder name (e.g. 'isaacverse-final').
         start_sec: Start time in seconds.
         end_sec: End time in seconds.
-        quality: 'draft' (360p, fast) or 'master' (1080p, slow).
-
-    Returns:
-        Path to the rendered .mp4, or an error message.
+        quality: 'draft' (360p) or 'master' (1080p).
     """
     cmd = [
-        "node",
-        os.path.join(RENDERER_DIR, "scripts", "render-window.mjs"),
-        "--project", project_slug,
-        "--start", str(start_sec),
-        "--end", str(end_sec),
-        "--quality", quality,
+        "node", os.path.join(RENDERER_DIR, "scripts", "render-window.mjs"),
+        "--project", project_slug, "--start", str(start_sec),
+        "--end", str(end_sec), "--quality", quality,
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, cwd=RENDERER_DIR, timeout=300)
     if result.returncode != 0:
-        return f"Render failed (exit {result.returncode}):\n{result.stderr[-500:]}"
-    output = result.stdout.strip().split("\n")
-    return output[-1] if output else "Render completed (no path in output)"
+        return f"Render failed:\n{result.stderr[-500:]}"
+    # Extract output path from stdout, convert to /workspace/ path
+    lines = result.stdout.strip().split("\n")
+    raw_path = lines[-1] if lines else ""
+    # Convert absolute path to /workspace/ relative
+    if raw_path.startswith(PROJECT_ROOT):
+        rel = raw_path[len(PROJECT_ROOT):].lstrip("\\/").replace("\\", "/")
+        return f"/workspace/{rel}"
+    return raw_path or "Render completed (no path)"
 
 
 @tool
-def read_edit_doc(project_slug: str) -> str:
-    """Read the EditDoc (05-edit-doc.json) for a project.
-
-    Returns the JSON structure showing beats, treatments, and timeline.
-    """
-    path = os.path.join(PROJECT_ROOT, "projects", project_slug, "05-edit-doc.json")
+def read_style() -> str:
+    """Read the current style store. Returns the full JSON."""
+    path = os.path.join(PROJECT_ROOT, STYLE_REL)
     if not os.path.exists(path):
-        return f"Edit doc not found: {path}"
+        return "Style file not found"
     with open(path, encoding="utf-8") as f:
-        doc = json.load(f)
-    beats_summary = []
-    for beat in doc.get("beats", []):
-        beats_summary.append({
-            "id": beat.get("id"),
-            "treatment": beat.get("treatment", {}).get("id"),
-            "startSec": beat.get("startSec"),
-            "durationSec": beat.get("durationSec"),
-            "transcript": beat.get("transcript", "")[:80],
-        })
-    return json.dumps({"id": doc.get("id"), "beats": beats_summary}, indent=2)
+        return json.dumps(json.load(f), indent=2)
+
+
+@tool
+def list_style_knobs() -> str:
+    """List all available style knobs with current values."""
+    path = os.path.join(PROJECT_ROOT, STYLE_REL)
+    if not os.path.exists(path):
+        return "Style file not found"
+    with open(path, encoding="utf-8") as f:
+        style = json.load(f)
+    knobs = []
+    def traverse(obj, prefix=""):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if isinstance(v, dict):
+                    traverse(v, f"{prefix}{k}.")
+                else:
+                    knobs.append(f"{prefix}{k} = {json.dumps(v)}")
+    traverse(style.get("treatments", {}), "treatments.")
+    return "\n".join(knobs)
 
 
 @tool
 def update_style(style_path: str, new_value: str) -> str:
-    """Update a style knob in the style store.
+    """Update a style knob. INTERRUPT-GATED: user must approve.
 
     Args:
-        style_path: Dot-notation path within the style JSON
-                    (e.g. 'treatments.semantic-diagram.edge.stroke.mode').
-        new_value: New value as a string. Will attempt JSON parse first
-                   (so '"gradient"' for a string, '2' for a number,
-                   '{"mode":"gradient","stops":["#a","#b"]}' for an object).
-
-    This tool is INTERRUPT-GATED: the user must approve before the write persists.
+        style_path: Dot-notation path from root (e.g. 'treatments.semantic-diagram.edge.stroke.mode').
+        new_value: New value (JSON-parsed: '"gradient"' for string, '2' for number, '{"a":1}' for object).
     """
-    if not os.path.exists(STYLE_FILE):
-        return f"Style file not found: {STYLE_FILE}"
-    with open(STYLE_FILE, encoding="utf-8") as f:
+    path = os.path.join(PROJECT_ROOT, STYLE_REL)
+    with open(path, encoding="utf-8") as f:
         style = json.load(f)
-
     parts = style_path.split(".")
     obj = style
     for p in parts[:-1]:
         if p not in obj:
-            return f"Path not found: {style_path} (missing key '{p}')"
+            return f"Path not found: {style_path} (missing '{p}')"
         obj = obj[p]
-
     try:
         val = json.loads(new_value)
     except (json.JSONDecodeError, TypeError):
         val = new_value
-
-    old_value = obj.get(parts[-1])
+    old = obj.get(parts[-1])
+    if old == val:
+        return f"No change (current value is already {json.dumps(val)})"
     obj[parts[-1]] = val
     style["version"] = style.get("version", 1) + 1
-
-    with open(STYLE_FILE, "w", encoding="utf-8") as f:
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(style, f, indent=2, ensure_ascii=False)
-
-    return (
-        f"Style updated: {style_path}\n"
-        f"  old: {json.dumps(old_value)}\n"
-        f"  new: {json.dumps(val)}\n"
-        f"  style version: {style['version']}"
-    )
-
-
-@tool
-def read_video(video_path: str) -> str:
-    """Report a rendered video path for visual inspection.
-
-    The Deep Agent's built-in read_file tool can read .mp4 as multimodal
-    content (video frames). Pass the path returned by render_window.
-    """
-    full = video_path if os.path.isabs(video_path) else os.path.join(PROJECT_ROOT, video_path)
-    if not os.path.exists(full):
-        return f"Video not found: {full}"
-    size_mb = os.path.getsize(full) / (1024 * 1024)
-    return f"Video ready: {full} ({size_mb:.1f} MB). Use read_file to view as multimodal."
-
-
-@tool
-def run_structural_qa(project_slug: str) -> str:
-    """Run structural QA on a project's edit doc.
-
-    Returns pass/fail status and any findings.
-    """
-    vd = os.path.join(PROJECT_ROOT, "projects", project_slug, "04-video-doc.json")
-    ed = os.path.join(PROJECT_ROOT, "projects", project_slug, "05-edit-doc.json")
-    out = os.path.join(PROJECT_ROOT, "projects", project_slug, "qa", "harness-check.json")
-    cmd = [
-        "python",
-        os.path.join(PROJECT_ROOT, "tools", "quality", "isaacverse_gate.py"),
-        "--video-doc", vd,
-        "--edit-doc", ed,
-        "--draft",
-        "--output", out,
-    ]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
-    if result.returncode == 0:
-        return f"QA passed.\n{result.stdout[-300:]}"
-    return f"QA issues (exit {result.returncode}):\n{result.stderr[-300:]}"
+    # Log the change
+    log_dir = os.path.join(PROJECT_ROOT, "harness", "logs")
+    os.makedirs(log_dir, exist_ok=True)
+    with open(os.path.join(log_dir, "events.jsonl"), "a", encoding="utf-8") as f:
+        f.write(json.dumps({"type": "style_update", "path": style_path, "old": old,
+                            "new": val, "version": style["version"], "ts": time.time()}) + "\n")
+    return (f"Style updated: {style_path}\n  old: {json.dumps(old)}\n  new: {json.dumps(val)}\n"
+            f"  version: {style['version']}\n  File: /workspace/{STYLE_REL}")
 
 
 @tool
@@ -151,24 +119,70 @@ def capture_feedback(dimension: str, verdict: str, note: str, beat_id: str = "")
     """Capture a per-aspect feedback verdict on a rendered segment.
 
     Args:
-        dimension: The visual aspect (e.g. 'edge-stroke', 'pacing', 'color', 'motion').
+        dimension: Visual aspect (e.g. 'edge-stroke', 'pacing', 'color').
         verdict: 'like' or 'dislike'.
-        note: Free-text explanation of what's good/bad.
-        beat_id: Optional beat ID the feedback applies to.
-
-    The feedback is logged and will be used to propose style refinements.
+        note: What's good/bad.
+        beat_id: Optional beat ID.
     """
     log_dir = os.path.join(PROJECT_ROOT, "harness", "logs")
     os.makedirs(log_dir, exist_ok=True)
-    log_file = os.path.join(log_dir, "feedback.jsonl")
-    import time
-    entry = {
-        "dimension": dimension,
-        "verdict": verdict,
-        "note": note,
-        "beatId": beat_id,
-        "timestamp": time.time(),
-    }
-    with open(log_file, "a", encoding="utf-8") as f:
+    entry = {"dimension": dimension, "verdict": verdict, "note": note,
+             "beatId": beat_id, "ts": time.time()}
+    with open(os.path.join(log_dir, "feedback.jsonl"), "a", encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
-    return f"Feedback captured: {dimension}={verdict} ({note[:60]}...). Logged to harness/logs/feedback.jsonl"
+    return f"Feedback logged: {dimension}={verdict}"
+
+
+@tool
+def run_structural_qa(project_slug: str) -> str:
+    """Run structural QA on a project."""
+    vd = os.path.join(PROJECT_ROOT, "projects", project_slug, "04-video-doc.json")
+    ed = os.path.join(PROJECT_ROOT, "projects", project_slug, "05-edit-doc.json")
+    out = os.path.join(PROJECT_ROOT, "projects", project_slug, "qa", "harness-check.json")
+    cmd = ["python", os.path.join(PROJECT_ROOT, "tools", "quality", "isaacverse_gate.py"),
+           "--video-doc", vd, "--edit-doc", ed, "--draft", "--output", out]
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    return f"QA {'passed' if result.returncode == 0 else 'failed'}:\n{result.stdout[-200:]}"
+
+
+@tool
+def render_compare(project_slug: str, start_sec: float, end_sec: float,
+                   style_path: str, new_value: str) -> str:
+    """Render before and after a style change for visual comparison.
+
+    Returns paths to both rendered videos (use read_file to view them).
+
+    Args:
+        project_slug: Project folder name.
+        start_sec: Start time.
+        end_sec: End time.
+        style_path: Style knob to change (dot-notation).
+        new_value: New value for the knob.
+    """
+    # 1. Render "before" (current style)
+    before = render_window.invoke({"project_slug": project_slug, "start_sec": start_sec,
+                                    "end_sec": end_sec, "quality": "draft"})
+    # 2. Apply proposed change temporarily
+    path = os.path.join(PROJECT_ROOT, STYLE_REL)
+    with open(path, encoding="utf-8") as f:
+        style = json.load(f)
+    parts = style_path.split(".")
+    obj = style
+    for p in parts[:-1]:
+        obj = obj[p]
+    old_val = obj.get(parts[-1])
+    try:
+        val = json.loads(new_value)
+    except:
+        val = new_value
+    obj[parts[-1]] = val
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(style, f, indent=2, ensure_ascii=False)
+    # 3. Render "after"
+    after = render_window.invoke({"project_slug": project_slug, "start_sec": start_sec,
+                                   "end_sec": end_sec, "quality": "draft"})
+    # 4. Revert to original
+    obj[parts[-1]] = old_val
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(style, f, indent=2, ensure_ascii=False)
+    return f"Before: {before}\nAfter: {after}\nUse read_file on both paths to compare visually."
