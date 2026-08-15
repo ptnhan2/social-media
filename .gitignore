@@ -33,6 +33,9 @@ remotion-composer/build/
 # Build output (Vite/dist)
 **/dist/
 
+# Python venvs (machine-specific, never commit)
+**/.venv/
+
 # Archive: openmontage = third-party reference (own LICENSE, huge, regenerable)
 archive/openmontage/
 

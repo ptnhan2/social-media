@@ -1,7 +1,7 @@
 # harness/run.ps1 — Run the IsaacVerse video agent harness
 # Usage: .\harness\run.ps1 "your query here"
 
-$PYTHON = "C:\Users\DELL\AppData\Local\Programs\Python\Python313\python.exe"
+$PYTHON = "$PSScriptRoot\.venv\Scripts\python.exe"
 $HARNESS_DIR = "$PSScriptRoot"
 
 # Check API key
