@@ -1,4 +1,4 @@
-r"""IsaacVerse video agent harness — Deep Agents entry point.
+r"""IsaacVerse video agent harness — Deep Agents native assembly.
 
 Run:
     harness/run.ps1 "your query"
@@ -19,34 +19,27 @@ if env_file.exists():
         if "=" in line and not line.startswith("#"):
             k, _, v = line.partition("=")
             v = v.strip()
-            # Strip inline comments (but not if # is inside quotes)
             if "#" in v and not (v.startswith('"') or v.startswith("'")):
                 v = v.split("#")[0].strip()
             os.environ.setdefault(k.strip(), v)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from deepagents import create_deep_agent
+from deepagents import create_deep_agent, SubAgent, FilesystemPermission
 from deepagents.backends import CompositeBackend, StateBackend, FilesystemBackend, StoreBackend
+from deepagents.middleware import RubricMiddleware
+from langchain.agents.middleware import TodoListMiddleware
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.store.memory import InMemoryStore
-from deepagents import FilesystemPermission
 
-from tools import (
-    render_window, read_style, list_style_knobs, update_style,
-    capture_feedback, run_structural_qa, propose_improvement, run_consolidation,
-    style_diff,
-)
-from tutorial_tools import ingest_tutorial, render_compare as rc_compare
-from visual_critique import visual_critique
-from governed_backend import GovernedBackend
+from tools import render_window, render_compare, update_style, style_diff
+from subagents import ALL_SUBAGENTS, CRITIC_SUBAGENT
+from rubric import TASTE_RUBRIC
 from file_store import FileBackedStore
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
 
-# --- Store (cross-thread memory, persistent to disk) ---
-# Dev: FileBackedStore (no Postgres needed). Prod: swap for PostgresStore.
+# --- Store (persistent cross-thread memory) ---
 STORE_FILE = os.path.join(os.path.dirname(__file__), "logs", "store.json")
 store = FileBackedStore(STORE_FILE)
 
@@ -71,8 +64,8 @@ def _seed_memory():
 
 _seed_memory()
 
-# --- Backend (wrapped with governance write-gate) ---
-_base_backend = CompositeBackend(
+# --- Backend (native CompositeBackend, no wrapper) ---
+backend = CompositeBackend(
     default=StateBackend(),
     routes={
         "/workspace/": FilesystemBackend(root_dir=PROJECT_ROOT, virtual_mode=True),
@@ -80,117 +73,158 @@ _base_backend = CompositeBackend(
         "/skills/": FilesystemBackend(root_dir=os.path.join(os.path.dirname(__file__), "skills"), virtual_mode=True),
     },
 )
-backend = GovernedBackend(_base_backend)
 
-# --- Permissions ---
+# --- Permissions (native — interrupt mode for governed paths, not deny) ---
 permissions = [
-    # Agent can't write directly to /memories/ (must use update_style tool)
-    FilesystemPermission(operations=["write"], paths=["/memories/**"], mode="deny"),
-    # Agent can't modify treatment code
-    FilesystemPermission(operations=["write"],
+    # Style store writes → human approval (interrupt)
+    FilesystemPermission(operations=["write", "edit"],
+                         paths=["/workspace/libraries/04-visual/**"], mode="interrupt"),
+    # Memory writes → human approval (agent can learn, but with oversight)
+    FilesystemPermission(operations=["write", "edit"],
+                         paths=["/memories/**"], mode="interrupt"),
+    # Treatment code → deny (never modify code)
+    FilesystemPermission(operations=["write", "edit"],
                          paths=["/workspace/remotion-composer/shared/**"], mode="deny"),
-    # Agent can't bypass update_style by writing style JSON directly
-    FilesystemPermission(operations=["write"],
-                         paths=["/workspace/libraries/04-visual/**"], mode="deny"),
 ]
 
 # --- System Prompt ---
 SYSTEM_PROMPT = """\
-You are the IsaacVerse video editing harness agent.
+You are the IsaacVerse video editing harness agent — a self-improving agent that \
+renders, critiques, and iteratively improves video style.
 
-## What you can do
+## Your workspace
 
-- render_window: Render a video segment (draft 360p or master 1080p).
-- read_style: Read the current style store JSON.
-- list_style_knobs: List all available style knobs with current values.
-- update_style: Change a style knob (APPROVAL-GATED — user must approve).
-- render_compare: Render before/after a style change for visual comparison.
-- capture_feedback: Log a per-aspect verdict on a render.
-- run_structural_qa: Run structural QA on a project.
-- read_file (built-in): Read ANY file including rendered .mp4 videos (multimodal — you SEE the frames).
-- visual_critique: Send rendered video frames to a VLM (GPT-4o) for structured visual critique.
-  Use this AFTER rendering to evaluate composition, color, motion, text, pacing.
-- propose_improvement: Analyze a render + critique and propose specific style changes.
-  Maps low-scoring aspects to available style knobs. Does NOT apply — use update_style after.
-- write_file/edit_file (built-in): Write to scratch space (NOT /memories/ — that's denied).
+The filesystem is your knowledge store. Use built-in tools (read_file, edit_file, ls, glob, grep) \
+to navigate it.
 
-## File paths
-
-Project files are under /workspace/:
+Key paths:
 - Style store: /workspace/libraries/04-visual/isaacverse-style.json
-- Edit doc: /workspace/projects/<slug>/05-edit-doc.json
+  Read it with read_file. Change values with update_style (approval-gated).
+- Memory: /memories/AGENTS.md (your constitution), /memories/taste-standard.md (accumulated taste principles)
+  Write learnings with edit_file (approval-gated). This is how you improve over time.
+- Skills: /skills/ (editing-craft, style-knobs, visual-critique)
+  Read SKILL.md files when a task matches their domain.
 - Rendered videos: /workspace/projects/<slug>/renders/*.mp4
-- Treatment code: /workspace/remotion-composer/shared/isaacverse/treatments.tsx (READ-ONLY)
+  You can read_file these — video frames are decoded natively.
+- Projects: /workspace/projects/<slug>/05-edit-doc.json (edit structure)
 
-## The learning loop
+## Your tools
 
-When the user gives feedback on a render (e.g. "the edge line looks too plain"):
+Domain tools (spawn external processes):
+- render_window: Render a video segment (draft 360p or master 1080p).
+- render_compare: Render before/after a style change.
+- update_style: Change a style knob (APPROVAL-GATED — human must approve).
+- style_diff: Show style change history.
 
-1. Capture the feedback: capture_feedback(dimension="edge-stroke", verdict="dislike", note="too plain")
-2. Read current style: read_style() — see what's active now
-3. List knobs: list_style_knobs() — see what you can change
-4. Propose a change: update_style(style_path, new_value) — this PAUSES for user approval
-5. After approval, render: render_window(project, start, end, "draft")
-6. Critique the result: visual_critique(video_path, "all") — VLM evaluates the render
-7. If critique is good: report success. If not: propose another change.
+Built-in tools (from Deep Agents):
+- read_file: Read any file (including .mp4 videos — frames decoded natively).
+- write_file / edit_file: Write to scratch space or memory (memory writes are approval-gated).
+- ls / glob / grep: Navigate the filesystem.
+- task: Delegate to subagents (see below).
+- write_todos: Plan multi-step work.
 
-## Proactive improvement loop (agent-initiated)
+## Delegation — the `task` tool
 
-After any render, you can proactively:
-1. Call visual_critique on the rendered video
-2. Call propose_improvement with the critique to get specific style change proposals
-3. Present the proposals to the user for approval
-4. After approval, call update_style to apply each approved change
-5. Re-render and verify the improvement
-6. This is how the system "learns" — each critique cycle improves the style store
+You CANNOT see video — your model is text-only. Delegate visual analysis to the `critic` subagent:
+
+    task(description="Critique the video at /workspace/projects/isaacverse-final/renders/windows/xxx.mp4", subagent_type="critic")
+
+The critic uses a VLM (GLM-4V-Flash) to analyze video frames and returns structured scores \
+(composition, color, motion, text, pacing) with a top issue and suggestions.
+
+Launch multiple subagents concurrently when independent. Each returns a distilled report.
+
+## Planning — write_todos
+
+For multi-step work (render → critique → change style → re-render → verify):
+1. Call write_todos with a concrete plan.
+2. Work through each todo.
+3. Mark todos as completed as you finish them.
+
+## Memory — learning
+
+When you learn something (user feedback, critique insight, successful technique):
+1. edit_file("/memories/taste-standard.md", old_text, new_text) to add the learning.
+2. The write is approval-gated — human reviews before it persists.
+3. In future sessions, taste-standard.md is loaded into your context via memory.
+
+This is how you improve: each approved learning compounds across sessions.
+
+## The improvement loop
+
+1. Plan with write_todos.
+2. Render: render_window(project, start, end, "draft").
+3. Critique: task(subagent_type="critic", description="...video path...").
+4. Analyze: read the critic's structured scores. Identify the weakest aspect.
+5. Change: update_style(style_path, new_value) to address the weakness.
+6. Re-render: render_window again.
+7. Verify: task(subagent_type="critic") again to confirm improvement.
+8. Learn: if the improvement worked, edit_file("/memories/taste-standard.md") to record the principle.
+9. Repeat until all scores >= 4 or the rubric is satisfied.
+
+## Rubric evaluation
+
+When a rubric is active (passed in invocation state), a grader will evaluate your work \
+after you finish. If it says "needs_revision", read the feedback and fix the issues. \
+The grader checks: motion present, text legible, composition balanced, no rendering errors, \
+style change verified.
 
 ## Style knob reference
 
 Key knobs (dot-notation from root):
 - treatments.semantic-diagram.edge.stroke.mode         solid | gradient | brush
-- treatments.semantic-diagram.edge.stroke.color         rgba string
-- treatments.semantic-diagram.edge.stroke.width         number
+- treatments.semantic-diagram.edge.stroke.width         number (0.5-10)
 - treatments.semantic-diagram.edge.stroke.gradientStops ["#color1", "#color2"]
-- treatments.semantic-diagram.edge.stroke.brushDasharray "3 1 5 2"
-- treatments.chapter-card.title.fontSizeShort           number
-- treatments.chapter-card.title.fontSizeLong            number
+- treatments.semantic-diagram.edge.revealDurationSec    number (0.1-5.0)
+- treatments.chapter-card.title.fontSizeShort           number (30-200)
+- treatments.chapter-card.title.fontSizeLong            number (30-200)
 - treatments.host-reflection.filter                     CSS filter string
-- treatments.host-reflection.letterboxTopPct            number
-- treatments.host-reflection.subtitleFontSize           number
+- treatments.host-reflection.letterboxTopPct            number (0-50)
+- treatments.host-reflection.subtitle.fontSize          number (10-60)
+
+Read the full style store with read_file to see all 53 knobs.
 
 ## Rules
 
-1. Never edit treatment code directly — only change the style store via update_style.
-2. Every style change must pass through update_style (approval-gated).
-3. Always render and view the result after a style change — never persist blind.
-4. Use render_compare to show before/after when proposing a change.
-5. If a render fails after a style change, revert immediately.
+1. Never edit treatment code — only change the style store via update_style.
+2. Always render and critique after a style change — never persist blind.
+3. Use the critic subagent for ALL visual analysis — you cannot see video.
+4. Learn from every critique cycle — write principles to /memories/taste-standard.md.
+5. Plan with write_todos before multi-step work.
 """
+
+# --- Middleware ---
+# RubricMiddleware: no-op unless a rubric is passed in invocation state.
+# To activate: agent.invoke({"messages": [...], "rubric": TASTE_RUBRIC})
+middleware = [
+    TodoListMiddleware(),
+    RubricMiddleware(
+        model=MODEL,
+        max_iterations=3,
+    ),
+]
 
 # --- Create Agent (module-level, no checkpointer/store — langgraph server compatible) ---
 _COMMON_KWARGS = dict(
     model=MODEL,
-    tools=[render_window, read_style, list_style_knobs, update_style,
-           capture_feedback, run_structural_qa, rc_compare, ingest_tutorial,
-           visual_critique, propose_improvement, run_consolidation, style_diff],
+    tools=[render_window, render_compare, update_style, style_diff],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
     skills=["/skills/"],
     permissions=permissions,
+    subagents=ALL_SUBAGENTS,
+    middleware=middleware,
     interrupt_on={"update_style": True},
 )
 
-# This is what langgraph server imports (no custom checkpointer/store)
 agent = create_deep_agent(**_COMMON_KWARGS)
 
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     from langgraph.types import Command
-    from langgraph.checkpoint.memory import MemorySaver
 
-    # Standalone CLI: create a separate agent WITH MemorySaver + store for interrupt resume
     cli_agent = create_deep_agent(**_COMMON_KWARGS, checkpointer=MemorySaver(), store=store)
 
     query = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "What can you do?"
@@ -200,23 +234,18 @@ def main():
         {"messages": [{"role": "user", "content": query}]},
         config=config,
     )
-    # Handle interrupts (approval gates for update_style)
     while "__interrupt__" in result:
         print("\n" + "="*60)
-        print("[APPROVAL NEEDED — style change requested]")
+        print("[APPROVAL NEEDED]")
         for item in result["__interrupt__"]:
             if hasattr(item, 'value'):
                 print(item.value)
             else:
                 print(str(item))
         print("="*60)
-        resp = input("\nApprove this style change? (yes/no): ").strip().lower()
-        if resp.startswith("y"):
-            resume_val = {"decisions": [{"type": "approve"}]}
-        else:
-            resume_val = {"decisions": [{"type": "reject"}]}
+        resp = input("\nApprove? (yes/no): ").strip().lower()
+        resume_val = {"decisions": [{"type": "approve" if resp.startswith("y") else "reject"}]}
         result = cli_agent.invoke(Command(resume=resume_val), config=config)
-    # Print final messages
     for msg in result.get("messages", []):
         content = getattr(msg, "content", None)
         if not content and isinstance(msg, dict):

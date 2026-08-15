@@ -299,13 +299,15 @@ def visual_critique(video_path: str, aspect: str = "all") -> str:
     Returns:
         Structured text critique from the VLM.
     """
-    # Resolve path
+    # Resolve path — handle /workspace/ prefix (virtual path → real disk)
     full = video_path
+    if full.startswith("/workspace/"):
+        full = full[len("/workspace/"):]
     if not os.path.isabs(full):
-        full = os.path.join(PROJECT_ROOT, video_path.lstrip("/"))
+        full = os.path.join(PROJECT_ROOT, full.lstrip("/"))
 
     if not os.path.exists(full):
-        return f"Video not found: {full}"
+        return f"Video not found: {full} (tried resolving {video_path})"
 
     # Extract keyframes
     frames = _extract_keyframes(full, max_frames=4)
