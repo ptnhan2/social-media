@@ -1,86 +1,124 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Component, ErrorInfo } from "react";
 import { useStream } from "@langchain/react";
 
 const LANGGRAPH_URL = "http://localhost:2024";
 const ASSISTANT_ID = "agent";
 
-// --- Helpers ---
+// --- Error Boundary ---
+class ErrorBoundary extends Component<{ children: React.ReactNode }, { hasError: boolean; error: string }> {
+  state = { hasError: false, error: "" };
+  static getDerivedStateFromError(err: Error) { return { hasError: true, error: err.message }; }
+  componentDidCatch(error: Error, info: ErrorInfo) { console.error("UI Error:", error, info); }
+  render() {
+    if (this.state.hasError) return (
+      <div className="ap-error"><strong>UI Error:</strong> {this.state.error}<br/>
+        <button onClick={() => this.setState({ hasError: false, error: "" })}>Retry</button>
+      </div>
+    );
+    return this.props.children;
+  }
+}
 
+// --- Helpers ---
 function extractVideoPaths(text: string): string[] {
   const paths: string[] = [];
   const regex = /(?:\/workspace\/)?(projects\/[^\s"']+\.mp4)/g;
-  let m;
-  while ((m = regex.exec(text)) !== null) paths.push(m[1]);
+  let m; while ((m = regex.exec(text)) !== null) paths.push(m[1]);
   return [...new Set(paths)];
 }
-
 function videoUrl(path: string): string {
-  // projects/isaacverse-final/renders/x.mp4 → /api/project/artifact?projectId=isaacverse-final&path=renders/x.mp4
   const parts = path.replace(/^projects\//, "").split("/");
   if (parts.length < 2) return "";
-  const projectId = parts[0];
-  const relPath = parts.slice(1).join("/");
-  return `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(relPath)}`;
+  return `/api/project/artifact?projectId=${encodeURIComponent(parts[0])}&path=${encodeURIComponent(parts.slice(1).join("/"))}`;
 }
-
 function parseCritiqueScores(text: string): { aspect: string; score: number }[] {
   const scores: { aspect: string; score: number }[] = [];
   const regex = /(composition|color|motion|text\s+legibility|text|pacing)\s*[:\-]\s*(\d)/gi;
   const seen = new Set<string>();
   let m;
   while ((m = regex.exec(text)) !== null) {
-    let aspect = m[1].toLowerCase();
-    if (aspect.includes("text")) aspect = "text";
-    if (!seen.has(aspect)) {
-      seen.add(aspect);
-      scores.push({ aspect, score: parseInt(m[2]) });
-    }
+    let a = m[1].toLowerCase(); if (a.includes("text")) a = "text";
+    if (!seen.has(a)) { seen.add(a); scores.push({ aspect: a, score: parseInt(m[2]) }); }
   }
   return scores;
 }
-
 function extractTopIssue(text: string): string {
   const lower = text.toLowerCase();
   const idx = lower.indexOf("top issue:");
   if (idx === -1) return "";
-  return text.substring(idx + "top issue:".length).trim().split("\n")[0];
+  return text.substring(idx + 10).trim().split("\n")[0];
+}
+
+// --- Collapsible Tool Call Card ---
+function ToolCallCard({ name, args, result }: { name: string; args: string; result?: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const isTask = name === "task";
+  const videos = result ? extractVideoPaths(result) : [];
+  const scores = result ? parseCritiqueScores(result) : [];
+  const topIssue = result ? extractTopIssue(result) : "";
+
+  return (
+    <div className={`ap-tool-card ${isTask ? "ap-tool-task" : ""}`}>
+      <div className="ap-tool-card-header" onClick={() => setExpanded(!expanded)}>
+        <span className="ap-tool-icon">{isTask ? "📤" : "🔧"}</span>
+        <span className="ap-tool-name">{name}</span>
+        <span className="ap-tool-expand">{expanded ? "▼" : "▶"}</span>
+      </div>
+      {!expanded && <div className="ap-tool-args-preview">{args.slice(0, 80)}{args.length > 80 ? "…" : ""}</div>}
+      {expanded && (
+        <div className="ap-tool-card-body">
+          <div className="ap-tool-args-full">{args}</div>
+          {result && (
+            <>
+              {scores.length > 0 && (
+                <div className="ap-critique-scores">
+                  {scores.map((s, i) => (
+                    <span key={i} className={`ap-score ap-score-${s.score <= 2 ? "low" : s.score === 3 ? "mid" : "high"}`}>
+                      {s.aspect}: {s.score}/5
+                    </span>
+                  ))}
+                </div>
+              )}
+              {topIssue && <div className="ap-top-issue">⚠ {topIssue}</div>}
+              <pre className="ap-tool-result">{result.slice(0, 500)}{result.length > 500 ? "…" : ""}</pre>
+              {videos.map((vp, i) => (
+                <div key={i} className="ap-video-inline">
+                  <video controls src={videoUrl(vp)} style={{ width: "100%", borderRadius: 6 }} />
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // --- Message renderer ---
-
 function MessageView({ msg }: { msg: any }) {
   const role = msg.type === "human" ? "user" : msg.type === "tool" ? "tool" : "agent";
   let content = msg.content;
   if (typeof content === "object" && content !== null) {
-    if (Array.isArray(content)) {
-      content = content.map((c: any) => (typeof c === "string" ? c : JSON.stringify(c))).join("");
-    } else {
-      content = JSON.stringify(content);
-    }
+    if (Array.isArray(content)) content = content.map((c: any) => typeof c === "string" ? c : JSON.stringify(c)).join("");
+    else content = JSON.stringify(content);
   }
   content = content || "";
 
-  // Tool call message
   if (msg.tool_calls && msg.tool_calls.length > 0) {
     return (
-      <div className="ap-msg ap-msg-tool">
-        <div className="ap-tool-header">🔧 {msg.tool_calls.map((tc: any) => tc.name).join(", ")}</div>
+      <div className="ap-msg-tool-calls">
         {msg.tool_calls.map((tc: any, i: number) => (
-          <div key={i} className="ap-tool-args">{JSON.stringify(tc.args).slice(0, 200)}</div>
+          <ToolCallCard key={i} name={tc.name} args={JSON.stringify(tc.args)} />
         ))}
       </div>
     );
   }
 
   if (!content && role === "agent") return null;
-
-  const videos = extractVideoPaths(content);
-  const scores = role === "tool" ? parseCritiqueScores(content) : [];
-  const topIssue = role === "tool" ? extractTopIssue(content) : "";
-  const isKnobList = content.includes("treatments.") && content.includes(" = ");
-
-  // Tool result — show truncated with video/critique enrichment
   if (role === "tool") {
+    const videos = extractVideoPaths(content);
+    const scores = parseCritiqueScores(content);
+    const topIssue = extractTopIssue(content);
     return (
       <div className="ap-msg ap-msg-tool">
         {scores.length > 0 && (
@@ -93,7 +131,7 @@ function MessageView({ msg }: { msg: any }) {
           </div>
         )}
         {topIssue && <div className="ap-top-issue">⚠ {topIssue}</div>}
-        <pre className="ap-tool-result">{content.slice(0, 600)}{content.length > 600 ? "…" : ""}</pre>
+        <pre className="ap-tool-result">{content.slice(0, 400)}{content.length > 400 ? "…" : ""}</pre>
         {videos.map((vp, i) => (
           <div key={i} className="ap-video-inline">
             <video controls src={videoUrl(vp)} style={{ width: "100%", borderRadius: 6 }} />
@@ -103,7 +141,7 @@ function MessageView({ msg }: { msg: any }) {
     );
   }
 
-  // Agent or user message
+  const videos = extractVideoPaths(content);
   return (
     <div className={`ap-msg ap-msg-${role}`}>
       <div className="ap-msg-content">{content}</div>
@@ -112,20 +150,55 @@ function MessageView({ msg }: { msg: any }) {
           <video controls src={videoUrl(vp)} style={{ width: "100%", borderRadius: 6 }} />
         </div>
       ))}
-      {isKnobList && (
-        <div className="ap-knob-preview">
-          {content.split("\n").filter((l: string) => l.includes(" = ")).slice(0, 8).map((line: string, i: number) => {
-            const [path, ...rest] = line.split(" = ");
-            return <div key={i} className="ap-knob-line"><span className="ap-knob-path">{path}</span><span className="ap-knob-val">= {rest.join(" = ")}</span></div>;
-          })}
+    </div>
+  );
+}
+
+// --- Subagent Card ---
+function SubagentCard({ subagent }: { subagent: any }) {
+  const [expanded, setExpanded] = useState(true);
+  const name = subagent?.name || "subagent";
+  const status = subagent?.status || "unknown";
+  const messages = subagent?.messages || [];
+
+  return (
+    <div className="ap-subagent-card">
+      <div className="ap-subagent-header" onClick={() => setExpanded(!expanded)}>
+        <span className="ap-subagent-icon">🤖</span>
+        <span className="ap-subagent-name">{name}</span>
+        <span className={`ap-subagent-status ap-status-${status}`}>{status}</span>
+        <span className="ap-tool-expand">{expanded ? "▼" : "▶"}</span>
+      </div>
+      {expanded && messages.length > 0 && (
+        <div className="ap-subagent-body">
+          {messages.slice(-3).map((m: any, i: number) => (
+            <div key={i} className="ap-subagent-msg">{typeof m.content === "string" ? m.content.slice(0, 200) : JSON.stringify(m.content).slice(0, 200)}</div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-// --- Main AgentPanel ---
+// --- Todo List ---
+function TodoList({ todos }: { todos: any[] | undefined }) {
+  if (!todos || todos.length === 0) return null;
+  return (
+    <div className="ap-todos">
+      <div className="ap-todos-header">📋 Plan</div>
+      {todos.map((todo, i) => (
+        <div key={i} className={`ap-todo ap-todo-${todo.status || "pending"}`}>
+          <span className="ap-todo-status">
+            {todo.status === "completed" ? "✅" : todo.status === "in_progress" ? "🔄" : "⬜"}
+          </span>
+          <span className="ap-todo-content">{todo.content}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
+// --- Main AgentPanel ---
 export function AgentPanel({ projectId, currentSec }: { projectId: string; currentSec: number }) {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -138,94 +211,108 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
   const messages = stream.messages || [];
   const isBusy = stream.isLoading;
   const interrupt = stream.interrupt;
+  const todos = (stream as any).values?.todos;
+  const subagents = (stream as any).subagents;
+  const subagentList = subagents ? [...subagents.values()] : [];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, subagentList.length]);
 
   const send = (text?: string) => {
     const msg = (text || input).trim();
     if (!msg || isBusy) return;
-    stream.submit({ messages: [{ type: "human", content: msg }] });
+    (stream as any).submit(
+      { messages: [{ type: "human", content: msg }] },
+      { streamSubgraphs: true, config: { recursionLimit: 10000 } },
+    );
     setInput("");
   };
 
   const handleApproval = (type: "approve" | "reject") => {
-    stream.respond({ decisions: [{ type }] });
+    (stream as any).respond({ decisions: [{ type }] });
   };
 
-  const quickAction = (label: string, prompt: string) => {
-    if (isBusy) return;
-    send(prompt);
-  };
+  // Parse interrupt for display
+  const interruptInfo = (() => {
+    if (!interrupt) return null;
+    const val = interrupt.value;
+    const reqs = val?.action_requests || [];
+    if (reqs.length > 0) {
+      const req = reqs[0];
+      const name = req?.name || "tool";
+      const args = req?.args || {};
+      if (name === "edit_file" || name === "write_file") {
+        return { name, path: args.file_path || args.path || "", old: args.old_string?.slice(0, 100) || "", new: args.new_string?.slice(0, 100) || "" };
+      }
+      return { name, path: JSON.stringify(args).slice(0, 200), old: "", new: "" };
+    }
+    return { name: "approval", path: JSON.stringify(val).slice(0, 200), old: "", new: "" };
+  })();
 
   return (
-    <div className="ap-root">
-      {/* Quick actions */}
-      <div className="ap-quick-actions">
-        <button className="ap-qa-btn" disabled={isBusy || !!interrupt}
-          onClick={() => quickAction("Knobs", "list style knobs")}>Knobs</button>
-        <button className="ap-qa-btn" disabled={isBusy || !!interrupt}
-          onClick={() => quickAction("Read", "read style")}>Read Style</button>
-        <button className="ap-qa-btn" disabled={isBusy || !!interrupt}
-          onClick={() => quickAction("Render", `render ${projectId} ${Math.max(0, currentSec - 2).toFixed(1)} to ${(currentSec + 2).toFixed(1)} draft`)}>Render ±2s</button>
-        <button className="ap-qa-btn" disabled={isBusy || !!interrupt}
-          onClick={() => quickAction("Critique", `render ${projectId} 0 to 4 draft then visual_critique the result`)}>Critique</button>
-        <button className="ap-qa-btn" disabled={isBusy || !!interrupt}
-          onClick={() => quickAction("Improve", `render ${projectId} 0 to 4 draft, then visual_critique, then propose_improvement`)}>Improve</button>
-      </div>
+    <ErrorBoundary>
+      <div className="ap-root">
+        {/* Quick actions */}
+        <div className="ap-quick-actions">
+          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send("list style knobs")}>Knobs</button>
+          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send("read the style store")}>Read Style</button>
+          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} ${Math.max(0, currentSec - 2).toFixed(1)} to ${(currentSec + 2).toFixed(1)} draft`)}>Render ±2s</button>
+          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} 0 to 4 draft then use the critic subagent to critique the result`)}>Critique</button>
+          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} 0 to 4 draft, critique it, then improve the weakest aspect`)}>Improve</button>
+        </div>
 
-      {/* Context bar */}
-      <div className="ap-context">
-        <span className="ap-ctx-item">📁 {projectId}</span>
-        <span className="ap-ctx-item">⏱ {currentSec.toFixed(1)}s</span>
-        <span className={`ap-ctx-status ${isBusy ? "busy" : interrupt ? "waiting" : "idle"}`}>
-          {isBusy ? "working" : interrupt ? "approval" : "idle"}
-        </span>
-      </div>
+        {/* Context bar */}
+        <div className="ap-context">
+          <span className="ap-ctx-item">📁 {projectId}</span>
+          <span className="ap-ctx-item">⏱ {currentSec.toFixed(1)}s</span>
+          <span className={`ap-ctx-status ${isBusy ? "busy" : interrupt ? "waiting" : "idle"}`}>
+            {isBusy ? "working" : interrupt ? "approval" : "idle"}
+          </span>
+        </div>
 
-      {/* Messages */}
-      <div className="ap-messages">
-        {messages.length === 0 && (
-          <div className="ap-msg ap-msg-agent">
-            <div className="ap-msg-content">
-              <strong>Agent ready.</strong> Ask me to render, critique, or change style knobs.
-              <br/><br/>
-              Quick actions above, or type a message below.
+        {/* Todo list */}
+        <TodoList todos={todos} />
+
+        {/* Messages */}
+        <div className="ap-messages">
+          {messages.length === 0 && subagentList.length === 0 && (
+            <div className="ap-msg ap-msg-agent">
+              <div className="ap-msg-content">
+                <strong>Agent ready.</strong> Ask me to render, critique, or change style knobs.
+              </div>
+            </div>
+          )}
+          {messages.map((msg: any, i: number) => <MessageView key={i} msg={msg} />)}
+          {/* Subagent cards */}
+          {subagentList.map((sa: any, i: number) => <SubagentCard key={`sa-${i}`} subagent={sa} />)}
+          {isBusy && <div className="ap-msg ap-msg-agent ap-loading-msg">working…</div>}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Approval bar */}
+        {interrupt && interruptInfo && (
+          <div className="ap-approval">
+            <div className="ap-approval-desc">
+              <strong>Approval needed: {interruptInfo.name}</strong>
+              {interruptInfo.path && <div className="ap-approval-path">📄 {interruptInfo.path}</div>}
+              {interruptInfo.old && <div className="ap-approval-diff"><span className="ap-diff-old">- {interruptInfo.old}</span><br/><span className="ap-diff-new">+ {interruptInfo.new}</span></div>}
+            </div>
+            <div className="ap-approval-actions">
+              <button className="ap-approve" onClick={() => handleApproval("approve")}>Approve</button>
+              <button className="ap-reject" onClick={() => handleApproval("reject")}>Reject</button>
             </div>
           </div>
         )}
-        {messages.map((msg: any, i: number) => <MessageView key={i} msg={msg} />)}
-        {isBusy && <div className="ap-msg ap-msg-agent ap-loading-msg">working…</div>}
-        <div ref={messagesEndRef} />
-      </div>
 
-      {/* Approval bar */}
-      {interrupt && (
-        <div className="ap-approval">
-          <div className="ap-approval-desc">
-            <strong>Style change requested:</strong>
-            <pre className="ap-approval-detail">{JSON.stringify(interrupt.value?.action_requests || interrupt.value, null, 2).slice(0, 300)}</pre>
-          </div>
-          <div className="ap-approval-actions">
-            <button className="ap-approve" onClick={() => handleApproval("approve")}>Approve</button>
-            <button className="ap-reject" onClick={() => handleApproval("reject")}>Reject</button>
-          </div>
+        {/* Input */}
+        <div className="ap-input-bar">
+          <input className="ap-input" value={input} onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send()}
+            placeholder="Ask the agent…" disabled={isBusy || !!interrupt} />
+          <button className="ap-send" onClick={() => send()} disabled={isBusy || !!interrupt || !input.trim()}>Send</button>
         </div>
-      )}
-
-      {/* Input */}
-      <div className="ap-input-bar">
-        <input
-          className="ap-input"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Ask the agent…"
-          disabled={isBusy || !!interrupt}
-        />
-        <button className="ap-send" onClick={() => send()} disabled={isBusy || !!interrupt || !input.trim()}>Send</button>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }

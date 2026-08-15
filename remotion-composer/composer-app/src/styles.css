@@ -1429,3 +1429,49 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 }
 .ap-send:hover:not(:disabled) { background: #1d4ed8; }
 .ap-send:disabled { opacity: 0.35; cursor: default; }
+
+/* Error boundary */
+.ap-error { padding: 12px; font-size: 12px; color: #ef5552; }
+.ap-error button { margin-top: 6px; padding: 4px 10px; border: 1px solid #1f2937; border-radius: 4px; background: #111827; color: #d8dee9; cursor: pointer; font-size: 11px; }
+
+/* Collapsible tool call cards */
+.ap-msg-tool-calls { display: flex; flex-direction: column; gap: 4px; align-self: flex-start; max-width: 92%; }
+.ap-tool-card { background: #0b0e14; border: 1px solid #1f2937; border-radius: 6px; overflow: hidden; }
+.ap-tool-card.ap-tool-task { border-color: #3730a3; }
+.ap-tool-card-header { display: flex; align-items: center; gap: 4px; padding: 4px 8px; cursor: pointer; font-size: 11px; }
+.ap-tool-card-header:hover { background: #111827; }
+.ap-tool-icon { font-size: 12px; }
+.ap-tool-name { font-weight: 600; color: #60a5fa; flex: 1; }
+.ap-tool-expand { color: #6b7280; font-size: 9px; }
+.ap-tool-args-preview { padding: 0 8px 4px; font-family: "Roboto Mono", monospace; font-size: 10px; color: #6b7280; word-break: break-all; }
+.ap-tool-card-body { padding: 4px 8px; border-top: 1px solid #1f2937; }
+.ap-tool-args-full { font-family: "Roboto Mono", monospace; font-size: 10px; color: #6b7280; word-break: break-all; margin-bottom: 4px; }
+
+/* Subagent cards */
+.ap-subagent-card { background: #0d1520; border: 1px solid #3730a3; border-radius: 6px; overflow: hidden; margin: 4px 0; }
+.ap-subagent-header { display: flex; align-items: center; gap: 4px; padding: 4px 8px; cursor: pointer; font-size: 11px; }
+.ap-subagent-header:hover { background: #111827; }
+.ap-subagent-icon { font-size: 12px; }
+.ap-subagent-name { font-weight: 600; color: #a78bfa; flex: 1; }
+.ap-subagent-status { font-size: 9px; padding: 1px 6px; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
+.ap-status-running { background: #1e3a5f; color: #93c5fd; }
+.ap-status-completed { background: #064e3b; color: #2dd4a0; }
+.ap-status-error { background: #450a0a; color: #ef5552; }
+.ap-status-unknown { background: #1f2937; color: #6b7280; }
+.ap-subagent-body { padding: 4px 8px; border-top: 1px solid #1f2937; }
+.ap-subagent-msg { font-size: 10px; color: #8d96a3; padding: 2px 0; word-break: break-word; }
+
+/* Todo list */
+.ap-todos { padding: 4px 8px; border-bottom: 1px solid #1f2937; flex-shrink: 0; }
+.ap-todos-header { font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.ap-todo { display: flex; align-items: flex-start; gap: 4px; font-size: 11px; padding: 2px 0; }
+.ap-todo-status { flex-shrink: 0; }
+.ap-todo-content { color: #8d96a3; }
+.ap-todo-completed .ap-todo-content { color: #4b5563; text-decoration: line-through; }
+.ap-todo-in_progress .ap-todo-content { color: #93c5fd; }
+
+/* Approval diff */
+.ap-approval-path { font-family: "Roboto Mono", monospace; font-size: 10px; color: #9ca3af; margin-top: 4px; word-break: break-all; }
+.ap-approval-diff { font-family: "Roboto Mono", monospace; font-size: 10px; margin-top: 4px; }
+.ap-diff-old { color: #ef5552; }
+.ap-diff-new { color: #2dd4a0; }
