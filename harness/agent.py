@@ -132,19 +132,26 @@ Key knobs (dot-notation from root):
 """
 
 # --- Create Agent ---
-agent = create_deep_agent(
+# When running via langgraph dev/up, the platform provides its own
+# checkpointer + store. We only pass them for standalone CLI mode.
+_is_langgraph_server = os.environ.get("__LANGGRAPH_API__") is not None
+
+_agent_kwargs = dict(
     model=MODEL,
     tools=[render_window, read_style, list_style_knobs, update_style,
            capture_feedback, run_structural_qa, rc_compare, ingest_tutorial],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
-    store=store,
-    checkpointer=MemorySaver(),
     memory=["/memories/AGENTS.md"],
     skills=["/skills/"],
     permissions=permissions,
     interrupt_on={"update_style": True},
 )
+if not _is_langgraph_server:
+    _agent_kwargs["store"] = store
+    _agent_kwargs["checkpointer"] = MemorySaver()
+
+agent = create_deep_agent(**_agent_kwargs)
 
 
 def main():
