@@ -1,31 +1,25 @@
-"""Harness domain tools — only tools that spawn external processes.
+"""Domain tools — only tools that spawn external processes.
 
-The agent uses built-in filesystem tools (read_file, edit_file, ls, glob, grep)
-for file operations. These domain tools exist because they spawn Remotion
-(Node.js subprocess) which can't be done via filesystem operations.
+render_window: spawns Remotion (Node.js subprocess)
+visual_critique: calls GLM-4V-Flash API (VLM)
 
-Style store reads: use built-in read_file("/workspace/libraries/04-visual/isaacverse-style.json")
-Style store writes: use update_style (schema-validated, approval-gated)
-Memory writes: use built-in edit_file("/memories/taste-standard.md") (approval-gated)
+Everything else (read_file, edit_file, write_file, ls, glob, grep, task)
+is provided by Deep Agents built-in.
 """
 
 from __future__ import annotations
 
+import base64
 import json
 import os
 import subprocess
 import sys
-import time
 
 from langchain.tools import tool
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RENDERER_DIR = os.path.join(PROJECT_ROOT, "remotion-composer")
 STYLE_REL = "libraries/04-visual/isaacverse-style.json"
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from style_schema import validate_style_schema
-import governance as gov
 
 
 @tool
@@ -68,137 +62,100 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
     return raw_path or f"Render completed. stdout:\n{out[-300:]}"
 
 
-@tool
-def render_compare(project_slug: str, start_sec: float, end_sec: float,
-                   style_path: str, new_value: str) -> str:
-    """Render before and after a style change for visual comparison.
-
-    Returns paths to both rendered videos (use read_file or delegate to critic subagent to view).
-
-    Args:
-        project_slug: Project folder name.
-        start_sec: Start time.
-        end_sec: End time.
-        style_path: Style knob to change (dot-notation from root).
-        new_value: New value for the knob.
-    """
-    before = render_window.invoke({"project_slug": project_slug, "start_sec": start_sec,
-                                    "end_sec": end_sec, "quality": "draft"})
-    path = os.path.join(PROJECT_ROOT, STYLE_REL)
-    with open(path, encoding="utf-8") as f:
-        style = json.load(f)
-    parts = style_path.split(".")
-    obj = style
-    for p in parts[:-1]:
-        obj = obj[p]
-    old_val = obj.get(parts[-1])
+def _extract_keyframes(video_path: str, max_frames: int = 4) -> list[str]:
+    """Extract keyframes from video as base64 PNG strings."""
+    full = video_path
+    if full.startswith("/workspace/"):
+        full = full[len("/workspace/"):]
+    if not os.path.isabs(full):
+        full = os.path.join(PROJECT_ROOT, full.lstrip("/"))
+    if not os.path.exists(full):
+        return []
+    probe = subprocess.run(
+        ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", str(full)],
+        capture_output=True, text=True, timeout=30)
+    duration = 10.0
     try:
-        val = json.loads(new_value)
+        duration = float(json.loads(probe.stdout).get("format", {}).get("duration", 10))
     except Exception:
-        val = new_value
-    obj[parts[-1]] = val
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(style, f, indent=2, ensure_ascii=False)
-    after = render_window.invoke({"project_slug": project_slug, "start_sec": start_sec,
-                                   "end_sec": end_sec, "quality": "draft"})
-    obj[parts[-1]] = old_val
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(style, f, indent=2, ensure_ascii=False)
-    return f"Before: {before}\nAfter: {after}\nUse the critic subagent to compare both videos."
+        pass
+    frames: list[str] = []
+    interval = duration / (max_frames + 1)
+    import tempfile, shutil
+    tmpdir = tempfile.mkdtemp()
+    for i in range(max_frames):
+        t = interval * (i + 1)
+        frame_path = os.path.join(tmpdir, f"frame_{i:02d}.png")
+        subprocess.run(
+            ["ffmpeg", "-y", "-ss", str(t), "-i", str(full),
+             "-frames:v", "1", "-q:v", "2", "-vf", "scale=640:-1", frame_path],
+            capture_output=True, timeout=30)
+        if os.path.exists(frame_path):
+            with open(frame_path, "rb") as f:
+                frames.append(base64.b64encode(f.read()).decode())
+    shutil.rmtree(tmpdir, ignore_errors=True)
+    return frames
 
 
-@tool
-def update_style(style_path: str, new_value: str) -> str:
-    """Update a style knob. APPROVAL-GATED (human must approve via interrupt).
-
-    Validates against JSON Schema before writing. Logs the change.
-    Use this to change any value in the style store.
-
-    Args:
-        style_path: Dot-notation path from root (e.g. 'treatments.semantic-diagram.edge.stroke.mode').
-        new_value: New value (JSON-parsed: '"gradient"' for string, '2' for number).
-    """
-    path = os.path.join(PROJECT_ROOT, STYLE_REL)
-    with open(path, encoding="utf-8") as f:
-        style = json.load(f)
-    parts = style_path.split(".")
-    obj = style
-    for p in parts[:-1]:
-        if p not in obj:
-            return f"Path not found: {style_path} (missing '{p}')"
-        obj = obj[p]
+def _call_vlm(frames: list[str], prompt: str) -> str:
+    """Call VLM (GLM-4V-Flash via Zhipu API) with image frames."""
+    import urllib.request, urllib.error
+    api_key = os.environ.get("ZHIPU_API_KEY", "")
+    if not api_key:
+        return "ERROR: ZHIPU_API_KEY not set."
+    content = [{"type": "text", "text": prompt}]
+    for b64 in frames:
+        content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
+    payload = json.dumps({
+        "model": "glm-4v-flash",
+        "messages": [
+            {"role": "system", "content": "You are a professional video editor and art director. Analyze video frames and provide structured visual critique."},
+            {"role": "user", "content": content},
+        ],
+        "max_tokens": 1000, "temperature": 0.3,
+    }).encode()
+    req = urllib.request.Request(
+        "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+        data=payload, headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}, method="POST")
     try:
-        val = json.loads(new_value)
-    except (json.JSONDecodeError, TypeError):
-        val = new_value
-    old = obj.get(parts[-1])
-    if old == val:
-        return f"No change (current value is already {json.dumps(val)})"
-    obj[parts[-1]] = val
-    style["version"] = style.get("version", 1) + 1
-    # Schema validation before write
-    valid, schema_err = validate_style_schema(style)
-    if not valid:
-        obj[parts[-1]] = old
-        style["version"] -= 1
-        return f"SCHEMA VALIDATION FAILED: {schema_err}. Change rejected."
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(style, f, indent=2, ensure_ascii=False)
-    # Verify after write
-    try:
-        with open(path, encoding="utf-8") as f:
-            verify = json.load(f)
-        valid2, err2 = validate_style_schema(verify)
-        if not valid2:
-            raise ValueError(err2)
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        return f"VLM API error {e.code}: {e.read().decode()[:300]}"
     except Exception as e:
-        obj[parts[-1]] = old
-        style["version"] -= 1
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(style, f, indent=2, ensure_ascii=False)
-        return f"QA GATE FAILED: style invalid after write ({e}). Reverted."
-    # Log
-    gov.log_event("style_update", {
-        "path": style_path, "old": old, "new": val,
-        "version": style["version"], "provenance": "update_style_tool",
-    })
-    return (f"Style updated: {style_path}\n  old: {json.dumps(old)}\n  new: {json.dumps(val)}\n"
-            f"  version: {style['version']}\n  File: /workspace/{STYLE_REL}")
+        return f"VLM API error: {e}"
 
 
 @tool
-def style_diff(from_version: int = 0, to_version: int = 0) -> str:
-    """Show style changes between two versions (from event log).
+def visual_critique(video_path: str, aspect: str = "all") -> str:
+    """Analyze a rendered video using VLM (GLM-4V-Flash).
+
+    Extracts keyframes, sends to VLM, returns structured critique.
+    Use this to evaluate composition, color, motion, text, pacing.
 
     Args:
-        from_version: Start version (0 = first in log).
-        to_version: End version (0 = latest in log).
+        video_path: Path to .mp4 (with /workspace/ prefix or relative).
+        aspect: 'all', 'composition', 'color', 'motion', 'text', 'pacing'.
     """
-    log_file = os.path.join(PROJECT_ROOT, "harness", "logs", "events.jsonl")
-    if not os.path.exists(log_file):
-        return "No event log found."
-    events = []
-    with open(log_file, encoding="utf-8") as f:
-        for line in f:
-            try:
-                entry = json.loads(line)
-                if entry.get("type") == "style_update":
-                    events.append(entry)
-            except json.JSONDecodeError:
-                continue
-    if not events:
-        return "No style_update events in log."
-    versions = [e.get("data", {}).get("version", 0) for e in events]
-    min_v, max_v = (min(versions), max(versions)) if versions else (0, 0)
-    from_v = from_version if from_version > 0 else min_v
-    to_v = to_version if to_version > 0 else max_v
-    relevant = [e for e in events if from_v <= e.get("data", {}).get("version", 0) <= to_v]
-    if not relevant:
-        return f"No changes between v{from_v} and v{to_v}."
-    lines = [f"Style changes (v{from_v} -> v{to_v}): {len(relevant)} change(s)\n"]
-    for e in relevant:
-        d = e.get("data", {})
-        lines.append(f"  v{d.get('version', '?')}: {d.get('path', '?')}")
-        lines.append(f"    {json.dumps(d.get('old'))} -> {json.dumps(d.get('new'))}")
-        lines.append(f"    provenance: {d.get('provenance', 'unknown')}\n")
-    return "\n".join(lines)
+    full = video_path
+    if full.startswith("/workspace/"):
+        full = full[len("/workspace/"):]
+    if not os.path.isabs(full):
+        full = os.path.join(PROJECT_ROOT, full.lstrip("/"))
+    if not os.path.exists(full):
+        return f"Video not found: {full}"
+    frames = _extract_keyframes(full, max_frames=4)
+    if not frames:
+        return f"Could not extract frames from: {full}"
+    prompts = {
+        "all": "Analyze these video frames. For each aspect, give a score (1-5) and 1-2 sentences:\n1. Composition\n2. Color\n3. Motion\n4. Text legibility\n5. Pacing\n\nEnd with 'TOP ISSUE:' and the single most impactful improvement.",
+        "composition": "Analyze composition only. Score 1-5 with feedback.",
+        "color": "Analyze color only. Score 1-5 with feedback.",
+        "motion": "Analyze motion only. Score 1-5 with feedback.",
+        "text": "Analyze text legibility only. Score 1-5 with feedback.",
+        "pacing": "Analyze pacing only. Score 1-5 with feedback.",
+    }
+    prompt = prompts.get(aspect, prompts["all"])
+    prompt += "\n\nContext: These are frames from an IsaacVerse-style story-driven video."
+    critique = _call_vlm(frames, prompt)
+    return f"Visual critique ({aspect}) of {video_path}:\n\n{critique}"

@@ -54,3 +54,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+.langgraph_api/
+docker-build.log
+harness/logs/
