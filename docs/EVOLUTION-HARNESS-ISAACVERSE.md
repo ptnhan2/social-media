@@ -97,12 +97,10 @@ Loop: ORIENT → DECIDE → ACT → OBSERVE → REFLECT (PAL)
 - **Render verified**: Vite compiles, no console errors after all 3 treatment refactors.
 
 ### Remaining (next sessions)
-- P0.3: Verify Deep Agents installs + hello-world run.
-- P1.5-P1.6: Refactor more treatments (ChapterCard, HostReflectionShot) to style knobs.
-- P1.8-P1.9: Verify render with style layer + test style change alters output.
-- P3.2: Configure CompositeBackend (cross-thread style store).
-- P3.6: Verify agent invokes tools in a test run.
-- P4.1-P4.2: Wire governance as custom Deep Agents middleware (currently standalone module).
-- P5.2-P5.7: Full learning loop PoC (refine → render-compare → approve → persist).
-- P6.1-P6.5: Deterministic QA gate middleware (typecheck + render before commit).
-- P7.1: harness/README.md (done, needs update with run instructions after install verified).
+- P1.9-P1.14: Refactor 5 treatments còn lại (ScreenProofInWorld, AudienceDemandProof, ProcessTimeline, CandidateComparison, CinematicMetaphor, SceneTransition).
+- P1.16-P1.17: Sync step (copy style JSON to Remotion public before render) + styleLoader read from public.
+- P3.7: Configure skills (editing-craft SKILL.md, style-knobs SKILL.md).
+- P4.3-P4.4: Wire governance as backend PolicyWrapper (currently standalone module).
+- P5.5: Full PoC loop run end-to-end (each piece verified individually; full run needs >180s due to DeepSeek latency + render time).
+- P6.1-P6.5: Deterministic QA gate middleware.
+- P8: Tutorial ingestion, segment attribution, product UI, self-host deploy.
