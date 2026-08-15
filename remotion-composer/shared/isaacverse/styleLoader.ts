@@ -18,6 +18,16 @@ const seedStyle = {
       accentLine: { height: 5, maxWidth: 190 },
       reveal: { inDurationSec: 0.45, lineStartSec: 0.15, lineEndSec: 0.8 },
     },
+    "host-reflection": {
+      filter: "saturate(.72) contrast(1.18) brightness(.72)",
+      pushStart: 1.06,
+      pushDurationSec: 4,
+      entranceDurationSec: 0.5,
+      letterboxTopPct: 8,
+      letterboxBottomPct: 12,
+      subtitleFontFamily: "Georgia, serif",
+      subtitleFontSize: 27,
+    },
   },
 };
 

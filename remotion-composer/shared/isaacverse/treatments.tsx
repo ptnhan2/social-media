@@ -298,17 +298,25 @@ export type HostReflectionShotProps = {
 export const HostReflectionShot: React.FC<HostReflectionShotProps> = ({ src, subtitle, accent = AMBER, lightSide = "left" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const entrance = interpolate(frame, [0, 0.5 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const push = interpolate(frame, [0, 4 * fps], [1.06, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const entranceDur = getStyle<number>("treatments.host-reflection.entranceDurationSec", 0.5);
+  const pushStart = getStyle<number>("treatments.host-reflection.pushStart", 1.06);
+  const pushDur = getStyle<number>("treatments.host-reflection.pushDurationSec", 4);
+  const imgFilter = getStyle<string>("treatments.host-reflection.filter", "saturate(.72) contrast(1.18) brightness(.72)");
+  const lbTop = getStyle<number>("treatments.host-reflection.letterboxTopPct", 8);
+  const lbBottom = getStyle<number>("treatments.host-reflection.letterboxBottomPct", 12);
+  const subFont = getStyle<string>("treatments.host-reflection.subtitleFontFamily", "Georgia, serif");
+  const subSize = getStyle<number>("treatments.host-reflection.subtitleFontSize", 27);
+  const entrance = interpolate(frame, [0, entranceDur * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const push = interpolate(frame, [0, pushDur * fps], [pushStart, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const light = lightSide === "left" ? "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)" : "linear-gradient(270deg, rgba(242,184,75,.65), transparent 48%)";
   return (
     <AbsoluteFill style={{ background: BLACK, overflow: "hidden", opacity: entrance }}>
-      <Img src={src} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: `scale(${push})`, filter: "saturate(.72) contrast(1.18) brightness(.72)" }} />
+      <Img src={src} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: `scale(${push})`, filter: imgFilter }} />
       <div style={{ position: "absolute", inset: 0, background: light, mixBlendMode: "screen", opacity: 0.7 }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))" }} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: "8%", background: BLACK }} />
-      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "12%", background: BLACK, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8%" }}>
-        <div style={{ color: accent, fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: 27, textAlign: "center", textShadow: "0 2px 8px #000" }}>{subtitle}</div>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: `${lbTop}%`, background: BLACK }} />
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: `${lbBottom}%`, background: BLACK, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8%" }}>
+        <div style={{ color: accent, fontFamily: subFont, fontStyle: "italic", fontSize: subSize, textAlign: "center", textShadow: "0 2px 8px #000" }}>{subtitle}</div>
       </div>
     </AbsoluteFill>
   );

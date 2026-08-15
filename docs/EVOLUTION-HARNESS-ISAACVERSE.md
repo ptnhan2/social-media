@@ -84,11 +84,17 @@ Loop: ORIENT → DECIDE → ACT → OBSERVE → REFLECT (PAL)
 - **Style layer**: `libraries/04-visual/isaacverse-style.json` (versioned style store seed).
 - **Style loader**: `remotion-composer/shared/isaacverse/styleLoader.ts` (`getStyle` path traversal + `setActiveStyle` override).
 - **Edge refactor**: `SemanticDiagram.Edge` reads stroke from style layer — supports `solid | gradient | brush` modes (the user's gradient+brush example is now a style knob change, not a code edit).
+- **ChapterCard refactor**: reads fontSize, lineHeight, accentLine, reveal timing from style layer.
+- **HostReflectionShot refactor**: reads filter, push, entrance, letterbox, subtitle from style layer.
+- **3/8 treatments now evolvable** (Edge, ChapterCard, HostReflectionShot).
 - **Python harness scaffold**: `harness/` directory with `pyproject.toml`, `agent.py` (Deep Agents `create_deep_agent` with `openrouter:z-ai/glm-5.2`), `tools.py` (6 tools: render_window, read_edit_doc, update_style, read_video, run_structural_qa, capture_feedback), `governance.py` (write-gate + minSupport + event log + replay), `AGENTS.md` (harness memory), `README.md`.
 - **Approval gate**: `interrupt_on={"update_style": True}` — every style change requires user approval.
 - **Feedback logging**: `capture_feedback` tool logs per-aspect verdicts to `harness/logs/feedback.jsonl`.
 - **Event log**: `harness/logs/events.jsonl` — append-only log of all style changes with provenance.
 - **Governance**: `governance.py` — `validate_style_change` (contradiction check + minSupport ≥ 2), `apply_approved_change`, `replay_from_log` (reversible reconciliation).
+- **Governance tested**: 6 tests pass (write-gate, minSupport, contradiction, apply+replay, identical-value block).
+- **DeepAgents verified**: v0.7.6 installed on Python313, import confirmed.
+- **Render verified**: Vite compiles, no console errors after all 3 treatment refactors.
 
 ### Remaining (next sessions)
 - P0.3: Verify Deep Agents installs + hello-world run.
