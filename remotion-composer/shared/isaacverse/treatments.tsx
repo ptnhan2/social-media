@@ -8,6 +8,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import { getStyle, defaultStroke, type StrokeStyle } from "./styleLoader";
 
 export type DiagramNode = {
   id: string;
@@ -56,8 +57,10 @@ const Edge: React.FC<{
   const to = nodes.get(edge.to);
   if (!from || !to) return null;
 
+  const ss = getStyle<StrokeStyle>("semantic-diagram.edge.stroke", defaultStroke);
+  const revealDur = getStyle<number>("semantic-diagram.edge.revealDurationSec", 0.65);
   const revealFrame = (edge.revealAt ?? 0) * fps;
-  const progress = interpolate(frame, [revealFrame, revealFrame + 0.65 * fps], [0, 1], {
+  const progress = interpolate(frame, [revealFrame, revealFrame + revealDur * fps], [0, 1], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -67,20 +70,36 @@ const Edge: React.FC<{
   const x2 = to.x;
   const y2 = to.y;
   const length = Math.hypot(x2 - x1, y2 - y1);
-  const stroke = edge.color ?? "rgba(242,184,75,0.58)";
+  const gradId = `edgeGrad-${edge.from}-${edge.to}`;
+  const baseColor = edge.color ?? ss.color;
+  const isGradient = ss.mode === "gradient";
+  const isBrush = ss.mode === "brush";
+  const stroke = isGradient ? `url(#${gradId})` : baseColor;
+  const dasharray = isBrush ? ss.brushDasharray : `${length} ${length}`;
+  const dashoffset = isBrush ? 0 : length * (1 - progress);
 
   return (
-    <line
-      x1={`${x1}%`}
-      y1={`${y1}%`}
-      x2={`${x1 + (x2 - x1) * progress}%`}
-      y2={`${y1 + (y2 - y1) * progress}%`}
-      stroke={stroke}
-      strokeWidth={2}
-      strokeDasharray={`${length} ${length}`}
-      strokeDashoffset={length * (1 - progress)}
-      strokeLinecap="round"
-    />
+    <g>
+      {isGradient && (
+        <defs>
+          <linearGradient id={gradId} x1={`${x1}%`} y1={`${y1}%`} x2={`${x2}%`} y2={`${y2}%`}>
+            <stop offset="0%" stopColor={ss.gradientStops[0] ?? "#7fd8e8"} />
+            <stop offset="100%" stopColor={ss.gradientStops[1] ?? "#f2d58a"} />
+          </linearGradient>
+        </defs>
+      )}
+      <line
+        x1={`${x1}%`}
+        y1={`${y1}%`}
+        x2={`${x1 + (x2 - x1) * progress}%`}
+        y2={`${y1 + (y2 - y1) * progress}%`}
+        stroke={stroke}
+        strokeWidth={ss.width}
+        strokeDasharray={dasharray}
+        strokeDashoffset={dashoffset}
+        strokeLinecap={ss.linecap as React.SVGProps<SVGLineElement>["strokeLinecap"]}
+      />
+    </g>
   );
 };
 
