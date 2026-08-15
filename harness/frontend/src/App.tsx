@@ -29,9 +29,8 @@ export default function App() {
   };
 
   const handleApproval = (type: "approve" | "reject") => {
-    stream.submit(null, {
-      configs: [{ interrupt_id: interrupt?.id, decision: { type } }],
-    });
+    // useStream.respond() — the correct API for resuming interrupts
+    stream.respond({ decisions: [{ type }] });
   };
 
   const renderMessage = (msg: any, i: number) => {
