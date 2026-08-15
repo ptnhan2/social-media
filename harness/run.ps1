@@ -6,13 +6,14 @@ $HARNESS_DIR = "$PSScriptRoot"
 
 # Check API key
 $hasKey = $false
-foreach ($k in @("GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "OPENROUTER_API_KEY")) {
+foreach ($k in @("GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "OPENROUTER_API_KEY", "DEEPSEEK_API_KEY")) {
     if ([Environment]::GetEnvironmentVariable($k)) { $hasKey = $true; break }
 }
 if (-not $hasKey) {
     Write-Host "ERROR: No API key found." -ForegroundColor Red
     Write-Host "Set one: `$env:GOOGLE_API_KEY = 'your-key'"
     Write-Host "Or:     `$env:ANTHROPIC_API_KEY = 'your-key'"
+    Write-Host "Or:     `$env:DEEPSEEK_API_KEY = 'your-key' + `$env:HARNESS_MODEL = 'deepseek:deepseek-chat'"
     exit 1
 }
 

@@ -80,7 +80,7 @@ Style knobs are dot-notation paths into the style JSON, starting from the root:
 MODEL = os.environ.get("HARNESS_MODEL", "google_genai:gemini-3.6-flash")
 
 # Check API key
-_API_KEYS = ["GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "OPENROUTER_API_KEY"]
+_API_KEYS = ["GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "OPENROUTER_API_KEY", "DEEPSEEK_API_KEY"]
 if not any(os.environ.get(k) for k in _API_KEYS):
     print("ERROR: No API key found. Set one of: " + ", ".join(_API_KEYS))
     print("Example: $env:GOOGLE_API_KEY='your-key-here'")
