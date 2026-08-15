@@ -19,17 +19,15 @@ jobs:
       - name: Install harness deps
         run: |
           python -m venv harness/.venv
-          harness/.venv/bin/pip install deepagents langchain-deepseek langgraph-cli[inmem] langchain langgraph jsonschema
+          harness/.venv/bin/pip install "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph
       - name: Create .env placeholder
         run: |
           echo "DEEPSEEK_API_KEY=test" > .env
           echo "ZHIPU_API_KEY=test" >> .env
-      - name: Governance tests
-        run: harness/.venv/bin/python harness/test_governance.py
-      - name: GovernedBackend tests
-        run: harness/.venv/bin/python harness/test_governed_backend.py
-      - name: Unit tool tests
-        run: harness/.venv/bin/python harness/test_unit_tools.py
+      - name: Unit tests
+        run: harness/.venv/bin/python harness/test_unit.py
+      - name: Agent compiles
+        run: harness/.venv/bin/python -c "import sys; sys.path.insert(0,'harness'); from agent import agent; print('OK')"
 
   frontend-build:
     runs-on: ubuntu-latest
@@ -38,10 +36,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Install frontend deps
-        run: cd harness/frontend && npm ci
-      - name: Build frontend
-        run: cd harness/frontend && npx vite build
+      - name: Install composer-app deps
+        run: cd remotion-composer/composer-app && npm ci
+      - name: Build Composer
+        run: cd remotion-composer/composer-app && npx vite build
 
   ts-tests:
     runs-on: ubuntu-latest

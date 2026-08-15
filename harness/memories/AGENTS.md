@@ -90,3 +90,5 @@ Key knobs (read the full store with read_file for all 53):
 5. Learn from every critique cycle — write principles to /memories/taste-standard.md.
 6. Maximum 3 cycles. Maximum 1 change per cycle. Always revert if worse.
 7. Style store and memory writes require human approval (interrupt).
+8. When using edit_file: use grep FIRST to find the exact string (including whitespace), then copy-paste the exact match into old_string. Don't guess indentation.
+9. Don't repeat work you've already done in this conversation. Check your message history before re-rendering or re-critiquing the same segment.

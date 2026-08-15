@@ -1,151 +1,113 @@
-# SESSION RECOVERY FILE — Read this first after compact
+# HARNESS RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-15 after Phase A-E completion.
+> Updated 2026-08-16 after full refactor + testing.
 
 ## 1. PROJECT
 
-Video Agent Harness (own product) on LangChain Deep Agents.
+Video Agent Harness on Deep Agents, integrated into Composer (video editor).
 - LLM: DeepSeek V4 (text-only, `deepseek:deepseek-chat`)
-- VLM: GLM-4V-Flash via ZHIPU_API_KEY (primary), Gemini/OpenAI/OpenRouter (fallback)
+- VLM: GLM-4V-Flash via ZHIPU_API_KEY (for visual critique)
+- LangSmith tracing enabled (project: isaacverse-harness)
 - Agent ↔ user = Vietnamese. Code/schema = English.
 
-## 2. COMPLETED PHASES
+## 2. ARCHITECTURE (Deep Agents native assembly)
 
-### Phase A (Critical Gaps) — COMPLETE
-- A1+A8: visual_critique tool — GLM-4V-Flash verified end-to-end
-- A2: GovernedBackend — write-gate on all paths (25/25 tests)
-- A3: FileBackedStore — persistent memory, taste-standard.md seeded
-- A4: propose_improvement tool — parses critique, maps to style knobs
-- A5: run_consolidation tool — wired into agent
-- A6: visual-critique skill — how to judge frames
-- A7: system_prompt with VLM critique + proactive improvement loop
+```
+Composer (remotion-composer/composer-app/)
+  └─ VideoEditor.tsx
+       └─ Right panel: Properties | Agent tab
+            └─ AgentPanel.tsx (chat + todos + subagent cards + approval)
+                 ↕ useStream (WebSocket)
+LangGraph Server (:2024)
+  └─ agent.py (create_deep_agent)
+       ├─ model: deepseek:deepseek-chat
+       ├─ tools: render_window, visual_critique, think
+       ├─ memory: /memories/AGENTS.md, /memories/taste-standard.md
+       ├─ skills: /skills/ (editing-craft, style-knobs, visual-critique)
+       ├─ subagents: critic (GLM-4V-Flash, response_format=CritiqueResult)
+       ├─ permissions: interrupt on style+memory, deny on treatment code
+       ├─ middleware: TodoListMiddleware, ModelRetryMiddleware
+       ├─ context_schema: AgentContext (project_id, current_sec)
+       └─ backend: CompositeBackend (workspace, memories, skills)
+```
 
-### Phase B (Style Knobs) — B2+B3 COMPLETE, B1 pending
-- B2: JSON Schema validation (style_schema.py) — types, ranges, enums
-- B3: style_diff tool — reads event log, shows changes between versions
-- B1: PENDING — deepen knobs in treatments.tsx (composition, color, easing)
+## 3. KEY FILES
 
-### Phase C (Frontend) — C1-C3,C6-C7 COMPLETE, C4-C5 pending
-- C1: Video preview panel (Vite middleware serves /video/*)
-- C2: Before/after visual diff (inline in tool messages)
-- C3: Style inspector (live knobs parsed from messages)
-- C6: Error boundary + loading states
-- C7: Responsive layout (mobile < 768px)
-- C4-C5: PENDING — subagent cards, todo list UI
-
-### Phase D (Testing) — D1,D2,D4,D6 COMPLETE
-- D1: 22 unit tests (8 tools) — ALL PASS
-- D2: 12 integration tests (full VLM loop) — ALL PASS
-- D4: 25 governance backend tests — ALL PASS
-- D6: GitHub Actions CI (3 jobs: python, frontend, ts)
-- D3: PENDING — E2E Playwright tests
-- D5: PENDING — load tests
-- Total: 65 tests pass (6 governance + 25 backend + 22 unit + 12 integration)
-
-### Phase E (Environment) — COMPLETE
-- E1: Dockerfile.langgraph (Python 3.13 + ffmpeg + node)
-- E2: Dockerfile.frontend (Node 20 → nginx)
-- E3: docker-compose.yml (Postgres 16 + LangGraph + nginx)
-- E4: postgres-init.sql
-- E5: nginx-frontend.conf (SPA + API proxy + video proxy)
-- E6: .env.example
-- E7: health.py (health_check + log_tool_call)
-
-### Phase F (Deployment) — F4+F5 done, F1-F3+F6 pending
-- F4: cron_consolidation.py — scheduled consolidation
-- F5: backup.sh — nightly Postgres dump + style JSON git + logs tar
-- F1-F3: PENDING — needs VPS + domain from user
-- F6: PENDING — production verification
-
-## 3. KEY FILES (modified/created this session)
-
-### Harness Python
-- `harness/agent.py` — 12 tools, GovernedBackend, FileBackedStore, VLM loop in system_prompt
-- `harness/tools.py` — 12 tools: render_window, read_style, list_style_knobs, update_style,
-  capture_feedback, run_structural_qa, render_compare, propose_improvement, run_consolidation,
-  style_diff (+ tutorial_tools: ingest_tutorial, render_compare)
-- `harness/visual_critique.py` — multi-backend VLM (GLM-4V-Flash > Gemini > OpenAI > OpenRouter)
-- `harness/governed_backend.py` — GovernedBackend wrapper (write-gate enforcement)
-- `harness/file_store.py` — FileBackedStore (persistent, same interface as InMemoryStore)
-- `harness/style_schema.py` — JSON Schema validation for style store
-- `harness/governance.py` — write-gate (contradiction + minSupport + event log + replay)
-- `harness/health.py` — health_check() + log_tool_call()
-- `harness/cron_consolidation.py` — scheduled consolidation
-- `harness/memories/taste-standard.md` — seeded taste principles
-- `harness/skills/visual-critique/SKILL.md` — how to judge frames
-
-### Tests (65 total, all pass)
-- `harness/test_governance.py` — 6 tests
-- `harness/test_governed_backend.py` — 25 tests
-- `harness/test_unit_tools.py` — 22 tests
-- `harness/test_integration_loop.py` — 12 tests (full VLM loop)
-- `remotion-composer/shared/isaacverse/styleLoader.test.ts` — 6 tests
+### Agent (3 Python files + config)
+- `harness/agent.py` (92 lines) — create_deep_agent assembly
+- `harness/harness_tools.py` (180 lines) — render_window, visual_critique, think
+- `harness/subagents.py` (36 lines) — critic spec + CritiqueResult
+- `harness/memories/AGENTS.md` — behavior instructions (system prompt via memory)
+- `harness/memories/taste-standard.md` — accumulated taste principles
 
 ### Frontend
-- `harness/frontend/src/App.tsx` — video preview, style inspector, error boundary, responsive
-- `harness/frontend/src/index.css` — dark theme, video styling, responsive
-- `harness/frontend/vite.config.ts` — project file server middleware (/video/*)
+- `remotion-composer/composer-app/src/agent/AgentPanel.tsx` — chat UI in editor
+- `remotion-composer/composer-app/src/styles.css` — agent panel CSS
+- `remotion-composer/composer-app/src/composer/VideoEditor.tsx` — Properties|Agent toggle
 
-### Docker/CI
-- `.github/workflows/ci.yml` — 3 CI jobs
-- `docker/Dockerfile.langgraph` — backend container
-- `docker/Dockerfile.frontend` — frontend container
-- `docker/nginx-frontend.conf` — nginx config
-- `docker/postgres-init.sql` — DB init
-- `docker/backup.sh` — nightly backup
-- `docker-compose.yml` — full stack
-- `.env.example` — documented env vars
+### Tests
+- `harness/test_evals.py` — 8 evals (agent responds, read_file native, think, memory read, no phantom tools)
+- `harness/test_unit.py` — 7 unit tests (think, visual_critique, render_window)
+- `harness/test_full_loop.py` — full improvement loop test (render→critique→think→edit→approve→revert→learn)
+
+### Config
+- `langgraph.json` — agent graph
+- `.env` — DEEPSEEK_API_KEY, ZHIPU_API_KEY, LANGSMITH_API_KEY, LANGSMITH_TRACING=true
+- `.github/workflows/ci.yml` — 3 CI jobs (python, frontend, ts)
 
 ## 4. HOW TO RUN
 
-### Standalone CLI
+### Start servers
 ```powershell
-.\harness\run.ps1 "list style knobs"
-```
-
-### LangGraph server + Frontend
-```powershell
-# Backend (port 2024)
+# LangGraph server (port 2024)
 $env:PYTHONIOENCODING='utf-8'
 & "harness\.venv\Scripts\python.exe" -m langgraph_cli dev --port 2024 --host 127.0.0.1
 
-# Frontend (port 3000)
-cd harness\frontend; npx vite --port 3000
+# Composer (port 5174)
+cd remotion-composer\composer-app; npx vite --port 5174
 ```
 
-### Docker (production)
-```bash
-cp .env.example .env  # Fill in API keys
-docker compose up -d  # Postgres + LangGraph + frontend
-# Access at http://localhost
-```
+### Open in browser
+`http://localhost:5174/?project=isaacverse-final` → tab AGENT
 
-### Tests
+### Run tests
 ```powershell
 $py = "harness\.venv\Scripts\python.exe"
-& $py harness\test_governance.py
-& $py harness\test_governed_backend.py
-& $py harness\test_unit_tools.py
-& $py harness\test_integration_loop.py
-cd remotion-composer; npx vitest run shared/isaacverse/styleLoader.test.ts
+& $py harness\test_evals.py      # 8 evals
+& $py harness\test_unit.py       # 7 unit tests
 ```
 
-## 5. PENDING WORK
+### Check LangSmith traces
+`https://smith.langchain.com` → project "isaacverse-harness"
 
-1. **B1**: Deepen style knobs in treatments.tsx (composition, color, easing)
-2. **C4-C5**: Frontend subagent cards + todo list UI
-3. **D3**: E2E Playwright tests
-4. **D5**: Load tests
-5. **F1-F3**: Deploy to VPS (needs user's VPS + domain)
-6. **F6**: Production verification
+## 5. VERIFIED
 
-## 6. KEY DECISIONS
+| Test | Result |
+|---|---|
+| Agent compiles (create_deep_agent) | ✅ |
+| read_file native (not phantom read_style) | ✅ |
+| think tool used for strategic reflection | ✅ |
+| Memory read before planning | ✅ |
+| No phantom tools | ✅ |
+| visual_critique (GLM-4V-Flash) | ✅ |
+| render_window (Remotion) | ✅ |
+| Full loop: render→critique→think→edit→approve→revert→learn | ✅ 58 msgs, 8 interrupts |
+| Frontend: quick actions, tool cards, status | ✅ |
+| 8 evals + 7 unit tests | ✅ all pass |
+| LangSmith tracing | ✅ configured |
 
-1. Harness = own product on Deep Agents, self-host
-2. DeepSeek text-only → VLM (GLM-4V-Flash) for visual critique
-3. Style store = libraries/04-visual/isaacverse-style.json (versioned JSON)
-4. Governance: GovernedBackend intercepts ALL write paths (write/edit/delete/execute)
-5. Memory: FileBackedStore (dev) → PostgresStore (prod, same interface)
-6. Schema validation: JSON Schema (types, ranges, enums) in update_style + GovernedBackend
-7. Frontend: React + useStream, video preview via Vite middleware
-8. .env parser strips inline comments (bug fix: was loading comment text as key value)
+## 6. SMART PATTERNS (from examples)
+
+- **think_tool** (from deep_research): agent pauses to reason before acting
+- **Hard limits**: max 3 cycles, 1 change/cycle, revert if worse, stop when scores ≥ 4
+- **Quality checklist**: 9-item verify before reporting "done"
+- **Strategic decomposition**: read memory → render → critique → think → change → verify → learn
+- **edit_file tip**: use grep first to find exact string, don't guess indentation
+
+## 7. NOT YET DONE (future)
+
+- Async subagents (background rendering, needs Agent Protocol server)
+- Code execution (sandbox, needs sandbox backend)
+- Outer-loop optimization (better-harness pattern, meta-agent improves harness)
+- Production deployment (Docker verified locally, needs VPS)
+- More eval cases (improvement quality, score tracking over time)
