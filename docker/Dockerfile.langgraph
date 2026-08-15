@@ -18,17 +18,17 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY langgraph.json ./
 COPY libraries/ ./libraries/
 COPY remotion-composer/package*.json ./remotion-composer/
+COPY remotion-composer/tsconfig.json ./remotion-composer/
 COPY remotion-composer/scripts/ ./remotion-composer/scripts/
-COPY remotion-composer/src/ ./remotion-composer/src/
 COPY remotion-composer/shared/ ./remotion-composer/shared/
 COPY remotion-composer/public/ ./remotion-composer/public/
-COPY remotion-composer/remotion.config.ts ./remotion-composer/
-COPY remotion-composer/tsconfig.json ./remotion-composer/
+COPY remotion-composer/composer-app/ ./remotion-composer/composer-app/
+COPY remotion-composer/build/ ./remotion-composer/build/
 COPY tools/ ./tools/
 COPY projects/ ./projects/
 
 # Install Remotion deps
-RUN cd remotion-composer && npm install --production
+RUN cd remotion-composer && npm install
 
 EXPOSE 2024
 

@@ -1,0 +1,15 @@
+﻿node_modules
+**/.venv
+**/dist
+harness/frontend/node_modules
+harness/frontend/dist
+remotion-composer/node_modules
+remotion-composer/renders
+remotion-composer/projects
+projects/isaacverse-final/renders
+projects/isaacverse-final/assets
+*.mp4
+*.png
+*.wav
+*.mp3
+.git
