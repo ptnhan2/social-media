@@ -1,9 +1,15 @@
-"""Visual critique tool — uses VLM (GPT-4o via OpenRouter) to judge rendered video frames.
+"""Visual critique tool — uses VLM to judge rendered video frames.
 
 DeepSeek V4 is text-only, so this tool acts as the agent's "eyes":
 1. Extract keyframes from rendered video (ffmpeg)
-2. Send frames to VLM (GPT-4o via OpenRouter)
+2. Send frames to a VLM (Gemini primary, OpenAI fallback, OpenRouter last resort)
 3. Return structured critique (composition, color, motion, text, pacing)
+
+VLM backend selection (first available key wins):
+  - ZHIPU_API_KEY    → GLM-4V-Flash (free, fast, vision-capable)
+  - GOOGLE_API_KEY   → Gemini 2.0 Flash (fast, free tier, excellent vision)
+  - OPENAI_API_KEY   → GPT-4o mini (direct, no OpenRouter middleman)
+  - OPENROUTER_API_KEY → GPT-4o via OpenRouter
 """
 
 from __future__ import annotations
@@ -18,9 +24,15 @@ from langchain.tools import tool
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+VLM_SYSTEM = (
+    "You are a professional video editor and art director. "
+    "Analyze video frames and provide structured visual critique. "
+    "Be specific, concise, and actionable."
+)
+
 
 def _extract_keyframes(video_path: str, max_frames: int = 4) -> list[str]:
-    """Extract keyframes from video as base64-encoded PNG strings."""
+    """Extract keyframes from video as base64-encoded PNG strings (raw base64, no data URI prefix)."""
     full = video_path
     if not os.path.isabs(full):
         full = os.path.join(PROJECT_ROOT, video_path.lstrip("/"))
@@ -39,8 +51,8 @@ def _extract_keyframes(video_path: str, max_frames: int = 4) -> list[str]:
     except Exception:
         pass
 
-    # Extract frames as base64
-    frames = []
+    # Extract frames as raw base64
+    frames: list[str] = []
     interval = duration / (max_frames + 1)
     import tempfile
     tmpdir = tempfile.mkdtemp()
@@ -55,35 +67,168 @@ def _extract_keyframes(video_path: str, max_frames: int = 4) -> list[str]:
         if os.path.exists(frame_path):
             with open(frame_path, "rb") as f:
                 b64 = base64.b64encode(f.read()).decode()
-                frames.append(f"data:image/png;base64,{b64}")
+                frames.append(b64)
 
-    # Cleanup
     import shutil
     shutil.rmtree(tmpdir, ignore_errors=True)
     return frames
 
 
-def _call_vlm_openrouter(frames: list[str], prompt: str) -> str:
-    """Call GPT-4o via OpenRouter API with image frames."""
+def _call_zhipu(frames: list[str], prompt: str) -> str:
+    """Call GLM-4V-Flash via Zhipu BigModel API v4 (OpenAI-compatible)."""
     import urllib.request
+    import urllib.error
+
+    api_key = os.environ.get("ZHIPU_API_KEY", "")
+    if not api_key:
+        return ""
+
+    content: list[dict] = [{"type": "text", "text": prompt}]
+    for b64 in frames:
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/png;base64,{b64}"},
+        })
+
+    payload = json.dumps({
+        "model": "glm-4v-flash",
+        "messages": [
+            {"role": "system", "content": VLM_SYSTEM},
+            {"role": "user", "content": content},
+        ],
+        "max_tokens": 1000,
+        "temperature": 0.3,
+    }).encode()
+
+    req = urllib.request.Request(
+        "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.loads(resp.read().decode())
+            return result["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        return f"Zhipu API error {e.code}: {e.read().decode()[:300]}"
+    except Exception as e:
+        return f"Zhipu API error: {e}"
+
+
+def _call_gemini(frames: list[str], prompt: str) -> str:
+    """Call Gemini 2.0 Flash via Google AI API with image frames."""
+    import urllib.request
+    import urllib.error
+
+    api_key = os.environ.get("GOOGLE_API_KEY", "")
+    if not api_key:
+        return ""
+
+    # Build Gemini request (inline_data parts)
+    parts: list[dict] = [{"text": f"{VLM_SYSTEM}\n\n{prompt}"}]
+    for b64 in frames:
+        parts.append({"inline_data": {"mime_type": "image/png", "data": b64}})
+
+    payload = json.dumps({
+        "contents": [{"role": "user", "parts": parts}],
+        "generationConfig": {"temperature": 0.3, "maxOutputTokens": 1000},
+    }).encode()
+
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    req = urllib.request.Request(
+        f"{url}?key={api_key}",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.loads(resp.read().decode())
+            candidates = result.get("candidates", [])
+            if candidates:
+                content = candidates[0].get("content", {}).get("parts", [])
+                return " ".join(p.get("text", "") for p in content)
+            return f"Gemini returned no candidates: {json.dumps(result)[:200]}"
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()[:300]
+        return f"Gemini API error {e.code}: {body}"
+    except Exception as e:
+        return f"Gemini API error: {e}"
+
+
+def _call_openai_direct(frames: list[str], prompt: str) -> str:
+    """Call GPT-4o-mini directly via OpenAI API (no OpenRouter)."""
+    import urllib.request
+    import urllib.error
+
+    api_key = os.environ.get("OPENAI_API_KEY", "")
+    if not api_key:
+        return ""
+
+    content: list[dict] = [{"type": "text", "text": prompt}]
+    for b64 in frames:
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/png;base64,{b64}"},
+        })
+
+    payload = json.dumps({
+        "model": "gpt-4o-mini",
+        "messages": [
+            {"role": "system", "content": VLM_SYSTEM},
+            {"role": "user", "content": content},
+        ],
+        "max_tokens": 1000,
+        "temperature": 0.3,
+    }).encode()
+
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/chat/completions",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            result = json.loads(resp.read().decode())
+            return result["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        return f"OpenAI API error {e.code}: {e.read().decode()[:300]}"
+    except Exception as e:
+        return f"OpenAI API error: {e}"
+
+
+def _call_openrouter(frames: list[str], prompt: str) -> str:
+    """Call GPT-4o via OpenRouter API (fallback)."""
+    import urllib.request
+    import urllib.error
 
     api_key = os.environ.get("OPENROUTER_API_KEY", "")
     if not api_key:
-        return "ERROR: OPENROUTER_API_KEY not set. Set it in .env to enable visual critique."
+        return ""
 
-    # Build message with images
-    content = [{"type": "text", "text": prompt}]
-    for i, frame in enumerate(frames):
+    content: list[dict] = [{"type": "text", "text": prompt}]
+    for b64 in frames:
         content.append({
             "type": "image_url",
-            "image_url": {"url": frame}
+            "image_url": {"url": f"data:image/png;base64,{b64}"},
         })
 
     payload = json.dumps({
         "model": "openai/gpt-4o",
         "messages": [
-            {"role": "system", "content": "You are a professional video editor and art director. Analyze video frames and provide structured visual critique. Be specific, concise, and actionable."},
-            {"role": "user", "content": content}
+            {"role": "system", "content": VLM_SYSTEM},
+            {"role": "user", "content": content},
         ],
         "max_tokens": 1000,
         "temperature": 0.3,
@@ -103,13 +248,45 @@ def _call_vlm_openrouter(frames: list[str], prompt: str) -> str:
         with urllib.request.urlopen(req, timeout=60) as resp:
             result = json.loads(resp.read().decode())
             return result["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        return f"OpenRouter API error {e.code}: {e.read().decode()[:300]}"
     except Exception as e:
-        return f"VLM API error: {e}"
+        return f"OpenRouter API error: {e}"
+
+
+def _call_vlm(frames: list[str], prompt: str) -> tuple[str, str]:
+    """Try VLM backends in priority order. Returns (backend_name, critique_text)."""
+    # 1. Zhipu GLM-4V-Flash (free, fast)
+    if os.environ.get("ZHIPU_API_KEY"):
+        result = _call_zhipu(frames, prompt)
+        if result and not result.startswith("Zhipu API error"):
+            return "glm-4v-flash", result
+
+    # 2. Gemini (Google API key)
+    if os.environ.get("GOOGLE_API_KEY"):
+        result = _call_gemini(frames, prompt)
+        if result and not result.startswith("Gemini API error"):
+            return "gemini-2.0-flash", result
+
+    # 3. OpenAI direct
+    if os.environ.get("OPENAI_API_KEY"):
+        result = _call_openai_direct(frames, prompt)
+        if result and not result.startswith("OpenAI API error"):
+            return "gpt-4o-mini", result
+
+    # 4. OpenRouter (fallback)
+    if os.environ.get("OPENROUTER_API_KEY"):
+        result = _call_openrouter(frames, prompt)
+        if result and not result.startswith("OpenRouter API error"):
+            return "openrouter/gpt-4o", result
+
+    # All failed
+    return "none", "ERROR: No VLM backend available. Set ZHIPU_API_KEY, GOOGLE_API_KEY, OPENAI_API_KEY, or OPENROUTER_API_KEY in .env."
 
 
 @tool
 def visual_critique(video_path: str, aspect: str = "all") -> str:
-    """Analyze a rendered video using a VLM (GPT-4o via OpenRouter).
+    """Analyze a rendered video using a VLM (Gemini/GPT-4o).
 
     Extracts keyframes from the video, sends them to the VLM, and returns
     a structured critique covering composition, color, motion, text legibility,
@@ -146,8 +323,8 @@ def visual_critique(video_path: str, aspect: str = "all") -> str:
     }
 
     prompt = aspect_prompts.get(aspect, aspect_prompts["all"])
-    prompt += f"\n\nContext: These are frames from an IsaacVerse-style story-driven video. The style should feel cinematic, disciplined, and narrative-purposeful."
+    prompt += "\n\nContext: These are frames from an IsaacVerse-style story-driven video. The style should feel cinematic, disciplined, and narrative-purposeful."
 
-    # Call VLM
-    critique = _call_vlm_openrouter(frames, prompt)
-    return f"Visual critique ({aspect}) of {video_path}:\n\n{critique}"
+    # Call VLM (auto-selects backend)
+    backend_name, critique = _call_vlm(frames, prompt)
+    return f"Visual critique ({aspect}) via {backend_name} of {video_path}:\n\n{critique}"

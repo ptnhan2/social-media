@@ -14,11 +14,15 @@ from pathlib import Path
 # Load .env
 env_file = Path(__file__).parent.parent / ".env"
 if env_file.exists():
-    for line in env_file.read_text(encoding="utf-8").splitlines():
+    for line in env_file.read_text(encoding="utf-8", errors="replace").splitlines():
         line = line.strip()
         if "=" in line and not line.startswith("#"):
             k, _, v = line.partition("=")
-            os.environ.setdefault(k.strip(), v.strip())
+            v = v.strip()
+            # Strip inline comments (but not if # is inside quotes)
+            if "#" in v and not (v.startswith('"') or v.startswith("'")):
+                v = v.split("#")[0].strip()
+            os.environ.setdefault(k.strip(), v)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
