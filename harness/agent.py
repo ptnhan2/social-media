@@ -30,9 +30,9 @@ from deepagents import FilesystemPermission
 
 from tools import (
     render_window, read_style, list_style_knobs, update_style,
-    capture_feedback, run_structural_qa, render_compare,
+    capture_feedback, run_structural_qa,
 )
-from tutorial_tools import ingest_tutorial
+from tutorial_tools import ingest_tutorial, render_compare as rc_compare
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
@@ -135,7 +135,7 @@ Key knobs (dot-notation from root):
 agent = create_deep_agent(
     model=MODEL,
     tools=[render_window, read_style, list_style_knobs, update_style,
-           capture_feedback, run_structural_qa, render_compare, ingest_tutorial],
+           capture_feedback, run_structural_qa, rc_compare, ingest_tutorial],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
     store=store,

@@ -116,20 +116,34 @@ def capture_feedback(dimension: str, verdict: str, note: str, beat_id: str = "")
 
 @tool
 def render_compare(project_slug: str, start_sec: float, end_sec: float,
-                   style_path: str, new_value: str) -> str:
+                   style_path: str, new_value: str, beat_id: str = "") -> str:
     """Render before and after a style change for visual comparison.
 
     Returns paths to both rendered videos (use read_file to view them).
 
     Args:
         project_slug: Project folder name.
-        start_sec: Start time.
-        end_sec: End time.
+        start_sec: Start time (or use beat_id to auto-resolve).
+        end_sec: End time (or use beat_id to auto-resolve).
         style_path: Style knob to change (dot-notation).
         new_value: New value for the knob.
+        beat_id: Optional beat ID — if provided, auto-resolves start/end from edit doc.
     """
     STYLE_REL = "libraries/04-visual/isaacverse-style.json"
     RENDERER_DIR = os.path.join(PROJECT_ROOT, "remotion-composer")
+
+    # Beat-scoped: resolve start/end from edit doc
+    if beat_id:
+        ed_path = os.path.join(PROJECT_ROOT, "projects", project_slug, "05-edit-doc.json")
+        if os.path.exists(ed_path):
+            import json as _json
+            with open(ed_path, encoding="utf-8") as f:
+                doc = _json.load(f)
+            for b in doc.get("beats", []):
+                if b.get("id") == beat_id:
+                    start_sec = b["startSec"]
+                    end_sec = b["startSec"] + b["durationSec"]
+                    break
 
     def do_render(slug, start, end):
         import shutil as _shutil
