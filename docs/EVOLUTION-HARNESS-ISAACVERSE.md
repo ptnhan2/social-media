@@ -77,3 +77,26 @@ Loop: ORIENT → DECIDE → ACT → OBSERVE → REFLECT (PAL)
 - `docs/FEEDBACK-UI-SPEC.md` — feedback UI (có seed: FeedbackRecord, promote_feedback_rule).
 - `docs/GAP-B-RESOLUTION.md` — đã retire "layout reuse" → semantic treatment; `TreatmentUsage` doc-only.
 - `remotion-composer/shared/isaacverse/treatments.tsx` — code treatment cần refactor thành style knobs.
+
+## Build Progress (2026-08-15 session)
+
+### Done
+- **Style layer**: `libraries/04-visual/isaacverse-style.json` (versioned style store seed).
+- **Style loader**: `remotion-composer/shared/isaacverse/styleLoader.ts` (`getStyle` path traversal + `setActiveStyle` override).
+- **Edge refactor**: `SemanticDiagram.Edge` reads stroke from style layer — supports `solid | gradient | brush` modes (the user's gradient+brush example is now a style knob change, not a code edit).
+- **Python harness scaffold**: `harness/` directory with `pyproject.toml`, `agent.py` (Deep Agents `create_deep_agent` with `openrouter:z-ai/glm-5.2`), `tools.py` (6 tools: render_window, read_edit_doc, update_style, read_video, run_structural_qa, capture_feedback), `governance.py` (write-gate + minSupport + event log + replay), `AGENTS.md` (harness memory), `README.md`.
+- **Approval gate**: `interrupt_on={"update_style": True}` — every style change requires user approval.
+- **Feedback logging**: `capture_feedback` tool logs per-aspect verdicts to `harness/logs/feedback.jsonl`.
+- **Event log**: `harness/logs/events.jsonl` — append-only log of all style changes with provenance.
+- **Governance**: `governance.py` — `validate_style_change` (contradiction check + minSupport ≥ 2), `apply_approved_change`, `replay_from_log` (reversible reconciliation).
+
+### Remaining (next sessions)
+- P0.3: Verify Deep Agents installs + hello-world run.
+- P1.5-P1.6: Refactor more treatments (ChapterCard, HostReflectionShot) to style knobs.
+- P1.8-P1.9: Verify render with style layer + test style change alters output.
+- P3.2: Configure CompositeBackend (cross-thread style store).
+- P3.6: Verify agent invokes tools in a test run.
+- P4.1-P4.2: Wire governance as custom Deep Agents middleware (currently standalone module).
+- P5.2-P5.7: Full learning loop PoC (refine → render-compare → approve → persist).
+- P6.1-P6.5: Deterministic QA gate middleware (typecheck + render before commit).
+- P7.1: harness/README.md (done, needs update with run instructions after install verified).
