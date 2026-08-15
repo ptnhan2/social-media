@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 import time
 
 from langchain.tools import tool
@@ -16,6 +17,10 @@ from langchain.tools import tool
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RENDERER_DIR = os.path.join(PROJECT_ROOT, "remotion-composer")
 STYLE_REL = "libraries/04-visual/isaacverse-style.json"
+
+# Import governance for validation
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import governance as gov
 
 
 @tool
@@ -33,6 +38,12 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
         "--project", project_slug, "--start", str(start_sec),
         "--end", str(end_sec), "--quality", quality,
     ]
+    # Sync style JSON before render so Remotion uses the latest style
+    import shutil
+    src_style = os.path.join(PROJECT_ROOT, STYLE_REL)
+    dst_style = os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json")
+    if os.path.exists(src_style):
+        shutil.copy2(src_style, dst_style)
     result = subprocess.run(cmd, capture_output=True, text=True, cwd=RENDERER_DIR, timeout=300)
     if result.returncode != 0:
         return f"Render failed:\n{result.stderr[-500:]}"
@@ -97,6 +108,10 @@ def update_style(style_path: str, new_value: str) -> str:
         val = json.loads(new_value)
     except (json.JSONDecodeError, TypeError):
         val = new_value
+    # Governance check: validate before writing
+    allowed, reason = gov.validate_style_change(style_path, val)
+    if not allowed:
+        return f"BLOCKED by governance: {reason}"
     old = obj.get(parts[-1])
     if old == val:
         return f"No change (current value is already {json.dumps(val)})"
