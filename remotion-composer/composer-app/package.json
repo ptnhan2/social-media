@@ -9,6 +9,8 @@
     "typecheck": "tsc --noEmit --strict --skipLibCheck --target ES2021 --module ESNext --moduleResolution bundler --jsx react-jsx src/composer/VideoEditor.tsx src/composer/LeftRail.tsx src/composer/PropertiesPanel.tsx src/canvas/InteractiveCanvas.tsx src/editor/EditorTimeline.tsx src/editor/editorOperations.ts"
   },
   "dependencies": {
+    "@langchain/core": "^1.2.8",
+    "@langchain/react": "^1.0.30",
     "@remotion/media": "^4.0.484",
     "@remotion/player": "^4.0.484",
     "react": "^18",

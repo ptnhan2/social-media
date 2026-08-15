@@ -9,6 +9,7 @@ import { EditorTimeline } from "../editor/EditorTimeline";
 import { InteractiveCanvas } from "../canvas/InteractiveCanvas";
 import { LeftRail, type LeftTab } from "./LeftRail";
 import { PropertiesPanel, type KeyframeTarget, type PropTab } from "./PropertiesPanel";
+import { AgentPanel } from "../agent/AgentPanel";
 import {
   addClipKeyframe,
   addClipToTrack,
@@ -188,6 +189,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void }> 
   const localSaveGuard = React.useRef(false);
   const [leftPanelWidth, setLeftPanelWidth] = React.useState(220);
   const [rightPanelWidth, setRightPanelWidth] = React.useState(280);
+  const [rightPanelMode, setRightPanelMode] = React.useState<"properties" | "agent">("properties");
   const [timeEditing, setTimeEditing] = React.useState(false);
   const [timeInput, setTimeInput] = React.useState("");
   const [exportOpen, setExportOpen] = React.useState(false);
@@ -872,7 +874,13 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void }> 
         <div className="ve-panel-divider ve-divider-right" role="separator" aria-label="Resize right panel" onPointerDown={(e) => { e.preventDefault(); const startX = e.clientX; const startW = rightPanelWidth; const onMove = (ev: PointerEvent) => setRightPanelWidth(Math.max(180, Math.min(500, startW - (ev.clientX - startX)))); const onUp = () => { window.removeEventListener("pointermove", onMove); window.removeEventListener("pointerup", onUp); document.body.style.cursor = ""; document.body.style.userSelect = ""; }; window.addEventListener("pointermove", onMove); window.addEventListener("pointerup", onUp); document.body.style.cursor = "col-resize"; document.body.style.userSelect = "none"; }} />
 
         <aside className="ve-right-panel" style={{ width: rightPanelWidth }}>
-          {selectedClip ? (
+          <div className="ve-right-tabs">
+            <button className={`ve-right-tab ${rightPanelMode === "properties" ? "active" : ""}`} onClick={() => setRightPanelMode("properties")}>Properties</button>
+            <button className={`ve-right-tab ${rightPanelMode === "agent" ? "active" : ""}`} onClick={() => setRightPanelMode("agent")}>Agent</button>
+          </div>
+          {rightPanelMode === "agent" ? (
+            <AgentPanel projectId={projectId} currentSec={currentSec} />
+          ) : selectedClip ? (
             <PropertiesPanel
               clip={selectedClip}
               tab={propTab}
