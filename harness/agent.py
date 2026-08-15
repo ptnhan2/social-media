@@ -164,7 +164,10 @@ def main():
                 print(str(item))
         print("="*60)
         resp = input("\nApprove this style change? (yes/no): ").strip().lower()
-        resume_val = "yes" if resp.startswith("y") else "no"
+        if resp.startswith("y"):
+            resume_val = {"decisions": [{"action": "approve"}]}
+        else:
+            resume_val = {"decisions": [{"action": "reject"}]}
         result = agent.invoke(Command(resume=resume_val), config=config)
     # Print final messages
     for msg in result.get("messages", []):
