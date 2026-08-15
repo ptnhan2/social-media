@@ -60,7 +60,7 @@
         "maxWidth": 190
       },
       "reveal": {
-        "inDurationSec": 0.45,
+        "inDurationSec": 1.1,
         "lineStartSec": 0.15,
         "lineEndSec": 0.8
       }
