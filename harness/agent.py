@@ -66,6 +66,9 @@ permissions = [
     # Agent can't modify treatment code
     FilesystemPermission(operations=["write"],
                          paths=["/workspace/remotion-composer/shared/**"], mode="deny"),
+    # Agent can't bypass update_style by writing style JSON directly
+    FilesystemPermission(operations=["write"],
+                         paths=["/workspace/libraries/04-visual/**"], mode="deny"),
 ]
 
 # --- System Prompt ---
