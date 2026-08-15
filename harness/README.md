@@ -4,71 +4,92 @@ Self-improving video agent harness built on LangChain Deep Agents.
 
 ## Quick start
 
-```bash
-cd harness
-pip install -e .
+```powershell
+# 1. Create venv + install deps (first time only)
+& "C:\Users\DELL\AppData\Local\Programs\Python\Python313\python.exe" -m venv harness/.venv
+harness/.venv/Scripts/pip install deepagents langchain-deepseek
 
-# Set your OpenRouter API key
-export OPENROUTER_API_KEY="sk-or-..."
+# 2. Set API key (or use .env which is auto-loaded)
+$env:DEEPSEEK_API_KEY = "your-key"
+$env:HARNESS_MODEL = "deepseek:deepseek-chat"
 
-# Run the agent
-python agent.py "render isaacverse-final 0 to 7 seconds at draft quality"
+# 3. Run the agent
+.\harness\run.ps1 "read the style store and tell me what the edge stroke mode is"
 ```
 
-## What it does
-
-The harness agent can:
-
-1. **Render** video segments via Remotion (`render_window`).
-2. **Read** the edit doc structure (`read_edit_doc`).
-3. **View** rendered videos as multimodal content (built-in `read_file` + `read_video`).
-4. **Update** the style store (`update_style` — approval-gated via `interrupt_on`).
-5. **Run QA** on projects (`run_structural_qa`).
-6. **Capture feedback** (`capture_feedback` — per-aspect verdicts logged).
-
-## The learning loop
+## The learning loop (verified end-to-end)
 
 ```
-user feedback on render
-  → agent reads current style store
-  → agent proposes a style change
-  → render before (current) + after (proposed)
-  → agent views both videos (read_file multimodal)
-  → user approves via interrupt gate
-  → update_style persists the change
-  → all future renders use the new style
+user: "the edge lines look too plain. Change to gradient."
+  → agent reads style (read_style)
+  → agent lists knobs (list_style_knobs)
+  → agent proposes change (update_style mode → gradient)
+  → INTERRUPT: user approves
+  → governance check (contradiction + minSupport)
+  → QA gate (JSON + schema validation)
+  → style persists to disk (solid → gradient, v1 → v2)
+  → event logged + feedback captured
+  → agent confirms
+  → all future renders use gradient edges
 ```
 
-## Style store
+## What the agent can do
 
-The style store lives at `libraries/04-visual/isaacverse-style.json`.
-It is a versioned JSON with per-treatment style knobs.
-
-Example — change edge stroke from solid to gradient:
-```python
-update_style(
-    style_path="treatments.semantic-diagram.edge.stroke.mode",
-    new_value='"gradient"'
-)
-```
+| Tool | Purpose |
+|---|---|
+| `render_window` | Render a video segment (draft 360p or master 1080p) |
+| `read_style` | Read the current style store JSON |
+| `list_style_knobs` | List all available style knobs with current values |
+| `update_style` | Change a style knob (APPROVAL-GATED via interrupt) |
+| `render_compare` | Render before/after a style change for visual comparison |
+| `capture_feedback` | Log a per-aspect verdict (like/dislike + note) |
+| `run_structural_qa` | Run structural QA on a project |
+| `read_file` (built-in) | Read ANY file including rendered .mp4 videos (multimodal) |
 
 ## Architecture
 
 ```
 harness/
-├── agent.py        # Deep Agents entry point (create_deep_agent)
-├── tools.py        # Custom tools (render, read, update, QA, feedback)
-├── pyproject.toml  # Python dependencies
-└── logs/           # Feedback log (feedback.jsonl)
+├── agent.py          # Deep Agents entry point (create_deep_agent)
+├── tools.py          # 7 custom tools (render, read, update, QA, feedback, compare)
+├── governance.py     # Write-gate (contradiction + minSupport ≥ 2 + event log + replay)
+├── test_governance.py # 6 governance tests (all pass)
+├── AGENTS.md         # Agent memory (persona + style knob reference + rules)
+├── run.ps1           # Convenience runner (checks API key, calls agent.py)
+├── pyproject.toml    # Python dependencies
+├── .venv/            # Dedicated venv (no Hermes dependency)
+├── skills/
+│   ├── editing-craft/SKILL.md   # Murch Rule of Six, pacing, continuity, sound
+│   └── style-knobs/SKILL.md     # Full reference for all 8 treatments' knobs
+└── logs/             # Event log + feedback log (runtime)
 ```
 
-The agent runs on LangChain Deep Agents (LangGraph runtime):
-- Durable execution (checkpoint, resume, time-travel).
-- Virtual filesystem (read_file supports video/audio/image).
-- interrupt_on for approval gates.
-- Custom middleware for governance (planned: write-gate, QA gate).
+## Deep Agents configuration
+
+- **Backend**: CompositeBackend
+  - `/workspace/` → FilesystemBackend (read real project files + videos)
+  - `/memories/` → StoreBackend (cross-thread memory, InMemoryStore)
+  - `/skills/` → FilesystemBackend (editing-craft + style-knobs)
+- **Checkpointer**: MemorySaver (enables interrupt resume)
+- **Permissions**: deny writes to /memories/, treatment code, style JSON (must use update_style)
+- **interrupt_on**: `{"update_style": True}` — every style change requires user approval
+- **Model**: configurable via `HARNESS_MODEL` env (default: `deepseek:deepseek-chat`)
+
+## Style store
+
+`libraries/04-visual/isaacverse-style.json` — versioned JSON with per-treatment style knobs.
+All 8 treatments are evolvable: SemanticDiagram, ChapterCard, HostReflectionShot,
+ScreenProofInWorld, AudienceDemandProof, ProcessTimeline, CandidateComparison, CinematicMetaphor.
+
+## Governance
+
+- **Write gate**: contradiction check (block identical values) + minSupport ≥ 2 (new knobs need 2+ feedback entries)
+- **QA gate**: JSON + schema validation after write (revert if invalid)
+- **Event log**: append-only `harness/logs/events.jsonl` (every style change with provenance)
+- **Feedback log**: `harness/logs/feedback.jsonl` (per-aspect verdicts)
+- **Replay**: `governance.replay_from_log()` reconstructs style from event log
 
 ## Related docs
 
-- `docs/EVOLUTION-HARNESS-ISAACVERSE.md` — direction + decisions.
-- `docs/HARNESS-SPEC.md` — (planned) detailed spec.
+- `docs/EVOLUTION-HARNESS-ISAACVERSE.md` — direction + decisions + build progress
+- `docs/HARNESS-TODOLIST.md` — full 79-task todo list with status

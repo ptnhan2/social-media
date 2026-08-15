@@ -119,17 +119,20 @@ def update_style(style_path: str, new_value: str) -> str:
     style["version"] = style.get("version", 1) + 1
     with open(path, "w", encoding="utf-8") as f:
         json.dump(style, f, indent=2, ensure_ascii=False)
-    # QA gate: verify the style JSON is valid after write
+    # QA gate: verify the style JSON is valid + has required structure after write
     try:
         with open(path, encoding="utf-8") as f:
-            json.load(f)  # will raise if invalid JSON
+            verify = json.load(f)
+        assert "version" in verify, "missing 'version' key"
+        assert "treatments" in verify, "missing 'treatments' key"
+        assert isinstance(verify["treatments"], dict), "'treatments' must be object"
     except Exception as e:
         # Revert on invalid write
         obj[parts[-1]] = old
         style["version"] -= 1
         with open(path, "w", encoding="utf-8") as f:
             json.dump(style, f, indent=2, ensure_ascii=False)
-        return f"QA GATE FAILED: style JSON invalid after write ({e}). Reverted."
+        return f"QA GATE FAILED: style invalid after write ({e}). Reverted."
     # Log the change
     log_dir = os.path.join(PROJECT_ROOT, "harness", "logs")
     os.makedirs(log_dir, exist_ok=True)
