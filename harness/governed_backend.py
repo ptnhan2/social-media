@@ -66,13 +66,19 @@ def _validate_style_write(new_content: str) -> tuple[bool, str]:
     """Validate a write to the style store.
 
     Parses the new content, compares with current style on disk,
-    and runs governance validation on each changed path.
+    and runs governance validation + schema validation on each changed path.
     """
     # Parse new content
     try:
         new_style = json.loads(new_content)
     except json.JSONDecodeError as e:
         return False, f"Invalid JSON: {e}"
+
+    # Schema validation
+    from style_schema import validate_style_schema
+    schema_valid, schema_err = validate_style_schema(new_style)
+    if not schema_valid:
+        return False, f"Schema validation failed: {schema_err}"
 
     # Load current style
     if not os.path.exists(STYLE_DISK_PATH):

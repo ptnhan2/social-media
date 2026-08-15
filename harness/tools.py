@@ -21,6 +21,7 @@ STYLE_REL = "libraries/04-visual/isaacverse-style.json"
 # Import governance for validation
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import governance as gov
+from style_schema import validate_style_schema
 
 
 @tool
@@ -132,13 +133,13 @@ def update_style(style_path: str, new_value: str) -> str:
     style["version"] = style.get("version", 1) + 1
     with open(path, "w", encoding="utf-8") as f:
         json.dump(style, f, indent=2, ensure_ascii=False)
-    # QA gate: verify the style JSON is valid + has required structure after write
+    # QA gate: verify the style JSON is valid + passes schema validation after write
     try:
         with open(path, encoding="utf-8") as f:
             verify = json.load(f)
-        assert "version" in verify, "missing 'version' key"
-        assert "treatments" in verify, "missing 'treatments' key"
-        assert isinstance(verify["treatments"], dict), "'treatments' must be object"
+        valid, schema_err = validate_style_schema(verify)
+        if not valid:
+            raise ValueError(schema_err)
     except Exception as e:
         # Revert on invalid write
         obj[parts[-1]] = old
@@ -391,6 +392,59 @@ def propose_improvement(video_path: str, critique_text: str = "") -> str:
             lines.append("")
         lines.append("To apply: call update_style(style_path, suggested_value) for any proposal above.")
         lines.append("Each update is approval-gated and governance-validated.")
+
+    return "\n".join(lines)
+
+
+@tool
+def style_diff(from_version: int = 0, to_version: int = 0) -> str:
+    """Show style changes between two versions (from event log).
+
+    Args:
+        from_version: Start version (0 = first version in log).
+        to_version: End version (0 = latest version in log).
+
+    Returns:
+        List of changes (path, old → new, version) between the two versions.
+    """
+    log_file = os.path.join(PROJECT_ROOT, "harness", "logs", "events.jsonl")
+    if not os.path.exists(log_file):
+        return "No event log found. No style changes have been recorded yet."
+
+    events = []
+    with open(log_file, encoding="utf-8") as f:
+        for line in f:
+            try:
+                entry = json.loads(line)
+                if entry.get("type") == "style_update":
+                    events.append(entry)
+            except json.JSONDecodeError:
+                continue
+
+    if not events:
+        return "No style_update events in log."
+
+    # Determine version range
+    versions = [e.get("data", {}).get("version", 0) for e in events]
+    min_v = min(versions) if versions else 0
+    max_v = max(versions) if versions else 0
+    from_v = from_version if from_version > 0 else min_v
+    to_v = to_version if to_version > 0 else max_v
+
+    # Filter events in range
+    relevant = [e for e in events
+                if from_v <= e.get("data", {}).get("version", 0) <= to_v]
+
+    if not relevant:
+        return f"No style changes between version {from_v} and {to_v}."
+
+    lines = [f"Style changes (v{from_v} → v{to_v}):", f"  {len(relevant)} change(s)\n"]
+    for e in relevant:
+        d = e.get("data", {})
+        lines.append(f"  v{d.get('version', '?')}: {d.get('path', '?')}")
+        lines.append(f"    {json.dumps(d.get('old'))} -> {json.dumps(d.get('new'))}")
+        lines.append(f"    provenance: {d.get('provenance', 'unknown')}")
+        lines.append("")
 
     return "\n".join(lines)
 

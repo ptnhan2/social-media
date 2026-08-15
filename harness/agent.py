@@ -35,6 +35,7 @@ from deepagents import FilesystemPermission
 from tools import (
     render_window, read_style, list_style_knobs, update_style,
     capture_feedback, run_structural_qa, propose_improvement, run_consolidation,
+    style_diff,
 )
 from tutorial_tools import ingest_tutorial, render_compare as rc_compare
 from visual_critique import visual_critique
@@ -171,7 +172,7 @@ _COMMON_KWARGS = dict(
     model=MODEL,
     tools=[render_window, read_style, list_style_knobs, update_style,
            capture_feedback, run_structural_qa, rc_compare, ingest_tutorial,
-           visual_critique, propose_improvement, run_consolidation],
+           visual_critique, propose_improvement, run_consolidation, style_diff],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
