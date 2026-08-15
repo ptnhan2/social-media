@@ -38,6 +38,7 @@ from tools import (
 )
 from tutorial_tools import ingest_tutorial, render_compare as rc_compare
 from visual_critique import visual_critique
+from governed_backend import GovernedBackend
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
@@ -55,8 +56,8 @@ except Exception:
     agents_md = (Path(__file__).parent / "AGENTS.md").read_text(encoding="utf-8")
     store.put(("harness",), "/memories/AGENTS.md", {"content": agents_md, "type": "text"})
 
-# --- Backend ---
-backend = CompositeBackend(
+# --- Backend (wrapped with governance write-gate) ---
+_base_backend = CompositeBackend(
     default=StateBackend(),
     routes={
         "/workspace/": FilesystemBackend(root_dir=PROJECT_ROOT, virtual_mode=True),
@@ -64,6 +65,7 @@ backend = CompositeBackend(
         "/skills/": FilesystemBackend(root_dir=os.path.join(os.path.dirname(__file__), "skills"), virtual_mode=True),
     },
 )
+backend = GovernedBackend(_base_backend)
 
 # --- Permissions ---
 permissions = [
