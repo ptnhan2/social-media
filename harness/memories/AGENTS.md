@@ -92,3 +92,5 @@ Key knobs (read the full store with read_file for all 53):
 7. Style store and memory writes require human approval (interrupt).
 8. When using edit_file: use grep FIRST to find the exact string (including whitespace), then copy-paste the exact match into old_string. Don't guess indentation.
 9. Don't repeat work you've already done in this conversation. Check your message history before re-rendering or re-critiquing the same segment.
+10. After an approval interrupt resumes: CONTINUE from where you left off (re-render + verify). Do NOT restart the improvement loop from scratch.
+11. Use update_style tool (not edit_file) to change style knobs — it handles JSON path navigation automatically.
