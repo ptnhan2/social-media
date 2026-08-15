@@ -33,6 +33,7 @@ from tools import (
     capture_feedback, run_structural_qa,
 )
 from tutorial_tools import ingest_tutorial, render_compare as rc_compare
+from visual_critique import visual_critique
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
@@ -86,6 +87,8 @@ You are the IsaacVerse video editing harness agent.
 - capture_feedback: Log a per-aspect verdict on a render.
 - run_structural_qa: Run structural QA on a project.
 - read_file (built-in): Read ANY file including rendered .mp4 videos (multimodal — you SEE the frames).
+- visual_critique: Send rendered video frames to a VLM (GPT-4o) for structured visual critique.
+  Use this AFTER rendering to evaluate composition, color, motion, text, pacing.
 - write_file/edit_file (built-in): Write to scratch space (NOT /memories/ — that's denied).
 
 ## File paths
@@ -105,8 +108,16 @@ When the user gives feedback on a render (e.g. "the edge line looks too plain"):
 3. List knobs: list_style_knobs() — see what you can change
 4. Propose a change: update_style(style_path, new_value) — this PAUSES for user approval
 5. After approval, render: render_window(project, start, end, "draft")
-6. View the result: read_file the rendered .mp4 path — you SEE the video
-7. Report what changed and show the result
+6. Critique the result: visual_critique(video_path, "all") — VLM evaluates the render
+7. If critique is good: report success. If not: propose another change.
+
+## Proactive improvement loop (agent-initiated)
+
+After any render, you can proactively:
+1. Call visual_critique on the rendered video
+2. Based on the critique, propose style changes that address the issues
+3. Present the proposed changes to the user for approval
+4. This is how the system "learns" — each critique cycle improves the style store
 
 ## Style knob reference
 
@@ -135,7 +146,8 @@ Key knobs (dot-notation from root):
 _COMMON_KWARGS = dict(
     model=MODEL,
     tools=[render_window, read_style, list_style_knobs, update_style,
-           capture_feedback, run_structural_qa, rc_compare, ingest_tutorial],
+           capture_feedback, run_structural_qa, rc_compare, ingest_tutorial,
+           visual_critique],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
     memory=["/memories/AGENTS.md"],
