@@ -1,30 +1,38 @@
 FROM python:3.13-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ffmpeg nodejs npm git \
+    ffmpeg nodejs npm git curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy harness requirements and install
+# Copy harness and install deps
 COPY harness/ ./harness/
-RUN python -m venv harness/.venv \
-    && harness/.venv/bin/pip install --no-cache-dir \
+RUN python -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-cache-dir \
     deepagents langchain-deepseek langgraph-cli[inmem] langchain langgraph jsonschema
 
-# Copy project files
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy project files needed for rendering
 COPY langgraph.json ./
 COPY libraries/ ./libraries/
-COPY remotion-composer/ ./remotion-composer/
+COPY remotion-composer/package*.json ./remotion-composer/
+COPY remotion-composer/scripts/ ./remotion-composer/scripts/
+COPY remotion-composer/src/ ./remotion-composer/src/
+COPY remotion-composer/shared/ ./remotion-composer/shared/
+COPY remotion-composer/public/ ./remotion-composer/public/
+COPY remotion-composer/remotion.config.ts ./remotion-composer/
+COPY remotion-composer/tsconfig.json ./remotion-composer/
 COPY tools/ ./tools/
 COPY projects/ ./projects/
 
-# Copy .env (will be overridden by docker-compose env_file)
-COPY .env ./
+# Install Remotion deps
+RUN cd remotion-composer && npm install --production
 
 EXPOSE 2024
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:2024/ok')" || exit 1
+    CMD curl -f http://localhost:2024/ok || exit 1
 
-CMD ["harness/.venv/bin/python", "-m", "langgraph_cli", "dev", "--host", "0.0.0.0", "--port", "2024"]
+CMD ["python", "-m", "langgraph_cli", "dev", "--host", "0.0.0.0", "--port", "2024"]
