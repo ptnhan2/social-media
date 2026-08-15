@@ -39,22 +39,36 @@ from tools import (
 from tutorial_tools import ingest_tutorial, render_compare as rc_compare
 from visual_critique import visual_critique
 from governed_backend import GovernedBackend
+from file_store import FileBackedStore
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
 
-# --- Store (cross-thread memory) ---
-store = InMemoryStore()
+# --- Store (cross-thread memory, persistent to disk) ---
+# Dev: FileBackedStore (no Postgres needed). Prod: swap for PostgresStore.
+STORE_FILE = os.path.join(os.path.dirname(__file__), "logs", "store.json")
+store = FileBackedStore(STORE_FILE)
 
-# Seed memory
-try:
-    from deepagents.backends.utils import create_file_data
-    agents_md = (Path(__file__).parent / "AGENTS.md").read_text(encoding="utf-8")
-    store.put(("harness",), "/memories/AGENTS.md", create_file_data(agents_md))
-except Exception:
-    # Fallback: direct dict
-    agents_md = (Path(__file__).parent / "AGENTS.md").read_text(encoding="utf-8")
-    store.put(("harness",), "/memories/AGENTS.md", {"content": agents_md, "type": "text"})
+
+def _seed_memory():
+    """Seed memory files if not already present."""
+    harness_dir = Path(__file__).parent
+    memory_files = {
+        "/memories/AGENTS.md": harness_dir / "AGENTS.md",
+        "/memories/taste-standard.md": harness_dir / "memories" / "taste-standard.md",
+    }
+    for mem_path, disk_path in memory_files.items():
+        existing = store.get(("harness",), mem_path)
+        if existing is None and disk_path.exists():
+            content = disk_path.read_text(encoding="utf-8")
+            try:
+                from deepagents.backends.utils import create_file_data
+                store.put(("harness",), mem_path, create_file_data(content))
+            except Exception:
+                store.put(("harness",), mem_path, {"content": content, "type": "text"})
+
+
+_seed_memory()
 
 # --- Backend (wrapped with governance write-gate) ---
 _base_backend = CompositeBackend(
@@ -156,7 +170,7 @@ _COMMON_KWARGS = dict(
            visual_critique],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
-    memory=["/memories/AGENTS.md"],
+    memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
     skills=["/skills/"],
     permissions=permissions,
     interrupt_on={"update_style": True},
