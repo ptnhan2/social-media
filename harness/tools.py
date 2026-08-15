@@ -249,3 +249,183 @@ def render_compare(project_slug: str, start_sec: float, end_sec: float,
     with open(path, "w", encoding="utf-8") as f:
         json.dump(style, f, indent=2, ensure_ascii=False)
     return f"Before: {before}\nAfter: {after}\nUse read_file on both paths to compare visually."
+
+
+# --- Aspect → style knob mapping for propose_improvement ---
+_ASPECT_KNOB_MAP = {
+    "motion": [
+        ("treatments.semantic-diagram.edge.revealDurationSec", [0.8, 1.0, 1.2],
+         "Increase reveal animation duration for smoother motion"),
+        ("treatments.semantic-diagram.edge.stroke.width", [2, 3],
+         "Adjust stroke width for visual presence"),
+    ],
+    "composition": [
+        ("treatments.chapter-card.title.fontSizeShort", [100, 110, 120],
+         "Adjust title font size for better balance"),
+        ("treatments.chapter-card.title.fontSizeLong", [64, 72, 80],
+         "Adjust long-title font size"),
+    ],
+    "color": [
+        ("treatments.semantic-diagram.edge.stroke.mode", ["gradient"],
+         "Switch to gradient stroke for richer color depth"),
+        ("treatments.semantic-diagram.edge.stroke.gradientStops",
+         [["#FFD700", "#FF6B35"], ["#4FC3F7", "#81D4FA"]],
+         "Try different gradient color pairs"),
+        ("treatments.host-reflection.filter", ["brightness(0.9) contrast(1.1)", "brightness(0.85) contrast(1.15)"],
+         "Adjust host-reflection color filter"),
+    ],
+    "text": [
+        ("treatments.chapter-card.title.fontSizeShort", [100, 110, 120],
+         "Increase font size for better legibility"),
+        ("treatments.host-reflection.subtitleFontSize", [18, 20, 22],
+         "Adjust subtitle font size"),
+    ],
+    "pacing": [
+        ("treatments.semantic-diagram.edge.revealDurationSec", [0.8, 1.0, 1.2],
+         "Adjust reveal duration to control pacing"),
+    ],
+}
+
+
+@tool
+def propose_improvement(video_path: str, critique_text: str = "") -> str:
+    """Analyze a rendered video and propose specific style improvements.
+
+    If critique_text is provided (from visual_critique), uses it directly.
+    Otherwise, runs visual_critique internally.
+
+    Maps critique findings to available style knobs and returns concrete
+    proposals with rationale. Does NOT apply changes — use update_style to apply.
+
+    Args:
+        video_path: Path to rendered .mp4.
+        critique_text: Optional pre-computed critique from visual_critique.
+
+    Returns:
+        Structured proposals: style_path, suggested_value, rationale.
+    """
+    # Get critique if not provided
+    if not critique_text:
+        from visual_critique import visual_critique
+        critique_text = visual_critique.invoke({"video_path": video_path, "aspect": "all"})
+
+    # Read current style knobs
+    style_path = os.path.join(PROJECT_ROOT, STYLE_REL)
+    with open(style_path, encoding="utf-8") as f:
+        style = json.load(f)
+
+    def get_style_value(path: str):
+        parts = path.split(".")
+        obj = style
+        for p in parts:
+            if isinstance(obj, dict) and p in obj:
+                obj = obj[p]
+            else:
+                return None
+        return obj
+
+    # Parse critique to find low-scoring aspects
+    proposals = []
+    critique_lower = critique_text.lower()
+
+    # Extract scores from critique (pattern: "aspect: N" or "aspect - N")
+    import re
+    score_pattern = r"(composition|color|motion|text\s+legibility|text|pacing)\s*[:\-]\s*(\d)"
+    raw_scores = re.findall(score_pattern, critique_lower)
+    # Deduplicate: keep first match per aspect (text_legibility → text)
+    scores = []
+    seen = set()
+    for aspect, score in raw_scores:
+        aspect = "text" if "text" in aspect else aspect
+        if aspect not in seen:
+            scores.append((aspect, score))
+            seen.add(aspect)
+
+    # Find TOP ISSUE
+    top_issue = ""
+    if "top issue:" in critique_lower:
+        top_issue = critique_text[critique_lower.index("top issue:"):].strip()
+
+    # Generate proposals for low-scoring aspects (score <= 3)
+    low_aspects = set()
+    for aspect, score in scores:
+        if int(score) <= 3:
+            low_aspects.add(aspect)
+
+    # If no scores found, propose for all aspects
+    if not scores:
+        low_aspects = {"motion", "composition", "color"}
+
+    for aspect in low_aspects:
+        knob_suggestions = _ASPECT_KNOB_MAP.get(aspect, [])
+        for knob_path, suggested_values, rationale in knob_suggestions:
+            current = get_style_value(knob_path)
+            # Find a suggested value different from current
+            for val in suggested_values:
+                if val != current:
+                    proposals.append({
+                        "aspect": aspect,
+                        "style_path": knob_path,
+                        "current_value": current,
+                        "suggested_value": val,
+                        "rationale": rationale,
+                    })
+                    break  # One proposal per knob
+
+    # Build output
+    lines = [f"Proposed improvements for {video_path}:", ""]
+    if top_issue:
+        lines.append(f"TOP ISSUE: {top_issue}")
+        lines.append("")
+
+    if not proposals:
+        lines.append("No specific improvements to propose. All aspects scored well.")
+    else:
+        lines.append(f"Found {len(proposals)} proposal(s) for low-scoring aspects {sorted(low_aspects)}:")
+        lines.append("")
+        for i, p in enumerate(proposals, 1):
+            lines.append(f"  {i}. [{p['aspect']}] {p['style_path']}")
+            lines.append(f"     current: {json.dumps(p['current_value'])}")
+            lines.append(f"     proposed: {json.dumps(p['suggested_value'])}")
+            lines.append(f"     why: {p['rationale']}")
+            lines.append("")
+        lines.append("To apply: call update_style(style_path, suggested_value) for any proposal above.")
+        lines.append("Each update is approval-gated and governance-validated.")
+
+    return "\n".join(lines)
+
+
+@tool
+def run_consolidation() -> str:
+    """Analyze accumulated feedback and propose batch style refinements.
+
+    Reads the feedback log, finds recurring patterns (dimensions with >= 2 dislikes),
+    and returns concrete style change proposals. Use this periodically to consolidate
+    feedback into actionable improvements.
+
+    Returns:
+        Feedback patterns + proposed style refinements.
+    """
+    from consolidation_agent import analyze_feedback, propose_refinements
+
+    patterns = analyze_feedback()
+    if not patterns:
+        return "No feedback patterns found (need >= 2 dislikes for same dimension to form a pattern)."
+
+    lines = [f"Consolidation analysis: found {len(patterns)} pattern(s):\n"]
+    for p in patterns:
+        lines.append(f"  Dimension: {p['dimension']} ({p['dislike_count']} dislikes)")
+        lines.append(f"  Knob: {p['knob'] or '(unmapped)'}")
+        lines.append(f"  Notes: {p['notes'][:2]}")
+        lines.append(f"  Recommendation: {p['recommendation']}\n")
+
+    proposals = propose_refinements(patterns)
+    if proposals:
+        lines.append("Proposed refinements (each needs approval via update_style):")
+        for prop in proposals:
+            lines.append(f"  update_style({prop['style_path']}, {prop['proposed_value']})")
+            lines.append(f"    Reason: {prop['reason']}\n")
+    else:
+        lines.append("No concrete proposals (patterns have no knob mapping).")
+
+    return "\n".join(lines)

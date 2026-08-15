@@ -34,7 +34,7 @@ from deepagents import FilesystemPermission
 
 from tools import (
     render_window, read_style, list_style_knobs, update_style,
-    capture_feedback, run_structural_qa,
+    capture_feedback, run_structural_qa, propose_improvement, run_consolidation,
 )
 from tutorial_tools import ingest_tutorial, render_compare as rc_compare
 from visual_critique import visual_critique
@@ -109,6 +109,8 @@ You are the IsaacVerse video editing harness agent.
 - read_file (built-in): Read ANY file including rendered .mp4 videos (multimodal — you SEE the frames).
 - visual_critique: Send rendered video frames to a VLM (GPT-4o) for structured visual critique.
   Use this AFTER rendering to evaluate composition, color, motion, text, pacing.
+- propose_improvement: Analyze a render + critique and propose specific style changes.
+  Maps low-scoring aspects to available style knobs. Does NOT apply — use update_style after.
 - write_file/edit_file (built-in): Write to scratch space (NOT /memories/ — that's denied).
 
 ## File paths
@@ -135,9 +137,11 @@ When the user gives feedback on a render (e.g. "the edge line looks too plain"):
 
 After any render, you can proactively:
 1. Call visual_critique on the rendered video
-2. Based on the critique, propose style changes that address the issues
-3. Present the proposed changes to the user for approval
-4. This is how the system "learns" — each critique cycle improves the style store
+2. Call propose_improvement with the critique to get specific style change proposals
+3. Present the proposals to the user for approval
+4. After approval, call update_style to apply each approved change
+5. Re-render and verify the improvement
+6. This is how the system "learns" — each critique cycle improves the style store
 
 ## Style knob reference
 
@@ -167,7 +171,7 @@ _COMMON_KWARGS = dict(
     model=MODEL,
     tools=[render_window, read_style, list_style_knobs, update_style,
            capture_feedback, run_structural_qa, rc_compare, ingest_tutorial,
-           visual_critique],
+           visual_critique, propose_improvement, run_consolidation],
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
