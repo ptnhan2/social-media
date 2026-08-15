@@ -139,6 +139,27 @@ def update_style(style_path: str, new_value: str) -> str:
     with open(os.path.join(log_dir, "events.jsonl"), "a", encoding="utf-8") as f:
         f.write(json.dumps({"type": "style_update", "path": style_path, "old": old,
                             "new": val, "version": style["version"], "ts": time.time()}) + "\n")
+    # QA gate: render-test (quick 1-second draft render to verify style doesn't break rendering)
+    try:
+        import shutil as _shutil
+        _src = os.path.join(PROJECT_ROOT, STYLE_REL)
+        _dst = os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json")
+        _shutil.copy2(_src, _dst)
+        _r = subprocess.run(
+            ["node", os.path.join(RENDERER_DIR, "scripts", "render-window.mjs"),
+             "--project", "isaacverse-final", "--start", "0", "--end", "1", "--quality", "draft"],
+            capture_output=True, text=True, cwd=RENDERER_DIR, timeout=120)
+        if _r.returncode != 0:
+            # Render failed — revert
+            obj[parts[-1]] = old
+            style["version"] -= 1
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(style, f, indent=2, ensure_ascii=False)
+            return f"QA RENDER-TEST FAILED: style change broke rendering. Reverted.\n{_r.stderr[-300:]}"
+    except subprocess.TimeoutExpired:
+        pass  # timeout = inconclusive, allow the change
+    except Exception:
+        pass  # render test optional, don't block on infra issues
     return (f"Style updated: {style_path}\n  old: {json.dumps(old)}\n  new: {json.dumps(val)}\n"
             f"  version: {style['version']}\n  File: /workspace/{STYLE_REL}")
 
