@@ -268,9 +268,14 @@ export const ScreenProofInWorld: React.FC<ScreenProofInWorldProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const entrance = spring({ frame, fps, config: { damping: 18, stiffness: 120 }, durationInFrames: Math.round(0.8 * fps) });
-  const camera = interpolate(frame, [0, 4 * fps], [1.04, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const focus = interpolate(frame, [0.65 * fps, 1.15 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const entranceDur = getStyle<number>("treatments.screen-proof.entranceDurationSec", 0.8);
+  const camStart = getStyle<number>("treatments.screen-proof.cameraStart", 1.04);
+  const camDur = getStyle<number>("treatments.screen-proof.cameraDurationSec", 4);
+  const focusStart = getStyle<number>("treatments.screen-proof.focusStartSec", 0.65);
+  const focusEnd = getStyle<number>("treatments.screen-proof.focusEndSec", 1.15);
+  const entrance = spring({ frame, fps, config: { damping: 18, stiffness: 120 }, durationInFrames: Math.round(entranceDur * fps) });
+  const camera = interpolate(frame, [0, camDur * fps], [camStart, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const focus = interpolate(frame, [focusStart * fps, focusEnd * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <AbsoluteFill style={{ background: BLACK, overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 56% 46%, ${accent}24, transparent 45%)` }} />
@@ -353,8 +358,8 @@ export const AudienceDemandProof: React.FC<AudienceDemandProofProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const contextIn = interpolate(frame, [2.4 * fps, 3.3 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const responseIn = interpolate(frame, [3.5 * fps, 4.2 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const contextIn = interpolate(frame, [getStyle<number>("treatments.audience-demand.contextInStartSec", 2.4) * fps, getStyle<number>("treatments.audience-demand.contextInEndSec", 3.3) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const responseIn = interpolate(frame, [getStyle<number>("treatments.audience-demand.responseInStartSec", 3.5) * fps, getStyle<number>("treatments.audience-demand.responseInEndSec", 4.2) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ background: BLACK, overflow: "hidden" }}>
@@ -399,9 +404,9 @@ export type ProcessTimelineProps = {
 export const ProcessTimeline: React.FC<ProcessTimelineProps> = ({ title, steps, activeStep = 0, accent = AMBER }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const titleIn = interpolate(frame, [0, 0.45 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const titleIn = interpolate(frame, [0, getStyle<number>("treatments.process-timeline.titleInDurationSec", 0.45) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const active = Math.min(steps.length - 1, Math.max(0, activeStep));
-  const progress = interpolate(frame, [0.35 * fps, 1.2 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const progress = interpolate(frame, [getStyle<number>("treatments.process-timeline.progressStartSec", 0.35) * fps, getStyle<number>("treatments.process-timeline.progressEndSec", 1.2) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <AbsoluteFill style={{ background: BLACK, color: PAPER, overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 50% 60%, ${accent}14, transparent 48%)` }} />
@@ -451,7 +456,7 @@ export type CandidateComparisonProps = {
 export const CandidateComparison: React.FC<CandidateComparisonProps> = ({ title, candidates, selectedIndex = 0, criteria, accent = AMBER }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const titleIn = interpolate(frame, [0, 0.45 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const titleIn = interpolate(frame, [0, getStyle<number>("treatments.candidate-comparison.titleInDurationSec", 0.45) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <AbsoluteFill style={{ background: BLACK, color: PAPER, overflow: "hidden" }}>
       <div style={{ position: "absolute", left: 70, top: 54, opacity: titleIn, transform: `translateY(${(1 - titleIn) * 18}px)`, fontFamily: "Arial, sans-serif" }}>
@@ -494,8 +499,8 @@ export type CinematicMetaphorProps = {
 export const CinematicMetaphor: React.FC<CinematicMetaphorProps> = ({ src, subtitle, label, accent = AMBER, mode = "cinematic" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const entrance = interpolate(frame, [0, 0.7 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const push = interpolate(frame, [0, 4 * fps], [1.08, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const entrance = interpolate(frame, [0, getStyle<number>("treatments.cinematic-metaphor.entranceDurationSec", 0.7) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const push = interpolate(frame, [0, getStyle<number>("treatments.cinematic-metaphor.pushDurationSec", 4) * fps], [getStyle<number>("treatments.cinematic-metaphor.pushStart", 1.08), 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const filter = mode === "line-art" ? "grayscale(1) sepia(1) hue-rotate(350deg) saturate(4) contrast(1.35) brightness(.72)" : mode === "warm" ? "sepia(.38) saturate(1.25) contrast(1.12) brightness(.82)" : "saturate(.76) contrast(1.18) brightness(.72)";
   return (
     <AbsoluteFill style={{ background: BLACK, overflow: "hidden", opacity: entrance }}>

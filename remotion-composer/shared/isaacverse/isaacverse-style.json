@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "seed": "isaac-forensic-2026-08",
+  "status": "seed",
+  "colors": {
+    "amber": "#f2b84b",
+    "cyan": "#61d7e8",
+    "paper": "#f4e8cf",
+    "black": "#07090d"
+  },
+  "treatments": {
+    "semantic-diagram": {
+      "edge": {
+        "stroke": {
+          "mode": "solid",
+          "color": "rgba(242,184,75,0.58)",
+          "width": 2,
+          "linecap": "round",
+          "gradientStops": [
+            "#7fd8e8",
+            "#f2d58a"
+          ],
+          "brushDasharray": "3 1 5 2"
+        },
+        "revealDurationSec": 0.65
+      },
+      "node": {
+        "borderWidth": 2,
+        "borderRadius": 10,
+        "background": "rgba(7,9,13,0.84)",
+        "fontSize": 20,
+        "detailFontSize": 14
+      },
+      "title": {
+        "fontSize": 46,
+        "fontWeight": 800,
+        "letterSpacing": "-0.02em"
+      },
+      "kicker": {
+        "fontSize": 18,
+        "fontWeight": 700,
+        "letterSpacing": "0.18em"
+      },
+      "entrance": {
+        "damping": 18,
+        "stiffness": 140,
+        "mass": 0.8,
+        "durationSec": 0.75
+      }
+    },
+    "chapter-card": {
+      "title": {
+        "fontSizeLong": 82,
+        "fontSizeShort": 96,
+        "lineHeight": 1.08,
+        "fontWeight": 900
+      },
+      "accentLine": {
+        "height": 5,
+        "maxWidth": 190
+      },
+      "reveal": {
+        "inDurationSec": 0.45,
+        "lineStartSec": 0.15,
+        "lineEndSec": 0.8
+      }
+    },
+    "host-reflection": {
+      "filter": "saturate(.72) contrast(1.18) brightness(.72)",
+      "pushStart": 1.06,
+      "pushDurationSec": 4,
+      "entranceDurationSec": 0.5,
+      "letterboxTopPct": 8,
+      "letterboxBottomPct": 12,
+      "subtitle": {
+        "fontFamily": "Georgia, serif",
+        "fontStyle": "italic",
+        "fontSize": 27
+      }
+    },
+    "screen-proof": {
+      "cameraStart": 1.04,
+      "cameraDurationSec": 4,
+      "entranceDurationSec": 0.8,
+      "focusStartSec": 0.65,
+      "focusEndSec": 1.15
+    },
+    "audience-demand": {
+      "contextInStartSec": 2.4,
+      "contextInEndSec": 3.3,
+      "responseInStartSec": 3.5,
+      "responseInEndSec": 4.2
+    },
+    "process-timeline": {
+      "titleInDurationSec": 0.45,
+      "progressStartSec": 0.35,
+      "progressEndSec": 1.2
+    },
+    "candidate-comparison": {
+      "titleInDurationSec": 0.45,
+      "candidateStaggerSec": 0.22
+    },
+    "cinematic-metaphor": {
+      "entranceDurationSec": 0.7,
+      "pushStart": 1.08,
+      "pushDurationSec": 4
+    }
+  }
+}
