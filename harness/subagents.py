@@ -5,7 +5,7 @@ Returns structured CritiqueResult (typed scores) via response_format.
 
 from pydantic import BaseModel, Field
 from deepagents import SubAgent
-from tools import visual_critique
+from harness_tools import visual_critique
 
 
 class CritiqueResult(BaseModel):

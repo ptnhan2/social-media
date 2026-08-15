@@ -1,7 +1,8 @@
-"""Domain tools — only tools that spawn external processes.
+"""Domain tools — render, critique, and think.
 
 render_window: spawns Remotion (Node.js subprocess)
 visual_critique: calls GLM-4V-Flash API (VLM)
+think: strategic reflection — agent pauses to reason before acting
 
 Everything else (read_file, edit_file, write_file, ls, glob, grep, task)
 is provided by Deep Agents built-in.
@@ -159,3 +160,21 @@ def visual_critique(video_path: str, aspect: str = "all") -> str:
     prompt += "\n\nContext: These are frames from an IsaacVerse-style story-driven video."
     critique = _call_vlm(frames, prompt)
     return f"Visual critique ({aspect}) of {video_path}:\n\n{critique}"
+
+
+@tool
+def think(reflection: str) -> str:
+    """Strategic reflection — pause to reason before next action.
+
+    Use this tool to think deliberately:
+    - After critique: What's the weakest aspect? Which knob should I change? Why?
+    - Before changing style: What's the risk? What's the expected improvement?
+    - After re-render: Did scores improve? Should I continue or stop?
+    - Before reporting: Have I verified the improvement? Is quality good enough?
+
+    This is NOT optional — use it after each critique and before each style change.
+
+    Args:
+        reflection: Your detailed reasoning about current state, gaps, and next steps.
+    """
+    return f"Reflection recorded: {reflection}"

@@ -31,7 +31,7 @@ from langchain.agents.middleware import TodoListMiddleware, ModelRetryMiddleware
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
-from tools import render_window, visual_critique
+from harness_tools import render_window, visual_critique, think
 from subagents import CRITIC_SUBAGENT
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,7 +48,7 @@ class AgentContext:
 
 _COMMON = dict(
     model=MODEL,
-    tools=[render_window, visual_critique],
+    tools=[render_window, visual_critique, think],
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
     skills=["/skills/"],
     subagents=[CRITIC_SUBAGENT],
