@@ -13,6 +13,11 @@ const seedStyle = {
         },
       },
     },
+    "chapter-card": {
+      title: { fontSizeLong: 82, fontSizeShort: 96, lineHeight: 1.08, fontWeight: 900 },
+      accentLine: { height: 5, maxWidth: 190 },
+      reveal: { inDurationSec: 0.45, lineStartSec: 0.15, lineEndSec: 0.8 },
+    },
   },
 };
 

@@ -205,12 +205,15 @@ export type ChapterCardProps = {
 
 export const chapterCardTitleLayout = (title: string): React.CSSProperties => {
   const longTitle = title.trim().length > 22;
+  const fontSizeLong = getStyle<number>("treatments.chapter-card.title.fontSizeLong", 82);
+  const fontSizeShort = getStyle<number>("treatments.chapter-card.title.fontSizeShort", 96);
+  const lineHeight = getStyle<number>("treatments.chapter-card.title.lineHeight", 1.08);
   return {
     width: "86%",
     maxWidth: "86%",
     margin: "0 auto",
-    fontSize: longTitle ? 82 : 96,
-    lineHeight: 1.08,
+    fontSize: longTitle ? fontSizeLong : fontSizeShort,
+    lineHeight,
     letterSpacing: longTitle ? "0.04em" : "0.08em",
     overflowWrap: "break-word",
   };
@@ -221,14 +224,19 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({ title, subtitle, accen
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const local = Math.max(0, frame - holdFrom * fps);
-  const inProgress = interpolate(local, [0, 0.45 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const inDur = getStyle<number>("treatments.chapter-card.reveal.inDurationSec", 0.45);
+  const lineStart = getStyle<number>("treatments.chapter-card.reveal.lineStartSec", 0.15);
+  const lineEnd = getStyle<number>("treatments.chapter-card.reveal.lineEndSec", 0.8);
+  const accentHeight = getStyle<number>("treatments.chapter-card.accentLine.height", 5);
+  const accentMaxWidth = getStyle<number>("treatments.chapter-card.accentLine.maxWidth", 190);
+  const inProgress = interpolate(local, [0, inDur * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const wordScale = interpolate(inProgress, [0, 1], [0.9, 1]);
-  const lineProgress = interpolate(local, [0.15 * fps, 0.8 * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const lineProgress = interpolate(local, [lineStart * fps, lineEnd * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <AbsoluteFill style={{ backgroundColor: BLACK, justifyContent: "center", alignItems: "center", color: PAPER }}>
       <div style={{ textAlign: "center", opacity: inProgress, transform: `scale(${wordScale})` }}>
         <div style={{ ...chapterCardTitleLayout(title), fontFamily: "Arial, sans-serif", fontWeight: 900, textTransform: "uppercase", textAlign: "center", textShadow: `0 0 22px ${accent}55` }}>{title}</div>
-        <div style={{ height: 5, background: accent, boxShadow: `0 0 18px ${accent}`, width: `${lineProgress * 190}px`, margin: "20px auto 0" }} />
+        <div style={{ height: accentHeight, background: accent, boxShadow: `0 0 18px ${accent}`, width: `${lineProgress * accentMaxWidth}px`, margin: "20px auto 0" }} />
         {subtitle ? <div style={{ marginTop: 18, fontFamily: "Arial, sans-serif", fontSize: 20, letterSpacing: "0.06em", color: secondaryColor(accent), textTransform: "uppercase", opacity: 0.8 }}>{subtitle}</div> : null}
       </div>
     </AbsoluteFill>

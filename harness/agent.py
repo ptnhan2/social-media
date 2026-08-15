@@ -77,8 +77,17 @@ Style knobs are dot-notation paths into the style JSON, starting from the root:
 - If a render fails after a style change, revert immediately.
 """
 
+MODEL = os.environ.get("HARNESS_MODEL", "google_genai:gemini-3.6-flash")
+
+# Check API key
+_API_KEYS = ["GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "OPENROUTER_API_KEY"]
+if not any(os.environ.get(k) for k in _API_KEYS):
+    print("ERROR: No API key found. Set one of: " + ", ".join(_API_KEYS))
+    print("Example: $env:GOOGLE_API_KEY='your-key-here'")
+    sys.exit(1)
+
 agent = create_deep_agent(
-    model="openrouter:z-ai/glm-5.2",
+    model=MODEL,
     tools=[render_window, read_edit_doc, update_style, read_video, run_structural_qa, capture_feedback],
     system_prompt=SYSTEM_PROMPT,
     interrupt_on={"update_style": True},
