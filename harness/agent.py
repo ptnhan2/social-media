@@ -131,10 +131,8 @@ Key knobs (dot-notation from root):
 5. If a render fails after a style change, revert immediately.
 """
 
-# --- Create Agent ---
-# When running via langgraph dev/up, the platform provides checkpointer + store.
-# For standalone CLI, we add them in main() after import.
-agent = create_deep_agent(
+# --- Create Agent (module-level, no checkpointer/store — langgraph server compatible) ---
+_COMMON_KWARGS = dict(
     model=MODEL,
     tools=[render_window, read_style, list_style_knobs, update_style,
            capture_feedback, run_structural_qa, rc_compare, ingest_tutorial],
@@ -146,14 +144,22 @@ agent = create_deep_agent(
     interrupt_on={"update_style": True},
 )
 
+# This is what langgraph server imports (no custom checkpointer/store)
+agent = create_deep_agent(**_COMMON_KWARGS)
+
 
 def main():
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     from langgraph.types import Command
+    from langgraph.checkpoint.memory import MemorySaver
+
+    # Standalone CLI: create a separate agent WITH MemorySaver + store for interrupt resume
+    cli_agent = create_deep_agent(**_COMMON_KWARGS, checkpointer=MemorySaver(), store=store)
+
     query = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "What can you do?"
     print(f"[harness] model={MODEL}  query: {query}\n")
     config = {"configurable": {"thread_id": "harness-1"}}
-    result = agent.invoke(
+    result = cli_agent.invoke(
         {"messages": [{"role": "user", "content": query}]},
         config=config,
     )
@@ -172,7 +178,7 @@ def main():
             resume_val = {"decisions": [{"type": "approve"}]}
         else:
             resume_val = {"decisions": [{"type": "reject"}]}
-        result = agent.invoke(Command(resume=resume_val), config=config)
+        result = cli_agent.invoke(Command(resume=resume_val), config=config)
     # Print final messages
     for msg in result.get("messages", []):
         content = getattr(msg, "content", None)

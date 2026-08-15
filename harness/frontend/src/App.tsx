@@ -35,10 +35,28 @@ export default function App() {
   };
 
   const renderMessage = (msg: any, i: number) => {
-    const content = msg.content || "";
-    const role = msg.type === "human" ? "user" : msg.type === "tool" ? "tool" : "agent";
+    let content = msg.content;
+    let role = msg.type === "human" ? "user" : msg.type === "tool" ? "tool" : "agent";
+
+    // Handle tool calls (content is array of objects or msg has tool_calls)
+    if (msg.tool_calls && msg.tool_calls.length > 0) {
+      const calls = msg.tool_calls.map((tc: any) => `${tc.name}(${JSON.stringify(tc.args)})`).join("\n");
+      return <div key={i} className="msg tool">{calls}</div>;
+    }
+
+    // Content can be string, array, or object
+    if (typeof content === "object" && content !== null) {
+      if (Array.isArray(content)) {
+        content = content.map((c: any) => typeof c === "string" ? c : JSON.stringify(c)).join("");
+      } else {
+        content = JSON.stringify(content);
+      }
+    }
+    content = content || "";
+    if (!content && role === "agent") return null;
+
     if (role === "tool") {
-      return <div key={i} className="msg tool">{typeof content === "string" ? content.slice(0, 200) : JSON.stringify(content).slice(0, 200)}</div>;
+      return <div key={i} className="msg tool">{typeof content === "string" ? content.slice(0, 300) : String(content).slice(0, 300)}</div>;
     }
     return <div key={i} className={`msg ${role}`}>{content}</div>;
   };

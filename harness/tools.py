@@ -47,14 +47,27 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
     result = subprocess.run(cmd, capture_output=True, text=True, cwd=RENDERER_DIR, timeout=300)
     if result.returncode != 0:
         return f"Render failed:\n{result.stderr[-500:]}"
-    # Extract output path from stdout, convert to /workspace/ path
-    lines = result.stdout.strip().split("\n")
-    raw_path = lines[-1] if lines else ""
+    # Parse output — render-window.mjs outputs JSON with the file path in args
+    out = result.stdout.strip()
+    raw_path = ""
+    # Search for .mp4 path in stdout (handles JSON, colored output, plain text)
+    import re
+    mp4_match = re.search(r'([A-Za-z]:\\[^\s"]+\.mp4|/[^\s"]+\.mp4)', out)
+    if mp4_match:
+        raw_path = mp4_match.group(1)
+    if not raw_path:
+        # Fallback: try JSON parse
+        try:
+            data = json.loads(out)
+            if isinstance(data.get("args"), list) and len(data["args"]) > 3:
+                raw_path = data["args"][3]
+        except (json.JSONDecodeError, TypeError):
+            pass
     # Convert absolute path to /workspace/ relative
-    if raw_path.startswith(PROJECT_ROOT):
+    if raw_path and raw_path.startswith(PROJECT_ROOT):
         rel = raw_path[len(PROJECT_ROOT):].lstrip("\\/").replace("\\", "/")
         return f"/workspace/{rel}"
-    return raw_path or "Render completed (no path)"
+    return raw_path or f"Render completed. stdout:\n{out[-300:]}"
 
 
 @tool
