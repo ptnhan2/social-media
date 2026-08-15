@@ -198,6 +198,69 @@ function TodoList({ todos }: { todos: any[] | undefined }) {
   );
 }
 
+// --- Score History Tracker ---
+function useScoreHistory() {
+  const [history, setHistory] = useState<{ cycle: number; scores: { aspect: string; score: number }[] }[]>([]);
+  const addScores = (scores: { aspect: string; score: number }[]) => {
+    setHistory(prev => [...prev, { cycle: prev.length + 1, scores }]);
+  };
+  return { history, addScores };
+}
+
+function ScoreHistoryChart({ history }: { history: { cycle: number; scores: { aspect: string; score: number }[] }[] }) {
+  if (history.length === 0) return null;
+  const aspects = history[0]?.scores.map(s => s.aspect) || [];
+  const colors: Record<string, string> = { composition: "#60a5fa", color: "#2dd4a0", motion: "#f5b544", text: "#a78bfa", pacing: "#ec6a5e" };
+  return (
+    <div className="ap-score-chart">
+      <div className="ap-score-chart-header">📊 Score History</div>
+      <div className="ap-score-chart-body">
+        {aspects.map(aspect => {
+          const scores = history.map(h => h.scores.find(s => s.aspect === aspect)?.score || 0);
+          const max = Math.max(...scores, 5);
+          return (
+            <div key={aspect} className="ap-score-row">
+              <span className="ap-score-label" style={{ color: colors[aspect] || "#888" }}>{aspect}</span>
+              <div className="ap-score-bars">
+                {scores.map((score, i) => (
+                  <div key={i} className="ap-score-bar" style={{
+                    height: `${(score / 5) * 100}%`,
+                    background: colors[aspect] || "#888",
+                    opacity: 0.4 + (i / scores.length) * 0.6,
+                  }} title={`Cycle ${i + 1}: ${score}/5`} />
+                ))}
+              </div>
+              <span className="ap-score-value">{scores[scores.length - 1]}/5</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// --- Before/After Video Player ---
+function BeforeAfterPlayer({ beforePath, afterPath }: { beforePath: string; afterPath: string }) {
+  const beforeUrl = beforePath.startsWith("/workspace/") ? `/api/project/artifact?projectId=${beforePath.split("/")[2]}&path=${beforePath.split("/").slice(3).join("/")}` : "";
+  const afterUrl = afterPath.startsWith("/workspace/") ? `/api/project/artifact?projectId=${afterPath.split("/")[2]}&path=${afterPath.split("/").slice(3).join("/")}` : "";
+  if (!beforeUrl || !afterUrl) return null;
+  return (
+    <div className="ap-before-after">
+      <div className="ap-before-after-header">🎬 Before / After</div>
+      <div className="ap-before-after-videos">
+        <div className="ap-ba-video">
+          <div className="ap-ba-label">Before</div>
+          <video controls src={beforeUrl} style={{ width: "100%", borderRadius: 4 }} />
+        </div>
+        <div className="ap-ba-video">
+          <div className="ap-ba-label">After</div>
+          <video controls src={afterUrl} style={{ width: "100%", borderRadius: 4 }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --- Main AgentPanel ---
 export function AgentPanel({ projectId, currentSec }: { projectId: string; currentSec: number }) {
   const [input, setInput] = useState("");
@@ -214,6 +277,31 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
   const todos = (stream as any).values?.todos;
   const subagents = (stream as any).subagents;
   const subagentList = subagents ? [...subagents.values()] : [];
+  const { history: scoreHistory, addScores } = useScoreHistory();
+
+  // Track video paths for before/after
+  const [videoPaths, setVideoPaths] = useState<string[]>([]);
+  useEffect(() => {
+    const allContent = messages.map((m: any) => {
+      let c = m.content;
+      if (typeof c === "object" && c !== null) {
+        if (Array.isArray(c)) c = c.map((x: any) => typeof x === "string" ? x : JSON.stringify(x)).join("");
+        else c = JSON.stringify(c);
+      }
+      return c || "";
+    }).join("\n");
+    const paths = extractVideoPaths(allContent);
+    if (paths.length > 0) setVideoPaths(prev => [...new Set([...prev, ...paths])].slice(-4));
+
+    // Track critique scores for history
+    for (const m of messages) {
+      const c = typeof m.content === "string" ? m.content : JSON.stringify(m.content || "");
+      const scores = parseCritiqueScores(c);
+      if (scores.length >= 3 && m.type === "tool") {
+        addScores(scores);
+      }
+    }
+  }, [messages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -273,6 +361,14 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
 
         {/* Todo list */}
         <TodoList todos={todos} />
+
+        {/* Score history chart */}
+        <ScoreHistoryChart history={scoreHistory} />
+
+        {/* Before/After player (if 2+ videos) */}
+        {videoPaths.length >= 2 && (
+          <BeforeAfterPlayer beforePath={videoPaths[videoPaths.length - 2]} afterPath={videoPaths[videoPaths.length - 1]} />
+        )}
 
         {/* Messages */}
         <div className="ap-messages">

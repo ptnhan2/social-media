@@ -49,3 +49,5 @@
 - **Static frames are the #1 quality killer** — VLM consistently scores motion 1/5 on static keyframes. Always add at least subtle animation to every visual element. (Source: VLM critique 2026-08-15)
 
 - **Fade duration length is not perceived as motion** — extending `chapter-card.reveal.inDurationSec` (0.45→1.1s) left the motion score at 1/5 and slightly hurt pacing (2→1). A lone opacity-fade does not read as movement to the VLM. To register as motion, an element needs translate/scale/spring displacement, not just a slower fade. Don't waste a change on fade-duration knobs alone for motion issues. (Source: cycle 2026-08-15, motion stayed 1/5)
+
+- **Stroke rendering mode is a PACE knob, not a MOTION knob** — switching `semantic-diagram.edge.stroke.mode` solid→gradient left motion at 3/5 but raised pacing 3→4. The richer gradient stroke reads as more deliberate, better-paced rendering but adds no translate/scale displacement. Use mode/color knobs to tune pacing and depth; reach for entrance/damping/displacement knobs when motion is the target. (Source: cycle 2026-08-18, pacing 3→4, motion flat 3)
