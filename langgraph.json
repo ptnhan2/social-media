@@ -1,7 +1,8 @@
 {
   "dependencies": ["."],
   "graphs": {
-    "agent": "./harness/agent.py:agent"
+    "agent": "./harness/agent.py:agent",
+    "consolidation": "./harness/consolidation_agent.py:main"
   },
   "env": ".env"
 }
