@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, StateBackend, FilesystemBackend, StoreBackend
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 from deepagents import FilesystemPermission
 
@@ -133,6 +134,7 @@ agent = create_deep_agent(
     system_prompt=SYSTEM_PROMPT,
     backend=backend,
     store=store,
+    checkpointer=MemorySaver(),
     memory=["/memories/AGENTS.md"],
     permissions=permissions,
     interrupt_on={"update_style": True},
