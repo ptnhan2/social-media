@@ -55,6 +55,7 @@ backend = CompositeBackend(
     routes={
         "/workspace/": FilesystemBackend(root_dir=PROJECT_ROOT, virtual_mode=True),
         "/memories/": StoreBackend(namespace=lambda _rt: ("harness",)),
+        "/skills/": FilesystemBackend(root_dir=os.path.join(os.path.dirname(__file__), "skills"), virtual_mode=True),
     },
 )
 
@@ -136,6 +137,7 @@ agent = create_deep_agent(
     store=store,
     checkpointer=MemorySaver(),
     memory=["/memories/AGENTS.md"],
+    skills=["/skills/"],
     permissions=permissions,
     interrupt_on={"update_style": True},
 )
