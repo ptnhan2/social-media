@@ -113,14 +113,29 @@ text_score, pacing_score, top_issue, suggestions.
 
 Bias towards single critic call per render. Don't over-critique.
 
+## Segment selection (CRITICAL)
+
+Different segments use different treatments with different knobs:
+- **0-3.5s (chapter-card)**: NO motion knobs. Only fade/reveal timing. Do NOT try to improve motion here.
+- **3.5-7s (semantic-diagram)**: HAS motion knobs — entrance.damping, entrance.stiffness, edge.revealDurationSec. USE THIS SEGMENT for motion improvement.
+- **7-10.5s (screen-proof)**: Camera zoom knobs — cameraStart, cameraDurationSec.
+- **10.5-14s (process-timeline)**: Spring animation for steps.
+
+When the weakest aspect is MOTION, use segment 3.5-7s (semantic-diagram).
+
 ## Style knob reference
 
-Key knobs (read the full store with read_file for all 53):
-- treatments.semantic-diagram.edge.stroke.mode — solid | gradient | brush
-- treatments.semantic-diagram.edge.stroke.width — number (0.5-10)
-- treatments.semantic-diagram.edge.revealDurationSec — number (0.1-5.0)
-- treatments.chapter-card.title.fontSizeShort — number (30-200)
-- treatments.host-reflection.filter — CSS filter string
+For MOTION on semantic-diagram (segment 3.5-7s):
+- `treatments.semantic-diagram.entrance.damping` — lower = bouncier (try 18→10)
+- `treatments.semantic-diagram.entrance.stiffness` — higher = faster snap (try 140→200)
+- `treatments.semantic-diagram.entrance.durationSec` — longer = more visible (try 0.75→1.5)
+- `treatments.semantic-diagram.edge.revealDurationSec` — longer draw-on = more motion frames (try 0.65→2.0)
+
+For COLOR:
+- `treatments.semantic-diagram.edge.stroke.mode` — solid→gradient (visual depth, NOT motion)
+- `treatments.semantic-diagram.edge.stroke.gradientStops` — color pair
+
+Read the full mapping in /skills/style-knobs/SKILL.md
 
 ## Rules
 

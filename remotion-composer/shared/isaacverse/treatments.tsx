@@ -111,11 +111,15 @@ const DiagramNodeView: React.FC<{
   secondaryAccent: string;
 }> = ({ node, frame, fps, accent, secondaryAccent }) => {
   const revealFrame = (node.activeFrom ?? 0) * fps;
+  const entDamping = getStyle<number>("semantic-diagram.entrance.damping", 18);
+  const entStiffness = getStyle<number>("semantic-diagram.entrance.stiffness", 140);
+  const entMass = getStyle<number>("semantic-diagram.entrance.mass", 0.8);
+  const entDur = getStyle<number>("semantic-diagram.entrance.durationSec", 0.75);
   const entrance = spring({
     frame: Math.max(0, frame - revealFrame),
     fps,
-    config: { damping: 18, stiffness: 140, mass: 0.8 },
-    durationInFrames: Math.round(0.75 * fps),
+    config: { damping: entDamping, stiffness: entStiffness, mass: entMass },
+    durationInFrames: Math.round(entDur * fps),
   });
   const activeFrame = frame >= revealFrame ? 1 : 0;
   const activePulse = activeFrame
