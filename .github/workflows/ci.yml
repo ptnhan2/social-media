@@ -24,6 +24,8 @@ jobs:
         run: |
           echo "DEEPSEEK_API_KEY=test" > .env
           echo "ZHIPU_API_KEY=test" >> .env
+          echo "LANGSMITH_API_KEY=test" >> .env
+          echo "LANGSMITH_TRACING=false" >> .env
       - name: Unit tests (domain tools)
         run: harness/.venv/bin/python harness/test_unit.py
       - name: Agent compiles
