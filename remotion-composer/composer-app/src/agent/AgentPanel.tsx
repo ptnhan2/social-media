@@ -312,7 +312,7 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
     if (!msg || isBusy) return;
     (stream as any).submit(
       { messages: [{ type: "human", content: msg }] },
-      { streamSubgraphs: true, config: { recursionLimit: 10000 } },
+      { streamSubgraphs: true, config: { recursionLimit: 50 } },
     );
     setInput("");
   };

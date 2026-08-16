@@ -131,12 +131,12 @@ def _call_vlm(frames: list[str], prompt: str) -> str:
         "https://open.bigmodel.cn/api/paas/v4/chat/completions",
         data=payload, headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        with urllib.request.urlopen(req, timeout=45) as resp:
             return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
         return f"VLM API error {e.code}: {e.read().decode()[:300]}"
     except Exception as e:
-        return f"VLM API error: {e}"
+        return f"VLM API error (timeout 45s): {e}"
 
 
 @tool

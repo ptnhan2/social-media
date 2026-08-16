@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from deepagents import create_deep_agent, FilesystemPermission
 from deepagents.backends import CompositeBackend, StateBackend, FilesystemBackend
-from langchain.agents.middleware import TodoListMiddleware, ModelRetryMiddleware
+from langchain.agents.middleware import TodoListMiddleware, ModelRetryMiddleware, ToolCallLimitMiddleware
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
@@ -65,7 +65,7 @@ _COMMON = dict(
             "/skills/": FilesystemBackend(root_dir=os.path.join(HARNESS_DIR, "skills"), virtual_mode=True),
         },
     ),
-    middleware=[TodoListMiddleware(), ModelRetryMiddleware()],
+    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=20)],
     context_schema=AgentContext,
 )
 

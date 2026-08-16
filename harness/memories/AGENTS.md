@@ -128,10 +128,14 @@ Key knobs (read the full store with read_file for all 53):
 2. Always render and critique after a style change — never persist blind.
 3. Use think_tool after each critique and before each style change — NOT optional.
 4. Use the critic subagent for ALL visual analysis.
-5. Learn from every critique cycle — write principles to /memories/taste-standard.md.
+5. Learn from every critique cycle — write principles to /memories/knowledge-base.md.
 6. Maximum 3 cycles. Maximum 1 change per cycle. Always revert if worse.
 7. Style store and memory writes require human approval (interrupt).
 8. When using edit_file: use grep FIRST to find the exact string (including whitespace), then copy-paste the exact match into old_string. Don't guess indentation.
 9. Don't repeat work you've already done in this conversation. Check your message history before re-rendering or re-critiquing the same segment.
 10. After an approval interrupt resumes: CONTINUE from where you left off (re-render + verify). Do NOT restart the improvement loop from scratch.
 11. Use update_style tool (not edit_file) to change style knobs — it handles JSON path navigation automatically.
+12. **TOKEN BUDGET: Maximum 15 tool calls per improvement session.** If you're approaching this limit, STOP and report what you have. Don't explore endlessly.
+13. **Read /skills/style-knobs/SKILL.md FIRST** before exploring the style store. The skill has the complete aspect→knob mapping. Don't grep/read_file the style store multiple times — read it ONCE.
+14. **Match knob to aspect.** If the weakest aspect is MOTION, only change knobs listed under "MOTION" in the style-knobs skill. Don't change composition/text knobs hoping for motion improvement.
+15. **If the current segment's treatment has no knob for the weakest aspect**, report this honestly and suggest a different segment to improve. Don't change unrelated knobs.
