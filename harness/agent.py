@@ -72,10 +72,26 @@ _COMMON = dict(
 agent = create_deep_agent(**_COMMON)
 
 
+def _get_checkpointer():
+    """Use Postgres checkpointer if DATABASE_URL is set, else MemorySaver."""
+    db_url = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
+    if db_url:
+        try:
+            from langgraph.checkpoint.postgres import PostgresSaver
+            return PostgresSaver.from_conn_string(db_url)
+        except ImportError:
+            pass
+    return MemorySaver()
+
+def _get_store():
+    """Use InMemoryStore for dev. Postgres store handled by LangGraph server in prod."""
+    return InMemoryStore()
+
+
 def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     from langgraph.types import Command
-    cli_agent = create_deep_agent(**_COMMON, checkpointer=MemorySaver(), store=InMemoryStore())
+    cli_agent = create_deep_agent(**_COMMON, checkpointer=_get_checkpointer(), store=_get_store())
     query = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "What can you do?"
     print(f"[harness] model={MODEL}  query: {query}\n")
     config = {"configurable": {"thread_id": "harness-1"}}

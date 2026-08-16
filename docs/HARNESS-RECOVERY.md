@@ -1,63 +1,57 @@
-# HARNESS RECOVERY FILE — Read this first after compact
+# SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-16 after full refactor + testing.
+> Updated 2026-08-17. Final state after full audit + cleanup.
 
 ## 1. PROJECT
 
 Video Agent Harness on Deep Agents, integrated into Composer (video editor).
-- LLM: DeepSeek V4 (text-only, `deepseek:deepseek-chat`)
-- VLM: GLM-4V-Flash via ZHIPU_API_KEY (for visual critique)
-- LangSmith tracing enabled (project: isaacverse-harness)
+- LLM: DeepSeek V4 (`deepseek:deepseek-chat`)
+- VLM: GLM-4V-Flash via ZHIPU_API_KEY (frame pairs for motion detection)
+- LangSmith tracing + evals (project: isaacverse-harness)
 - Agent ↔ user = Vietnamese. Code/schema = English.
 
-## 2. ARCHITECTURE (Deep Agents native assembly)
+## 2. ARCHITECTURE (native Deep Agents — no custom infra)
 
 ```
 Composer (remotion-composer/composer-app/)
-  └─ VideoEditor.tsx
-       └─ Right panel: Properties | Agent tab
-            └─ AgentPanel.tsx (chat + todos + subagent cards + approval)
-                 ↕ useStream (WebSocket)
+  └─ VideoEditor.tsx → right panel: Properties | Agent tab
+       └─ AgentPanel.tsx (chat + todos + subagent cards + approval + before/after + score chart)
+            ↕ useStream (streamSubgraphs, recursionLimit=50)
 LangGraph Server (:2024)
-  └─ agent.py (create_deep_agent)
+  └─ agent.py (create_deep_agent — 98 lines)
        ├─ model: deepseek:deepseek-chat
-       ├─ tools: render_window, visual_critique, think
-       ├─ memory: /memories/AGENTS.md, /memories/taste-standard.md
-       ├─ skills: /skills/ (editing-craft, style-knobs, visual-critique)
+       ├─ tools: render_window, visual_critique, think, update_style (harness_tools.py)
+       ├─ memory: AGENTS.md, taste-standard.md, knowledge-base.md (memories/)
+       ├─ skills: editing-craft, style-knobs, visual-critique (skills/)
        ├─ subagents: critic (GLM-4V-Flash, response_format=CritiqueResult)
        ├─ permissions: interrupt on style+memory, deny on treatment code
-       ├─ middleware: TodoListMiddleware, ModelRetryMiddleware
+       ├─ middleware: TodoList, ModelRetry, ToolCallLimit(30)
        ├─ context_schema: AgentContext (project_id, current_sec)
-       └─ backend: CompositeBackend (workspace, memories, skills)
+       └─ backend: CompositeBackend (workspace=Filesystem, memories=Filesystem, skills=Filesystem)
 ```
 
-## 3. KEY FILES
+## 3. KEY FILES (15 files total)
 
-### Agent (3 Python files + config)
-- `harness/agent.py` (92 lines) — create_deep_agent assembly
-- `harness/harness_tools.py` (180 lines) — render_window, visual_critique, think
-- `harness/subagents.py` (36 lines) — critic spec + CritiqueResult
-- `harness/memories/AGENTS.md` — behavior instructions (system prompt via memory)
-- `harness/memories/taste-standard.md` — accumulated taste principles
-
-### Frontend
-- `remotion-composer/composer-app/src/agent/AgentPanel.tsx` — chat UI in editor
-- `remotion-composer/composer-app/src/styles.css` — agent panel CSS
-- `remotion-composer/composer-app/src/composer/VideoEditor.tsx` — Properties|Agent toggle
-
-### Tests
-- `harness/test_evals.py` — 8 evals (agent responds, read_file native, think, memory read, no phantom tools)
-- `harness/test_unit.py` — 7 unit tests (think, visual_critique, render_window)
-- `harness/test_full_loop.py` — full improvement loop test (render→critique→think→edit→approve→revert→learn)
-
-### Config
-- `langgraph.json` — agent graph
-- `.env` — DEEPSEEK_API_KEY, ZHIPU_API_KEY, LANGSMITH_API_KEY, LANGSMITH_TRACING=true
-- `.github/workflows/ci.yml` — 3 CI jobs (python, frontend, ts)
+| File | Lines | Purpose |
+|------|-------|---------|
+| `agent.py` | 98 | create_deep_agent assembly |
+| `harness_tools.py` | 231 | render_window, visual_critique, think, update_style |
+| `subagents.py` | 44 | critic spec + CritiqueResult |
+| `eval.py` | 130 | LangSmith dataset (10 cases) + evaluators (code + LLM-as-judge) |
+| `test_unit.py` | 68 | Domain tool unit tests |
+| `memories/AGENTS.md` | 120 | Agent behavior (18 rules, 11-step loop, segment selection) |
+| `memories/taste-standard.md` | 35 | Accumulated taste principles |
+| `memories/knowledge-base.md` | 50 | Experiment results (failed + pending) |
+| `skills/style-knobs/SKILL.md` | 140 | Aspect→knob mapping, per-treatment detail |
+| `skills/editing-craft/SKILL.md` | 30 | Murch Rule of Six |
+| `skills/visual-critique/SKILL.md` | 57 | How to judge frames |
+| `AgentPanel.tsx` | 382 | Frontend UI in Composer |
+| `langgraph.json` | 7 | Agent graph config |
+| `.env` | — | API keys + LangSmith tracing |
+| `.github/workflows/ci.yml` | 45 | 3 CI jobs |
 
 ## 4. HOW TO RUN
 
-### Start servers
 ```powershell
 # LangGraph server (port 2024)
 $env:PYTHONIOENCODING='utf-8'
@@ -65,49 +59,50 @@ $env:PYTHONIOENCODING='utf-8'
 
 # Composer (port 5174)
 cd remotion-composer\composer-app; npx vite --port 5174
+
+# Browser: http://localhost:5174/?project=isaacverse-final → tab AGENT
 ```
 
-### Open in browser
-`http://localhost:5174/?project=isaacverse-final` → tab AGENT
+## 5. EVALS
 
-### Run tests
 ```powershell
-$py = "harness\.venv\Scripts\python.exe"
-& $py harness\test_evals.py      # 8 evals
-& $py harness\test_unit.py       # 7 unit tests
+# LangSmith eval (requires server running)
+& "harness\.venv\Scripts\python.exe" harness\eval.py
+
+# Unit tests (domain tools)
+& "harness\.venv\Scripts\python.exe" harness\test_unit.py
 ```
 
-### Check LangSmith traces
-`https://smith.langchain.com` → project "isaacverse-harness"
+View results: https://smith.langchain.com → project "isaacverse-harness"
 
-## 5. VERIFIED
+## 6. WHAT THE FRAMEWORK PROVIDES (we use)
 
-| Test | Result |
-|---|---|
-| Agent compiles (create_deep_agent) | ✅ |
-| read_file native (not phantom read_style) | ✅ |
-| think tool used for strategic reflection | ✅ |
-| Memory read before planning | ✅ |
-| No phantom tools | ✅ |
-| visual_critique (GLM-4V-Flash) | ✅ |
-| render_window (Remotion) | ✅ |
-| Full loop: render→critique→think→edit→approve→revert→learn | ✅ 58 msgs, 8 interrupts |
-| Frontend: quick actions, tool cards, status | ✅ |
-| 8 evals + 7 unit tests | ✅ all pass |
-| LangSmith tracing | ✅ configured |
+- FilesystemMiddleware: read_file, write_file, edit_file, ls, glob, grep (built-in)
+- SubAgentMiddleware: task tool + critic subagent (built-in)
+- MemoryMiddleware: AGENTS.md + taste-standard.md loaded, agent learns via edit_file (built-in)
+- SkillsMiddleware: progressive disclosure (built-in)
+- SummarizationMiddleware: auto context management (built-in)
+- HumanInTheLoopMiddleware: permission interrupts (built-in)
+- TodoListMiddleware: write_todos planning (langchain)
+- ModelRetryMiddleware: API retry (langchain)
+- ToolCallLimitMiddleware: max 30 tool calls (langchain)
+- FilesystemPermission: interrupt on style+memory, deny on treatment code (built-in)
+- LangSmith: tracing, datasets, experiments, evaluators, annotation queues
 
-## 6. SMART PATTERNS (from examples)
+## 7. WHAT WE BUILT (domain-specific only)
 
-- **think_tool** (from deep_research): agent pauses to reason before acting
-- **Hard limits**: max 3 cycles, 1 change/cycle, revert if worse, stop when scores ≥ 4
-- **Quality checklist**: 9-item verify before reporting "done"
-- **Strategic decomposition**: read memory → render → critique → think → change → verify → learn
-- **edit_file tip**: use grep first to find exact string, don't guess indentation
+- `render_window`: spawns Remotion (Node.js subprocess)
+- `visual_critique`: extracts frame pairs → GLM-4V-Flash API → structured critique
+- `think`: strategic reflection (from deep_research example pattern)
+- `update_style`: JSON path navigation for style store (avoids edit_file indentation issues)
+- `CritiqueResult`: Pydantic model for structured critique
+- `AgentPanel.tsx`: frontend UI (chat, todos, subagent cards, before/after, score chart)
+- `AGENTS.md`: 18 rules, 11-step improvement loop, segment selection guide
+- `knowledge-base.md`: experiment results with format
+- `style-knobs SKILL.md`: aspect→knob mapping, per-treatment detail
 
-## 7. NOT YET DONE (future)
+## 8. PENDING (needs user input)
 
-- Async subagents (background rendering, needs Agent Protocol server)
-- Code execution (sandbox, needs sandbox backend)
-- Outer-loop optimization (better-harness pattern, meta-agent improves harness)
-- Production deployment (Docker verified locally, needs VPS)
-- More eval cases (improvement quality, score tracking over time)
+- Browser test: click "Improve" → verify scores improve
+- LangSmith: check traces + experiment results
+- VPS + domain for production deployment

@@ -26,8 +26,8 @@ services:
     volumes:
       - ./libraries:/app/libraries
       - ./projects:/app/projects
-      - ./harness/logs:/app/harness/logs
       - ./harness/memories:/app/harness/memories
+      - ./harness/skills:/app/harness/skills
     ports:
       - "2024:2024"
     depends_on:

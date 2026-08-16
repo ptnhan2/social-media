@@ -6,15 +6,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy harness and install deps
 COPY harness/ ./harness/
 RUN python -m venv /opt/venv \
     && /opt/venv/bin/pip install --no-cache-dir \
-    deepagents langchain-deepseek langgraph-cli[inmem] langchain langgraph jsonschema
+    "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph langsmith openevals
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy project files needed for rendering
 COPY langgraph.json ./
 COPY libraries/ ./libraries/
 COPY remotion-composer/package*.json ./remotion-composer/
@@ -27,7 +25,6 @@ COPY remotion-composer/build/ ./remotion-composer/build/
 COPY tools/ ./tools/
 COPY projects/ ./projects/
 
-# Install Remotion deps
 RUN cd remotion-composer && npm install
 
 EXPOSE 2024

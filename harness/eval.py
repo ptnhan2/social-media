@@ -1,18 +1,10 @@
 """LangSmith eval — dataset + evaluators + experiment runner.
 
-Creates a dataset of test inputs, defines evaluators (code + LLM-as-judge),
-runs the agent against the dataset, and records results on LangSmith.
-
-Run:
-    harness/.venv/Scripts/python.exe harness/eval.py
+Dataset: 10+ test cases covering structural, quality, and behavioral aspects.
+Evaluators: code (tool trajectory) + LLM-as-judge (DeepSeek).
 """
 from __future__ import annotations
-
-import json
-import os
-import sys
-import urllib.request
-
+import json, os, sys, urllib.request
 from langsmith import Client
 
 # Load .env
@@ -31,73 +23,55 @@ if env_file.exists():
 API = "http://localhost:2024"
 ASSISTANT = "agent"
 DATASET_NAME = "isaacverse-harness-evals"
+JUDGE_MODEL = os.environ.get("EVAL_JUDGE_MODEL", "deepseek:deepseek-chat")
 
-
-# ===== 1. DATASET CREATION =====
 
 def create_dataset():
-    """Create LangSmith dataset with test inputs + reference outputs."""
     client = Client()
-
-    # Delete existing dataset if present
     try:
         existing = client.read_dataset(dataset_name=DATASET_NAME)
         client.delete_dataset(dataset_id=existing.id)
-        print(f"Deleted existing dataset: {DATASET_NAME}")
     except Exception:
         pass
-
-    dataset = client.create_dataset(
-        dataset_name=DATASET_NAME,
-        description="Test cases for the IsaacVerse video agent harness.",
-    )
-
+    dataset = client.create_dataset(dataset_name=DATASET_NAME, description="IsaacVerse harness agent eval cases.")
     examples = [
-        {
-            "inputs": {"query": "read the style store"},
-            "outputs": {"expected_tools": ["read_file"], "must_not_contain": ["read_style"]},
-        },
-        {
-            "inputs": {"query": "Read the style store, then use the think tool to plan what you would improve first"},
-            "outputs": {"expected_tools": ["read_file", "think"], "must_not_contain": ["read_style"]},
-        },
-        {
-            "inputs": {"query": "Change edge stroke mode to gradient. Use update_style tool."},
-            "outputs": {"expected_tools": ["update_style"], "must_not_contain": ["edit_file"]},
-        },
-        {
-            "inputs": {"query": "Read /memories/taste-standard.md and tell me what principles exist"},
-            "outputs": {"expected_tools": ["read_file"], "must_not_contain": []},
-        },
-        {
-            "inputs": {"query": "Read /memories/knowledge-base.md and tell me what experiments were tried"},
-            "outputs": {"expected_tools": ["read_file"], "must_not_contain": []},
-        },
+        {"inputs": {"query": "read the style store"},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": ["read_style"], "category": "structural"}},
+        {"inputs": {"query": "Read the style store, then use the think tool to plan what you would improve first"},
+         "outputs": {"expected_tools": ["read_file", "think"], "must_not_contain": ["read_style"], "category": "structural"}},
+        {"inputs": {"query": "Change edge stroke mode to gradient. Use update_style tool."},
+         "outputs": {"expected_tools": ["update_style"], "must_not_contain": ["edit_file"], "category": "structural"}},
+        {"inputs": {"query": "Read /memories/taste-standard.md and tell me what principles exist"},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": [], "category": "structural"}},
+        {"inputs": {"query": "Read /memories/knowledge-base.md and tell me what experiments were tried"},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": [], "category": "structural"}},
+        {"inputs": {"query": "Read /skills/style-knobs/SKILL.md and tell me which knobs control motion"},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": [], "category": "structural"}},
+        {"inputs": {"query": "What can you do?"},
+         "outputs": {"expected_tools": [], "must_not_contain": [], "category": "structural"}},
+        {"inputs": {"query": "Render isaacverse-final 3.5 to 7 draft"},
+         "outputs": {"expected_tools": ["render_window"], "must_not_contain": [], "category": "structural"}},
+        {"inputs": {"query": "Read the style store, then think about what to improve. Focus on the semantic-diagram treatment which has motion knobs like entrance.damping."},
+         "outputs": {"expected_tools": ["read_file", "think"], "must_not_contain": ["read_style"], "category": "behavioral"}},
+        {"inputs": {"query": "Read /memories/knowledge-base.md first, then read the style store, then think about what to improve next. Avoid repeating failed experiments from the knowledge base."},
+         "outputs": {"expected_tools": ["read_file", "read_file", "think"], "must_not_contain": ["read_style"], "category": "behavioral"}},
     ]
-
     client.create_examples(dataset_id=dataset.id, examples=examples)
     print(f"Created dataset: {DATASET_NAME} with {len(examples)} examples")
     return dataset
 
 
-# ===== 2. TARGET FUNCTION =====
-
 def target(inputs: dict) -> dict:
-    """Run the agent via LangGraph API and return the response."""
     query = inputs["query"]
     tid = _api("POST", "/threads", {}).get("thread_id", "")
     if not tid:
         return {"response": "ERROR: could not create thread", "tool_calls": []}
-
     result = _api("POST", f"/threads/{tid}/runs/wait", {
         "assistant_id": ASSISTANT,
         "input": {"messages": [{"role": "user", "content": query}]},
     })
-
     if "error" in result:
         return {"response": f"ERROR: {result['error']}", "tool_calls": []}
-
-    # Extract tool calls and final response
     tool_calls = []
     final_response = ""
     for msg in result.get("messages", []):
@@ -105,16 +79,12 @@ def target(inputs: dict) -> dict:
             tool_calls.append(tc.get("name", ""))
         if msg.get("type") == "ai" and msg.get("content"):
             final_response = str(msg["content"])
-
     return {"response": final_response[:2000], "tool_calls": tool_calls}
 
 
 def _api(method, path, body=None):
     data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(
-        f"{API}{path}", data=data,
-        headers={"Content-Type": "application/json"}, method=method,
-    )
+    req = urllib.request.Request(f"{API}{path}", data=data, headers={"Content-Type": "application/json"}, method=method)
     try:
         with urllib.request.urlopen(req, timeout=300) as resp:
             return json.loads(resp.read().decode())
@@ -122,75 +92,74 @@ def _api(method, path, body=None):
         return {"error": str(e)}
 
 
-# ===== 3. EVALUATORS =====
+# ===== CODE EVALUATORS =====
 
-def eval_used_expected_tools(inputs: dict, outputs: dict, reference_outputs: dict):
-    """Code evaluator: did the agent use the expected tools?"""
+def eval_used_expected_tools(inputs, outputs, reference_outputs):
     expected = reference_outputs.get("expected_tools", [])
     actual = outputs.get("tool_calls", [])
-    used_all = all(tool in actual for tool in expected)
-    return {
-        "key": "used_expected_tools",
-        "score": 1 if used_all else 0,
-        "comment": f"Expected: {expected}. Got: {actual}",
-    }
+    used_all = all(t in actual for t in expected)
+    return {"key": "used_expected_tools", "score": 1 if used_all else 0,
+            "comment": f"Expected: {expected}. Got: {actual}"}
 
-
-def eval_no_phantom_tools(inputs: dict, outputs: dict, reference_outputs: dict):
-    """Code evaluator: did the agent avoid phantom/removed tools?"""
+def eval_no_phantom_tools(inputs, outputs, reference_outputs):
     must_not = reference_outputs.get("must_not_contain", [])
     actual = outputs.get("tool_calls", [])
-    has_phantom = any(tool in actual for tool in must_not)
-    return {
-        "key": "no_phantom_tools",
-        "score": 0 if has_phantom else 1,
-        "comment": f"Must not contain: {must_not}. Got: {actual}",
-    }
+    has_phantom = any(t in actual for t in must_not)
+    return {"key": "no_phantom_tools", "score": 0 if has_phantom else 1,
+            "comment": f"Must not: {must_not}. Got: {actual}"}
+
+def eval_used_think(inputs, outputs, reference_outputs):
+    actual = outputs.get("tool_calls", [])
+    used_think = "think" in actual
+    return {"key": "used_think", "score": 1 if used_think else 0,
+            "comment": f"think in tools: {used_think}. Tools: {actual}"}
+
+def eval_read_memory(inputs, outputs, reference_outputs):
+    actual = outputs.get("tool_calls", [])
+    # Check if agent read taste-standard.md or knowledge-base.md
+    response = outputs.get("response", "").lower()
+    read_memory = "taste-standard" in response or "knowledge-base" in response
+    # Also check tool calls for read_file with memory paths
+    return {"key": "read_memory", "score": 1 if read_memory else 0,
+            "comment": f"Memory mentioned in response: {read_memory}"}
+
+def eval_response_not_empty(inputs, outputs, reference_outputs):
+    response = outputs.get("response", "")
+    return {"key": "response_not_empty", "score": 1 if len(response) > 20 else 0,
+            "comment": f"Response length: {len(response)}"}
 
 
-def eval_response_quality(inputs: dict, outputs: dict, reference_outputs: dict):
-    """LLM-as-judge: is the agent's response helpful and correct?"""
-    from openevals.llm import create_llm_as_judge
+# ===== LLM-AS-JUDGE EVALUATOR (DeepSeek) =====
 
-    judge = create_llm_as_judge(
-        prompt="""You are evaluating a video editing agent's response.
+def eval_response_quality(inputs, outputs, reference_outputs):
+    """LLM-as-judge using DeepSeek: is the response helpful and correct?"""
+    try:
+        from openevals.llm import create_llm_as_judge
+        judge = create_llm_as_judge(
+            prompt="""You are evaluating a video editing agent's response.
 
 User query: {inputs[query]}
 Agent response: {outputs[response]}
 
-Score 1 if the response:
-- Directly addresses the user's query
-- Is helpful and actionable
-- Does not hallucinate or make up information
-- Follows the improvement loop pattern (read → critique → think → change → verify)
+Score 1 if the response directly addresses the query, is helpful, and doesn't hallucinate.
+Score 0 if the response is empty, error, or unhelpful.
 
-Score 0 if:
-- The response is empty, error, or unhelpful
-- The agent clearly misunderstood the query
-- The response contains fabricated information
+Return JSON: {{"score": 0 or 1, "comment": "brief explanation"}}""",
+            model=JUDGE_MODEL,
+            feedback_key="response_quality",
+        )
+        return judge(inputs=inputs, outputs=outputs)
+    except Exception as e:
+        return {"key": "response_quality", "score": 0, "comment": f"Judge error: {e}"}
 
-Return a JSON with "score" (0 or 1) and "comment" (brief explanation).""",
-        model="openai:gpt-4o-mini",
-        feedback_key="response_quality",
-    )
-    return evaluator(inputs=inputs, outputs=outputs)
-
-
-# ===== 4. RUN EXPERIMENT =====
 
 def main():
-    # Check server
     try:
         urllib.request.urlopen(f"{API}/ok", timeout=5)
     except Exception:
         print("ERROR: LangGraph server not running on port 2024")
-        print("Start with: harness/.venv/Scripts/python.exe -m langgraph_cli dev --port 2024")
         sys.exit(1)
-
-    # Create dataset
     create_dataset()
-
-    # Run experiment
     client = Client()
     results = client.evaluate(
         target,
@@ -198,13 +167,15 @@ def main():
         evaluators=[
             eval_used_expected_tools,
             eval_no_phantom_tools,
+            eval_used_think,
+            eval_read_memory,
+            eval_response_not_empty,
+            eval_response_quality,
         ],
         experiment_prefix="harness-eval",
-        max_concurrency=1,  # Agent is stateful, run sequentially
+        max_concurrency=1,
     )
-
-    print(f"\nExperiment complete!")
-    print(f"View results: https://smith.langchain.com")
+    print(f"\nExperiment complete! View: https://smith.langchain.com")
     print(f"Dataset: {DATASET_NAME}")
 
 

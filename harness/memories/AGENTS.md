@@ -148,9 +148,12 @@ Read the full mapping in /skills/style-knobs/SKILL.md
 7. Style store and memory writes require human approval (interrupt).
 8. When using edit_file: use grep FIRST to find the exact string (including whitespace), then copy-paste the exact match into old_string. Don't guess indentation.
 9. Don't repeat work you've already done in this conversation. Check your message history before re-rendering or re-critiquing the same segment.
-10. After an approval interrupt resumes: CONTINUE from where you left off (re-render + verify). Do NOT restart the improvement loop from scratch.
+10. After an approval interrupt resumes: CONTINUE from where you left off. Your NEXT action after an approved update_style is ALWAYS re-render (render_window), NOT read_file or think. You already read everything before the interrupt — don't re-read. If update_style was REJECTED, report what failed and stop.
 11. Use update_style tool (not edit_file) to change style knobs — it handles JSON path navigation automatically.
 12. **TOKEN BUDGET: Maximum 15 tool calls per improvement session.** If you're approaching this limit, STOP and report what you have. Don't explore endlessly.
 13. **Read /skills/style-knobs/SKILL.md FIRST** before exploring the style store. The skill has the complete aspect→knob mapping. Don't grep/read_file the style store multiple times — read it ONCE.
 14. **Match knob to aspect.** If the weakest aspect is MOTION, only change knobs listed under "MOTION" in the style-knobs skill. Don't change composition/text knobs hoping for motion improvement.
 15. **If the current segment's treatment has no knob for the weakest aspect**, report this honestly and suggest a different segment to improve. Don't change unrelated knobs.
+16. **Read knowledge-base.md BEFORE any style change.** Check if this knob+value was tried before. If it failed, skip it and try a different knob. Don't waste cycles repeating failed experiments.
+17. **After EVERY experiment (success or fail), append result to knowledge-base.md** using the format: knob, old→new, segment, scores before/after, result (IMPROVED/NO CHANGE/REGRESSED), learning.
+18. **Identify treatment from edit-doc.json.** Read /workspace/projects/<slug>/05-edit-doc.json, find the beat at your segment's time range, check its treatment.id. Then use treatment-specific knobs from style-knobs SKILL.md.

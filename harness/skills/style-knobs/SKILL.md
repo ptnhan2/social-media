@@ -113,11 +113,21 @@ Key knobs: entranceDurationSec, pushStart, pushDurationSec
 
 ## Common Improvement Patterns
 
-1. **"Motion is 1/5"** → Change `edge.stroke.mode` from `solid` to `gradient` (adds draw-on animation)
-2. **"Color is 3/5"** → Change `edge.stroke.mode` to `gradient` + adjust `gradientStops`
-3. **"Text is 3/5"** → Increase `fontSizeShort` or `fontSize` by 10-20%
-4. **"Pacing is 2/5"** → Adjust `revealDurationSec` and `entrance.durationSec` for better rhythm
-5. **"Composition is 3/5"** → Adjust `accentLine.maxWidth` or `fontSizeShort` for better balance
+1. **"Motion is 1/5" on semantic-diagram** → Decrease `entrance.damping` 18→10 (bouncier entrance) OR increase `entrance.durationSec` 0.75→1.5 (longer animation) OR increase `edge.revealDurationSec` 0.65→2.0 (longer draw-on)
+2. **"Motion is 1/5" on chapter-card** → NO motion knobs available. Switch to semantic-diagram segment (3.5-7s).
+3. **"Motion is 1/5" on host-reflection** → Increase `pushStart` 1.06→1.10 (faster camera push)
+4. **"Motion is 1/5" on screen-proof** → Increase `cameraStart` 1.04→1.08 (more zoom)
+5. **"Color is 3/5"** → Change `edge.stroke.mode` to `gradient` + adjust `gradientStops`
+6. **"Text is 3/5"** → Increase `fontSizeShort` or `fontSize` by 10-20%
+7. **"Pacing is 2/5"** → Adjust `revealDurationSec` and `entrance.durationSec` for better rhythm
+8. **"Composition is 3/5"** → Adjust `accentLine.maxWidth` or `fontSizeShort` for better balance
+
+## CRITICAL: Which knobs actually affect motion
+
+- `edge.stroke.mode solid→gradient`: Changes STROKE COLOR (visual depth). Does NOT add new animation. Draw-on animation exists in both modes.
+- `entrance.damping/stiffness/mass/durationSec`: Controls node entrance spring (scale + opacity). LOWER damping = bouncier = more visible motion. These are now wired to style store.
+- `edge.revealDurationSec`: Controls how long edge draw-on takes. INCREASE = animation visible in more frames = VLM sees more motion.
+- `chapter-card.reveal.inDurationSec`: Controls fade-in speed. Does NOT add motion. Increasing makes pacing WORSE.
 
 ## Rules
 
@@ -125,4 +135,5 @@ Key knobs: entranceDurationSec, pushStart, pushDurationSec
 - Use `update_style` tool (not edit_file) to change knobs
 - After change: re-render + re-critique to verify
 - If score doesn't improve: revert and try a different knob
-- Record what worked in /memories/taste-standard.md
+- Record what worked in /memories/knowledge-base.md
+- Read /memories/knowledge-base.md BEFORE changing — don't repeat failed experiments
