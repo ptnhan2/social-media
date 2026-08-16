@@ -65,7 +65,7 @@ _COMMON = dict(
             "/skills/": FilesystemBackend(root_dir=os.path.join(HARNESS_DIR, "skills"), virtual_mode=True),
         },
     ),
-    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=20)],
+    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=30)],
     context_schema=AgentContext,
 )
 

@@ -19,15 +19,13 @@ jobs:
       - name: Install harness deps
         run: |
           python -m venv harness/.venv
-          harness/.venv/bin/pip install "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph
+          harness/.venv/bin/pip install "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph langsmith openevals
       - name: Create .env placeholder
         run: |
           echo "DEEPSEEK_API_KEY=test" > .env
           echo "ZHIPU_API_KEY=test" >> .env
-      - name: Unit tests
+      - name: Unit tests (domain tools)
         run: harness/.venv/bin/python harness/test_unit.py
-      - name: Structural evals
-        run: harness/.venv/bin/python harness/test_evals.py
       - name: Agent compiles
         run: harness/.venv/bin/python -c "import sys; sys.path.insert(0,'harness'); from agent import agent; print('OK')"
 

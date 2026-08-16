@@ -1,95 +1,63 @@
-# IsaacVerse Video Agent Harness
+# IsaacVerse Harness
 
-Self-improving video agent harness built on LangChain Deep Agents.
+Self-improving video agent built on Deep Agents, integrated into the Composer video editor.
 
-## Quick start
+## Quick Start
 
 ```powershell
-# 1. Create venv + install deps (first time only)
-& "C:\Users\DELL\AppData\Local\Programs\Python\Python313\python.exe" -m venv harness/.venv
-harness/.venv/Scripts/pip install deepagents langchain-deepseek
+# 1. Start LangGraph server (port 2024)
+$env:PYTHONIOENCODING='utf-8'
+& "harness\.venv\Scripts\python.exe" -m langgraph_cli dev --port 2024 --host 127.0.0.1
 
-# 2. Set API key (or use .env which is auto-loaded)
-$env:DEEPSEEK_API_KEY = "your-key"
-$env:HARNESS_MODEL = "deepseek:deepseek-chat"
+# 2. Start Composer (port 5174)
+cd remotion-composer\composer-app; npx vite --port 5174
 
-# 3. Run the agent
-.\harness\run.ps1 "read the style store and tell me what the edge stroke mode is"
+# 3. Open browser
+# http://localhost:5174/?project=isaacverse-final → tab AGENT
 ```
-
-## The learning loop (verified end-to-end)
-
-```
-user: "the edge lines look too plain. Change to gradient."
-  → agent reads style (read_style)
-  → agent lists knobs (list_style_knobs)
-  → agent proposes change (update_style mode → gradient)
-  → INTERRUPT: user approves
-  → governance check (contradiction + minSupport)
-  → QA gate (JSON + schema validation)
-  → style persists to disk (solid → gradient, v1 → v2)
-  → event logged + feedback captured
-  → agent confirms
-  → all future renders use gradient edges
-```
-
-## What the agent can do
-
-| Tool | Purpose |
-|---|---|
-| `render_window` | Render a video segment (draft 360p or master 1080p) |
-| `read_style` | Read the current style store JSON |
-| `list_style_knobs` | List all available style knobs with current values |
-| `update_style` | Change a style knob (APPROVAL-GATED via interrupt) |
-| `render_compare` | Render before/after a style change for visual comparison |
-| `capture_feedback` | Log a per-aspect verdict (like/dislike + note) |
-| `run_structural_qa` | Run structural QA on a project |
-| `read_file` (built-in) | Read ANY file including rendered .mp4 videos (multimodal) |
 
 ## Architecture
 
 ```
-harness/
-├── agent.py          # Deep Agents entry point (create_deep_agent)
-├── tools.py          # 7 custom tools (render, read, update, QA, feedback, compare)
-├── governance.py     # Write-gate (contradiction + minSupport ≥ 2 + event log + replay)
-├── test_governance.py # 6 governance tests (all pass)
-├── AGENTS.md         # Agent memory (persona + style knob reference + rules)
-├── run.ps1           # Convenience runner (checks API key, calls agent.py)
-├── pyproject.toml    # Python dependencies
-├── .venv/            # Dedicated venv (no Hermes dependency)
-├── skills/
-│   ├── editing-craft/SKILL.md   # Murch Rule of Six, pacing, continuity, sound
-│   └── style-knobs/SKILL.md     # Full reference for all 8 treatments' knobs
-└── logs/             # Event log + feedback log (runtime)
+Composer (remotion-composer/composer-app/)
+  └─ VideoEditor.tsx → right panel: Properties | Agent tab
+       └─ AgentPanel.tsx (chat + todos + subagent cards + approval + before/after + score chart)
+            ↕ useStream
+LangGraph Server (:2024)
+  └─ agent.py (create_deep_agent)
+       ├─ model: deepseek:deepseek-chat
+       ├─ tools: render_window, visual_critique, think, update_style
+       ├─ memory: AGENTS.md, taste-standard.md, knowledge-base.md
+       ├─ skills: editing-craft, style-knobs, visual-critique
+       ├─ subagents: critic (GLM-4V-Flash, response_format=CritiqueResult)
+       ├─ permissions: interrupt on style+memory, deny on treatment code
+       ├─ middleware: TodoList, ModelRetry, ToolCallLimit(30)
+       └─ backend: CompositeBackend (workspace, memories, skills)
 ```
 
-## Deep Agents configuration
+## Files
 
-- **Backend**: CompositeBackend
-  - `/workspace/` → FilesystemBackend (read real project files + videos)
-  - `/memories/` → StoreBackend (cross-thread memory, InMemoryStore)
-  - `/skills/` → FilesystemBackend (editing-craft + style-knobs)
-- **Checkpointer**: MemorySaver (enables interrupt resume)
-- **Permissions**: deny writes to /memories/, treatment code, style JSON (must use update_style)
-- **interrupt_on**: `{"update_style": True}` — every style change requires user approval
-- **Model**: configurable via `HARNESS_MODEL` env (default: `deepseek:deepseek-chat`)
+| File | Purpose |
+|------|---------|
+| `agent.py` | Deep Agents assembly (create_deep_agent config) |
+| `harness_tools.py` | Domain tools: render_window, visual_critique, think, update_style |
+| `subagents.py` | Critic subagent spec + CritiqueResult model |
+| `memories/AGENTS.md` | Agent behavior (loaded via MemoryMiddleware) |
+| `memories/taste-standard.md` | Accumulated taste principles |
+| `memories/knowledge-base.md` | Experiment results |
+| `skills/style-knobs/SKILL.md` | Aspect→knob mapping |
+| `skills/editing-craft/SKILL.md` | Murch Rule of Six, pacing, continuity |
+| `skills/visual-critique/SKILL.md` | How to judge video frames |
+| `eval.py` | LangSmith dataset + evaluators + experiment runner |
 
-## Style store
+## Evals
 
-`libraries/04-visual/isaacverse-style.json` — versioned JSON with per-treatment style knobs.
-All 8 treatments are evolvable: SemanticDiagram, ChapterCard, HostReflectionShot,
-ScreenProofInWorld, AudienceDemandProof, ProcessTimeline, CandidateComparison, CinematicMetaphor.
+```powershell
+# Run LangSmith eval (requires server running on :2024)
+& "harness\.venv\Scripts\python.exe" harness\eval.py
 
-## Governance
+# Run unit tests (domain tools)
+& "harness\.venv\Scripts\python.exe" harness\test_unit.py
+```
 
-- **Write gate**: contradiction check (block identical values) + minSupport ≥ 2 (new knobs need 2+ feedback entries)
-- **QA gate**: JSON + schema validation after write (revert if invalid)
-- **Event log**: append-only `harness/logs/events.jsonl` (every style change with provenance)
-- **Feedback log**: `harness/logs/feedback.jsonl` (per-aspect verdicts)
-- **Replay**: `governance.replay_from_log()` reconstructs style from event log
-
-## Related docs
-
-- `docs/EVOLUTION-HARNESS-ISAACVERSE.md` — direction + decisions + build progress
-- `docs/HARNESS-TODOLIST.md` — full 79-task todo list with status
+View results: https://smith.langchain.com → project "isaacverse-harness"
