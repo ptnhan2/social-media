@@ -1,9 +1,15 @@
-# Taste Calibration & Learning Roadmap — concrete proposals (rev 2)
+# Taste Calibration & Learning Roadmap — concrete proposals (rev 3)
 
-> Written 2026-08-19, reviewed same day. Rev 2 fixes a critical flaw found in
-> the review pass (blind votes), plus 4 hidden problems and 3 better methods.
-> Review findings are marked REVIEW. Vietnamese explanation lives in the
-> session chat; this doc is the implementation reference.
+> Written 2026-08-19, reviewed same day. Rev 2 fixed a critical blind-vote
+> flaw + 4 hidden problems. Rev 3 (same day, from user question): the KEEP
+> gate gains a THIRD exit — feedback. Binary approve/reject could not express
+> "both are bad" or "B is better but still not good enough"; feedback is now
+> a first-class channel with its own file (feedback.jsonl), 3-case diagnosis
+> rules, a wishlist for the not-expressible, and "both_bad" as both a
+> re-diagnosis trigger and an absolute-calibration signal. See "Feedback
+> processing" under Protocol v4. Review findings are marked REVIEW.
+> Vietnamese explanation lives in the session chat; this doc is the
+> implementation reference.
 
 ## REVIEW PASS — what changed and why
 
@@ -70,10 +76,59 @@ Move the human gate from the change to the KEEP decision:
    - AUTO zone + control passed + verdict says after → keep, no interrupt;
      log the cycle (this is where approval fatigue is avoided).
    - ASK zone, or control failed, or VLM is unavailable → interrupt WITH BOTH
-     VIDEOS + the VLM verdict attached. The user's approve/reject is now an
-     INFORMED pairwise vote and calibration data.
-9. Record: cycle result + (if human voted) preference pair
+     VIDEOS + the VLM verdict attached. The gate has THREE exits (rev 3 —
+     feedback is a first-class channel, not a fallback):
+       a. KEEP               → preference vote "b"
+       b. KEEP + note        → vote "b" + feedback text ("B better, text
+                               still too small")
+       c. REJECT + note      → revert + feedback text ("both bad — colors
+                               muddy") → verdict "both_bad" when the note
+                               rejects both renders
+     Notes are OPTIONAL text attached at the gate, where the user has full
+     context (both videos on screen). Votes go to preferences.jsonl; feedback
+     text goes to feedback.jsonl (different channel, different processing —
+     see "Feedback processing" below).
+9. Record: cycle result + (if human voted) preference pair + (if noted)
+   feedback record
 10. Revert on any failed gate or losing verdict (auto-revert, no interrupt)
+
+### Feedback processing (rev 3 — the third channel)
+
+When the user attaches feedback at the KEEP gate, the agent must DIAGNOSE
+before acting, in this order:
+
+1. **Maps to a knob** ("text too small" → node.fontSize up): state the
+   interpretation and feed it into the next cycle as the hypothesis. Do not
+   ask a clarifying question when the mapping is unambiguous.
+2. **Ambiguous** ("make it pop"): the agent states its interpretation as
+   concrete candidates in `think` ("'pop' = more visible animation → try
+   durationSec 0.75→1.0"), picks one, and declares it. The user corrects at
+   the next gate if wrong — the loop absorbs one-beat mistakes.
+3. **Not expressible with current knobs** ("edges should be brush strokes"):
+   the agent reports this honestly and records it in
+   `harness/memories/wishlist.md` — the structured backlog that feeds P2
+   (action-space expansion). Never force an unrelated knob.
+
+`harness/memories/feedback.jsonl` schema:
+```json
+{"ts":"...","segment":"3.5-7s","knob_under_test":"entrance.damping",
+ "a":18,"b":2,"verdict":"both_bad","note":"colors muddy on both",
+ "agent_diagnosis":"knob-mapped: node.background opacity",
+ "next_action":"cycle: node.background 0.84→0.95"}
+```
+
+### "Both bad" is a special signal (rev 3)
+
+A both_bad verdict means the problem is NOT the knob under test — it is
+upstream (wrong knob, wrong value range, or the treatment design itself).
+Rules:
+- The agent must RE-DIAGNOSE (re-critique at a higher level, consider a
+  different knob/range/treatment) instead of mechanically retrying.
+- It is also absolute-calibration data: a high both_bad rate on an aspect
+  while the VLM's absolute critique scores it 4/5 means the VLM's ABSOLUTE
+  scores are overrating that aspect. calibrate.py tracks both_bad rate per
+  aspect and can mark an aspect "absolute scores unreliable — pairwise only"
+  in oracle-trust.md.
 
 ### 1a. Collect informed votes — `harness/memories/preferences.jsonl`
 
@@ -172,13 +227,21 @@ skip it.
 
 ## P4. Learn from user feedback
 
-- **Reject-path wiring (now):** a REJECT at the protocol-v4 KEEP gate is both
-  a calibration vote (against) and a knowledge-base failure entry. One data
-  channel, two records.
-- **Free-text feedback (next):** FEEDBACK-UI-SPEC box in AgentPanel → agent
-  task "diagnose this complaint" → hypothesis → standard cycle → principle if
-  confirmed.
+REv 3: the KEEP gate IS the feedback entry point (rev 2 planned a separate
+feedback box — replaced: one entry where the user has full context, both
+videos on screen; see "Feedback processing" under Protocol v4).
+
+- **KEEP-gate notes (now):** every note (keep-with-note or reject-with-note)
+  is recorded in feedback.jsonl with full context; the agent diagnoses per
+  the 3-case rules (knob-mapped / ambiguous-with-declared-interpretation /
+  not-expressible → wishlist).
+- **Wishlist → roadmap link:** not-expressible feedback accumulates in
+  wishlist.md and directly prioritizes P2 (action-space expansion). The
+  user's desires become the backlog, not chat history.
 - **Attribution:** clip provenance (P2 ph2) maps complaints to concrete clips.
+- **Composer-origin feedback (later):** FEEDBACK-UI-SPEC's select-and-comment
+  flow routes into the SAME feedback.jsonl + diagnosis pipeline — one
+  feedback spine, many doors.
 
 ## P5. Generalization — multi-segment verification
 
@@ -203,14 +266,14 @@ per-treatment win rates; zones may need per-treatment recalibration.
   loop. If kept: timestamped experiments, compare pass rates, keep if no
   regression.
 
-## Sequencing (rev 2)
+## Sequencing (rev 3)
 
-1. **Protocol v4 restructure + P1a/1b/1c** — the flywheel; everything inherits
-   its correctness. Includes the agent smoke test (P6) since v4 changes the
-   loop the agent must follow.
+1. **Protocol v4 restructure (incl. the 3-exit KEEP gate + feedback channel) +
+   P1a/1b/1c** — the flywheel; everything inherits its correctness. Includes
+   the agent smoke test (P6) since v4 changes the loop the agent must follow.
 2. **P5 multi-segment** — validates generality while calibration data
    accumulates.
 3. **P2 Phase 1 knobs** (with per-knob pixel-diff tests).
 4. **P3 tutorial ingest.**
 5. **P2 Phase 2 generator + clip tools.**
-6. **P4 feedback box + P6 remainder.**
+6. **P6 remainder** (Composer-origin feedback door, structured output).**
