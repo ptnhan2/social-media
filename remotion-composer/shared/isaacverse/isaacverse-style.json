@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 2,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -12,7 +12,7 @@
     "semantic-diagram": {
       "edge": {
         "stroke": {
-          "mode": "gradient",
+          "mode": "solid",
           "color": "rgba(242,184,75,0.58)",
           "width": 2,
           "linecap": "round",
@@ -45,7 +45,7 @@
         "damping": 10,
         "stiffness": 140,
         "mass": 0.8,
-        "durationSec": 1.5
+        "durationSec": 0.75
       }
     },
     "chapter-card": {
