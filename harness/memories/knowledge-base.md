@@ -46,3 +46,13 @@
 - edge.revealDurationSec: 0.65 → 2.0 (expected: longer draw-on → VLM sees motion in more frames)
 - entrance.durationSec: 0.75 → 1.5 (expected: longer entrance animation → more visible motion)
 - edge.stroke.mode: solid → gradient (expected: improves COLOR, not motion — but still worth trying for overall quality)
+
+
+### Experiment: entrance.damping 18 → 10 ✅ SUCCESS
+- Date: 2026-08-19
+- Segment: isaacverse-final 3.5-7s (semantic-diagram: 'A cut is a decision')
+- Before scores: composition=5, color=5, motion=1, text=5, pacing=3
+- After scores: composition=4, color=4, motion=3, text=5, pacing=4
+- Result: IMPROVED (motion +2, pacing +1; composition -1, color -1)
+- Learning: Lower entrance.damping (18→10) makes node entrance bouncier. VLM detects this as more visible motion. Tradeoff: slight decrease in composition/color scores (possibly because bouncier animation is less 'clean'). Net improvement is positive.
+- Action: KEPT. This is the first verified score improvement.
