@@ -12,36 +12,40 @@ Video Agent Harness on Deep Agents, integrated into Composer (video editor).
 
 ## 2. CURRENT STATE — THẬN THẮNG
 
-### 🔴 CRITICAL FINDING (2026-08-19): style changes NEVER reached the render
+### ✅ RESOLVED (2026-08-19 evening): style→render chain fixed, first verified improvement
 
-This is the single most important fact. Every style-knob "improvement
-experiment" was invalid because the renders were pixel-identical regardless of
-the style value. Verified by deterministic pixel-diff (PIL):
+The full root-cause chain (4 bugs) was found and fixed in one day:
+1. **getStyle path prefix** (treatments.tsx lines 60,61,114-117): missing
+   `"treatments."` prefix → always returned hardcoded fallbacks. FIXED.
+2. **BeatContent stub regression (THE BIG ONE)**: Composer v2 commit (17bf79c)
+   replaced `<BeatTreatment/>` with an empty `<BeatContent/>` stub in every
+   beat Sequence — treatments were NEVER rendered. The video's visuals came
+   from editor overlay clips (`editor/current.json` element clips), which
+   don't read the style store at all. FIXED: EditVideo.tsx renders the
+   treatment path when no editor doc is passed (CLI/harness renders =
+   the accepted v009 master path); the editor path remains for the Composer
+   preview (which mounts IsaacVerseEditVideo with its own editor prop).
+3. **Style JSON webpack-bundling staleness**: styleLoader.ts now fetches the
+   JSON at RUNTIME from `public/isaacverse-style.json` (same pattern as the
+   edit doc) — never bundled, never cached by webpack.
+4. **Test methodology bug**: A/B renders write the same deterministic output
+   path — render B overwrites render A and you end up diffing B with B.
+   ALWAYS copy the before-render aside first.
 
-- damping 18→2: 0% diff | revealDurationSec 0.65→5.0: 0% diff
-- fontSizeShort 96→200 (2x title): 0% diff
-- a hardcoded red square added to the node component: 0 red pixels
+Verification (all through the agent's own render_window tool):
+- damping 18→2 → 0.2-1.7% pixels change (deterministic PIL diff), peaking in
+  the entrance window — change verifiably reaches the render.
+- fontSizeLong 82→150 → 47.7% pixels change.
+- render-window.mjs: bundle rebuild gated on a TS/TSX source hash (style-only
+  changes reuse the bundle + sync runtime JSONs → ~19s/render vs ~52s).
+- **First verified improvement cycle**: baseline critique (motion=2 weakest)
+  → damping 18→2 → pixel-diff gate PASS → pairwise control (A-vs-A =
+  "Identical") → pairwise verdict "WINNER: second" → KEPT (damping=2 in the
+  style store). See knowledge-base.md "FIRST VERIFIED IMPROVEMENT".
 
-→ The "GLM-4V can't detect changes" conclusion was WRONG. GLM correctly saw no
-change because there was no change. The whole measurement debate was moot.
-
-Three compounding bugs:
-1. **getStyle path prefix** (treatments.tsx lines 60,61,114-117): called
-   `getStyle("semantic-diagram....")` without `"treatments."` prefix → always
-   returned the hardcoded fallback. FIXED.
-2. **Remotion render-time bundle cache** (`%TEMP%/remotion-webpack-bundle-*` +
-   `node_modules/.cache/webpack`): served a stale bundle so source/JSON edits
-   never reached the render. PARTIALLY FIXED (render-window.mjs + render_window
-   now clear these + build an explicit bundle).
-3. **Style JSON not loaded by render** — UNRESOLVED. Even after switching
-   styleLoader.ts to runtime `fetch(staticFile("isaacverse-style.json"))`
-   (to bypass webpack), a fontSizeShort 96→200 change still gave 0 diff. The
-   served bundle does not pick up styleLoader.ts edits. Needs a dedicated
-   debugging session.
-
-**Do NOT run style experiments until bug #3 is fixed and a deterministic
-pixel-diff confirms the change reaches the render.** Verify with
-`harness/test_style_read.py` (must show mean_diff > 0).
+Oracle protocol v3 (use for ALL experiments): pixel-diff gate → premise-neutral
+pairwise with A-vs-A control → trust only WINNER/identical verdicts, never the
+VLM's narrated details (they confabulate).
 
 ### Agent hoạt động được gì
 - ✅ Agent nhúng trong Composer (tab Properties|Agent)

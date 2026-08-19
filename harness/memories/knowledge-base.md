@@ -53,6 +53,55 @@
 
 ## Measurement invalidation (2026-08-19) — READ BEFORE ANY EXPERIMENT
 
+### ✅ RESOLVED same day: full root-cause chain found and fixed
+
+The "style never reached the render" chain (below) was fixed on 2026-08-19
+evening. Final root causes (4, not 3):
+1. getStyle path prefix missing "treatments." (treatments.tsx) — FIXED.
+2. **BeatContent stub regression**: Composer v2 commit (17bf79c) replaced
+   `<BeatTreatment/>` with an empty `<BeatContent/>` stub inside every beat
+   Sequence — treatments were NEVER rendered; visuals came from editor overlay
+   clips (which don't read the style store). FIXED: EditVideo.tsx now renders
+   the treatment path when no editor doc is passed (CLI/harness renders), and
+   the editor path when the Composer preview passes one.
+3. Style JSON webpack-bundling staleness — FIXED by making styleLoader.ts fetch
+   the JSON at RUNTIME from public/ (same pattern as the edit doc).
+4. **Test methodology bug**: A/B renders write to the same deterministic output
+   path — render B overwrites render A, so "diff A vs B" compared B with B.
+   ALWAYS copy the before-render aside before rendering the after.
+
+The render pipeline now verifiably applies style changes: damping 18→2 →
+0.2-1.7% of pixels change (deterministic PIL diff), peaking during the node
+entrance. render-window.mjs rebuilds the bundle only when TS/TSX source changes
+(hash-gated) and syncs the runtime JSONs otherwise (~19s per render vs ~52s).
+
+### ✅ FIRST VERIFIED IMPROVEMENT (2026-08-19 evening)
+
+**Experiment: entrance.damping 18 → 2 — IMPROVED (pairwise verdict)**
+- Segment: isaacverse-final 3.5-7s (semantic-diagram)
+- Baseline scores (Qwen3-VL-flash, keyframe pairs): composition=4, color=3,
+  motion=2, text=3, pacing=2 — motion weakest → damping chosen for motion.
+- Pixel-diff gate: mean 0.32-0.80, changed 0.46-1.69% (change reached render).
+- Oracle control (A-vs-A, premise-neutral prompt): "Identical" — honest.
+- Pairwise verdict (A=damping18 vs B=damping2, premise-neutral): "clearly
+  different", more visible purposeful movement in second image, "WINNER: second".
+- Result: IMPROVED. KEPT (style store now has damping=2).
+- Caveats: the VLM's narrated details are confabulated (describes boxes that
+  don't exist) — only the binary verdict + direction is trustworthy. Absolute
+  scores remain coarse; use pairwise + pixel-diff gate for keep/revert decisions.
+- Learning: lower damping makes the entrance more visibly animated and the
+  pairwise oracle prefers it. Next candidates: entrance.durationSec 0.75→1.5,
+  edge.revealDurationSec 0.65→2.0.
+
+### Oracle protocol (v3 — use this for all future experiments)
+1. Render BEFORE, copy aside, apply ONE change, render AFTER.
+2. Pixel-diff gate (PIL): max mean diff > 0.05 else the change didn't reach
+   the render — abort and debug, never critique.
+3. Pairwise control A-vs-A with premise-NEUTRAL prompt — must answer
+   "identical", else the oracle is confabulating; do not trust verdicts.
+4. Pairwise A/B verdict — trust only WINNER/different-identical, not details.
+5. Record knob, values, gate numbers, verdict, decision (keep/revert).
+
 ### ROOT CAUSE FOUND 2026-08-19: style changes never reached the render
 
 Every style-knob experiment on this project was INVALID — not because the VLM

@@ -2,7 +2,7 @@ import React from "react";
 import { Composition, staticFile } from "remotion";
 import { ProjectLoader } from "../../shared/isaacverse/ProjectLoader";
 
-const FinalProject = () => <ProjectLoader src="isaacverse-final/05-edit-doc.json" editorSrc="isaacverse-final/editor/current.json" />;
+const FinalProject = () => <ProjectLoader src="isaacverse-final/05-edit-doc.json" />;
 
 const calculateFinalMetadata = async () => {
   const editDoc = await fetch(staticFile("isaacverse-final/05-edit-doc.json")).then((response) => response.json()) as { beats?: { startSec: number; durationSec: number }[] };

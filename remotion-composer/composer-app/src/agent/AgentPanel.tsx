@@ -33,10 +33,12 @@ function videoUrl(path: string): string {
 }
 function parseCritiqueScores(text: string): { aspect: string; score: number }[] {
   const scores: { aspect: string; score: number }[] = [];
-  const regex = /(composition|color|motion|text\s+legibility|text|pacing)\s*[:\-]\s*(\d)/gi;
+  // strip markdown emphasis so "**Composition**: 4/5" matches like "Composition: 4"
+  const clean = text.replace(/[*_`#]/g, "");
+  const regex = /(composition|color|motion|text\s+legibility|text|pacing)\s*[:\-]?\s*(\d)/gi;
   const seen = new Set<string>();
   let m;
-  while ((m = regex.exec(text)) !== null) {
+  while ((m = regex.exec(clean)) !== null) {
     let a = m[1].toLowerCase(); if (a.includes("text")) a = "text";
     if (!seen.has(a)) { seen.add(a); scores.push({ aspect: a, score: parseInt(m[2]) }); }
   }

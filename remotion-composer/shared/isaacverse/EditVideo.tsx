@@ -212,7 +212,24 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
       <AbsoluteFill style={gradeStyle(doc.colorGrade)}>
         {timelineBeats.map(({ clip, beat }) => (
           <Sequence key={clip?.id ?? beat.id} from={Math.round((clip?.range.startSec ?? beat.startSec) * fps)} durationInFrames={Math.max(1, Math.round(((clip?.range.endSec ?? beatEndSec(beat)) - (clip?.range.startSec ?? beat.startSec)) * fps))}>
-            <BeatCamera beat={beat}><BeatContent beat={beat} /></BeatCamera>
+            {/* Two render modes:
+                - WITHOUT an editor doc (CLI render pipeline / harness renders):
+                  render the semantic treatments + canvas-overridden elements.
+                  This is the accepted v009 master path and the ONLY path where
+                  the style store (getStyle) affects the output.
+                - WITH an editor doc (Composer preview, clip-first contract):
+                  beats render their background only; visuals come from the
+                  editor overlay clips below. */}
+            <BeatCamera beat={beat}>
+              {editor ? (
+                <BeatContent beat={beat} />
+              ) : (
+                <>
+                  <BeatTreatment beat={beat} />
+                  <BeatElementOverlay beat={beat} />
+                </>
+              )}
+            </BeatCamera>
           </Sequence>
         ))}
         {(transitionClips?.length ? transitionClips.map((clip) => ({ clip, transition: doc.transitions?.find((candidate) => candidate.id === clip.source.transitionId) })).filter((entry): entry is { clip: typeof transitionClips[number]; transition: NonNullable<typeof doc.transitions>[number] } => Boolean(entry.transition)) : (doc.transitions || []).map((transition) => ({ clip: undefined, transition }))).map(({ clip, transition }) => (

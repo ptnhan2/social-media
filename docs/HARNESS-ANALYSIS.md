@@ -3,28 +3,33 @@
 > Written 2026-08-19 after full code audit + Qwen3-VL integration.
 > Vietnamese summary in chat; this doc is the durable English reference.
 
-## 0. CRITICAL UPDATE (end of 2026-08-19 session) — the real blocker
+## 0. CRITICAL UPDATE (2026-08-19, end of day) — RESOLVED: the real blocker was a render regression
 
-While validating the VLM oracle, a deterministic pixel-diff exposed that **style
-changes never reached the render at all**. damping 18→2, revealDurationSec
-0.65→5.0, fontSizeShort 96→200, and even a hardcoded red square in the node
-component ALL produced pixel-identical renders. So every prior "the VLM can't
-detect the change" result was because there was no change to detect.
+While validating the VLM oracle, a deterministic pixel-diff exposed that style
+changes never reached the render. Root causes (4, all fixed the same day):
 
-Three compounding bugs:
-1. getStyle path prefix (FIXED in treatments.tsx)
-2. Remotion render-time bundle cache (PARTIALLY FIXED — cache clearing + explicit bundle)
-3. style JSON still not loaded by render even after a runtime-fetch styleLoader
-   rewrite (UNRESOLVED — the served bundle doesn't pick up styleLoader.ts edits)
+1. getStyle path prefix missing "treatments." (treatments.tsx) — FIXED.
+2. **BeatContent stub regression** — the Composer v2 commit (17bf79c) replaced
+   `<BeatTreatment/>` with an empty `<BeatContent/>` stub in every beat
+   Sequence, so treatments were never rendered; the video's visuals came from
+   editor overlay clips which don't read the style store. FIXED with a
+   conditional: no editor doc → treatment path (CLI/harness renders, the
+   accepted v009 master path); editor doc → editor overlay path (Composer
+   preview).
+3. Style JSON webpack staleness — FIXED by runtime fetch in styleLoader.ts.
+4. A/B test methodology bug (render B overwrites render A's deterministic
+   output path → diffing B with B).
 
-This re-prioritizes everything below: **fixing the style→render path is the
-prerequisite for ALL improvement work.** The eval/oracle/aesthetic-learning
-analysis remains valid as the design target, but none of it can be exercised
-until a style change demonstrably alters the render (verify with
-`harness/test_style_read.py`).
+After the fix, style changes verifiably reach the render (damping 18→2 →
+0.2-1.7% pixel diff; fontSizeLong 82→150 → 47.7%), and the project recorded
+its FIRST verified improvement cycle (see knowledge-base.md). The layered
+oracle (pixel-diff gate → premise-neutral pairwise with A-vs-A control) is the
+validated measurement protocol; Qwen3-VL verdicts are directionally reliable
+but its narrated details confabulate — trust only WINNER/identical outputs.
 
-The rest of this doc was written before this discovery and analyzes the
-mechanisms as designed.
+The analysis below (eval loops, agent-video interaction, aesthetic learning)
+was written during the debugging and remains the design reference; with the
+render chain fixed, Loop C is now exercisable for real.
 
 ## 1. The self-improvement mechanism — what actually exists today
 

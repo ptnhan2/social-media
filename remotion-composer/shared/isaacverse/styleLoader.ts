@@ -21,10 +21,12 @@ fetch(staticFile("isaacverse-style.json"))
   .then((s: Record<string, unknown>) => {
     activeStyle = s;
     loaded = true;
+    console.log("[STYLE] loaded ok, fontSizeShort=" + getStyle("treatments.chapter-card.title.fontSizeShort", -1) + " damping=" + getStyle("treatments.semantic-diagram.entrance.damping", -1));
     continueRender(handle);
   })
   .catch((e: unknown) => {
     loadError = e instanceof Error ? e.message : String(e);
+    console.error("[STYLE] LOAD FAILED: " + loadError);
     continueRender(handle); // proceed with empty style (fallbacks apply)
   });
 

@@ -99,23 +99,17 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
     if os.path.exists(src_style):
         shutil.copy2(src_style, dst_style)
         shutil.copy2(src_style, public_style)
-    # Aggressively clear ALL Remotion/webpack caches before rendering. The style
-    # JSON is webpack-bundled (import in styleLoader.ts); webpack's persistent
-    # filesystem cache + Remotion's render-time bundle cache frequently serve a
-    # STALE json module, so style-knob edits silently never reach the render.
-    # Clearing these is mandatory for any style change to take effect.
-    for cache in [
-        os.path.join(RENDERER_DIR, "node_modules", ".cache", "webpack"),
-        os.path.join(RENDERER_DIR, "build"),
-    ]:
-        shutil.rmtree(cache, ignore_errors=True)
-    import tempfile as _tf
-    for name in os.listdir(_tf.gettempdir()):
-        if name.startswith("remotion-webpack-bundle-"):
-            shutil.rmtree(os.path.join(_tf.gettempdir(), name), ignore_errors=True)
-    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=RENDERER_DIR, timeout=300)
+    result = None
+    for attempt in range(2):
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=RENDERER_DIR, timeout=300)
+        if result.returncode == 0:
+            break
+        # transient failures (lingering chrome-headless-shell from a previous
+        # render holding locks/ports) — wait and retry once
+        import time
+        time.sleep(5)
     if result.returncode != 0:
-        return f"Render failed:\n{(result.stderr or '')[-500:]}"
+        return f"Render failed:\n{(result.stderr or '')[-1000:]}"
     import re
     out = result.stdout.strip()
     mp4_match = re.search(r'([A-Za-z]:\\[^\s"]+\.mp4|/[^\s"]+\.mp4)', out)
@@ -232,8 +226,10 @@ def _vlm_config() -> dict:
 
 
 def _chat_completions(cfg: dict, content_blocks: list[dict], system: str, timeout: int) -> str:
-    """One chat/completions attempt against a single provider. Returns text or 'VLM API error...'."""
+    """One chat/completions attempt (with transient-network retry) against a single
+    provider. Returns text or 'VLM API error...'."""
     import urllib.request, urllib.error
+    import time as _time
     if not cfg["api_key"]:
         return f"VLM API error: {cfg['key_env']} not set"
     payload = json.dumps({
@@ -244,16 +240,28 @@ def _chat_completions(cfg: dict, content_blocks: list[dict], system: str, timeou
         ],
         "max_tokens": int(cfg.get("max_tokens", 1500)), "temperature": 0.3,
     }).encode()
-    req = urllib.request.Request(
-        f"{cfg['base_url'].rstrip('/')}/chat/completions",
-        data=payload, headers={"Authorization": f"Bearer {cfg['api_key']}", "Content-Type": "application/json"}, method="POST")
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
-    except urllib.error.HTTPError as e:
-        return f"VLM API error {e.code} ({cfg['provider']}/{cfg['model']}): {e.read().decode()[:300]}"
-    except Exception as e:
-        return f"VLM API error ({cfg['provider']}/{cfg['model']}, timeout {timeout}s): {e}"
+    last_err = None
+    for attempt in range(3):
+        req = urllib.request.Request(
+            f"{cfg['base_url'].rstrip('/')}/chat/completions",
+            data=payload, headers={"Authorization": f"Bearer {cfg['api_key']}", "Content-Type": "application/json"}, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
+        except urllib.error.HTTPError as e:
+            body = e.read().decode()[:300]
+            # 4xx = auth/billing/payload problems — retrying rarely helps, except 429 (rate limit)
+            if e.code == 429 and attempt < 2:
+                _time.sleep(5 * (attempt + 1))
+                continue
+            return f"VLM API error {e.code} ({cfg['provider']}/{cfg['model']}): {body}"
+        except Exception as e:
+            # transient network resets/timeouts — retry with backoff
+            last_err = f"VLM API error ({cfg['provider']}/{cfg['model']}, timeout {timeout}s): {e}"
+            if attempt < 2:
+                _time.sleep(5 * (attempt + 1))
+                continue
+    return last_err or "VLM API error: unknown"
 
 
 def _call_vlm(content_blocks: list[dict], system: str, timeout: int = 120) -> str:

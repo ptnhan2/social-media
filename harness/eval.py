@@ -23,7 +23,10 @@ if env_file.exists():
 API = "http://localhost:2024"
 ASSISTANT = "agent"
 DATASET_NAME = "isaacverse-harness-evals"
-JUDGE_MODEL = os.environ.get("EVAL_JUDGE_MODEL", "deepseek:deepseek-chat")
+# Judge default: glm-4-flash via the Zhipu OpenAI-compatible endpoint (working
+# key). DeepSeek is out of balance and silently scores 0 — override with
+# EVAL_JUDGE_MODEL if you switch providers.
+JUDGE_MODEL = os.environ.get("EVAL_JUDGE_MODEL", "openai:glm-4-flash")
 
 
 def create_dataset():
