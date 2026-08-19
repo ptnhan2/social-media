@@ -37,17 +37,28 @@
 
 ## Style Knobs (approved values)
 
-- `edge.stroke.mode`: gradient (approved 2026-08-14, v2) — adds depth over solid
-- `edge.stroke.width`: 2-3 (range, not single value — allows per-treatment tuning)
-- `chapter-card.title.fontSizeShort`: 110 (approved 2026-08-14, v2)
+> ⚠️ 2026-08-19 audit: the entries below came from an earlier governance era
+> (pre A/B-test invalidation) and DO NOT match the current style store
+> (`isaacverse-style.json` has mode=solid, fontSizeShort=96). They are kept as
+> *candidates*, not as approved truth. Re-approve through a valid measurement
+> (pairwise comparison or a stronger VLM — see knowledge-base.md) before
+> treating any of them as standard.
+
+- `edge.stroke.mode`: gradient — CANDIDATE (adds depth over solid; needs re-verification)
+- `edge.stroke.width`: 2-3 (range, allows per-treatment tuning)
+- `chapter-card.title.fontSizeShort`: 96-110 (current store: 96; 110 needs re-verification)
 - `edge.stroke.gradientStops`: warm-to-cool 2-color gradient
 
 ## Lessons Learned
 
 > Accumulated from feedback + critique cycles. Each lesson has provenance.
+> ⚠️ Provenance note (2026-08-19): lessons sourced from GLM-4V-Flash absolute
+> scores are weak evidence — the controlled A/B test showed that VLM could not
+> detect a real render change. Treat them as hypotheses pending re-verification
+> with a valid oracle (pairwise comparison / Qwen3-VL video input).
 
-- **Static frames are the #1 quality killer** — VLM consistently scores motion 1/5 on static keyframes. Always add at least subtle animation to every visual element. (Source: VLM critique 2026-08-15)
+- **Static frames are the #1 quality killer** — VLM consistently scores motion 1/5 on static keyframes. Always add at least subtle animation to every visual element. (Source: VLM critique 2026-08-15; caveat: keyframe sampling biases scores toward "no motion")
 
-- **Fade duration length is not perceived as motion** — extending `chapter-card.reveal.inDurationSec` (0.45→1.1s) left the motion score at 1/5 and slightly hurt pacing (2→1). A lone opacity-fade does not read as movement to the VLM. To register as motion, an element needs translate/scale/spring displacement, not just a slower fade. Don't waste a change on fade-duration knobs alone for motion issues. (Source: cycle 2026-08-15, motion stayed 1/5)
+- **Fade duration length is not perceived as motion** — extending `chapter-card.reveal.inDurationSec` (0.45→1.1s) left the motion score at 1/5 and slightly hurt pacing (2→1). A lone opacity-fade does not read as movement to the VLM. To register as motion, an element needs translate/scale/spring displacement, not just a slower fade. Don't waste a change on fade-duration knobs alone for motion issues. (Source: cycle 2026-08-15; within-session comparison — direction plausible, magnitudes uncertain)
 
-- **Stroke rendering mode is a PACE knob, not a MOTION knob** — switching `semantic-diagram.edge.stroke.mode` solid→gradient left motion at 3/5 but raised pacing 3→4. The richer gradient stroke reads as more deliberate, better-paced rendering but adds no translate/scale displacement. Use mode/color knobs to tune pacing and depth; reach for entrance/damping/displacement knobs when motion is the target. (Source: cycle 2026-08-18, pacing 3→4, motion flat 3)
+- **Stroke rendering mode is a PACE knob, not a MOTION knob** — switching `semantic-diagram.edge.stroke.mode` solid→gradient left motion at 3/5 but raised pacing 3→4. Use mode/color knobs to tune pacing and depth; reach for entrance/damping/displacement knobs when motion is the target. (Source: cycle 2026-08-18; ⚠️ cross-session comparison — NOT controlled, treat as unverified hypothesis)

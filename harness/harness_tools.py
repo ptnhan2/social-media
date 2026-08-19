@@ -1,7 +1,9 @@
 """Domain tools — render, critique, think, update_style.
 
 render_window: spawns Remotion (Node.js subprocess)
-visual_critique: calls GLM-4V-Flash API (VLM) with frame pairs
+visual_critique: calls the configured VLM. With Qwen3-VL (DashScope) the video is
+  sent NATIVELY (video_url base64) so the VLM sees actual motion. With other
+  providers (zhipu GLM-4V) it falls back to keyframe pairs.
 think: strategic reflection — agent pauses to reason before acting
 update_style: change a style knob by dot-notation path (avoids edit_file indentation issues)
 
@@ -23,6 +25,54 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RENDERER_DIR = os.path.join(PROJECT_ROOT, "remotion-composer")
 STYLE_REL = "libraries/04-visual/isaacverse-style.json"
 
+# ---------------------------------------------------------------------------
+# VLM provider configuration (all OpenAI-compatible endpoints)
+#
+#   VLM_PROVIDER = dashscope | zhipu | openrouter   (default: dashscope)
+#   VLM_MODEL    = e.g. qwen3-vl-flash | qwen3-vl-plus | qwen3.8-max
+#   DASHSCOPE_BASE_URL = override endpoint region (default: international)
+#     - international key: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+#     - China key:         https://dashscope.aliyuncs.com/compatible-mode/v1
+#   VLM_VIDEO_FPS = frames/sec sampled from video for dashscope video input (default 10)
+# ---------------------------------------------------------------------------
+
+_VLM_DEFAULTS = {
+    "dashscope": {
+        "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "model": "qwen3-vl-flash",
+        "key_env": "DASHSCOPE_API_KEY",
+        "supports_video": True,
+        "max_tokens": 1500,
+        # POST bodies above ~64KB get connection-reset on the China endpoint from
+        # some international routes. Override with VLM_MAX_BODY_KB=0 (unlimited)
+        # when routing cleanly (e.g. international endpoint).
+        "max_body_kb": 60,
+    },
+    "zhipu": {
+        "base_url": "https://open.bigmodel.cn/api/paas/v4",
+        "model": "glm-4v-flash",
+        "key_env": "ZHIPU_API_KEY",
+        "supports_video": False,
+        "max_tokens": 1024,
+    },
+    "openrouter": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "model": "openai/gpt-4o-mini",
+        "key_env": "OPENROUTER_API_KEY",
+        "supports_video": False,
+        "max_tokens": 1500,
+    },
+}
+
+
+def _resolve_workspace_path(video_path: str) -> str:
+    full = video_path
+    if full.startswith("/workspace/"):
+        full = full[len("/workspace/"):]
+    if not os.path.isabs(full):
+        full = os.path.join(PROJECT_ROOT, full.lstrip("/"))
+    return full
+
 
 @tool
 def render_window(project_slug: str, start_sec: float, end_sec: float, quality: str = "draft") -> str:
@@ -42,11 +92,30 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
     ]
     src_style = os.path.join(PROJECT_ROOT, STYLE_REL)
     dst_style = os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json")
+    # styleLoader.ts now fetches the style at RUNTIME from public/ (bypassing
+    # webpack bundling/cache), so the JSON MUST be present in public/ for the
+    # render to pick up style-knob edits.
+    public_style = os.path.join(RENDERER_DIR, "public", "isaacverse-style.json")
     if os.path.exists(src_style):
         shutil.copy2(src_style, dst_style)
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd=RENDERER_DIR, timeout=300)
+        shutil.copy2(src_style, public_style)
+    # Aggressively clear ALL Remotion/webpack caches before rendering. The style
+    # JSON is webpack-bundled (import in styleLoader.ts); webpack's persistent
+    # filesystem cache + Remotion's render-time bundle cache frequently serve a
+    # STALE json module, so style-knob edits silently never reach the render.
+    # Clearing these is mandatory for any style change to take effect.
+    for cache in [
+        os.path.join(RENDERER_DIR, "node_modules", ".cache", "webpack"),
+        os.path.join(RENDERER_DIR, "build"),
+    ]:
+        shutil.rmtree(cache, ignore_errors=True)
+    import tempfile as _tf
+    for name in os.listdir(_tf.gettempdir()):
+        if name.startswith("remotion-webpack-bundle-"):
+            shutil.rmtree(os.path.join(_tf.gettempdir(), name), ignore_errors=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=RENDERER_DIR, timeout=300)
     if result.returncode != 0:
-        return f"Render failed:\n{result.stderr[-500:]}"
+        return f"Render failed:\n{(result.stderr or '')[-500:]}"
     import re
     out = result.stdout.strip()
     mp4_match = re.search(r'([A-Za-z]:\\[^\s"]+\.mp4|/[^\s"]+\.mp4)', out)
@@ -64,17 +133,19 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
     return raw_path or f"Render completed. stdout:\n{out[-300:]}"
 
 
-def _extract_keyframes(video_path: str, max_frames: int = 4) -> list[str]:
-    """Extract keyframes from video as base64 PNG strings.
-    
-    Extracts frame PAIRS (t, t+0.08s) so VLM can detect motion via frame differences.
+def _extract_keyframes(video_path: str, max_frames: int = 4, jpeg: bool = False, budget_kb: int | None = None) -> list[str]:
+    """Extract keyframes from video as base64 strings.
+
+    Frame PAIRS (t, t+0.08s) sampled evenly across the clip, so the VLM can
+    detect motion via intra-pair differences and progression via inter-pair.
     Returns pairs as adjacent frames: [frame_t1, frame_t1+0.08, frame_t2, frame_t2+0.08, ...]
+
+    jpeg=True + budget_kb: re-encode frames as JPEG (512px, q55) and drop the
+    last pairs until the total base64 payload fits the budget — needed for
+    DashScope's China endpoint, which resets connections with POST bodies
+    above ~64KB from international routes.
     """
     full = video_path
-    if full.startswith("/workspace/"):
-        full = full[len("/workspace/"):]
-    if not os.path.isabs(full):
-        full = os.path.join(PROJECT_ROOT, full.lstrip("/"))
     if not os.path.exists(full):
         return []
     probe = subprocess.run(
@@ -86,82 +157,148 @@ def _extract_keyframes(video_path: str, max_frames: int = 4) -> list[str]:
     except Exception:
         pass
     frames: list[str] = []
-    # Extract frame pairs: for each sample point, get frame at t and t+0.08s
-    # This lets the VLM see motion by comparing adjacent frames
     pair_offset = 0.08  # 80ms between pair frames (~2-3 frames at 30fps)
-    num_pairs = max_frames // 2  # 4 frames = 2 pairs
-    interval = duration / (num_pairs + 1)
+    num_pairs = max_frames // 2
+    # Bias the FIRST pair into the entrance animation (most treatments animate
+    # in during the first ~1s) — even spacing made VLMs consistently miss motion.
+    first_t = min(0.7, duration / 4)
+    pair_times = [first_t]
+    if num_pairs > 1:
+        pair_times.append(max(first_t * 2, duration * 0.5))
+    if num_pairs > 2:
+        interval = duration / (num_pairs + 1)
+        pair_times = [interval * (i + 1) for i in range(num_pairs)]
     import tempfile, shutil
     tmpdir = tempfile.mkdtemp()
+    if jpeg:
+        vf, ext, qarg = "scale=512:-1", "jpg", ["-q:v", "55"]
+    else:
+        vf, ext, qarg = "scale=640:-1", "png", []
     for i in range(num_pairs):
-        t = interval * (i + 1)
+        t = pair_times[i] if i < len(pair_times) else (duration / (num_pairs + 1)) * (i + 1)
         for j, time_offset in enumerate([0, pair_offset]):
-            frame_path = os.path.join(tmpdir, f"frame_{i:02d}_{j}.png")
+            frame_path = os.path.join(tmpdir, f"frame_{i:02d}_{j}.{ext}")
             actual_t = min(t + time_offset, duration - 0.01)
             subprocess.run(
                 ["ffmpeg", "-y", "-ss", str(actual_t), "-i", str(full),
-                 "-frames:v", "1", "-q:v", "2", "-vf", "scale=640:-1", frame_path],
+                 "-frames:v", "1", *qarg, "-vf", vf, frame_path],
                 capture_output=True, timeout=30)
             if os.path.exists(frame_path):
                 with open(frame_path, "rb") as f:
-                    b64 = base64.b64encode(f.read()).decode()
-                    frames.append(b64)
+                    frames.append(base64.b64encode(f.read()).decode())
     shutil.rmtree(tmpdir, ignore_errors=True)
+    if budget_kb is not None:
+        limit = budget_kb * 1024
+        while frames and sum(len(f) for f in frames) > limit:
+            frames = frames[:-2]  # drop the last pair
     return frames
 
 
-def _call_vlm(frames: list[str], prompt: str) -> str:
-    """Call VLM (GLM-4V-Flash via Zhipu API) with image frames."""
+def _encode_video(video_path: str) -> str | None:
+    """Base64-encode a whole video for native VLM input (Qwen3-VL video_url).
+
+    Returns None when the file is > 7MB — the OpenAI-compatible base64 limit
+    for video on DashScope; larger files need a public URL instead.
+    """
+    try:
+        if os.path.getsize(video_path) > 7 * 1024 * 1024:
+            return None
+        with open(video_path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except OSError:
+        return None
+
+
+def _provider_config(provider: str) -> dict:
+    """Build a VLM config for a specific provider name (shared env overrides)."""
+    cfg = dict(_VLM_DEFAULTS[provider])
+    cfg["provider"] = provider
+    if provider == "dashscope" and os.environ.get("DASHSCOPE_BASE_URL"):
+        cfg["base_url"] = os.environ["DASHSCOPE_BASE_URL"]
+    cfg["api_key"] = os.environ.get(cfg["key_env"], "")
+    return cfg
+
+
+def _vlm_config() -> dict:
+    provider = os.environ.get("VLM_PROVIDER", "dashscope").lower()
+    if provider not in _VLM_DEFAULTS:
+        provider = "dashscope"
+    cfg = _provider_config(provider)
+    if os.environ.get("VLM_MODEL"):
+        cfg["model"] = os.environ["VLM_MODEL"]
+    if os.environ.get("VLM_BASE_URL"):
+        cfg["base_url"] = os.environ["VLM_BASE_URL"]
+    return cfg
+
+
+def _chat_completions(cfg: dict, content_blocks: list[dict], system: str, timeout: int) -> str:
+    """One chat/completions attempt against a single provider. Returns text or 'VLM API error...'."""
     import urllib.request, urllib.error
-    api_key = os.environ.get("ZHIPU_API_KEY", "")
-    if not api_key:
-        return "ERROR: ZHIPU_API_KEY not set."
-    content = [{"type": "text", "text": prompt}]
-    for b64 in frames:
-        content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
+    if not cfg["api_key"]:
+        return f"VLM API error: {cfg['key_env']} not set"
     payload = json.dumps({
-        "model": "glm-4v-flash",
+        "model": cfg["model"],
         "messages": [
-            {"role": "system", "content": "You are a professional video editor and art director. Analyze video frames and provide structured visual critique."},
-            {"role": "user", "content": content},
+            {"role": "system", "content": system},
+            {"role": "user", "content": content_blocks},
         ],
-        "max_tokens": 1000, "temperature": 0.3,
+        "max_tokens": int(cfg.get("max_tokens", 1500)), "temperature": 0.3,
     }).encode()
     req = urllib.request.Request(
-        "https://open.bigmodel.cn/api/paas/v4/chat/completions",
-        data=payload, headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}, method="POST")
+        f"{cfg['base_url'].rstrip('/')}/chat/completions",
+        data=payload, headers={"Authorization": f"Bearer {cfg['api_key']}", "Content-Type": "application/json"}, method="POST")
     try:
-        with urllib.request.urlopen(req, timeout=45) as resp:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
-        return f"VLM API error {e.code}: {e.read().decode()[:300]}"
+        return f"VLM API error {e.code} ({cfg['provider']}/{cfg['model']}): {e.read().decode()[:300]}"
     except Exception as e:
-        return f"VLM API error (timeout 45s): {e}"
+        return f"VLM API error ({cfg['provider']}/{cfg['model']}, timeout {timeout}s): {e}"
+
+
+def _call_vlm(content_blocks: list[dict], system: str, timeout: int = 120) -> str:
+    """Call the configured VLM with automatic provider fallback.
+
+    Tries VLM_PROVIDER first; on auth/billing/network failure falls back to the
+    other configured providers (image content is portable across all of them).
+    Returns the first successful response, annotated with the serving provider.
+    """
+    primary = _vlm_config()
+    chain = [primary] + [_provider_config(n) for n in _VLM_DEFAULTS if n != primary["provider"]]
+    errors = []
+    for cfg in chain:
+        if not cfg["api_key"]:
+            continue
+        result = _chat_completions(cfg, content_blocks, system, timeout)
+        if not result.startswith("VLM API error"):
+            if cfg["provider"] != primary["provider"]:
+                result += f"\n[served by fallback provider {cfg['provider']}/{cfg['model']}; primary {primary['provider']} failed: {errors[-1][:150] if errors else 'unknown'}]"
+            return result
+        errors.append(f"{cfg['provider']}/{cfg['model']}: {result[:200]}")
+    return "VLM API error — all providers failed:\n" + "\n".join(errors)
+
+
+_VLM_SYSTEM = "You are a professional video editor and art director. Analyze video and provide structured visual critique."
 
 
 @tool
 def visual_critique(video_path: str, aspect: str = "all") -> str:
-    """Analyze a rendered video using VLM (GLM-4V-Flash).
+    """Analyze a rendered video using the configured VLM (default: Qwen3-VL via DashScope).
 
-    Extracts keyframes, sends to VLM, returns structured critique.
-    Use this to evaluate composition, color, motion, text, pacing.
+    With a video-native VLM (Qwen3-VL) the WHOLE VIDEO is sent directly, so the
+    critique sees actual motion, timing and pacing. With image-only VLMs it falls
+    back to keyframe pairs. Returns structured critique.
 
     Args:
         video_path: Path to .mp4 (with /workspace/ prefix or relative).
         aspect: 'all', 'composition', 'color', 'motion', 'text', 'pacing'.
     """
-    full = video_path
-    if full.startswith("/workspace/"):
-        full = full[len("/workspace/"):]
-    if not os.path.isabs(full):
-        full = os.path.join(PROJECT_ROOT, full.lstrip("/"))
+    full = _resolve_workspace_path(video_path)
     if not os.path.exists(full):
         return f"Video not found: {full}"
-    frames = _extract_keyframes(full, max_frames=4)
-    if not frames:
-        return f"Could not extract frames from: {full}"
+    cfg = _vlm_config()
     prompts = {
-        "all": "Analyze these video frames. For each aspect, give a score (1-5) and 1-2 sentences:\n1. Composition\n2. Color\n3. Motion\n4. Text legibility\n5. Pacing\n\nEnd with 'TOP ISSUE:' and the single most impactful improvement.",
+        "all": "Analyze this video. For each aspect, give a score (1-5) and 1-2 sentences:\n1. Composition\n2. Color\n3. Motion\n4. Text legibility\n5. Pacing\n\nEnd with 'TOP ISSUE:' and the single most impactful improvement.",
         "composition": "Analyze composition only. Score 1-5 with feedback.",
         "color": "Analyze color only. Score 1-5 with feedback.",
         "motion": "Analyze motion only. Score 1-5 with feedback.",
@@ -169,9 +306,40 @@ def visual_critique(video_path: str, aspect: str = "all") -> str:
         "pacing": "Analyze pacing only. Score 1-5 with feedback.",
     }
     prompt = prompts.get(aspect, prompts["all"])
+
+    # --- Preferred path: native video input (Qwen3-VL via DashScope) ---
+    # video_url content is provider-specific, so no cross-provider fallback here —
+    # on failure we degrade to keyframe pairs below.
+    if cfg["supports_video"]:
+        video_b64 = _encode_video(full)
+        max_body_kb = int(os.environ.get("VLM_MAX_BODY_KB", str(cfg.get("max_body_kb", 0))))
+        payload_ok = video_b64 is not None and (max_body_kb <= 0 or len(video_b64) <= max_body_kb * 1024)
+        if payload_ok:
+            fps = float(os.environ.get("VLM_VIDEO_FPS", "10"))
+            content = [
+                {"type": "video_url", "video_url": {"url": f"data:video/mp4;base64,{video_b64}"}, "fps": fps},
+                {"type": "text", "text": prompt},
+            ]
+            critique = _chat_completions(cfg, content, _VLM_SYSTEM + " You are given the actual video (sampled frames), so judge motion and pacing from the temporal changes you observe.", 180)
+            if not critique.startswith("VLM API error"):
+                return f"Visual critique ({aspect}) of {video_path} [VLM: {cfg['provider']}/{cfg['model']} — native video @ {fps}fps]:\n\n{critique}"
+            # native-video call failed (billing/auth) — fall through to frames
+
+    # --- Fallback: keyframe pairs (any provider, with provider fallback chain) ---
+    # DashScope China endpoint resets connections with POST bodies > ~64KB from
+    # international routes — use compressed JPEG frames with a strict budget.
+    if cfg["provider"] == "dashscope":
+        frames = _extract_keyframes(full, max_frames=4, jpeg=True, budget_kb=52)
+    else:
+        frames = _extract_keyframes(full, max_frames=4)
+    if not frames:
+        return f"Could not extract frames from: {full}"
     prompt += "\n\nContext: These are frames from an IsaacVerse-style story-driven video. Frames are sent in PAIRS (consecutive frames 80ms apart) — compare adjacent frames to detect MOTION and animation. If frames in a pair look identical, there is no motion at that point."
-    critique = _call_vlm(frames, prompt)
-    return f"Visual critique ({aspect}) of {video_path}:\n\n{critique}"
+    content = [{"type": "text", "text": prompt}]
+    for b64 in frames:
+        content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
+    critique = _call_vlm(content, _VLM_SYSTEM)
+    return f"Visual critique ({aspect}) of {video_path} [VLM: {cfg['provider']}/{cfg['model']} — keyframe pairs]:\n\n{critique}"
 
 
 @tool

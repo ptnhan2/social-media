@@ -57,8 +57,8 @@ const Edge: React.FC<{
   const to = nodes.get(edge.to);
   if (!from || !to) return null;
 
-  const ss = getStyle<StrokeStyle>("semantic-diagram.edge.stroke", defaultStroke);
-  const revealDur = getStyle<number>("semantic-diagram.edge.revealDurationSec", 0.65);
+  const ss = getStyle<StrokeStyle>("treatments.semantic-diagram.edge.stroke", defaultStroke);
+  const revealDur = getStyle<number>("treatments.semantic-diagram.edge.revealDurationSec", 0.65);
   const revealFrame = (edge.revealAt ?? 0) * fps;
   const progress = interpolate(frame, [revealFrame, revealFrame + revealDur * fps], [0, 1], {
     easing: Easing.out(Easing.cubic),
@@ -111,10 +111,10 @@ const DiagramNodeView: React.FC<{
   secondaryAccent: string;
 }> = ({ node, frame, fps, accent, secondaryAccent }) => {
   const revealFrame = (node.activeFrom ?? 0) * fps;
-  const entDamping = getStyle<number>("semantic-diagram.entrance.damping", 18);
-  const entStiffness = getStyle<number>("semantic-diagram.entrance.stiffness", 140);
-  const entMass = getStyle<number>("semantic-diagram.entrance.mass", 0.8);
-  const entDur = getStyle<number>("semantic-diagram.entrance.durationSec", 0.75);
+  const entDamping = getStyle<number>("treatments.semantic-diagram.entrance.damping", 18);
+  const entStiffness = getStyle<number>("treatments.semantic-diagram.entrance.stiffness", 140);
+  const entMass = getStyle<number>("treatments.semantic-diagram.entrance.mass", 0.8);
+  const entDur = getStyle<number>("treatments.semantic-diagram.entrance.durationSec", 0.75);
   const entrance = spring({
     frame: Math.max(0, frame - revealFrame),
     fps,

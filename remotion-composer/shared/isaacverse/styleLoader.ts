@@ -1,6 +1,32 @@
-import externalStyle from "./isaacverse-style.json";
+import { delayRender, continueRender, staticFile } from "remotion";
 
-let activeStyle: Record<string, unknown> = externalStyle as unknown as Record<string, unknown>;
+// The style store is loaded at RUNTIME via fetch (not webpack-bundled) so that
+// style-knob edits always take effect on the next render. Bundling the JSON
+// (the previous `import externalStyle from "./isaacverse-style.json"`) let
+// webpack's persistent cache serve a stale module, so edits silently never
+// reached the render. Fetching from public/ at render time bypasses that cache.
+// render-window.mjs / render_window copy the current style JSON to
+// remotion-composer/public/isaacverse-style.json before each render.
+
+let activeStyle: Record<string, unknown> = {};
+let loaded = false;
+let loadError: string | null = null;
+const handle = delayRender("Loading isaacverse-style.json");
+
+fetch(staticFile("isaacverse-style.json"))
+  .then((r) => {
+    if (!r.ok) throw new Error(`style fetch failed: ${r.status}`);
+    return r.json();
+  })
+  .then((s: Record<string, unknown>) => {
+    activeStyle = s;
+    loaded = true;
+    continueRender(handle);
+  })
+  .catch((e: unknown) => {
+    loadError = e instanceof Error ? e.message : String(e);
+    continueRender(handle); // proceed with empty style (fallbacks apply)
+  });
 
 export function getStyle<T>(path: string, fallback: T): T {
   const parts = path.split(".");
@@ -15,6 +41,9 @@ export function getStyle<T>(path: string, fallback: T): T {
 export function setActiveStyle(style: Record<string, unknown>): void {
   activeStyle = style;
 }
+
+export const isStyleLoaded = () => loaded;
+export const styleLoadError = () => loadError;
 
 export type StrokeStyle = {
   mode: "solid" | "gradient" | "brush";

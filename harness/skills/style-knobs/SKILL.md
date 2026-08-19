@@ -113,7 +113,7 @@ Key knobs: entranceDurationSec, pushStart, pushDurationSec
 
 ## Common Improvement Patterns
 
-1. **"Motion is 1/5" on semantic-diagram** → Decrease `entrance.damping` 18→10 (bouncier entrance) OR increase `entrance.durationSec` 0.75→1.5 (longer animation) OR increase `edge.revealDurationSec` 0.65→2.0 (longer draw-on)
+1. **"Motion is 1/5" on semantic-diagram** → Decrease `entrance.damping` 18→2 (DRASTIC — 18→10 was undetectable) OR increase `entrance.durationSec` 0.75→1.5 (longer animation) OR increase `edge.revealDurationSec` 0.65→2.0 (longer draw-on)
 2. **"Motion is 1/5" on chapter-card** → NO motion knobs available. Switch to semantic-diagram segment (3.5-7s).
 3. **"Motion is 1/5" on host-reflection** → Increase `pushStart` 1.06→1.10 (faster camera push)
 4. **"Motion is 1/5" on screen-proof** → Increase `cameraStart` 1.04→1.08 (more zoom)
@@ -125,9 +125,16 @@ Key knobs: entranceDurationSec, pushStart, pushDurationSec
 ## CRITICAL: Which knobs actually affect motion
 
 - `edge.stroke.mode solid→gradient`: Changes STROKE COLOR (visual depth). Does NOT add new animation. Draw-on animation exists in both modes.
-- `entrance.damping/stiffness/mass/durationSec`: Controls node entrance spring (scale + opacity). LOWER damping = bouncier = more visible motion. These are now wired to style store.
-- `edge.revealDurationSec`: Controls how long edge draw-on takes. INCREASE = animation visible in more frames = VLM sees more motion.
+- `entrance.damping/stiffness/mass/durationSec`: Controls node entrance spring (scale + opacity). LOWER damping = bouncier. Wired to style store.
+- `edge.revealDurationSec`: Controls how long edge draw-on takes. INCREASE = animation spans more frames.
 - `chapter-card.reveal.inDurationSec`: Controls fade-in speed. Does NOT add motion. Increasing makes pacing WORSE.
+
+## CRITICAL: Measurement limits (2026-08-19)
+
+- GLM-4V-Flash + 4 keyframes could NOT detect damping 18→10 (controlled A/B: zero delta).
+- For motion changes, use DRASTIC values (damping 18→2, durationSec 0.75→1.5) and verify
+  with pairwise comparison (both videos in ONE critique) or a video-native VLM (Qwen3-VL).
+- Absolute 1-5 scores from different sessions are NEVER comparable — VLM is non-deterministic.
 
 ## Rules
 

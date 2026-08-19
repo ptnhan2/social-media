@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -58,13 +59,50 @@ export const runRemotion = (args, { dryRun = false } = {}) => {
   return { command, args, status: result.status ?? 0 };
 };
 
+// Build a fresh bundle to a stable temp dir, then render from it.
+// We CANNOT pass the entry point directly to `remotion render` because Remotion
+// caches its internal render-time bundle in %TEMP%/remotion-webpack-bundle-* and
+// reuses it even when source/style files change — so style-knob edits never
+// reached the render (every "VLM can't detect changes" A/B had identical videos).
+// `remotion bundle <entry> <out>` always rebuilds to the named path, bypassing
+// that cache; rendering from the bundle dir then uses the fresh code.
+const bundleCacheDir = () => {
+  // RELATIVE path inside composerRoot — avoids .cmd-shim + shell quoting issues
+  // with absolute temp paths (backslashes/spaces) on Windows. `build` is the
+  // remotion default and is reliably accepted as both bundle-out and render-input.
+  return process.env.REMOTION_BUNDLE_DIR || "build";
+};
+
+export function buildBundle(entry) {
+  const entryPoint = entry || `projects/isaacverse-final/index.tsx`;
+  const outDir = bundleCacheDir();
+  // wipe the bundle dir, webpack filesystem cache, AND remotion's render-time
+  // bundle temp dirs so source/style-JSON edits are GUARANTEED to reach the
+  // render. Without all three, a stale cache silently serves old modules
+  // (including the imported isaacverse-style.json) and style-knob changes never
+  // affect the output — every prior "VLM can't detect changes" A/B had identical
+  // videos because of this.
+  try { fs.rmSync(path.join(composerRoot, outDir), { recursive: true, force: true }); } catch {}
+  try { fs.rmSync(path.join(composerRoot, "node_modules", ".cache", "webpack"), { recursive: true, force: true }); } catch {}
+  try {
+    const tmp = os.tmpdir();
+    for (const name of fs.readdirSync(tmp)) {
+      if (name.startsWith("remotion-webpack-bundle-")) fs.rmSync(path.join(tmp, name), { recursive: true, force: true });
+    }
+  } catch {}
+  const r = runRemotion(["bundle", entryPoint, outDir]);
+  return outDir;
+}
+
 export function buildWindowRender({ slug, composition, entry, editDocPath, startSec, endSec, quality = "draft", output, paddingSec = 0.45, scale, dryRun = false }) {
   const info = projectInfo(slug, editDocPath);
   const window = computeWindow({ startSec, endSec, fps: info.fps, durationSec: info.durationSec, paddingSec });
   const qualityPreset = preset(quality);
   const outputPath = output || path.join(workspaceRoot, "projects", slug, "renders", "windows", `${slug}-${quality}-${window.startSec.toFixed(2)}-${window.endSec.toFixed(2)}.mp4`);
-  const args = ["render", entry || `projects/${slug}/index.tsx`, composition || `${slug}-30s`, outputPath, `--frames=${window.startFrame}-${window.endFrame}`, `--scale=${typeof scale === "number" && scale > 0 ? scale : qualityPreset.scale}`, `--concurrency=${qualityPreset.concurrency}`, `--x264-preset=${qualityPreset.x264Preset}`, `--crf=${qualityPreset.crf}`, "--gl=angle"];
-  return { ...window, outputPath, command: runRemotion(args, { dryRun }), args };
+  // Step 1: fresh bundle (picks up style/source edits). Step 2: render from it.
+  const bundleDir = dryRun ? "<bundle>" : buildBundle(entry);
+  const args = ["render", bundleDir, composition || `${slug}-30s`, outputPath, `--frames=${window.startFrame}-${window.endFrame}`, `--scale=${typeof scale === "number" && scale > 0 ? scale : qualityPreset.scale}`, `--concurrency=${qualityPreset.concurrency}`, `--x264-preset=${qualityPreset.x264Preset}`, `--crf=${qualityPreset.crf}`, "--gl=angle"];
+  return { ...window, outputPath, bundleDir, command: runRemotion(args, { dryRun }), args };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {

@@ -12,36 +12,52 @@ Video Agent Harness on Deep Agents, integrated into Composer (video editor).
 
 ## 2. CURRENT STATE — THẬN THẮNG
 
+### 🔴 CRITICAL FINDING (2026-08-19): style changes NEVER reached the render
+
+This is the single most important fact. Every style-knob "improvement
+experiment" was invalid because the renders were pixel-identical regardless of
+the style value. Verified by deterministic pixel-diff (PIL):
+
+- damping 18→2: 0% diff | revealDurationSec 0.65→5.0: 0% diff
+- fontSizeShort 96→200 (2x title): 0% diff
+- a hardcoded red square added to the node component: 0 red pixels
+
+→ The "GLM-4V can't detect changes" conclusion was WRONG. GLM correctly saw no
+change because there was no change. The whole measurement debate was moot.
+
+Three compounding bugs:
+1. **getStyle path prefix** (treatments.tsx lines 60,61,114-117): called
+   `getStyle("semantic-diagram....")` without `"treatments."` prefix → always
+   returned the hardcoded fallback. FIXED.
+2. **Remotion render-time bundle cache** (`%TEMP%/remotion-webpack-bundle-*` +
+   `node_modules/.cache/webpack`): served a stale bundle so source/JSON edits
+   never reached the render. PARTIALLY FIXED (render-window.mjs + render_window
+   now clear these + build an explicit bundle).
+3. **Style JSON not loaded by render** — UNRESOLVED. Even after switching
+   styleLoader.ts to runtime `fetch(staticFile("isaacverse-style.json"))`
+   (to bypass webpack), a fontSizeShort 96→200 change still gave 0 diff. The
+   served bundle does not pick up styleLoader.ts edits. Needs a dedicated
+   debugging session.
+
+**Do NOT run style experiments until bug #3 is fixed and a deterministic
+pixel-diff confirms the change reaches the render.** Verify with
+`harness/test_style_read.py` (must show mean_diff > 0).
+
 ### Agent hoạt động được gì
 - ✅ Agent nhúng trong Composer (tab Properties|Agent)
 - ✅ Agent dùng native Deep Agents (filesystem, memory, skills, subagents, permissions, HITL)
 - ✅ Agent dùng `read_file` (built-in), `think`, `update_style`, `render_window`, `visual_critique`
-- ✅ Agent delegate to critic subagent → GLM-4V-Flash → structured CritiqueResult
-- ✅ Agent đọc memory trước khi hành động (taste-standard.md, knowledge-base.md)
-- ✅ Agent dùng think tool cho strategic reflection
+- ✅ Agent delegate to critic subagent → VLM → structured CritiqueResult
 - ✅ LangSmith tracing active, eval chạy 10 cases × 6 evaluators
-- ✅ Docker build + run thành công (Postgres + LangGraph + nginx, 3 services)
-- ✅ Token limits: recursionLimit=50, ToolCallLimit=30, VLM timeout=45s
+- ✅ Docker build + run thành công (Postgres + LangGraph + nginx)
+- ✅ VLM provider chain with auto-fallback (Qwen3-VL DashScope → GLM → OpenRouter)
 
 ### Agent CHƯA chứng minh được gì
-- ❌ **Cơ chế improvement CHƯA được verify** — A/B test có kiểm soát (cùng session, cùng VLM) cho thấy damping 18→10 → scores GIỐNG NHAU (4,4,3,3 → 4,4,3,3). Không có cải thiện detectable.
-- ❌ **VLM có thể không nhạy đủ** — GLM-4V-Flash nhìn keyframes tĩnh, có thể không detect được spring animation differences.
-- ❌ **Claim trước đó (motion 1→3) SAI** — so sánh 2 session khác nhau, VLM non-deterministic. Test có kiểm soát bác bỏ.
-- ❌ Loop repetition sau interrupt (agent re-reads file thay vì continue)
-- ❌ Render đôi khi fail khi chạy qua agent (nhưng works khi gọi trực tiếp)
-
-## 3. VẤN ĐỀ CỐT LÕI CHƯA GIẢI QUYẾT
-
-**Làm sao biết cơ chế hiện tại giúp cải thiện video?**
-
-Cơ chế: render → VLM critique (5 scores) → change knob → re-render → VLM critique → so sánh scores.
-
-Vấn đề: VLM (GLM-4V-Flash) nhận 4 keyframes tĩnh (2 pairs, 80ms apart). Có thể không phân biệt được khác biệt giữa 2 renders với style settings khác nhau. A/B test cho thấy scores giống nhau → hoặc VLM không thấy, hoặc thay đổi quá subtle, hoặc VLM non-deterministic che lấp signal.
-
-**Cần giải quyết trước khi tiếp tục:**
-1. Verify VLM có phát hiện được khác biệt KHÔNG — render 2 videos drastically khác nhau (vd: damping=2 vs damping=50), critique cả 2, xem scores có khác không
-2. Nếu VLM không phân biệt được → cần phương pháp đo khác (vd: so sánh pixel diff giữa frames, hoặc dùng VLM stronger)
-3. Nếu VLM phân biệt được nhưng cần thay đổi lớn → điều chỉnh AGENTS.md để agent thử thay đổi dramatic hơn
+- ❌ **Improvement loop chưa verify được** — vì style changes chưa đến render (xem trên)
+- ❌ VLM oracle chưa validate được — pairwise test với prompt dẫn dắt → Qwen3-VL
+  confabulate (thấy "khác biệt" ở 2 video giống hệt nhau). Cần prompt trung lập
+  + deterministic pixel-diff làm lớp 1 (xem docs/HARNESS-ANALYSIS.md §3)
+- ❌ Bug #3 (style JSON không đến render) chưa giải quyết
 
 ## 4. ARCHITECTURE (native Deep Agents)
 
