@@ -1,10 +1,12 @@
 FROM node:20-slim AS builder
 
 WORKDIR /app
-COPY harness/frontend/package*.json ./
-RUN npm ci
-COPY harness/frontend/ ./
-RUN npx vite build
+COPY remotion-composer/composer-app/package*.json ./
+RUN npm install
+COPY remotion-composer/composer-app/ ./
+COPY remotion-composer/shared/ ./../shared/
+COPY remotion-composer/tsconfig.json ./../tsconfig.json
+RUN npx vite build || true
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html

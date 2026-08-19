@@ -36,7 +36,20 @@ from subagents import CRITIC_SUBAGENT
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HARNESS_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
+
+# Model: support DeepSeek, Zhipu (via OpenAI-compatible), or any langchain provider
+_model_str = os.environ.get("HARNESS_MODEL", "deepseek:deepseek-chat")
+if _model_str.startswith("openai:") and os.environ.get("OPENAI_BASE_URL"):
+    # OpenAI-compatible endpoint (e.g. Zhipu GLM-4-Flash)
+    from langchain_openai import ChatOpenAI
+    MODEL = ChatOpenAI(
+        model=_model_str.split(":", 1)[1],
+        api_key=os.environ.get("OPENAI_API_KEY", ""),
+        base_url=os.environ.get("OPENAI_BASE_URL"),
+        use_responses_api=False,
+    )
+else:
+    MODEL = _model_str
 
 
 @dataclass
