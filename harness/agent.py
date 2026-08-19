@@ -21,7 +21,8 @@ if env_file.exists():
             v = v.strip()
             if "#" in v and not (v.startswith('"') or v.startswith("'")):
                 v = v.split("#")[0].strip()
-            os.environ.setdefault(k.strip(), v)
+            if v:  # Skip empty values
+                os.environ.setdefault(k.strip(), v)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
