@@ -60,3 +60,5 @@ docker-build.log
 harness/logs/
 
 harness/test_vlm_qwen.log
+
+/memories/

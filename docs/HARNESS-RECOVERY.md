@@ -1,53 +1,58 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-20 (protocol v4 implementation session). Previous: 2026-08-19.
+> Updated 2026-08-20 evening. Protocol v4 IMPLEMENTED + VERIFIED. Previous: 2026-08-19.
 
-## 0. SESSION 2026-08-20 — PROTOCOL v4 (taste-calibration flywheel) IN PROGRESS
+## 0. SESSION 2026-08-20 — PROTOCOL v4 SHIPPED END-TO-END ✅
 
-Implementing docs/TASTE-AND-LEARNING-ROADMAP.md (rev 3) P1. DONE so far:
+Everything in TASTE-AND-LEARNING-ROADMAP P1 + P5 is done and verified:
 
-- **compare_renders tool** — deterministic pixel-diff gate (entrance-biased
-  sampling, PASS at max mean > 0.05). Verified: damping pair PASS (0.595),
-  identical pair FAIL (0.0).
-- **pairwise_verdict tool** — control (A-vs-A must say "identical") +
-  premise-neutral A/B verdict, judge conditioned on taste-standard.md +
-  user exemplar verdicts. Decision-maker uses qwen3-vl-plus by default
-  (VLM_PAIRWISE_MODEL env) — flash flipped verdicts on the same pair;
-  plus gave the correct "after" verdict referencing the principles.
-- **request_keep tool** — the human KEEP gate via interrupt(). 3 exits
-  (keep / keep+note / reject+note), auto-records votes to
-  harness/memories/preferences.jsonl and notes to feedback.jsonl.
-  VERIFIED end-to-end in the browser (vite :5174 + langgraph dev :2024):
-  KeepGate UI renders both videos + note textarea; resume MUST use
-  `stream.respond({type, note})` — NOT `submit(undefined, {command})`
-  (the v1 commands transport dispatches run.start WITHOUT the resume;
-  documented in @langchain/langgraph-sdk headless-tools.js).
-- **AGENTS.md rewritten for protocol v4**: new loop (gate at KEEP, not at
-  change), feedback-driven short cycle (user-as-oracle, no VLM), both_bad
-  re-diagnosis, AUTO/ASK zones from oracle-trust.md, shared 3-cycle cap.
-- **calibrate.py** — Wilson-interval agreement stats → oracle-trust.md
-  zones (AUTO needs N>=10 + lower bound >= 80%).
-- **wishlist.md** seeded (not-expressible feedback backlog).
-- agent.py CLI: keep_gate interrupt handling (keep/reject + note after ';'),
-  tool-call visibility in output.
-- eval.py judge switched to glm-4-flash (DeepSeek 402).
-- AgentPanel: markdown-bold score regex fix, content-block text extraction.
+- **Full protocol v4 cycle ran through the REAL agent** (glm-4-plus):
+  read memories → render baseline (copy_render) → critic critique → think →
+  revealDurationSec 0.65→2 (real knob from knowledge-base pending list) →
+  re-render → compare_renders PASS (0.896) → pairwise "WINNER: second"
+  (control passed) → request_keep KEEP gate (vote + note recorded) →
+  knowledge-base entry → report. Style store now: damping=2,
+  revealDurationSec=2.
+- **Multi-segment (P5)**: chapter-card runs exercised the protocol's
+  self-protection — inDurationSec 0.45→0.3 and fontSizeShort 96→130 BOTH
+  failed the pixel-diff gate (too-small / wrong-knob-for-28char-title) and
+  the agent auto-reverted + recorded failures correctly.
+- **KEEP-gate UI verified in browser** (vite + langgraph): KeepGate renders
+  both videos + note textarea; resume MUST use stream.respond({type, note})
+  NOT submit(undefined, {command}) (v1 commands transport drops it).
+- **Model choice**: main LLM = glm-4-plus (paid, user-approved after pricing
+  review: ~¥1.5-2 ≈ 5,400-7,200 VND per cycle). glm-4-flash (free) works but
+  non-deterministically invents paths; qwen-plus reliable but 24s/call on the
+  slow China route. VLM decision-maker = qwen3-vl-plus, critique = qwen3-vl-flash.
+- **TextOnlyContentMiddleware**: strips deepagents' media-preview content
+  blocks (mp4 read_file previews) — glm-4-plus 400'd without it.
+- **Tools**: compare_renders, pairwise_verdict, request_keep, copy_render.
+  **calibrate.py**: Wilson-interval zones → oracle-trust.md (no votes yet —
+  files reset clean after UI tests). **ingest_tutorial.py**: P3 pipeline ready
+  (not yet run on the Isaac videos in research/isaacverse/source/).
+- run_cycle.py: python driver for scripted cycles (use this, not .cmd files —
+  cmd.exe breaks on Vietnamese/parens). Log: harness/last_cycle.log.
 
-Commits this session: 0306cd6 (tools+protocol), 74aefbb (KEEP-gate UI).
+REMAINING from the roadmap:
+- P2.1: add ~15 new style knobs (TSX wiring + pixel-diff verification each)
+- P2.2: style-knobs SKILL.md update for the new knobs
+- P3: run ingest_tutorial.py on an Isaac video + human review of candidates
+- P1 refinements: taste-standard into judge prompt is done; zones need votes
+  to activate; spot-check cadence once AUTO zones exist
+- Later: P2 phase-2 generator architecture, P4 feedback door in Composer UI
 
-IN PROGRESS at compact time:
-- Smoke test: full protocol v4 cycle through the REAL agent (CLI). glm-4-flash
-  sees the protocol (verified: answers "3 cycles" and "/memories/knowledge-base.md"
-  correctly) but is non-deterministic — sometimes invents paths. qwen-plus is
-  reliable but ~24s per trivial call (DashScope China route slow) — full cycle
-  exceeds 20min. Current approach: glm-4-flash + explicit prompt.
-- Remaining roadmap: P5 multi-segment, P2 phase-1 knobs, P3 tutorial ingest.
+Key files this session: harness/harness_tools.py (tools), harness/agent.py
+(middleware + CLI), harness/calibrate.py, harness/run_cycle.py,
+harness/ingest_tutorial.py, AgentPanel.tsx (KeepGate UI),
+harness/memories/AGENTS.md (protocol v4), docs/TASTE-AND-LEARNING-ROADMAP.md (rev 3).
+
+Commits: 0306cd6 → 74aefbb → f9bc742 → 92b3e7c (+ stray-dir cleanup).
 
 ## 1. PROJECT
 
 Video Agent Harness on Deep Agents, integrated into Composer (video editor).
-- LLM: GLM-4-Flash (Zhipu, free) — DeepSeek hết balance (402), đã switch
-- VLM: Qwen3-VL (DashScope — key có tiền; plus cho pairwise, flash cho critique)
+- LLM: glm-4-plus (Zhipu, paid — ~6k VND/cycle; free fallback glm-4-flash)
+- VLM: Qwen3-VL (DashScope — plus cho pairwise, flash cho critique)
 - LangSmith tracing + evals (project: isaacverse-harness)
 - Agent ↔ user = Vietnamese. Code/schema = English.
 
