@@ -165,6 +165,17 @@ MUST show mean_diff > 0 before any VLM critique is trusted.
 - Action: reverted to damping=18. The earlier SUCCESS claim is void. Do not re-record
   it as a win anywhere.
 
+### Experiment: edge.revealDurationSec 0.65 → 2 — IMPROVED (pairwise verdict)
+- Date: 2026-08-20
+- Segment: isaacverse-final 3.5-7s (semantic-diagram)
+- Baseline scores: composition=3, color=3, motion=4, text=5, pacing=4 — motion was weakest at 4/5
+- Pixel-diff gate: max mean=0.896, changed 0.159-1.503% (change reached render)
+- Oracle control (A-vs-A, premise-neutral): "Identical" — honest
+- Pairwise verdict (A=reveal0.65 vs B=reveal2, premise-neutral): "WINNER: second"
+- More visible, purposeful animation with sequential node reveals and better narrative progression
+- Result: IMPROVED. KEPT (style store now has revealDurationSec=2)
+- Learning: Increasing edge.revealDurationSec from 0.65→2 seconds creates more visible motion with sequential node reveals, improving the narrative progression and visual engagement of semantic diagrams.
+
 ### Root cause: the measurement instrument, not the knob
 - GLM-4V-Flash receives 4 keyframes (2 pairs, 80ms apart) scaled to 640px. Motion is
   temporal; sparse static frames barely encode it.

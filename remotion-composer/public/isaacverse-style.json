@@ -1,5 +1,5 @@
 {
-  "version": 26,
+  "version": 27,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -22,7 +22,7 @@
           ],
           "brushDasharray": "3 1 5 2"
         },
-        "revealDurationSec": 0.65
+        "revealDurationSec": 2
       },
       "node": {
         "borderWidth": 2,

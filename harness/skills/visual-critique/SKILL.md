@@ -1,3 +1,8 @@
+---
+name: visual-critique
+description: How to interpret VLM critique results and turn them into style decisions. The agent cannot see video, so it relies on VLM critique plus this skill to understand what "good" looks like.
+---
+
 # Skill: Visual Critique — How to Judge Video Frames
 
 > This skill teaches the agent how to interpret VLM critique results and make

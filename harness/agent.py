@@ -6,6 +6,7 @@ critic subagent spec. This file just wires them together.
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 from dataclasses import dataclass
@@ -32,7 +33,7 @@ from langchain.agents.middleware import TodoListMiddleware, ModelRetryMiddleware
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
-from harness_tools import render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep
+from harness_tools import render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render
 from subagents import CRITIC_SUBAGENT
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -71,9 +72,57 @@ class AgentContext:
     current_sec: float = 0.0
 
 
+from langchain.agents.middleware import AgentMiddleware
+
+
+class TextOnlyContentMiddleware(AgentMiddleware):
+    """Strip non-text content blocks before they reach a text-only LLM.
+
+    deepagents' read_file attaches image/video previews as content blocks in a
+    follow-up HumanMessage — text-only models (glm-4-plus, glm-4-flash,
+    qwen-plus...) reject those with 400 "messages.content.type 参数非法".
+    The agent cannot see media anyway (AGENTS.md: "You CANNOT see video" — the
+    critic subagent owns visual analysis), so we flatten every list-content
+    message to text and replace media blocks with a pointer to the VLM tools.
+    """
+
+    def wrap_model_call(self, request, handler):
+        for msg in getattr(request, "messages", []):
+            content = getattr(msg, "content", None)
+            if isinstance(content, list):
+                try:
+                    msg.content = self._flatten(content)
+                except Exception:
+                    pass
+        return handler(request)
+
+    async def awrap_model_call(self, request, handler):
+        for msg in getattr(request, "messages", []):
+            content = getattr(msg, "content", None)
+            if isinstance(content, list):
+                try:
+                    msg.content = self._flatten(content)
+                except Exception:
+                    pass
+        return await handler(request)
+
+    @staticmethod
+    def _flatten(blocks):
+        out = []
+        for b in blocks:
+            if isinstance(b, str):
+                out.append(b)
+            elif isinstance(b, dict) and b.get("type") == "text":
+                out.append(b)
+            else:
+                btype = b.get("type", "unknown") if isinstance(b, dict) else type(b).__name__
+                out.append({"type": "text", "text": f"[{btype} content omitted — you cannot see media; use the critic subagent / visual_critique instead]"})
+        return out
+
+
 _COMMON = dict(
     model=MODEL,
-    tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep],
+    tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render],
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
     skills=["/skills/"],
     subagents=[CRITIC_SUBAGENT],
@@ -90,7 +139,7 @@ _COMMON = dict(
             "/skills/": FilesystemBackend(root_dir=os.path.join(HARNESS_DIR, "skills"), virtual_mode=True),
         },
     ),
-    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=30)],
+    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=30), TextOnlyContentMiddleware()],
     context_schema=AgentContext,
 )
 
@@ -147,8 +196,21 @@ def main():
         print("=" * 60)
         result = cli_agent.invoke(Command(resume=resume), config=config)
     for msg in result.get("messages", []):
+        # print tool calls for visibility
+        for tc in (getattr(msg, "tool_calls", None) or []):
+            name = tc.get("name", "") if isinstance(tc, dict) else getattr(tc, "name", "")
+            args = tc.get("args", {}) if isinstance(tc, dict) else getattr(tc, "args", {})
+            args_str = json.dumps(args, ensure_ascii=False, default=str)
+            print(f"\n[tool] {name}({args_str[:300]})")
+        if getattr(msg, "type", "") == "tool":
+            content = getattr(msg, "content", "")
+            if content:
+                print(f"[result] {str(content)[:400]}")
+            continue
         content = getattr(msg, "content", None) or (msg.get("content") if isinstance(msg, dict) else None)
         if content:
+            if isinstance(content, list):
+                content = "".join(c.get("text", "") if isinstance(c, dict) and isinstance(c.get("text"), str) else (c if isinstance(c, str) else "") for c in content)
             print(content)
 
 

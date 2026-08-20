@@ -411,6 +411,30 @@ def update_style(style_path: str, new_value: str) -> str:
             f"  version: {style['version']}\n  File: /workspace/{STYLE_REL}")
 
 
+@tool
+def copy_render(source_path: str, destination_path: str) -> str:
+    """Copy a render file aside (protocol v4 step 2 — MANDATORY before re-rendering).
+
+    render_window writes to a DETERMINISTIC output path — the next render
+    OVERWRITES the previous one. Copy the baseline to e.g.
+    renders/windows/cycle_baseline.mp4 BEFORE rendering the after, or your
+    before/after comparison will compare the after with itself.
+
+    Args:
+        source_path: Path to the render to copy (with /workspace/ prefix or relative).
+        destination_path: Destination path, project-relative (e.g. 'projects/<slug>/renders/windows/cycle_baseline.mp4').
+    """
+    src = _resolve_workspace_path(source_path)
+    if not os.path.exists(src):
+        return f"Copy failed: source not found: {src}"
+    dst = _resolve_workspace_path(destination_path)
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    import shutil
+    shutil.copy2(src, dst)
+    rel = os.path.relpath(dst, PROJECT_ROOT).replace("\\", "/")
+    return f"Copied to /workspace/{rel} ({os.path.getsize(dst) // 1024} KB)"
+
+
 # ---------------------------------------------------------------------------
 # Protocol v4 tools — the layered oracle + the KEEP gate
 # (design: docs/TASTE-AND-LEARNING-ROADMAP.md rev 3)
