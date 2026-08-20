@@ -133,43 +133,33 @@ LangGraph Server (:2024)
        └─ backend: CompositeBackend (workspace, memories, skills = FilesystemBackend)
 ```
 
-## 5. KEY FILES (16 files, ~1600 lines)
+## 5. KEY FILES
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `harness/agent.py` | 100 | create_deep_agent assembly, model switch (DeepSeek→GLM-4-Flash) |
-| `harness/harness_tools.py` | 231 | render_window, visual_critique (frame pairs), think, update_style |
-| `harness/subagents.py` | 44 | critic spec + CritiqueResult (Pydantic) |
-| `harness/eval.py` | 157 | LangSmith 10 cases + 6 evaluators (code + LLM-as-judge) |
-| `harness/optimize.py` | 143 | outer-loop optimization (better-harness pattern) |
-| `harness/setup_langsmith.py` | 61 | annotation queue setup |
-| `harness/test_unit.py` | 68 | domain tool unit tests |
-| `harness/test_ab_direct.py` | 85 | A/B test (direct, bypass agent) — USE THIS to verify improvements |
-| `harness/memories/AGENTS.md` | 122 | 18 rules, 11-step loop, segment selection guide |
-| `harness/memories/taste-standard.md` | 35 | taste principles |
-| `harness/memories/knowledge-base.md` | 49 | experiment results (1 failed, 1 "success" but unverified) |
-| `harness/skills/style-knobs/SKILL.md` | 140 | aspect→knob mapping, per-treatment detail |
-| `harness/skills/editing-craft/SKILL.md` | 30 | Murch Rule of Six |
-| `harness/skills/visual-critique/SKILL.md` | 57 | how to judge frames |
-| `AgentPanel.tsx` | 382 | frontend UI in Composer |
-| `.github/workflows/ci.yml` | 45 | 3 CI jobs |
+| File | Purpose |
+|------|---------|
+| `harness/agent.py` | create_deep_agent assembly + TextOnlyContentMiddleware + CLI (keep_gate resume) |
+| `harness/harness_tools.py` | render_window, visual_critique, think, update_style, copy_render, **compare_renders, pairwise_verdict, request_keep** |
+| `harness/subagents.py` | critic subagent (CritiqueResult) |
+| `harness/run_cycle.py` | **python driver cho scripted cycles** (dùng cái này, KHÔNG dùng .cmd — cmd.exe chết với tiếng Việt/parens) |
+| `harness/calibrate.py` | Wilson zones → memories/oracle-trust.md |
+| `harness/ingest_tutorial.py` | P3 tutorial ingestion (chưa chạy) |
+| `harness/memories/AGENTS.md` | protocol v4 (não agent) |
+| `harness/memories/knowledge-base.md` | sổ tay thí nghiệm (2 IMPROVED thật) |
+| `harness/memories/preferences.jsonl` + `feedback.jsonl` | votes + notes tại KEEP gate (hiện RỖNG — cần Batch A) |
+| `harness/memories/wishlist.md` | feedback không biểu đạt được |
+| `remotion-composer/composer-app/src/agent/AgentPanel.tsx` | KeepGate UI (resume qua `stream.respond`, KHÔNG `submit`) |
+| `docs/TODO-NEXT.md` | **VIỆC CÒN LẠI — batch A-F** |
+| `docs/TASTE-AND-LEARNING-ROADMAP.md` | thiết kế nền (rev 3) |
+## 6. MODEL CONFIG (hiện tại 2026-08-20)
 
-## 6. MODEL CONFIG
-
-```
-.env:
-  DEEPSEEK_API_KEY=... (hết balance — 402 Payment Required)
-  ZHIPU_API_KEY=... (đang dùng — GLM-4-Flash + GLM-4V-Flash, free)
-  LANGSMITH_API_KEY=... (tracing + evals)
-  LANGSMITH_TRACING=true
-  LANGSMITH_PROJECT=isaacverse-harness
-  HARNESS_MODEL=openai:glm-4-flash
-  OPENAI_BASE_URL=https://open.bigmodel.cn/api/paas/v4
-  OPENAI_API_KEY=<ZHIPU_API_KEY value>
-```
-
-agent.py detects OpenAI-compatible providers (OPENAI_BASE_URL set) → creates ChatOpenAI with `use_responses_api=False` (Zhipu chỉ hỗ trợ /chat/completions, không hỗ trợ /responses).
-
+- Main LLM: `HARNESS_MODEL=openai:glm-4-plus` (Zhipu, TRẢ PHÍ ~6k VND/vòng —
+  user duyệt 2026-08-20). Free fallback: `openai:glm-4-flash` (thỉnh thoảng
+  bịa path). qwen-plus đáng tin nhưng 24s/call (route China chậm).
+- VLM: `VLM_PROVIDER=dashscope` (Qwen3-VL) — pairwise verdict dùng
+  `qwen3-vl-plus` (VLM_PAIRWISE_MODEL), absolute critique dùng
+  `qwen3-vl-flash`. Endpoint CHINA (giới hạn POST body ~64KB — montage
+  3-frame thay video). DashScope key có tiền.
+- File thật: `.env` (đừng tin tóm tắt này hơn file).
 ## 7. TREATMENTS.TSX FIX
 
 `entrance.damping/stiffness/mass/durationSec` đã được wire to style store (trước đó hardcoded). Fix tại `remotion-composer/shared/isaacverse/treatments.tsx` line 113-119.
@@ -216,26 +206,13 @@ cd remotion-composer\composer-app; npx vite --port 5174
 | ToolCallLimitMiddleware (30 max) | eval.py (LangSmith dataset + evaluators) |
 | LangSmith (tracing, datasets, experiments) | optimize.py (outer-loop) |
 
-## 11. NEXT STEPS (priority order)
+## 11. NEXT STEPS
 
-1. **Verify VLM sensitivity** — render 2 videos drastically khác (damping=2 vs damping=50), critique cả 2, xem scores có khác không. Nếu không → VLM không phù hợp làm thước đo.
-2. **Nếu VLM OK** — chạy full improvement loop, verify scores cải thiện
-3. **Fix loop repetition** — agent re-reads file sau interrupt (rule 10 trong AGENTS.md chưa đủ)
-4. **Fix render qua agent** — render đôi khi fail khi gọi qua LangGraph server
-5. **DeepSeek balance** — nạp credit nếu muốn dùng DeepSeek thay GLM-4-Flash
-6. **Docker production** — code sẵn, build OK, cần VPS/domain để deploy
+→ **TẤT CẢ việc còn lại nằm trong `docs/TODO-NEXT.md`** (batch A-F với done
+criteria). Đọc file đó, không dùng danh sách cũ.
 
 ## 12. GIT
 
-```
-Repo: https://github.com/ptnhan2/social-media.git
-Branch: master
-Latest commit: 5aa0e59 (docs: record successful experiment in knowledge-base.md)
-```
-
-30+ commits session này. Key commits:
-- `705bf9f` MILESTONE: agent successfully improves video (SAI — A/B test bác bỏ)
-- `f111251` Switch to GLM-4-Flash (DeepSeek out of balance)
-- `98e0db3` Clean up: remove custom infra (-4137 lines), use LangSmith evals
-- `2a2baa7` Simplify to Deep Agents example pattern
-- `01bfa11` Agent integrated into Composer
+Repo: https://github.com/ptnhan2/social-media.git — branch master.
+Session 2026-08-20 commits: 0306cd6 → 74aefbb → f9bc742 → 92b3e7c →
+15b318d → f283a0e → 4f53956 → 9fa8881 (+ doc fixes cuối session).
