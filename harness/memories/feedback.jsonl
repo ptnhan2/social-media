@@ -1,0 +1,2 @@
+{"ts": "2026-08-20T16:43:01", "knob_under_test": "entrance.damping", "a": "18", "b": "2", "verdict": "kept_with_note", "note": "server-side resume test", "user_directed": false}
+{"ts": "2026-08-20T16:50:33", "knob_under_test": "entrance.damping", "a": "18", "b": "2", "verdict": "kept_with_note", "note": "UI test round 2: animation tốt hơn rồi, giữ", "user_directed": false}

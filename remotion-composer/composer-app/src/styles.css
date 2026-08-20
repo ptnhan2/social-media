@@ -1492,3 +1492,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .ap-before-after-videos { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 .ap-ba-video { display: flex; flex-direction: column; gap: 2px; }
 .ap-ba-label { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+
+/* KEEP gate (protocol v4) */
+.ap-note-input { width: 100%; resize: vertical; font-size: 12px; padding: 6px 8px; border-radius: 6px; border: 1px solid #374151; background: #111827; color: #e5e7eb; margin: 6px 0; box-sizing: border-box; }
+.ap-note-input:focus { outline: none; border-color: #2563eb; }

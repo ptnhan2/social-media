@@ -27,7 +27,11 @@ function extractVideoPaths(text: string): string[] {
   return [...new Set(paths)];
 }
 function videoUrl(path: string): string {
-  const parts = path.replace(/^projects\//, "").split("/");
+  if (!path) return "";
+  // normalize: strip /workspace/ prefix and leading projects/ segment
+  let p = path.startsWith("/workspace/") ? path.slice("/workspace/".length) : path;
+  if (p.startsWith("projects/")) p = p.slice("projects/".length);
+  const parts = p.split("/");
   if (parts.length < 2) return "";
   return `/api/project/artifact?projectId=${encodeURIComponent(parts[0])}&path=${encodeURIComponent(parts.slice(1).join("/"))}`;
 }
@@ -101,8 +105,8 @@ function MessageView({ msg }: { msg: any }) {
   const role = msg.type === "human" ? "user" : msg.type === "tool" ? "tool" : "agent";
   let content = msg.content;
   if (typeof content === "object" && content !== null) {
-    if (Array.isArray(content)) content = content.map((c: any) => typeof c === "string" ? c : JSON.stringify(c)).join("");
-    else content = JSON.stringify(content);
+    if (Array.isArray(content)) content = content.map((c: any) => typeof c === "string" ? c : (typeof c?.text === "string" ? c.text : JSON.stringify(c))).join("");
+    else content = typeof (content as any).text === "string" ? (content as any).text : JSON.stringify(content);
   }
   content = content || "";
 
@@ -243,8 +247,8 @@ function ScoreHistoryChart({ history }: { history: { cycle: number; scores: { as
 
 // --- Before/After Video Player ---
 function BeforeAfterPlayer({ beforePath, afterPath }: { beforePath: string; afterPath: string }) {
-  const beforeUrl = beforePath.startsWith("/workspace/") ? `/api/project/artifact?projectId=${beforePath.split("/")[2]}&path=${beforePath.split("/").slice(3).join("/")}` : "";
-  const afterUrl = afterPath.startsWith("/workspace/") ? `/api/project/artifact?projectId=${afterPath.split("/")[2]}&path=${afterPath.split("/").slice(3).join("/")}` : "";
+  const beforeUrl = videoUrl(beforePath);
+  const afterUrl = videoUrl(afterPath);
   if (!beforeUrl || !afterUrl) return null;
   return (
     <div className="ap-before-after">
@@ -258,6 +262,34 @@ function BeforeAfterPlayer({ beforePath, afterPath }: { beforePath: string; afte
           <div className="ap-ba-label">After</div>
           <video controls src={afterUrl} style={{ width: "100%", borderRadius: 4 }} />
         </div>
+      </div>
+    </div>
+  );
+}
+
+// --- KEEP Gate (protocol v4) — 3-exit human decision ---
+function KeepGate({ gate, onDecide, busy }: { gate: any; onDecide: (type: "keep" | "reject", note: string) => void; busy: boolean }) {
+  const [note, setNote] = useState("");
+  return (
+    <div className="ap-approval">
+      <div className="ap-approval-desc">
+        <strong>KEEP GATE — {gate.knob}: {String(gate.old_value)} → {String(gate.new_value)}</strong>
+        <div className="ap-approval-path">📊 {gate.verdict_summary}</div>
+        {gate.aspect ? <div className="ap-approval-path">🎯 aspect: {gate.aspect}</div> : null}
+        {gate.feedback_context ? <div className="ap-approval-path">💬 your feedback: {gate.feedback_context}</div> : null}
+      </div>
+      <BeforeAfterPlayer beforePath={gate.video_before} afterPath={gate.video_after} />
+      <textarea
+        className="ap-input ap-note-input"
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Góp ý (không bắt buộc): còn thiếu gì? Both bad? — note này thành chu kỳ fix kế tiếp"
+        rows={2}
+        disabled={busy}
+      />
+      <div className="ap-approval-actions">
+        <button className="ap-approve" disabled={busy} onClick={() => onDecide("keep", note)}>Keep{note.trim() ? " + note" : ""}</button>
+        <button className="ap-reject" disabled={busy} onClick={() => onDecide("reject", note)}>Reject{note.trim() ? " + note" : ""}</button>
       </div>
     </div>
   );
@@ -323,10 +355,18 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
     (stream as any).respond({ decisions: [{ type }] });
   };
 
+  // KEEP gate (protocol v4): interrupt payload {kind:"keep_gate", ...}
+  const keepGate = interrupt && interrupt.value && (interrupt.value as any).kind === "keep_gate" ? (interrupt.value as any) : null;
+  const handleKeepDecision = (type: "keep" | "reject", note: string) => {
+    // v1 commands transport: submit() dispatches run.start WITHOUT a resume —
+    // resumes must go through respond(), which targets the pending interrupt.
+    (stream as any).respond({ type, note });
+  };
+
   // Parse interrupt for display
   const interruptInfo = (() => {
     if (!interrupt) return null;
-    const val = interrupt.value;
+    const val = interrupt.value as any;
     const reqs = val?.action_requests || [];
     if (reqs.length > 0) {
       const req = reqs[0];
@@ -388,8 +428,8 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Approval bar */}
-        {interrupt && interruptInfo && (
+        {/* Approval bar — permission interrupts (edit_file/write_file on gated paths) */}
+        {interrupt && !keepGate && interruptInfo && (
           <div className="ap-approval">
             <div className="ap-approval-desc">
               <strong>Approval needed: {interruptInfo.name}</strong>
@@ -401,6 +441,11 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
               <button className="ap-reject" onClick={() => handleApproval("reject")}>Reject</button>
             </div>
           </div>
+        )}
+
+        {/* KEEP gate — protocol v4 3-exit decision (videos + note) */}
+        {keepGate && (
+          <KeepGate gate={keepGate} onDecide={handleKeepDecision} busy={isBusy} />
         )}
 
         {/* Input */}
