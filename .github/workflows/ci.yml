@@ -26,6 +26,8 @@ jobs:
           echo "ZHIPU_API_KEY=test" >> .env
           echo "LANGSMITH_API_KEY=test" >> .env
           echo "LANGSMITH_TRACING=false" >> .env
+          echo "OPENAI_API_KEY=dummy-ci" >> .env
+          echo "HARNESS_MODEL=openai:glm-4-flash" >> .env
       - name: Unit tests (domain tools)
         run: harness/.venv/bin/python harness/test_unit.py
       - name: Agent compiles
