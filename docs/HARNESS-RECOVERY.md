@@ -1,6 +1,9 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-20 night — END of session. P1+P5+P2.1 SHIPPED. Previous: 2026-08-19.
+> Updated 2026-08-20 night — END of session. P1+P5+P2.1 SHIPPED.
+> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** (source of truth cho các batch
+> A-F: taste calibration, feedback cycle, multi-segment, tutorial, generator
+> architecture, vụn nhỏ — kèm done criteria từng batch). Previous: 2026-08-19.
 
 ## 0. SESSION 2026-08-20 — PROTOCOL v4 SHIPPED END-TO-END ✅
 
