@@ -74,12 +74,12 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           centerLabel={asString(params.centerLabel)}
           nodes={Array.isArray(params.nodes) ? params.nodes as any : []}
           edges={Array.isArray(params.edges) ? params.edges as any : []}
-          accent={asString(params.accent, undefined)}
-          secondaryAccent={asString(params.secondaryAccent, undefined)}
+          accent={asString(params.accent) || undefined}
+          secondaryAccent={asString(params.secondaryAccent) || undefined}
         />
       );
     case "chapter-card":
-      return <ChapterCard title={asString(params.title, beat.narrativeFunction)} subtitle={asString(params.subtitle)} accent={asString(params.accent, undefined)} />;
+      return <ChapterCard title={asString(params.title, beat.narrativeFunction)} subtitle={asString(params.subtitle)} accent={asString(params.accent) || undefined} />;
     case "audience-demand-proof":
       return (
         <AudienceDemandProof
@@ -87,7 +87,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           contextSrc={assetSrc(beat, "screen")}
           hostSrc={assetSrc(beat, "character")}
           caption={asString(params.caption)}
-          accent={asString(params.accent, undefined)}
+          accent={asString(params.accent) || undefined}
         />
       );
     case "screen-proof-in-world":
@@ -96,7 +96,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           screenSrc={assetSrc(beat, "screen") ?? ""}
           hostSrc={assetSrc(beat, "character")}
           caption={asString(params.caption)}
-          accent={asString(params.accent, undefined)}
+          accent={asString(params.accent) || undefined}
           focusRect={params.focusRect as any}
         />
       );
@@ -105,7 +105,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
         <HostReflectionShot
           src={assetSrc(beat, "character") ?? assetSrc(beat, "image") ?? ""}
           subtitle={asString(params.subtitle, beat.transcript)}
-          accent={asString(params.accent, undefined)}
+          accent={asString(params.accent) || undefined}
           lightSide={params.lightSide === "right" ? "right" : "left"}
         />
       );
@@ -115,7 +115,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           src={assetSrc(beat, "image") ?? assetSrc(beat, "video") ?? ""}
           subtitle={asString(params.subtitle, beat.transcript)}
           label={asString(params.label)}
-          accent={asString(params.accent, undefined)}
+          accent={asString(params.accent) || undefined}
           mode={params.mode === "line-art" || params.mode === "warm" ? params.mode : "cinematic"}
         />
       );
@@ -126,7 +126,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           criteria={asString(params.criteria)}
           candidates={Array.isArray(params.candidates) ? params.candidates as any : []}
           selectedIndex={asNumber(params.selectedIndex, 0)}
-          accent={asString(params.accent, undefined)}
+          accent={asString(params.accent) || undefined}
         />
       );
     case "process-timeline":
@@ -135,7 +135,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           title={asString(params.title, beat.narrativeFunction)}
           steps={Array.isArray(params.steps) ? params.steps as any : []}
           activeStep={asNumber(params.activeStep, 0)}
-          accent={asString(params.accent, undefined)}
+          accent={asString(params.accent) || undefined}
         />
       );
     default:

@@ -136,6 +136,25 @@ Key knobs: entranceDurationSec, pushStart, pushDurationSec
   with pairwise comparison (both videos in ONE critique) or a video-native VLM (Qwen3-VL).
 - Absolute 1-5 scores from different sessions are NEVER comparable — VLM is non-deterministic.
 
+## NEW KNOBS (2026-08-20, all pixel-diff verified)
+
+| Knob | Default | Effect |
+|------|---------|--------|
+| `colors.amber` | #f2b84b | Primary accent palette (title bars, glows — all treatments). VERIFIED: change → 0.52 mean diff |
+| `colors.cyan` | #61d7e8 | Secondary accent (kicker, center label) |
+| `colors.paper` | #f4e8cf | Text color (titles, node details) |
+| `colors.black` | #07090d | Background |
+| `treatments.semantic-diagram.node.glow` | 18 | Node boxShadow glow radius. VERIFIED: 18→60 → 0.92 mean diff |
+| `treatments.semantic-diagram.node.padding` | "14px 18px 13px" | Node inner padding |
+| `treatments.chapter-card.title.fontWeight` | 900 | Title weight |
+| `treatments.chapter-card.accentLine.glow` | 18 | Accent line glow radius |
+| `treatments.audience-demand.spring.damping/stiffness` | 17/170 | Comment entrance spring |
+| `treatments.process-timeline.spring.damping/stiffness` | 18/150 | Step reveal spring |
+| `treatments.candidate-comparison.spring.damping/stiffness` | 18/160 | Candidate entrance spring |
+
+CRITICAL note on `colors.*`: these affect EVERY treatment at once (palette-level
+changes). Use them for color/composition experiments with LARGE visual deltas.
+
 ## Rules
 
 - Change ONE knob per cycle (isolate effects)

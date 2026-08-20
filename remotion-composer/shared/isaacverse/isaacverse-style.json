@@ -1,5 +1,5 @@
 {
-  "version": 30,
+  "version": 44,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -29,7 +29,9 @@
         "borderRadius": 10,
         "background": "rgba(7,9,13,0.84)",
         "fontSize": 20,
-        "detailFontSize": 14
+        "detailFontSize": 14,
+        "glow": 18,
+        "padding": "14px 18px 13px"
       },
       "title": {
         "fontSize": 46,
@@ -57,7 +59,8 @@
       },
       "accentLine": {
         "height": 5,
-        "maxWidth": 190
+        "maxWidth": 190,
+        "glow": 18
       },
       "reveal": {
         "inDurationSec": 0.45,
@@ -89,16 +92,28 @@
       "contextInStartSec": 2.4,
       "contextInEndSec": 3.3,
       "responseInStartSec": 3.5,
-      "responseInEndSec": 4.2
+      "responseInEndSec": 4.2,
+      "spring": {
+        "damping": 17,
+        "stiffness": 170
+      }
     },
     "process-timeline": {
       "titleInDurationSec": 0.45,
       "progressStartSec": 0.35,
-      "progressEndSec": 1.2
+      "progressEndSec": 1.2,
+      "spring": {
+        "damping": 18,
+        "stiffness": 150
+      }
     },
     "candidate-comparison": {
       "titleInDurationSec": 0.45,
-      "candidateStaggerSec": 0.22
+      "candidateStaggerSec": 0.22,
+      "spring": {
+        "damping": 18,
+        "stiffness": 160
+      }
     },
     "cinematic-metaphor": {
       "entranceDurationSec": 0.7,
