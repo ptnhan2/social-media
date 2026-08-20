@@ -24,6 +24,15 @@
 - Learning: accentLine.maxWidth changes visual width of accent line, does NOT add motion.
 - Action: Reverted. Always match knob to aspect.
 
+### Experiment: chapter-card.title.fontSizeShort 96 → 130
+- Date: 2026-08-19
+- Segment: isaacverse-final 0-3.5s (chapter-card)
+- Before scores: composition=4, color=3, motion=2, text=5, pacing=2
+- Pixel-diff gate: FAIL (max mean=0.0, change did NOT reach render)
+- Result: FAILED (pipeline issue — style change not applied to render)
+- Learning: fontSizeShort change did not reach render despite style store update. Need to investigate render pipeline for chapter-card treatment.
+- Action: Reverted. Style store version rolled back to 29.
+
 ## Key findings from code research (2026-08-16)
 
 ### semantic-diagram treatment (segment 3.5-7s)

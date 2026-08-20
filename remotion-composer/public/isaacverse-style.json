@@ -1,5 +1,5 @@
 {
-  "version": 27,
+  "version": 30,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -51,7 +51,7 @@
     "chapter-card": {
       "title": {
         "fontSizeLong": 82,
-        "fontSizeShort": 96,
+        "fontSizeShort": 130,
         "lineHeight": 1.08,
         "fontWeight": 900
       },
