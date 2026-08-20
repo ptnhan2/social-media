@@ -1,9 +1,21 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-20 night — END of session. P1+P5+P2.1 SHIPPED.
+> Updated 2026-08-20 night (sau audit toàn dự án lần 2). P1+P5+P2.1 SHIPPED.
 > **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** (source of truth cho các batch
 > A-F: taste calibration, feedback cycle, multi-segment, tutorial, generator
 > architecture, vụn nhỏ — kèm done criteria từng batch). Previous: 2026-08-19.
+>
+> **Audit lần 2 (21:00-23:00 2026-08-20) đã sửa thêm**: CI đỏ cả ngày (4 gốc:
+> styleLoader test brittle, test_unit cần điều kiện không có trên CI,
+> package-lock hỏng vì vitest@4→vite@8, thiếu langchain-openai + OPENAI_API_KEY
+> dummy) → **CI XANH** từ commit fdc3940. BOM bug trong preferences/feedback
+> jsonl (PowerShell ghi BOM → json.loads chết dòng 1) → files reset sạch +
+> đọc bằng utf-8-sig. Pillow + langchain-openai khai báo tường minh ở
+> pyproject/ci.yml/Dockerfile. fontSizeShort=130 sót (agent claim revert
+> nhưng không revert) → reset 96. Test data bẩn trong jsonl (2 entries không
+> phải user thật) → cleaned. Broken .cmd files xóa; last_cycle.log
+> gitignore. Vitest pin ^2 (dùng vite 5 chung với root). CI đỏ dấu hiệu:
+> luôn `gh run list` sau push.
 
 ## 0. SESSION 2026-08-20 — PROTOCOL v4 SHIPPED END-TO-END ✅
 
