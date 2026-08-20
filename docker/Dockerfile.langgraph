@@ -9,7 +9,7 @@ WORKDIR /app
 COPY harness/ ./harness/
 RUN python -m venv /opt/venv \
     && /opt/venv/bin/pip install --no-cache-dir \
-    "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph langsmith openevals pillow
+    "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph langsmith openevals pillow langchain-openai
 
 ENV PATH="/opt/venv/bin:$PATH"
 
