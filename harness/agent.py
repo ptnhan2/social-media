@@ -32,7 +32,7 @@ from langchain.agents.middleware import TodoListMiddleware, ModelRetryMiddleware
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
-from harness_tools import render_window, visual_critique, think, update_style
+from harness_tools import render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep
 from subagents import CRITIC_SUBAGENT
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,7 +73,7 @@ class AgentContext:
 
 _COMMON = dict(
     model=MODEL,
-    tools=[render_window, visual_critique, think, update_style],
+    tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep],
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
     skills=["/skills/"],
     subagents=[CRITIC_SUBAGENT],
@@ -123,12 +123,29 @@ def main():
     result = cli_agent.invoke({"messages": [{"role": "user", "content": query}]}, config=config)
     while "__interrupt__" in result:
         print("\n" + "=" * 60)
-        print("[APPROVAL NEEDED]")
         for item in result["__interrupt__"]:
-            print(getattr(item, "value", str(item)))
+            val = getattr(item, "value", item)
+            if isinstance(val, dict) and val.get("kind") == "keep_gate":
+                # KEEP gate (protocol v4): 3-exit decision with optional note
+                print("[KEEP GATE]")
+                print(f"  knob: {val.get('knob')} {val.get('old_value')} -> {val.get('new_value')}")
+                print(f"  verdict: {val.get('verdict_summary')}")
+                if val.get("feedback_context"):
+                    print(f"  your feedback was: {val.get('feedback_context')}")
+                print(f"  before: {val.get('video_before')}")
+                print(f"  after:  {val.get('video_after')}")
+                resp = input("\nKeep this change? (keep/reject) + optional note after ';': ").strip()
+                choice, _, note = resp.partition(";")
+                dtype = "keep" if choice.strip().lower().startswith("k") else "reject"
+                resume = {"type": dtype, "note": note.strip()}
+            else:
+                # permission interrupt (edit_file/write_file on gated paths)
+                print("[APPROVAL NEEDED]")
+                print(val)
+                resp = input("\nApprove? (yes/no): ").strip().lower()
+                resume = {"decisions": [{"type": "approve" if resp.startswith("y") else "reject"}]}
         print("=" * 60)
-        resp = input("\nApprove? (yes/no): ").strip().lower()
-        result = cli_agent.invoke(Command(resume={"decisions": [{"type": "approve" if resp.startswith("y") else "reject"}]}), config=config)
+        result = cli_agent.invoke(Command(resume=resume), config=config)
     for msg in result.get("messages", []):
         content = getattr(msg, "content", None) or (msg.get("content") if isinstance(msg, dict) else None)
         if content:

@@ -399,9 +399,302 @@ def update_style(style_path: str, new_value: str) -> str:
     style["version"] = style.get("version", 1) + 1
     with open(style_file, "w", encoding="utf-8") as f:
         json.dump(style, f, indent=2, ensure_ascii=False)
-    # Sync to Remotion shared dir
+    # Sync to Remotion shared dir AND public/ (styleLoader fetches at runtime
+    # from public/, so the public copy is the one the render actually reads)
     import shutil
-    dst = os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json")
-    shutil.copy2(style_file, dst)
+    for dst in [
+        os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json"),
+        os.path.join(RENDERER_DIR, "public", "isaacverse-style.json"),
+    ]:
+        shutil.copy2(style_file, dst)
     return (f"Style updated: {style_path}\n  old: {json.dumps(old)}\n  new: {json.dumps(val)}\n"
             f"  version: {style['version']}\n  File: /workspace/{STYLE_REL}")
+
+
+# ---------------------------------------------------------------------------
+# Protocol v4 tools — the layered oracle + the KEEP gate
+# (design: docs/TASTE-AND-LEARNING-ROADMAP.md rev 3)
+# ---------------------------------------------------------------------------
+
+MEMORIES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memories")
+PREFERENCES_FILE = os.path.join(MEMORIES_DIR, "preferences.jsonl")
+FEEDBACK_FILE = os.path.join(MEMORIES_DIR, "feedback.jsonl")
+TASTE_STANDARD_FILE = os.path.join(MEMORIES_DIR, "taste-standard.md")
+
+
+def _duration_of(video_path: str) -> float:
+    probe = subprocess.run(
+        ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", video_path],
+        capture_output=True, text=True, timeout=30)
+    try:
+        return float(json.loads(probe.stdout).get("format", {}).get("duration", 10))
+    except Exception:
+        return 10.0
+
+
+def _frame_image(video_path: str, t: float, width: int = 426):
+    """Extract one frame as a PIL image."""
+    from PIL import Image
+    import tempfile, shutil as _sh
+    tmp = tempfile.mkdtemp()
+    fp = os.path.join(tmp, "f.png")
+    subprocess.run(["ffmpeg", "-y", "-ss", str(t), "-i", video_path, "-frames:v", "1",
+                    "-vf", f"scale={width}:-1", fp], capture_output=True, timeout=30)
+    img = Image.open(fp).convert("RGB") if os.path.exists(fp) else None
+    _sh.rmtree(tmp, ignore_errors=True)
+    return img
+
+
+def _pixel_diff_stats(ia, ib) -> tuple[float, float]:
+    """Mean abs diff (0-255) and % of pixels differing by >8, between two PIL images."""
+    from PIL import ImageChops
+    d = ImageChops.difference(ia, ib).convert("L")
+    h = d.histogram()
+    total = sum(h)
+    mean = sum(i * c for i, c in enumerate(h)) / max(total, 1)
+    changed = sum(h[8:]) / max(total, 1) * 100
+    return mean, changed
+
+
+@tool
+def compare_renders(video_a: str, video_b: str) -> str:
+    """Deterministic pixel-diff gate between two renders (protocol v4 step 6).
+
+    Extracts frames at entrance-biased times (animation lives early in a
+    segment) and computes the pixel difference. Run this BEFORE trusting any
+    VLM verdict: if max mean diff <= 0.05 the change did NOT reach the render —
+    the pipeline is broken and you must NOT critique; report the failure.
+
+    Args:
+        video_a: Path to the before render (with /workspace/ prefix or relative).
+        video_b: Path to the after render.
+    """
+    fa, fb = _resolve_workspace_path(video_a), _resolve_workspace_path(video_b)
+    for p, n in [(fa, "video_a"), (fb, "video_b")]:
+        if not os.path.exists(p):
+            return f"GATE ERROR: {n} not found: {p}"
+    dur = min(_duration_of(fa), _duration_of(fb))
+    # entrance-biased sampling: ~18%, 30%, 45%, 65% of the clip
+    times = [round(dur * f, 2) for f in (0.18, 0.30, 0.45, 0.65)]
+    results = []
+    for t in times:
+        ia, ib = _frame_image(fa, t), _frame_image(fb, t)
+        if ia is None or ib is None:
+            results.append((t, None, None))
+            continue
+        mean, changed = _pixel_diff_stats(ia, ib)
+        results.append((t, round(mean, 3), round(changed, 3)))
+    means = [m for _, m, _ in results if m is not None]
+    max_mean = max(means) if means else 0.0
+    gate = "PASS" if max_mean > 0.05 else "FAIL"
+    lines = [f"Pixel-diff gate: {gate} (max mean {max_mean})"]
+    for t, m, c in results:
+        lines.append(f"  t={t}s: mean={m} changed_pct={c}")
+    if gate == "FAIL":
+        lines.append("The change did NOT reach the render. Do NOT critique — report the pipeline failure and stop.")
+    else:
+        lines.append("Change verified in the render. Proceed to pairwise verdict (or request_keep if user-directed).")
+    return "\n".join(lines)
+
+
+def _montage_b64(video_path: str, times: list[float]) -> str | None:
+    """3-panel horizontal montage as base64 JPEG (< 64KB, DashScope-safe)."""
+    import base64, tempfile
+    from PIL import Image
+    imgs = [i for i in (_frame_image(video_path, t) for t in times) if i is not None]
+    if not imgs:
+        return None
+    w = sum(i.width for i in imgs)
+    h = max(i.height for i in imgs)
+    canvas = Image.new("RGB", (w, h), (0, 0, 0))
+    x = 0
+    for i in imgs:
+        canvas.paste(i, (x, 0))
+        x += i.width
+    tmp = os.path.join(tempfile.mkdtemp(), "m.jpg")
+    canvas.save(tmp, "JPEG", quality=55)
+    with open(tmp, "rb") as f:
+        b64 = base64.b64encode(f.read()).decode()
+    import shutil as _sh
+    _sh.rmtree(os.path.dirname(tmp), ignore_errors=True)
+    return b64
+
+
+def _judge_system_prompt() -> str:
+    """Conditioned judge: taste-standard principles + few-shot exemplar verdicts."""
+    base = ("You are a careful motion designer judging two video variants side by side "
+            "from temporal montages. You never invent differences that are not present.")
+    principles = ""
+    try:
+        with open(TASTE_STANDARD_FILE, encoding="utf-8-sig") as f:
+            principles = f.read().strip()
+    except OSError:
+        pass
+    exemplars = []
+    try:
+        with open(PREFERENCES_FILE, encoding="utf-8-sig") as f:
+            for line in f:
+                try:
+                    rec = json.loads(line)
+                    if rec.get("user_verdict") in ("a", "b"):
+                        exemplars.append(rec)
+                except json.JSONDecodeError:
+                    continue
+    except OSError:
+        pass
+    parts = [base]
+    if principles:
+        parts.append("\nYou judge strictly by these approved principles:\n" + principles)
+    if exemplars:
+        ex_lines = []
+        for rec in exemplars[-3:]:
+            winner = rec.get("a") if rec.get("user_verdict") == "a" else rec.get("b")
+            ex_lines.append(f"- knob {rec.get('knob')}: user preferred value {winner} ({rec.get('aspect', '?')} aspect)")
+        parts.append("\nThe user's prior verdicts (follow this taste):\n" + "\n".join(ex_lines))
+    return "\n".join(parts)
+
+
+_PAIRWISE_PROMPT = (
+    "You are given two images. Each shows 3 snapshots of the same video segment "
+    "at successive times, during the entrance animation of diagram nodes.\n"
+    "FIRST, answer honestly: are the two images identical, nearly identical, or "
+    "clearly different? They might be the same image.\n"
+    "IF AND ONLY IF clearly different:\n"
+    "  - Which image (first or second) shows more visible, purposeful animation movement?\n"
+    "  - Which image's animation looks more polished overall?\n"
+    "  - End with a line: 'WINNER: first' or 'WINNER: second'.\n"
+    "If identical or nearly identical, say exactly that and stop."
+)
+
+
+@tool
+def pairwise_verdict(video_a: str, video_b: str, skip_control: bool = False) -> str:
+    """Premise-neutral pairwise comparison with honesty control (protocol v4 step 7).
+
+    Layer 1 (control): A vs A in one call — the oracle MUST answer 'identical',
+    otherwise it is confabulating and this verdict is UNTRUSTED.
+    Layer 2 (verdict): A vs B — trust only the WINNER/identical line, never the
+    narrated details (VLMs confabulate specifics).
+
+    Args:
+        video_a: Path to the before render.
+        video_b: Path to the after render.
+        skip_control: Skip the A-vs-A control (NOT recommended — only for
+            re-running when a previous control passed in the same session).
+    """
+    fa, fb = _resolve_workspace_path(video_a), _resolve_workspace_path(video_b)
+    for p, n in [(fa, "video_a"), (fb, "video_b")]:
+        if not os.path.exists(p):
+            return f"VERDICT ERROR: {n} not found: {p}"
+    dur = min(_duration_of(fa), _duration_of(fb))
+    times = [round(dur * f, 2) for f in (0.18, 0.3, 0.42)]
+    ma, mb = _montage_b64(fa, times), _montage_b64(fb, times)
+    if not ma or not mb:
+        return "VERDICT ERROR: could not build montages"
+
+    def _pw(x: str, y: str, label: str) -> str:
+        content = [
+            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{x}"}},
+            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{y}"}},
+            {"type": "text", "text": _PAIRWISE_PROMPT},
+        ]
+        cfg = _provider_config("dashscope")
+        # the decision-maker uses the stronger model by default (flash is
+        # noisy on subtle A/B verdicts); override with VLM_PAIRWISE_MODEL
+        cfg["model"] = os.environ.get("VLM_PAIRWISE_MODEL", "qwen3-vl-plus")
+        return _chat_completions(cfg, content, _judge_system_prompt(), 180)
+
+    if not skip_control:
+        ctrl = _pw(ma, ma, "control")
+        if ctrl.startswith("VLM API error"):
+            return f"ORACLE UNAVAILABLE (control call failed): {ctrl[:200]}"
+        if "identical" not in ctrl.lower():
+            return ("CONTROL FAILED — the oracle claims differences between IDENTICAL inputs "
+                    "(confabulating). Verdict untrusted. Do NOT use this verdict; treat the "
+                    "cycle as unverifiable and revert.\nControl response:\n" + ctrl[:400])
+    verdict = _pw(ma, mb, "verdict")
+    if verdict.startswith("VLM API error"):
+        return f"ORACLE UNAVAILABLE: {verdict[:200]}"
+    low = verdict.lower().replace("*", "")
+    winner = ""
+    if "winner: second" in low:
+        winner = "after"
+    elif "winner: first" in low:
+        winner = "before"
+    elif "identical" in low:
+        winner = "identical"
+    header = f"Pairwise verdict: {winner or 'unparsed'}\n(control {'skipped' if skip_control else 'passed'})\n\n"
+    return header + verdict
+
+
+def _append_jsonl(path: str, record: dict) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+@tool
+def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
+                 video_after: str, verdict_summary: str, aspect: str = "",
+                 user_directed: bool = False, feedback_context: str = "") -> str:
+    """The KEEP gate (protocol v4 step 8) — ask the human whether to keep a style change.
+
+    PAUSES for a human decision. Show up with both renders + the verdict.
+    Three exits: keep / keep+note / reject+note. The vote is recorded to
+    /memories/preferences.jsonl automatically; notes go to /memories/feedback.jsonl.
+
+    For AGENT-DRIVEN cycles: call after pairwise_verdict says the after-render wins.
+    For USER-DIRECTED (feedback-driven) fixes: call with user_directed=True right
+    after compare_renders passes — the user is the oracle for their own request,
+    no VLM verdict is needed.
+
+    Args:
+        knob: Style knob that was changed (dot-notation).
+        old_value: Previous value (as string).
+        new_value: New value (as string).
+        video_before: Path to the before render.
+        video_after: Path to the after render.
+        verdict_summary: One line — the pairwise verdict, or 'user-directed fix per your feedback'.
+        aspect: Which critique aspect this targets (motion/color/text/pacing/composition).
+        user_directed: True when this change came from the user's feedback (skip VLM framing).
+        feedback_context: For user-directed fixes: the user's original feedback text.
+    """
+    from langgraph.types import interrupt
+    import datetime
+    payload = {
+        "kind": "keep_gate",
+        "knob": knob,
+        "old_value": old_value,
+        "new_value": new_value,
+        "video_before": video_before,
+        "video_after": video_after,
+        "verdict_summary": verdict_summary,
+        "aspect": aspect,
+        "user_directed": user_directed,
+        "feedback_context": feedback_context,
+    }
+    decision = interrupt(payload)
+    # decision: {"type": "keep" | "reject", "note": str}
+    dtype = decision.get("type", "reject") if isinstance(decision, dict) else "reject"
+    note = (decision.get("note", "") or "").strip() if isinstance(decision, dict) else ""
+    ts = datetime.datetime.now().isoformat(timespec="seconds")
+    vote = "b" if dtype == "keep" else "a"
+    vlm_verdict = "" if user_directed else verdict_summary
+    _append_jsonl(PREFERENCES_FILE, {
+        "ts": ts, "knob": knob, "a": old_value, "b": new_value,
+        "user_verdict": vote, "vlm_verdict": vlm_verdict, "aspect": aspect,
+        "user_directed": user_directed, "segment_note": os.path.basename(video_before),
+    })
+    if note:
+        _append_jsonl(FEEDBACK_FILE, {
+            "ts": ts, "knob_under_test": knob, "a": old_value, "b": new_value,
+            "verdict": "kept_with_note" if dtype == "keep" else "rejected_with_note",
+            "note": note, "user_directed": user_directed,
+        })
+    outcome = ("KEPT" if dtype == "keep" else "REJECTED (revert the knob via update_style)")
+    result = f"KEEP GATE: {outcome}. knob={knob} {old_value}->{new_value}, user_verdict={vote}"
+    if note:
+        result += f"\nUser note (recorded to feedback.jsonl — diagnose it next): {note}"
+    if dtype != "keep":
+        result += "\nNEXT: revert the knob, then process the note per the feedback rules (3-case diagnosis)."
+    return result
