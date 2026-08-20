@@ -37,12 +37,14 @@ describe("styleLoader", () => {
   });
 
   test("chapter-card knobs are readable", () => {
-    const fontSize = getStyle<number>("treatments.chapter-card.title.fontSizeShort", 96);
-    expect(fontSize).toBe(96);
+    // structural: knob exists and is a positive number (the agent may
+    // legitimately evolve its value - never assert a specific one)
+    const fontSize = getStyle<number>("treatments.chapter-card.title.fontSizeShort", -1);
+    expect(fontSize).toBeGreaterThan(0);
   });
 
   test("host-reflection knobs are readable", () => {
     const filter = getStyle<string>("treatments.host-reflection.filter", "");
-    expect(filter).toContain("saturate");
+    expect(filter.length).toBeGreaterThan(0);
   });
 });

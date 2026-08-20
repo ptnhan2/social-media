@@ -46,7 +46,7 @@ def load_votes() -> list[dict]:
     votes = []
     if not PREFERENCES.exists():
         return votes
-    for line in PREFERENCES.read_text(encoding="utf-8").splitlines():
+    for line in PREFERENCES.read_text(encoding="utf-8-sig").splitlines():
         line = line.strip()
         if not line:
             continue
@@ -63,7 +63,7 @@ def load_feedback() -> list[dict]:
     notes = []
     if not FEEDBACK.exists():
         return notes
-    for line in FEEDBACK.read_text(encoding="utf-8").splitlines():
+    for line in FEEDBACK.read_text(encoding="utf-8-sig").splitlines():
         line = line.strip()
         if not line:
             continue

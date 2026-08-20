@@ -45,7 +45,7 @@ def test_visual_critique():
     print("\n=== visual_critique tool ===")
     video = "projects/isaacverse-final/renders/windows/isaacverse-final-draft-0.00-3.95.mp4"
     if not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), video)):
-        check("video exists", False, f"not found: {video}")
+        print("  SKIP: reference video not present (CI checkout has no renders) — add the file locally to run this test")
         return
     result = visual_critique.invoke({"video_path": video, "aspect": "all"})
     check("returns critique", len(result) > 50, result[:100])
@@ -57,8 +57,13 @@ def test_render_window():
     print("\n=== render_window tool ===")
     # Skip if no Remotion installed
     renderer = os.path.join(os.path.dirname(os.path.dirname(__file__)), "remotion-composer")
+    remotion_bin = os.path.join(renderer, "node_modules", ".bin",
+                                "remotion.cmd" if os.name == "nt" else "remotion")
     if not os.path.exists(os.path.join(renderer, "scripts", "render-window.mjs")):
-        check("remotion exists", False, "render-window.mjs not found")
+        print("  SKIP: render-window.mjs not found")
+        return
+    if not os.path.exists(remotion_bin):
+        print("  SKIP: remotion not installed (run npm install in remotion-composer) — CI does not install node deps for this job")
         return
     # Quick 1-second render
     result = render_window.invoke({

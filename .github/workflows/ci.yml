@@ -19,7 +19,7 @@ jobs:
       - name: Install harness deps
         run: |
           python -m venv harness/.venv
-          harness/.venv/bin/pip install "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph langsmith openevals
+          harness/.venv/bin/pip install "deepagents[video]" langchain-deepseek langgraph-cli[inmem] langchain langgraph langsmith openevals pillow
       - name: Create .env placeholder
         run: |
           echo "DEEPSEEK_API_KEY=test" > .env

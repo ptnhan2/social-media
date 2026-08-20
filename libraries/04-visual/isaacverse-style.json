@@ -53,7 +53,7 @@
     "chapter-card": {
       "title": {
         "fontSizeLong": 82,
-        "fontSizeShort": 130,
+        "fontSizeShort": 96,
         "lineHeight": 1.08,
         "fontWeight": 900
       },

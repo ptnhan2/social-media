@@ -1,2 +1,0 @@
-﻿{"ts": "2026-08-20T17:59:38", "knob_under_test": "treatments.semantic-diagram.ui.text.fill.color", "a": "\"#000000\"", "b": "\"#FFFFFF\"", "verdict": "rejected_with_note", "note": "animation nhanh h?n nhi?u, gi?", "user_directed": true}
-{"ts": "2026-08-20T18:32:53", "knob_under_test": "treatments.semantic-diagram.edge.revealDurationSec", "a": "0.65", "b": "2", "verdict": "kept_with_note", "note": "animation nhanh hon nhe, giu", "user_directed": false}

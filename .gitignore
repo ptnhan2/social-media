@@ -62,3 +62,5 @@ harness/logs/
 harness/test_vlm_qwen.log
 
 /memories/
+
+harness/last_cycle.log
