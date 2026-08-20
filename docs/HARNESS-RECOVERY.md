@@ -1,10 +1,10 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-20 evening. Protocol v4 IMPLEMENTED + VERIFIED. Previous: 2026-08-19.
+> Updated 2026-08-20 night — END of session. P1+P5+P2.1 SHIPPED. Previous: 2026-08-19.
 
 ## 0. SESSION 2026-08-20 — PROTOCOL v4 SHIPPED END-TO-END ✅
 
-Everything in TASTE-AND-LEARNING-ROADMAP P1 + P5 is done and verified:
+Everything in TASTE-AND-LEARNING-ROADMAP P1 + P5 + P2-phase1 is done and verified:
 
 - **Full protocol v4 cycle ran through the REAL agent** (glm-4-plus):
   read memories → render baseline (copy_render) → critic critique → think →
@@ -14,39 +14,40 @@ Everything in TASTE-AND-LEARNING-ROADMAP P1 + P5 is done and verified:
   knowledge-base entry → report. Style store now: damping=2,
   revealDurationSec=2.
 - **Multi-segment (P5)**: chapter-card runs exercised the protocol's
-  self-protection — inDurationSec 0.45→0.3 and fontSizeShort 96→130 BOTH
-  failed the pixel-diff gate (too-small / wrong-knob-for-28char-title) and
-  the agent auto-reverted + recorded failures correctly.
-- **KEEP-gate UI verified in browser** (vite + langgraph): KeepGate renders
-  both videos + note textarea; resume MUST use stream.respond({type, note})
-  NOT submit(undefined, {command}) (v1 commands transport drops it).
-- **Model choice**: main LLM = glm-4-plus (paid, user-approved after pricing
-  review: ~¥1.5-2 ≈ 5,400-7,200 VND per cycle). glm-4-flash (free) works but
-  non-deterministically invents paths; qwen-plus reliable but 24s/call on the
-  slow China route. VLM decision-maker = qwen3-vl-plus, critique = qwen3-vl-flash.
-- **TextOnlyContentMiddleware**: strips deepagents' media-preview content
-  blocks (mp4 read_file previews) — glm-4-plus 400'd without it.
-- **Tools**: compare_renders, pairwise_verdict, request_keep, copy_render.
-  **calibrate.py**: Wilson-interval zones → oracle-trust.md (no votes yet —
-  files reset clean after UI tests). **ingest_tutorial.py**: P3 pipeline ready
-  (not yet run on the Isaac videos in research/isaacverse/source/).
-- run_cycle.py: python driver for scripted cycles (use this, not .cmd files —
-  cmd.exe breaks on Vietnamese/parens). Log: harness/last_cycle.log.
+  self-protection — two changes failed the pixel-diff gate (too-small /
+  wrong-knob-for-28char-title) and the agent auto-reverted + recorded.
+- **KEEP-gate UI verified in browser** (vite + langgraph): resume MUST use
+  `stream.respond({type, note})` NOT submit(undefined, {command}) — the v1
+  commands transport drops the resume (sdk docs + network capture proof).
+- **THE INVISIBLE-ACCENT BUG (P2.1 session find)**: EditVideo passed
+  `accent={asString(params.accent, undefined)}` — explicit undefined triggers
+  asString's fallback default `""` → every treatment got accent="" →
+  component defaults (accent = AMBER()) bypassed → ALL accent elements
+  (title bars/glows/borders) invisible in treatment renders since the
+  BeatContent fix. Fixed with `|| undefined` at 9 call sites. Diagnosed via
+  brute-force red-bar render.
+- **New knobs (P2.1)**: colors.* (palette — wired via getters; module-load
+  freeze fixed), semantic-diagram.node.glow/padding, chapter-card
+  .title.fontWeight/.accentLine.glow, spring configs ×3 treatments. All
+  pixel-diff verified (amber 0.52, glow 0.92). SKILL.md updated.
+- **Model**: main LLM = glm-4-plus (paid, user-approved: ~6k VND/cycle;
+  free fallback glm-4-flash — non-deterministic path invention; qwen-plus
+  24s/call too slow). VLM: qwen3-vl-plus (pairwise) / flash (critique).
+- **TextOnlyContentMiddleware**: strips deepagents media-preview blocks.
+- **calibrate.py** (Wilson zones → oracle-trust.md), **ingest_tutorial.py**
+  (P3 pipeline written, NOT yet run — Isaac videos in
+  research/isaacverse/source/), **run_cycle.py** (python driver; cmd.exe
+  breaks on Vietnamese/parens; log: harness/last_cycle.log).
 
-REMAINING from the roadmap:
-- P2.1: add ~15 new style knobs (TSX wiring + pixel-diff verification each)
-- P2.2: style-knobs SKILL.md update for the new knobs
-- P3: run ingest_tutorial.py on an Isaac video + human review of candidates
-- P1 refinements: taste-standard into judge prompt is done; zones need votes
-  to activate; spot-check cadence once AUTO zones exist
-- Later: P2 phase-2 generator architecture, P4 feedback door in Composer UI
+REMAINING (next session):
+1. Run ingest_tutorial.py on an Isaac video + human review of candidates
+2. Accumulate calibration votes (real usage) → calibrate.py → zones activate
+3. P2 phase-2: generator architecture (EditorDoc as truth, treatments as
+   generators, editorOperations as agent tools)
+4. P4: Composer feedback door (KEEP gate is in AgentPanel already)
+5. Wishlist entries will accumulate from feedback notes
 
-Key files this session: harness/harness_tools.py (tools), harness/agent.py
-(middleware + CLI), harness/calibrate.py, harness/run_cycle.py,
-harness/ingest_tutorial.py, AgentPanel.tsx (KeepGate UI),
-harness/memories/AGENTS.md (protocol v4), docs/TASTE-AND-LEARNING-ROADMAP.md (rev 3).
-
-Commits: 0306cd6 → 74aefbb → f9bc742 → 92b3e7c (+ stray-dir cleanup).
+Commits this session: 0306cd6 → 74aefbb → f9bc742 → 92b3e7c → 15b318d → f283a0e.
 
 ## 1. PROJECT
 
