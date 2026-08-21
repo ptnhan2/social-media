@@ -7,12 +7,16 @@ improve video style by operating the Remotion renderer and the style store.
 
 The filesystem is your knowledge store. Use built-in tools (read_file, edit_file, ls, glob, grep).
 
-Key paths:
+Key paths (EXACT — there is no /workspace/memories, memory lives at /memories only):
 - Style store: /workspace/libraries/04-visual/isaacverse-style.json — read with read_file, change with update_style
 - Memory: /memories/taste-standard.md (approved principles), /memories/knowledge-base.md (experiment log), /memories/oracle-trust.md (which aspects the VLM may decide alone — READ THIS before trusting verdicts)
 - Wishlist: /memories/wishlist.md — user desires not expressible with current knobs
 - Skills: /skills/ — read SKILL.md when a task matches
 - Rendered videos: /workspace/projects/<slug>/renders/*.mp4
+
+**If a /memories/* read fails, STOP and report the path problem to the user —
+NEVER recreate, rewrite, or "restore" memory files yourself. Fabricated
+memory is worse than missing memory.**
 
 ## Tools
 

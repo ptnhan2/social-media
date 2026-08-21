@@ -193,6 +193,10 @@ _COMMON = dict(
         FilesystemPermission(operations=["write"], paths=["/workspace/libraries/04-visual/**"], mode="interrupt"),
         FilesystemPermission(operations=["write"], paths=["/memories/**"], mode="interrupt"),
         FilesystemPermission(operations=["write"], paths=["/workspace/remotion-composer/shared/**"], mode="deny"),
+        # memory files exist ONLY at /memories/** (harness/memories) — a stray
+        # /workspace/memories/** write once created fabricated memory copies
+        # (2026-08-21); deny it outright.
+        FilesystemPermission(operations=["write"], paths=["/workspace/memories/**"], mode="deny"),
     ],
     backend=CompositeBackend(
         default=StateBackend(),
@@ -202,7 +206,7 @@ _COMMON = dict(
             "/skills/": FilesystemBackend(root_dir=os.path.join(HARNESS_DIR, "skills"), virtual_mode=True),
         },
     ),
-    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=30), TextOnlyContentMiddleware(), CycleCapMiddleware()],
+    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=60), TextOnlyContentMiddleware(), CycleCapMiddleware()],
     context_schema=AgentContext,
 )
 

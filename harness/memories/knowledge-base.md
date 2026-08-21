@@ -6,6 +6,17 @@
 
 ## Experiments
 
+### Experiment: process-timeline.spring.stiffness 150 → 180 — NO CHANGE (pairwise identical)
+- Date: 2026-08-21 (C2 first attempt)
+- Segment: isaacverse-final 10.5-14s (process-timeline)
+- Pixel-diff gate: PASS (max mean 0.311 — small but reached render)
+- Pairwise verdict: "identical" (control passed) → auto-reverted
+- Result: NO CHANGE. REVERTED (stiffness=150).
+- Learning: a 150→180 stiffness delta is below the montage oracle's
+  discrimination threshold — consistent with the spring damping 18→4 miss
+  in the vote session. Spring knobs on this treatment need drastic deltas
+  or a better instrument.
+
 ### Experiment: edge.stroke.width 2 → 4 — USER-REJECTED (user-directed fix cycle)
 - Date: 2026-08-21 (Batch B test — first feedback-driven cycle ever run)
 - Segment: isaacverse-final 3.5-7s (semantic-diagram)
@@ -87,6 +98,15 @@
 - Action: Reverted. Style store version rolled back to 29.
 
 ## Per-treatment win rate (update after every cycle)
+
+> **Montage oracle limits (2026-08-21 vote session — read before choosing knobs):**
+> the 3-frame montage pairwise verdict detected only 4/8 verified-different
+> pairs. CAUGHT: big accent visibility, glow 18→60, fontSize 82→110, semantic
+> entrance damping 18→2. MISSED ("identical"): process-timeline spring damping
+> 18→4, amber→red hue swap, edge reveal timing, accentLine width 190→340.
+> Knobs that change SIZE or STRONG brightness in static frames verify best;
+> pure timing/motion/hue knobs often die at pairwise. Prefer verifiable knobs
+> when the weakest aspect allows a choice.
 
 | Treatment | Cycles | Wins kept | Losses reverted | Notes |
 |---|---|---|---|---|

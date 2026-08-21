@@ -1,5 +1,5 @@
 {
-  "version": 53,
+  "version": 58,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -103,7 +103,7 @@
       "progressStartSec": 0.35,
       "progressEndSec": 1.2,
       "spring": {
-        "damping": 18,
+        "damping": 22,
         "stiffness": 150
       }
     },
