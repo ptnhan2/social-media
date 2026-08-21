@@ -153,8 +153,13 @@ khoảng cách "preview Composer ≠ video agent render".
 - [x] **F5. optimize.py**: ĐÃ XÓA (2026-08-21) — stub với comparison logic giả,
       proposals hardcoded, tự sửa AGENTS.md không qua write-gate; taste
       flywheel (calibrate + KEEP gate + knowledge-base) là outer loop thật.
-- [ ] **F6. Docker Postgres persistence test** (build xong từ trước, chưa
-      test restart).
+- [x] **F6. Docker Postgres persistence test** — XONG (đêm 21-22/08):
+      f6_probe.py chạy graph nhỏ với PostgresSaver trong container → fresh
+      container ĐỌC LẠI được state, và cả sau khi restart postgres container.
+      Phát hiện + fix quan trọng: Dockerfile.langgraph thiếu
+      `langgraph-checkpoint-postgres` + `psycopg[binary]` — không có 2 package
+      này, agent.py trong Docker **fallback im lặng sang MemorySaver** (mất
+      state mỗi restart). Image harness-langgraph đã build sẵn локально.
 
 ---
 
