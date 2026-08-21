@@ -64,17 +64,31 @@ CỦA BẠN, không phải gu Qwen"). E là việc kiến trúc lớn, để ri�
       cycle 4 và hướng dẫn mở thread mới. AGENTS.md cũng sắc lại định nghĩa
       "session = whole thread".
 
-## BATCH C — Multi-segment: chưa có cải thiện THÀNH CÔNG nào ngoài semantic-diagram
+## BATCH C — Multi-segment — ✅ ĐÓNG 2026-08-21 (kết quả trung thực: 0 IMPROVED mới)
 
-- [ ] **C1. Chapter-card cycle thành công** (2 lần trước fail gate vì chọn
-      knob delta nhỏ/sai). Lần này chọn knob delta lớn: fontSizeLong 82→110
-      (title 28 chars dùng fontSizeLong) hoặc accentLine.maxWidth 190→340.
-- [ ] **C2. Process-timeline segment (10.5-14s)**: knob map = spring
-      damping/stiffness (mới wire), progressStartSec/progressEndSec.
-- [ ] **C3. Host-reflection segment (7-10.5s)**: pushStart, pushDurationSec.
-- [ ] **C4. Ghi win-rate theo treatment** vào knowledge-base.md; nếu oracle
-      giữ được tỉ lệ thắng ở mọi treatment → zones tổng quát hóa; không thì
-      hiệu chuẩn riêng từng treatment (calibrate.py mở rộng).
+> Kết luận batch: cả 2 treatment chưa test đều bị **chặn bởi thiết bị đo**, không
+> phải thiếu thử. Monte oracle mù đặc hiệu với thay đổi TOÀN-CỤC (luminance/
+> saturation/zoom) — nói "identical" với cặp diff 5.28 (8.7% pixels), trong khi
+> vẫn bắt đúng thay đổi cục bộ (probe fontSize xác nhận endpoint không xuống
+> cấp). User cũng tie trên mọi cặp motion/global (6/6). Chìa khóa mở: **F4**
+> (native video input) + có thể vote ở resolution cao hơn. Chi tiết trong
+> knowledge-base.md: "blind spot is PERCEPTUAL" + "Taste-profile insight".
+
+- [x] **C1. Chapter-card**: không chạy cycle — 2 knob gợi ý (fontSizeLong 110,
+      accentLine 340) đã bị user vote xuống sáng cùng ngày (prefer baseline
+      82/190); treatment không có motion knob; kết luận trung thực: chapter-card
+      đang ở local optimum với gu user hiện tại.
+- [x] **C2. Process-timeline**: đủ 4 loại knob wired đều test — stiffness
+      (identical), damping (identical/user-tie), amber (0.0 diff — không wired
+      cho beat này), progressEndSec (diff 0.478 nhưng identical). INSTRUMENT-
+      BLOCKED, ghi rõ trong KB + rule "đừng tiêu cycle vào treatment này tới
+      khi có F4".
+- [x] **C3. Host-reflection**: pushDurationSec 4→1.5 (diff 5.28!) và filter
+      sáng hơn (diff 3.75) đều PASS pixel-diff nhưng VLM mù + user tie →
+      UNVERIFIABLE, reverted. Human-fallback vote qua vote_session (đúng
+      triết lý user-as-oracle).
+- [x] **C4. Win-rate theo treatment**: bảng cập nhật đầy đủ trong
+      knowledge-base.md (semantic 2W/2L, pt 0/4, hr 0/2, cc 0/2).
 
 ## BATCH D — Tutorial learning (script có sẵn, chưa chạy)
 
@@ -119,6 +133,10 @@ khoảng cách "preview Composer ≠ video agent render".
       chưa chạy lại).
 - [ ] **F4. Key DashScope quốc tế (user action)** → native video input cho
       VLM (bỏ montage 3-frame) → bỏ nhãn PROVISIONAL của motion zone.
+      **⬆️ ĐÃ THÀNH CRITICAL PATH (2026-08-21 tối)**: Batch C chứng minh
+      montage oracle mù với thay đổi toàn-cục (identical với diff 5.28) và
+      user tie trên mọi cặp motion/global — không thể có IMPROVED entry mới
+      cho bất kỳ treatment nào ngoài các knob cục bộ cho tới khi có cái này.
 - [ ] **F5. optimize.py**: fix logic so sánh hoặc xóa hẳn (đã demote — taste
       flywheel mới là outer loop thật).
 - [ ] **F6. Docker Postgres persistence test** (build xong từ trước, chưa

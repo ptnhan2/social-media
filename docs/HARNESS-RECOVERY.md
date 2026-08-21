@@ -1,21 +1,27 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-21 tối (BATCH A + B SHIP). Previous: 2026-08-20 đêm.
-> **BATCH A — HIỆU CHUẨN GU — XONG**: `harness/vote_session.py` (blind A/B web
-> UI) thu 8 phiếu thật → `memories/preferences.jsonl`; `calibrate.py` sinh
-> `memories/oracle-trust.md` (toàn ASK; AUTO cần N≥10, dồn qua KEEP gate thật).
-> **BATCH B — FEEDBACK-DRIVEN CYCLE — XONG** (qa AgentPanel UI): B1 reject+note
-> → revert + 3-case chẩn đoán đúng; B2 chuỗi rút gọn đúng contract (no VLM,
-> user_directed=True, gate quay lại); B3 film-grain → wishlist.md qua
-> write-gate; B4 cap FAIL lần đầu → fix `CycleCapMiddleware` (đếm cycle qua
-> message markers, inject system reminder ở cap) → test PASS. Tìm thấy thêm:
-> AgentPanel submit bị khuyết sau khi cancel run (thread kẹt dangling
-> interrupt — mở chat mới là xong), memory files UTF-8 sạch.
-> Phát hiện style: `host-reflection.subtitle.fontSize` CHƯA WIRE (hardcode 28
-> trong treatments.tsx ~line 296) — việc cho Batch C3; `ab_A/ab_B` là render
-> tiền-fix (bỏ dùng).
-> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** — Batch C (multi-segment) kế
-> tiếp, rồi D (tutorial), E (generator arch), F (vụn).
+> Updated 2026-08-21 đêm (BATCH A + B + C đóng). Previous: 2026-08-20 đêm.
+> **BATCH A — HIỆU CHUẨN GU — XONG**: 10 phiếu thật (8 sáng + 2 tối) trong
+> preferences.jsonl; oracle-trust.md toàn ASK; agent verified đọc zones.
+> **BATCH B — FEEDBACK CYCLE — XONG**: 3 đường (reject+note / user-directed /
+> wishlist) qua AgentPanel UI; cap 3-cycle fix bằng CycleCapMiddleware
+> (test_cycle_cap.py PASS).
+> **BATCH C — ĐÓNG với 0 IMPROVED mới (trung thực)**: cả process-timeline
+> (4 knob) lẫn host-reflection (push + filter) đều UNVERIFIABLE — montage
+> oracle mù PERCEPTUAL với thay đổi toàn-cục (nói identical với diff 5.28/
+> 8.7% pixels — debug_montage.py chứng minh builder đúng, probe fontSize
+> chứng minh endpoint không hỏng), và user TIE trên 6/6 cặp motion/global.
+> Insight gu: user nhạy với feature CỤC BỘ (text/accent/glow), kệ motion.
+> Style store verify 8/8 về baseline thật sau 3 lần leak (damping 22, amber
+> #ffb84b, filter — đều bắt được và restore; lỗi: script restore chết bởi
+> quoting + run chết giữa chừng bỏ qua finally).
+> **CRITICAL PATH GIỜ LÀ F4** (key DashScope quốc tế → native video input) —
+> không có nó thì không treatment nào ngoài semantic-diagram có thể sinh
+> IMPROVED entry. Cũng cân nhắc: vote ở resolution cao hơn 360p.
+> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** — D (tutorial, cần D1 chạy
+> ingest_tutorial.py), E (generator arch — session riêng), F (vụn, F4 trên
+> hết). Lưu ý vận hành: langgraph dev + vite vẫn đang chạy; thread UI cuối bị
+> kẹt model-glitch — refresh page = thread mới.
 >
 > **Audit lần 2 (21:00-23:00 2026-08-20) đã sửa thêm**: CI đỏ cả ngày (4 gốc:
 > styleLoader test brittle, test_unit cần điều kiện không có trên CI,

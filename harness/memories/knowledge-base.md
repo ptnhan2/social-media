@@ -6,6 +6,51 @@
 
 ## Experiments
 
+### Experiment: host-reflection.pushDurationSec 4 → 1.5 — UNVERIFIABLE (oracle blind)
+- Date: 2026-08-21 (C3, deterministic protocol run)
+- Segment: isaacverse-final 7-10.5s (host-reflection, critique motion 2/5 weakest)
+- Pixel-diff gate: PASS (max mean 5.284, 8.7% pixels — huge)
+- Pairwise verdict: "identical" (control passed) — the oracle CANNOT see a
+  whole-frame zoom shift at this magnitude
+- Human fallback vote (vote_session): TIE — user indifferent at 360p
+- Result: UNVERIFIABLE. REVERTED (pushDurationSec=4). Not refuted — neither
+  oracle (VLM nor user) could discriminate it.
+
+### Experiment: host-reflection.filter saturate/brightness up — UNVERIFIABLE (oracle blind)
+- Date: 2026-08-21 (C3 cycle 2, targeting critique's color complaint "washed out")
+- Segment: isaacverse-final 7-10.5s
+- Change: saturate(.72)→(.8), brightness(.72)→(.88)
+- Pixel-diff gate: PASS (max mean 3.751, 8.5% pixels)
+- Pairwise verdict: "identical" (control passed) — blind to whole-frame
+  luminance shift
+- Human fallback vote: TIE
+- Result: UNVERIFIABLE. REVERTED.
+
+### Finding: the pairwise oracle's blind spot is PERCEPTUAL, not pipeline (2026-08-21)
+- debug_montage.py verified the montage builder: the two montages differ
+  (mean 4.06, 10.65% pixels, different bytes). The VLM receives genuinely
+  different images and still says "identical" with pixel-level confidence.
+- Probe: the SAME VLM correctly judged the fontSize 82/110 pair ("after",
+  matching the morning verdict) — the endpoint is not degraded; it is
+  specifically blind to GLOBAL changes (whole-frame luminance, saturation,
+  zoom) while catching LOCAL high-contrast changes (text size, accent
+  blocks, glow).
+- Practical rule: pairwise verdicts are only meaningful for local,
+  high-contrast knob changes. Global/luminance/motion changes cannot pass
+  the gate regardless of pixel-diff magnitude — do not spend cycles on them
+  until the oracle improves (F4 native video input).
+
+### Taste-profile insight from 10 calibration votes (2026-08-21)
+- User's DECIDED preferences are all LOCAL/high-contrast features: text size
+  (prefers 82 over 110), accent line width (190 over 340), accent visibility,
+  amber hue (baseline). All 4 decided votes chose the CURRENT baseline.
+- User TIES on: all motion pairs (4), global luminance/saturation (2).
+- Implication: improvement cycles should target color/text/composition with
+  local contrast — motion and global-filter knobs are invisible to this user
+  at draft resolution (and to the montage oracle). Spending cycles on motion
+  is wasted budget until renders are judged at higher resolution or with
+  native video input.
+
 ### Conclusion: process-timeline is INSTRUMENT-BLOCKED for pairwise gates (2026-08-21)
 - All 4 wired knob types tested today; none can pass the pairwise gate:
   - spring.stiffness 150→180: pairwise "identical" (pixel-diff 0.311)
@@ -143,8 +188,8 @@
 |---|---|---|---|---|
 | semantic-diagram | 4 | 2 (damping 18→2, reveal 0.65→2) | 2 (durationSec 0.75→1.5, stroke.width 2→4*, stroke.mode solid→gradient*) | *user-directed, user-rejected. VLM-detectable knobs exist here. |
 | chapter-card | 2 | 0 | 2 (inDurationSec, fontSizeShort pre-fix invalid) | motion impossible; text knobs user-prefers-baseline (votes 2026-08-21) |
-| process-timeline | 0 | 0 | 0 | untested — spring + progress knobs wired |
-| host-reflection | 0 | 0 | 0 | subtitle.fontSize NOT WIRED (hardcoded 28) |
+| process-timeline | 4 | 0 | 4 (stiffness 180, damping 4, amber, progressEndSec 3.5) | INSTRUMENT-BLOCKED: all pairwise "identical" |
+| host-reflection | 2 | 0 | 2 (pushDurationSec 1.5, filter bright) | UNVERIFIABLE: oracle blind to global changes; user tied |
 | screen-proof / audience-demand / candidate-comparison / cinematic-metaphor | 0 | 0 | 0 | untested |
 
 

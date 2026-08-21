@@ -38,5 +38,15 @@
     "winner": "identical",
     "raw": "Pairwise verdict: identical | (control passed)",
     "ts": "2026-08-21T16:16:02"
+  },
+  "hr3color": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical | (control passed) — VLM blind to whole-frame luminance shift (pixel mean 3.75)",
+    "ts": "2026-08-21T20:40:00"
+  },
+  "hr3push": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical | (control passed) — VLM blind to zoom shift (pixel mean 5.28)",
+    "ts": "2026-08-21T20:20:00"
   }
 }
