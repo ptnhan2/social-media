@@ -143,17 +143,17 @@ const DiagramNodeView: React.FC<{
     >
       <div
         style={{
-          border: `2px solid ${color}`,
-          borderRadius: 10,
+          border: `${getStyle<number>("treatments.semantic-diagram.node.borderWidth", 2)}px solid ${color}`,
+          borderRadius: getStyle<number>("treatments.semantic-diagram.node.borderRadius", 10),
           padding: getStyle<string>("treatments.semantic-diagram.node.padding", "14px 18px 13px"),
-          background: "rgba(7,9,13,0.84)",
+          background: getStyle<string>("treatments.semantic-diagram.node.background", "rgba(7,9,13,0.84)"),
           boxShadow: `0 0 ${getStyle<number>("treatments.semantic-diagram.node.glow", 18)}px ${color}38, inset 0 0 ${getStyle<number>("treatments.semantic-diagram.node.glow", 18)}px ${color}12`,
         }}
       >
-        <div style={{ color, fontFamily: "Arial, sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+        <div style={{ color, fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.node.fontSize", 20), fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
           {node.label}
         </div>
-        {node.detail ? <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: 14, lineHeight: 1.35, marginTop: 6, opacity: 0.78 }}>{node.detail}</div> : null}
+        {node.detail ? <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.node.detailFontSize", 14), lineHeight: 1.35, marginTop: 6, opacity: 0.78 }}>{node.detail}</div> : null}
       </div>
       <div style={{ width: 8, height: 8, borderRadius: "50%", background: secondaryAccent, boxShadow: `0 0 12px ${secondaryAccent}`, margin: "-4px auto 0" }} />
     </div>
@@ -186,8 +186,8 @@ export const SemanticDiagram: React.FC<SemanticDiagramProps> = ({
     <AbsoluteFill style={{ backgroundColor: BLACK(), color: PAPER(), overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 46%, rgba(242,184,75,0.09), transparent 42%)" }} />
       <div style={{ position: "absolute", left: 86, top: 62, opacity: titleIn, transform: `translateY(${(1 - titleIn) * 18}px)` }}>
-        {kicker ? <div style={{ color: secondaryAccent, fontFamily: "Arial, sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>{kicker}</div> : null}
-        <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: 46, fontWeight: 800, letterSpacing: "-0.02em" }}>{title}</div>
+        {kicker ? <div style={{ color: secondaryAccent, fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.kicker.fontSize", 18), fontWeight: getStyle<number>("treatments.semantic-diagram.kicker.fontWeight", 700), letterSpacing: getStyle<string>("treatments.semantic-diagram.kicker.letterSpacing", "0.18em"), textTransform: "uppercase", marginBottom: 12 }}>{kicker}</div> : null}
+        <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.title.fontSize", 46), fontWeight: getStyle<number>("treatments.semantic-diagram.title.fontWeight", 800), letterSpacing: getStyle<string>("treatments.semantic-diagram.title.letterSpacing", "-0.02em") }}>{title}</div>
         <div style={{ width: 110, height: 4, background: accent, boxShadow: `0 0 14px ${accent}`, marginTop: 16 }} />
       </div>
       <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
@@ -315,8 +315,9 @@ export const HostReflectionShot: React.FC<HostReflectionShotProps> = ({ src, sub
   const imgFilter = getStyle<string>("treatments.host-reflection.filter", "saturate(.72) contrast(1.18) brightness(.72)");
   const lbTop = getStyle<number>("treatments.host-reflection.letterboxTopPct", 8);
   const lbBottom = getStyle<number>("treatments.host-reflection.letterboxBottomPct", 12);
-  const subFont = getStyle<string>("treatments.host-reflection.subtitleFontFamily", "Georgia, serif");
-  const subSize = getStyle<number>("treatments.host-reflection.subtitleFontSize", 27);
+  const subFont = getStyle<string>("treatments.host-reflection.subtitle.fontFamily", "Georgia, serif");
+  const subStyle = getStyle<string>("treatments.host-reflection.subtitle.fontStyle", "italic");
+  const subSize = getStyle<number>("treatments.host-reflection.subtitle.fontSize", 27);
   const entrance = interpolate(frame, [0, entranceDur * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const push = interpolate(frame, [0, pushDur * fps], [pushStart, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const light = lightSide === "left" ? "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)" : "linear-gradient(270deg, rgba(242,184,75,.65), transparent 48%)";
@@ -327,7 +328,7 @@ export const HostReflectionShot: React.FC<HostReflectionShotProps> = ({ src, sub
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))" }} />
       <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: `${lbTop}%`, background: BLACK() }} />
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: `${lbBottom}%`, background: BLACK(), display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8%" }}>
-        <div style={{ color: accent, fontFamily: subFont, fontStyle: "italic", fontSize: subSize, textAlign: "center", textShadow: "0 2px 8px #000" }}>{subtitle}</div>
+        <div style={{ color: accent, fontFamily: subFont, fontStyle: subStyle, fontSize: subSize, textAlign: "center", textShadow: "0 2px 8px #000" }}>{subtitle}</div>
       </div>
     </AbsoluteFill>
   );
@@ -472,7 +473,7 @@ export const CandidateComparison: React.FC<CandidateComparisonProps> = ({ title,
       </div>
       <div style={{ position: "absolute", left: "7%", right: "7%", top: "28%", bottom: "12%", display: "grid", gridTemplateColumns: `repeat(${Math.max(1, Math.min(4, candidates.length))}, 1fr)`, gap: 18, alignItems: "stretch" }}>
         {candidates.map((candidate, index) => {
-          const entrance = spring({ frame: Math.max(0, frame - index * 0.22 * fps), fps, config: { damping: getStyle<number>("treatments.candidate-comparison.spring.damping", 18), stiffness: getStyle<number>("treatments.candidate-comparison.spring.stiffness", 160) }, durationInFrames: Math.round(0.6 * fps) });
+          const entrance = spring({ frame: Math.max(0, frame - index * getStyle<number>("treatments.candidate-comparison.candidateStaggerSec", 0.22) * fps), fps, config: { damping: getStyle<number>("treatments.candidate-comparison.spring.damping", 18), stiffness: getStyle<number>("treatments.candidate-comparison.spring.stiffness", 160) }, durationInFrames: Math.round(0.6 * fps) });
           const selected = index === selectedIndex;
           const color = candidate.color ?? (selected ? accent : "#61d7e8");
           return (

@@ -67,15 +67,36 @@
   amber #ffb84b) leaked in from dead runs — always verify the store after
   any run that dies mid-cycle.
 
-### Finding: colors.amber is INEFFECTIVE on the process-timeline beat (2026-08-21)
+### Finding: colors.amber on process-timeline — SUB-THRESHOLD, not unwired (corrected 2026-08-21 night)
 - Segment: isaacverse-final 10.5-14s (beat final-beat-04, activeStep=2).
-- colors.amber #f2b84b → #ffb84b: pixel-diff gate FAIL (max mean 0.0, 0.0%
-  changed) — the change did not reach the render at all.
-- The 4 steps pin their own colors in beat params (#61d7e8 / #f2b84b /
-  #ec6a5e / #a98bff); accent-driven regions are too subtle to register.
-- Effective wired knobs for this beat ONLY: titleInDurationSec,
-  progressStartSec, progressEndSec, spring.damping, spring.stiffness.
-  progressEndSec 1.2→3.5 verified to reach render (max mean 0.478).
+- colors.amber #f2b84b → #ffb84b: pixel-diff 0.0. CORRECTION of the earlier
+  "did not reach the render" reading: the delta is R-channel-only (242→255,
+  13 units) → grayscale diff ≈ 3.9, BELOW the >8 changed-pixel threshold.
+  The change DID reach the render; it is simply invisible to the gate.
+- Rule: hue-only changes with small channel deltas (especially on small
+  accent regions — this beat's steps pin their own colors, leaving only a
+  17px kicker + 3px progress bar + faint gradient amber-driven) are below
+  the pixel-diff instrument's resolution. Use bigger hue steps or
+  channel-balanced colors when testing palette knobs.
+
+### Finding + fix: 11 dead knobs wired (2026-08-21 night, audit_knob_paths.py)
+- audit_knob_paths.py cross-checks every getStyle() path vs the store.
+- Found and FIXED (all behavior-preserving, QA-verified):
+  - host-reflection subtitle path MISMATCH: code read flat
+    `subtitleFontSize`/`subtitleFontFamily` while the store nests
+    `subtitle.fontSize` — knob dead since inception. Wired to nested paths
+    (+ fontStyle wired too).
+  - semantic-diagram node.borderWidth/borderRadius/background/fontSize/
+    detailFontSize, kicker.fontSize/fontWeight/letterSpacing,
+    title.fontSize/fontWeight/letterSpacing — all hardcoded in
+    treatments.tsx despite store entries. Now wired.
+  - candidate-comparison.candidateStaggerSec — hardcoded 0.22. Now wired.
+- QA: identity renders 0.0/0.0 vs pre-change renders (behavior-preserving);
+  bump tests node.fontSize 20→28 → 1.654, subtitle.fontSize 27→36 → 2.375;
+  vite build + 79/79 tests pass.
+- IMPLICATION for earlier experiments: any cycle that touched these knobs
+  before 2026-08-21 night could not have changed the render (the C2 "amber
+  sub-threshold" case above is separate and real).
 
 ### Experiment: process-timeline.progressEndSec 1.2 → 3.5 — reaches render (sanity check)
 - Date: 2026-08-21 (local sanity render, not an agent cycle)
