@@ -1,0 +1,2 @@
+{"ts": "2026-08-21T17:52:37", "knob_under_test": "treatments.semantic-diagram.edge.stroke.width", "a": "2", "b": "4", "verdict": "rejected_with_note", "note": "Cả hai đều xấu — màu hơi bệt, đường dày hơn vẫn không có chiều sâu", "user_directed": true}
+{"ts": "2026-08-21T18:02:50", "knob_under_test": "treatments.semantic-diagram.edge.stroke.mode", "a": "solid", "b": "gradient", "verdict": "rejected_with_note", "note": "Tạm ổn — trả về style cũ. Hôm nay đủ 3 chu kỳ rồi, dừng ở đây.", "user_directed": true}

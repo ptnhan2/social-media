@@ -1,17 +1,21 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-21 (Batch A SHIP). Previous: 2026-08-20 đêm (audit 2).
+> Updated 2026-08-21 tối (BATCH A + B SHIP). Previous: 2026-08-20 đêm.
 > **BATCH A — HIỆU CHUẨN GU — XONG**: `harness/vote_session.py` (blind A/B web
 > UI) thu 8 phiếu thật → `memories/preferences.jsonl`; `calibrate.py` sinh
-> `memories/oracle-trust.md` (color 0/1, text 0/1, motion +3 ties — toàn ASK;
-> AUTO cần N≥10, sẽ dồn qua các KEEP gate thật). Cycle verify qua AgentPanel
-> UI chat (F1 ✓): agent đọc zones, tôn trọng ASK, pairwise thua → tự revert.
-> Write-gate approval UI (Approve/Reject + diff) test lần đầu — hoạt động.
-> Phát hiện mới: `host-reflection.subtitle.fontSize` CHƯA WIRE (treatments.tsx
-> hardcode 28) — việc cho Batch C3; `ab_A/ab_B` là render tiền-fix (bỏ dùng).
-> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** — Batch B (feedback cycle) là
-> bước kế tiếp, rồi C (multi-segment), D (tutorial), E (generator arch),
-> F (vụn).
+> `memories/oracle-trust.md` (toàn ASK; AUTO cần N≥10, dồn qua KEEP gate thật).
+> **BATCH B — FEEDBACK-DRIVEN CYCLE — XONG** (qa AgentPanel UI): B1 reject+note
+> → revert + 3-case chẩn đoán đúng; B2 chuỗi rút gọn đúng contract (no VLM,
+> user_directed=True, gate quay lại); B3 film-grain → wishlist.md qua
+> write-gate; B4 cap FAIL lần đầu → fix `CycleCapMiddleware` (đếm cycle qua
+> message markers, inject system reminder ở cap) → test PASS. Tìm thấy thêm:
+> AgentPanel submit bị khuyết sau khi cancel run (thread kẹt dangling
+> interrupt — mở chat mới là xong), memory files UTF-8 sạch.
+> Phát hiện style: `host-reflection.subtitle.fontSize` CHƯA WIRE (hardcode 28
+> trong treatments.tsx ~line 296) — việc cho Batch C3; `ab_A/ab_B` là render
+> tiền-fix (bỏ dùng).
+> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** — Batch C (multi-segment) kế
+> tiếp, rồi D (tutorial), E (generator arch), F (vụn).
 >
 > **Audit lần 2 (21:00-23:00 2026-08-20) đã sửa thêm**: CI đỏ cả ngày (4 gốc:
 > styleLoader test brittle, test_unit cần điều kiện không có trên CI,

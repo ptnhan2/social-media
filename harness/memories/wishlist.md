@@ -7,4 +7,9 @@
 
 ## Entries
 
-(none yet)
+### 2026-08-21: Film grain effect overlay
+- **User feedback**: "Tôi muốn toàn bộ khung hình có cảm giác film grain — vân nhiễu mịn kiểu phim cổ, phủ lên mọi thứ"
+- **Analysis**: Checked style-knobs skill thoroughly - NO existing knobs control visual effects, overlays, or filters
+- **Current knobs available**: Colors, motion timing, layout sizing, glow effects - but NO global visual effects/film grain
+- **Status**: REQUESTED - needs new knob implementation for `treatments.global.filmGrain` or similar overlay system
+- **Priority**: High - adds authentic film aesthetic to entire video

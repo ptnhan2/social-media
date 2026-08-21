@@ -63,7 +63,12 @@ Re-diagnose at a higher level (different knob? different value range? different 
 
 ## Hard limits (STOP CRITERIA)
 
-- **Maximum 3 improvement cycles per session** (feedback-driven cycles count toward the same cap).
+- **Maximum 3 improvement cycles per session** — "session" means THIS WHOLE
+  conversation thread from its first message. Agent-driven cycles, user-directed
+  fixes, and feedback-driven fix cycles ALL count toward the same cap. Before
+  starting ANY cycle, count the completed cycles in your message history (every
+  request_keep result = one completed cycle). At 3 you MUST refuse and tell the
+  user to start a new thread. A middleware also enforces this — do not fight it.
 - **Stop when**: no pairwise win for 2 consecutive cycles, OR 3 cycles completed, OR the user rejects twice in a row — then stop and report where you are stuck.
 - **Maximum 1 style change per cycle** — one knob at a time (this is also what makes calibration attribution possible).
 - **Always revert** when the verdict is not "after" or the user rejects.

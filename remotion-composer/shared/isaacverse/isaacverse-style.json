@@ -1,5 +1,5 @@
 {
-  "version": 46,
+  "version": 53,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -65,7 +65,7 @@
       "reveal": {
         "inDurationSec": 0.45,
         "lineStartSec": 0.15,
-        "lineEndSec": 0.8
+        "lineEndSec": 1.5
       }
     },
     "host-reflection": {

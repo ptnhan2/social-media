@@ -6,6 +6,30 @@
 
 ## Experiments
 
+### Experiment: edge.stroke.width 2 → 4 — USER-REJECTED (user-directed fix cycle)
+- Date: 2026-08-21 (Batch B test — first feedback-driven cycle ever run)
+- Segment: isaacverse-final 3.5-7s (semantic-diagram)
+- Feedback: "đường nối nhạt quá, mảnh và khó để ý" → interpretation: width 2→4
+- Pixel-diff gate: PASS (max mean 1.767)
+- Keep gate: user REJECTED with note "Cả hai đều xấu — màu hơi bệt, đường dày
+  hơn vẫn không có chiều sâu" → reverted (width=2 restored)
+- Learning: thicker stroke alone does not read as more visible/better to this
+  user. Note diagnosed as case 1 (maps to knob): "màu bệt / không chiều sâu"
+  → edge.stroke.mode gradient was the follow-up candidate.
+- Path evidence: shortened chain ran correctly (update_style → render →
+  compare_renders → request_keep(user_directed=True), NO critique/pairwise).
+
+### Experiment: edge.stroke.mode solid → gradient — USER-REJECTED (hot-fix re-evaluation)
+- Date: 2026-08-21 (Batch B test — the "hot fix then re-evaluate" promise)
+- Segment: isaacverse-final 3.5-7s (semantic-diagram)
+- Trigger: diagnosis of the previous rejection note (color depth)
+- Pixel-diff gate: PASS (max mean 1.395)
+- Keep gate: user REJECTED with note "Tạm ổn — trả về style cũ" → reverted
+  (mode=solid restored; store verified back at full baseline)
+- Learning: gradient stroke reads as "acceptable but not preferred" vs solid
+  for this user — consistent with their calibration votes preferring baseline
+  values (see preferences.jsonl 2026-08-21 vote session).
+
 ### Experiment: entrance.durationSec 0.75 → 1.5 — REGRESSED (pairwise verdict)
 - Date: 2026-08-21 (first full cycle driven through the Composer AgentPanel UI)
 - Segment: isaacverse-final 3.5-7s (semantic-diagram)

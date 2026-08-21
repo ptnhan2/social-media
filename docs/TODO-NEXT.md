@@ -40,20 +40,29 @@ CỦA BẠN, không phải gu Qwen"). E là việc kiến trúc lớn, để ri�
       tới khi có zone AUTO đầu tiên (cần N≥10) — rule đã sẵn, verify hành xử
       khi zone tồn tại.
 
-## BATCH B — Feedback-driven cycle end-to-end (chưa test lần nào)
+## BATCH B — Feedback-driven cycle end-to-end — ✅ XONG 2026-08-21 (qua AgentPanel UI)
 
-- [ ] **B1. Reject + note path**: chạy 1 cycle, ở KEEP gate bấm REJECT kèm
-      note kiểu "cả hai đều xấu — màu hơi bệt". Verify: agent REVERT knob +
-      chẩn đoán note theo 3 trường hợp (map knob / mơ hồ / không biểu đạt).
-- [ ] **B2. User-directed fix cycle**: sau B1, agent phải chạy chuỗi rút gọn
-      (update_style → render → compare_renders → request_keep với
-      user_directed=True, KHÔNG VLM) và quay lại cổng KEEP cho user xem fix.
-      Đây là lời hứa "hot fix rồi cho đánh giá lại" — KHÔNG auto-accept.
-- [ ] **B3. Wishlist path**: cho feedback không núm nào làm nổi ("đường nối
-      nên là nét cọ loang màu") → agent phải báo thật + ghi vào
-      `memories/wishlist.md`, không đổi núm nào khác.
-- [ ] **B4. Cap feedback cycles**: verify feedback-cycle đếm vào budget 3
-      vòng/session; quá cap agent DỪNG và báo kẹt (không ping-pong vô tận).
+- [x] **B1. Reject + note path**: cycle user-directed thật, tại KEEP gate bấm
+      REJECT kèm note "Cả hai đều xấu — màu hơi bệt...". Agent: revert knob
+      (width 4→2) + chẩn đoán note đúng 3-case → nhận diện "cả hai xấu" +
+      map "màu bệt" sang knob khác (stroke.mode). Evidence: thread trace +
+      feedback.jsonl + preferences.jsonl.
+- [x] **B2. User-directed fix cycle**: chuỗi rút gọn chạy đúng contract —
+      update_style → render → compare_renders (PASS bắt buộc) →
+      request_keep(user_directed=True, feedback_context=note), KHÔNG
+      critique/pairwise. Hot-fix sau chẩn đoán quay lại gate cho user đánh
+      giá lại (không auto-accept) — verify ở cả 2 gate.
+- [x] **B3. Wishlist path**: feedback "film grain phủ toàn khung" → agent
+      đọc style-knobs skill, báo thẳng KHÔNG núm nào làm nổi, ghi entry vào
+      wishlist.md qua write-gate (approve), không đụng núm nào khác.
+- [x] **B4. Cap feedback cycles**: lần đầu FAIL (agent chạy cycle 4 sau 3
+      cycle hoàn tất — soft rule trong AGENTS.md bị quên dưới context dài;
+      đã cancel run giữa chừng). Fix: `CycleCapMiddleware` trong agent.py —
+      đếm cycle hoàn tất qua marker trong message history (KEEP GATE result /
+      pairwise loss / control fail) và chèn system reminder mỗi model call
+      khi đạt cap. Test `harness/test_cycle_cap.py`: PASS — agent từ chối
+      cycle 4 và hướng dẫn mở thread mới. AGENTS.md cũng sắc lại định nghĩa
+      "session = whole thread".
 
 ## BATCH C — Multi-segment: chưa có cải thiện THÀNH CÔNG nào ngoài semantic-diagram
 

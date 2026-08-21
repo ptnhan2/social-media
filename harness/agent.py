@@ -73,6 +73,69 @@ class AgentContext:
 
 
 from langchain.agents.middleware import AgentMiddleware
+from langchain_core.messages import SystemMessage
+
+
+class CycleCapMiddleware(AgentMiddleware):
+    """Hard enforcement of the 3-cycles-per-thread protocol limit.
+
+    The rule exists in AGENTS.md but soft rules drift under context pressure
+    (verified 2026-08-21: the agent started a 4th cycle after 3 completed).
+    This middleware re-counts completed cycles every model call — every
+    request_keep tool result ("KEEP GATE: ...") marks one completed cycle,
+    agent-driven and user-directed alike — and injects a system reminder
+    once the cap is reached. Injected messages are per-call only; they are
+    never persisted to thread state.
+    """
+
+    CAP = 3
+    _REMINDER = (
+        "HARD LIMIT REACHED: this conversation thread has already completed "
+        "{n} improvement cycles (the protocol cap is 3). Do NOT start another "
+        "improvement cycle, do NOT call update_style, render_window, or "
+        "request_keep. Reply to the user reporting the cap, summarize what the "
+        "completed cycles did, and tell them to start a NEW thread (chat) for "
+        "more cycles. Answering questions is still fine."
+    )
+
+    @staticmethod
+    def _completed_cycles(messages) -> int:
+        """Completed cycles = every cycle ENDING, whichever way it ended:
+        - request_keep gate decision ("KEEP GATE: ...") — keep or reject
+        - pairwise_verdict loss ("Pairwise verdict: before/identical/unparsed")
+          — auto-reverted without a gate
+        - oracle failures ("CONTROL FAILED" / "ORACLE UNAVAILABLE") — reverted
+        Pixel-diff FAIL cycles are not counted (cheap, self-terminating)."""
+        n = 0
+        for m in messages:
+            content = getattr(m, "content", None)
+            if getattr(m, "type", "") != "tool" or not isinstance(content, str):
+                continue
+            if content.startswith("KEEP GATE:"):
+                n += 1
+            elif content.startswith("Pairwise verdict:"):
+                first = content.splitlines()[0]
+                if ": after" not in first:  # wins continue to a KEEP gate
+                    n += 1
+            elif content.startswith(("CONTROL FAILED", "ORACLE UNAVAILABLE")):
+                n += 1
+        return n
+
+    def wrap_model_call(self, request, handler):
+        n = self._completed_cycles(getattr(request, "messages", []))
+        if n >= self.CAP:
+            request.messages = list(request.messages) + [
+                SystemMessage(content=self._REMINDER.format(n=n))
+            ]
+        return handler(request)
+
+    async def awrap_model_call(self, request, handler):
+        n = self._completed_cycles(getattr(request, "messages", []))
+        if n >= self.CAP:
+            request.messages = list(request.messages) + [
+                SystemMessage(content=self._REMINDER.format(n=n))
+            ]
+        return await handler(request)
 
 
 class TextOnlyContentMiddleware(AgentMiddleware):
@@ -139,7 +202,7 @@ _COMMON = dict(
             "/skills/": FilesystemBackend(root_dir=os.path.join(HARNESS_DIR, "skills"), virtual_mode=True),
         },
     ),
-    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=30), TextOnlyContentMiddleware()],
+    middleware=[TodoListMiddleware(), ModelRetryMiddleware(), ToolCallLimitMiddleware(run_limit=30), TextOnlyContentMiddleware(), CycleCapMiddleware()],
     context_schema=AgentContext,
 )
 
