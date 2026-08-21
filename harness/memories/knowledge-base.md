@@ -6,6 +6,22 @@
 
 ## Experiments
 
+### Conclusion: process-timeline is INSTRUMENT-BLOCKED for pairwise gates (2026-08-21)
+- All 4 wired knob types tested today; none can pass the pairwise gate:
+  - spring.stiffness 150→180: pairwise "identical" (pixel-diff 0.311)
+  - spring.damping 18 vs 4: vote-session VLM "identical", user tie
+  - colors.amber: 0.0 pixel diff (not effectively wired for this beat)
+  - progressEndSec 1.2 vs 3.5: pixel-diff 0.478 but pairwise "identical"
+    (the 3px progress bar is too thin for the 3-frame montage)
+- This is an INSTRUMENT limitation, not a knob limitation. The unlock is
+  native video input for the VLM (TODO-NEXT F4 — international DashScope
+  key) or a denser montage. Until then, do NOT spend cycles on
+  process-timeline: record and move on.
+- Style store verified restored to true baseline (damping 18, amber
+  #f2b84b, progressEndSec 1.2) after two polluted values (damping 22,
+  amber #ffb84b) leaked in from dead runs — always verify the store after
+  any run that dies mid-cycle.
+
 ### Finding: colors.amber is INEFFECTIVE on the process-timeline beat (2026-08-21)
 - Segment: isaacverse-final 10.5-14s (beat final-beat-04, activeStep=2).
 - colors.amber #f2b84b → #ffb84b: pixel-diff gate FAIL (max mean 0.0, 0.0%
