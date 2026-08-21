@@ -1,27 +1,54 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-21 đêm (BATCH A + B + C đóng). Previous: 2026-08-20 đêm.
-> **BATCH A — HIỆU CHUẨN GU — XONG**: 10 phiếu thật (8 sáng + 2 tối) trong
-> preferences.jsonl; oracle-trust.md toàn ASK; agent verified đọc zones.
-> **BATCH B — FEEDBACK CYCLE — XONG**: 3 đường (reject+note / user-directed /
-> wishlist) qua AgentPanel UI; cap 3-cycle fix bằng CycleCapMiddleware
-> (test_cycle_cap.py PASS).
-> **BATCH C — ĐÓNG với 0 IMPROVED mới (trung thực)**: cả process-timeline
-> (4 knob) lẫn host-reflection (push + filter) đều UNVERIFIABLE — montage
-> oracle mù PERCEPTUAL với thay đổi toàn-cục (nói identical với diff 5.28/
-> 8.7% pixels — debug_montage.py chứng minh builder đúng, probe fontSize
-> chứng minh endpoint không hỏng), và user TIE trên 6/6 cặp motion/global.
-> Insight gu: user nhạy với feature CỤC BỘ (text/accent/glow), kệ motion.
-> Style store verify 8/8 về baseline thật sau 3 lần leak (damping 22, amber
-> #ffb84b, filter — đều bắt được và restore; lỗi: script restore chết bởi
-> quoting + run chết giữa chừng bỏ qua finally).
-> **CRITICAL PATH GIỜ LÀ F4** (key DashScope quốc tế → native video input) —
-> không có nó thì không treatment nào ngoài semantic-diagram có thể sinh
-> IMPROVED entry. Cũng cân nhắc: vote ở resolution cao hơn 360p.
-> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** — D (tutorial, cần D1 chạy
-> ingest_tutorial.py), E (generator arch — session riêng), F (vụn, F4 trên
-> hết). Lưu ý vận hành: langgraph dev + vite vẫn đang chạy; thread UI cuối bị
-> kẹt model-glitch — refresh page = thread mới.
+> Updated 2026-08-22 ~01:30 (KẾT THÚC SESSION ĐÊM 21-22/08 — mọi việc tự
+> làm được đã làm xong). Previous: 2026-08-21 tối (batch A+B+C).
+>
+> ## ĐỌC PHẦN NÀY TRƯỚC — việc chờ USER buổi sáng
+> 1. **Duyệt tutorial candidates**: mở `docs/TUTORIAL-CANDIDATES-REVIEW.md`
+>    (41 candidates / 7 nhóm, kèm khuyến nghị + số đo) → nói Kilo duyệt nhóm
+>    nào → Kito ghi CANDIDATE vào taste-standard.md.
+> 2. **Vote 1080p**: chạy `harness\.venv\Scripts\python.exe
+>    harness\vote_session.py --port 8765` → mở http://localhost:8765 (2 cặp
+>    hr3 1080p — test giả thuyết "motion/global tie ở 360p là do resolution").
+>    Verdict cache đã seed sẵn qua đêm.
+> 3. **F4 (nếu rảnh)**: cấp key DashScope quốc tế — CRITICAL PATH của toàn bộ
+>    hướng tiến hóa treatment (oracle montage mù thay đổi toàn-cục — đã
+>    chứng minh bằng evidence chain trong knowledge-base).
+>
+> ## ĐÊM 21-22/08 đã xong (tất cả committed + CI xanh)
+> - **D1**: ingest 3 video Isaac (04/02/06) → 41 candidates;
+>   `ingest_tutorial.py` fix merge multi-video (từng ghi đè mất data —
+>   recover từ git); gap-fill loop recover hết moments lỗi VLM.
+> - **D2-prep/D3-prep**: review doc tự sinh + đo PIL deterministic
+>   (accent 0.26-4.7% — xa dưới caps của Isaac; node/detail 1.43x fail
+>   marginal so với candidate ≥1.5x).
+> - **11 dead knobs WIRED** (path mismatch subtitle + 10 hardcode trong
+>   SemanticDiagram/CandidateComparison) — QA: identity 0.0/0.0 + bump
+>   1.654/2.375 + build + 79/79 tests. Audit script: audit_knob_paths.py.
+> - **Amber mystery GIẢI QUYẾT**: #f2b84b→#ffb84b chỉ lệch R-channel 13 units
+>   → grayscale ~3.9 < threshold 8 — KHÔNG phải unwired (KB entry đã sửa).
+> - **E1**: `docs/GENERATOR-SPEC.md` — spec đầy đủ, grounded trong audit
+>   (projectEditDocToEditor đã tồn tại nhưng chỉ là runtime fallback).
+>   E2-E6 để session code riêng theo §4 của spec.
+> - **F2**: pairwise structured output (JSON-first parse + fallback) —
+>   unit 11/11 + live verify khớp verdict buổi sáng.
+> - **F3**: eval re-run XANH — response_quality 10/10 sau fix 3 tầng
+>   (prompt {inputs}/{outputs}, use_reasoning=False, env-loader override
+>   empty-string vars — background processes mang OPENAI_API_KEY='' là
+>   nguyên nhân judge chết trước đây).
+> - **F5**: optimize.py ĐÃ XÓA (stub; taste flywheel là outer loop thật).
+> - **F6**: Docker Postgres persistence PASS — và fix gap: image thiếu
+>   langgraph-checkpoint-postgres + psycopg[binary] (agent.py trong Docker
+>   fallback im lặng sang MemorySaver). Image harness-langgraph build sẵn.
+> - **1080p renders** cho 2 cặp C3 (hr3_1080_*.mp4) — chờ vote buổi sáng.
+>
+> ## Vận hành buổi sáng
+> - langgraph dev (:2024) + vite (:5174) vẫn đang chạy; refresh page =
+>   thread UI mới (reset cycle cap 3). Thread UI cuối hôm qua bị kẹt model
+>   glitch — bỏ qua.
+> - DashScope tối hay timeout — nếu VLM call treo, chạy lại (retry pattern
+>   có sẵn trong seed_1080_verdicts.py / f2_retry.py).
+> - Style store: verify 8/8 baseline thật; mọi experiment đêm đều restore.
 >
 > **Audit lần 2 (21:00-23:00 2026-08-20) đã sửa thêm**: CI đỏ cả ngày (4 gốc:
 > styleLoader test brittle, test_unit cần điều kiện không có trên CI,

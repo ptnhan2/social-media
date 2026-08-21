@@ -48,5 +48,15 @@
     "winner": "identical",
     "raw": "Pairwise verdict: identical | (control passed) — VLM blind to zoom shift (pixel mean 5.28)",
     "ts": "2026-08-21T20:20:00"
+  },
+  "hr3color1080": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical",
+    "ts": "2026-08-21T23:36:13"
+  },
+  "hr3push1080": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical",
+    "ts": "2026-08-21T23:36:28"
   }
 }
