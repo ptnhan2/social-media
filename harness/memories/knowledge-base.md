@@ -86,6 +86,18 @@
 - Learning: fontSizeShort change did not reach render despite style store update. Need to investigate render pipeline for chapter-card treatment.
 - Action: Reverted. Style store version rolled back to 29.
 
+## Per-treatment win rate (update after every cycle)
+
+| Treatment | Cycles | Wins kept | Losses reverted | Notes |
+|---|---|---|---|---|
+| semantic-diagram | 4 | 2 (damping 18→2, reveal 0.65→2) | 2 (durationSec 0.75→1.5, stroke.width 2→4*, stroke.mode solid→gradient*) | *user-directed, user-rejected. VLM-detectable knobs exist here. |
+| chapter-card | 2 | 0 | 2 (inDurationSec, fontSizeShort pre-fix invalid) | motion impossible; text knobs user-prefers-baseline (votes 2026-08-21) |
+| process-timeline | 0 | 0 | 0 | untested — spring + progress knobs wired |
+| host-reflection | 0 | 0 | 0 | subtitle.fontSize NOT WIRED (hardcoded 28) |
+| screen-proof / audience-demand / candidate-comparison / cinematic-metaphor | 0 | 0 | 0 | untested |
+
+
+
 ## Key findings from code research (2026-08-16)
 
 ### semantic-diagram treatment (segment 3.5-7s)
