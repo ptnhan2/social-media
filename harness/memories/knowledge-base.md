@@ -6,6 +6,21 @@
 
 ## Experiments
 
+### Experiment: entrance.durationSec 0.75 → 1.5 — REGRESSED (pairwise verdict)
+- Date: 2026-08-21 (first full cycle driven through the Composer AgentPanel UI)
+- Segment: isaacverse-final 3.5-7s (semantic-diagram)
+- Baseline scores: composition=3, color=4, motion=2, text=5, pacing=3 — motion weakest
+- Pixel-diff gate: max mean=0.806, changed 0.296-1.998% (change reached render)
+- Oracle control (A-vs-A): "Identical" — honest
+- Pairwise verdict (A=duration0.75 vs B=duration1.5): "WINNER: first" (baseline wins)
+- Keep gate: not reached (verdict loss auto-reverts, no human gate needed)
+- Result: REGRESSED. REVERTED (style store durationSec=0.75 verified after cycle)
+- Learning: extending the entrance beyond 0.75s does not read as an improvement to
+  the oracle. The narrated failure details (missing "MEANING" node, cyan-vs-amber)
+  are confabulated specifics — only the verdict line is trusted per protocol.
+- Zones honored: oracle-trust.md read at cycle start; all aspects ASK; nothing
+  auto-kept; loss → revert without gate (correct protocol v4 behavior).
+
 ### Finding: treatments.host-reflection.subtitle.fontSize NOT WIRED (2026-08-21)
 - Pixel-diff gate: FAIL (max mean 0.0) for 27 → 36 on segment 7-10.5s.
 - Root cause: treatments.tsx hardcodes `fontSize: 28` for the host-reflection

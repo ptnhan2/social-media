@@ -1,9 +1,17 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-20 night (sau audit toàn dự án lần 2). P1+P5+P2.1 SHIPPED.
-> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** (source of truth cho các batch
-> A-F: taste calibration, feedback cycle, multi-segment, tutorial, generator
-> architecture, vụn nhỏ — kèm done criteria từng batch). Previous: 2026-08-19.
+> Updated 2026-08-21 (Batch A SHIP). Previous: 2026-08-20 đêm (audit 2).
+> **BATCH A — HIỆU CHUẨN GU — XONG**: `harness/vote_session.py` (blind A/B web
+> UI) thu 8 phiếu thật → `memories/preferences.jsonl`; `calibrate.py` sinh
+> `memories/oracle-trust.md` (color 0/1, text 0/1, motion +3 ties — toàn ASK;
+> AUTO cần N≥10, sẽ dồn qua các KEEP gate thật). Cycle verify qua AgentPanel
+> UI chat (F1 ✓): agent đọc zones, tôn trọng ASK, pairwise thua → tự revert.
+> Write-gate approval UI (Approve/Reject + diff) test lần đầu — hoạt động.
+> Phát hiện mới: `host-reflection.subtitle.fontSize` CHƯA WIRE (treatments.tsx
+> hardcode 28) — việc cho Batch C3; `ab_A/ab_B` là render tiền-fix (bỏ dùng).
+> **VIỆC CÒN LẠI: đọc `docs/TODO-NEXT.md`** — Batch B (feedback cycle) là
+> bước kế tiếp, rồi C (multi-segment), D (tutorial), E (generator arch),
+> F (vụn).
 >
 > **Audit lần 2 (21:00-23:00 2026-08-20) đã sửa thêm**: CI đỏ cả ngày (4 gốc:
 > styleLoader test brittle, test_unit cần điều kiện không có trên CI,

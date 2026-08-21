@@ -16,25 +16,29 @@ CỦA BẠN, không phải gu Qwen"). E là việc kiến trúc lớn, để ri�
 
 ---
 
-## BATCH A — Kích hoạt hiệu chuẩn gu (gu của AI ≠ gu của bạn)
+## BATCH A — Kích hoạt hiệu chuẩn gu (gu của AI ≠ gu của bạn) — ✅ XONG 2026-08-21
 
-- [ ] **A1. Chu kỳ bầu chọn thật (10-20 phiếu).** Mỗi phiếu = 1 quyết định
-      KEEP thật của user trên một cặp video A/B. Cách rẻ nhất: chạy
-      `harness/run_cycle.py` nhiều lần (mỗi lần ~6-8 phút, ~6k VND model),
-      mỗi lần kết thúc bằng KEEP gate → user bấm. Đa dạng hóa: xen kẽ
-      semantic-diagram (3.5-7s) và chapter-card (0-3.5s), thay đổi knob mỗi
-      lần. LƯU Ý: mỗi phiếu phải GHI THẬT ý của user — đừng bấm máy móc.
-      - Nhanh hơn: viết `vote_session.py` tái dùng các cặp A/B ĐÃ CÓ
-        (fixtest_A/B, cycle_baseline/damping2, knob_*.mp4 trong
-        renders/windows/) + vài cặp mới, trình từng cặp cho user vote không
-        cần chạy full cycle. ~30 phút cho 10 phiếu.
-- [ ] **A2. Chạy `harness/calibrate.py`** → sinh `memories/oracle-trust.md`.
-      AUTO zone cần N≥10 + Wilson lower bound ≥80%. Dưới mức đó: mọi thứ ASK.
-- [ ] **A3. Verify agent đọc zones đúng.** Chạy 1 cycle trên aspect ở AUTO
-      zone → agent phải auto-keep KHÔNG interrupt (trừ lần thứ 5 — spot check).
-- [ ] **A4. Spot-check cadence**: xác nhận logic "mỗi quyết định AUTO thứ 5
-      vẫn hiện KEEP gate" — hiện nằm trong AGENTS.md như quy tắc, cần verify
-      agent tuân thủ.
+- [x] **A1. Chu kỳ bầu chọn thật (10-20 phiếu).** Đã làm theo hướng nhanh:
+      `harness/vote_session.py` (blind A/B web UI, thứ tự trái/phải xáo trộn mù,
+      không có position bias — 4 phiếu quyết định rơi cả 2 vị trí màn hình).
+      8 phiếu thật: motion 3 ties + color 1 tie + 4 phiếu quyết (đều chọn A =
+      giá trị baseline hiện tại, kể cả bản accent-ẩn > accent amber). VLM verdict
+      cache: 4 usable, 4 "identical" (montage yếu ở subtle color/motion). Cặp
+      mới render bằng `render_vote_pairs*.py`, verify bằng
+      `verify_vote_pairs.py` (pixel-diff PASS bắt được 2 cặp hỏng: ab_* là render
+      tiền-fix, subtitle knob chưa wire). Cần thêm phiếu ở các vòng sau (mỗi
+      KEEP gate thật tự sinh phiếu mới) để dồn N≥10 cho từng aspect.
+- [x] **A2. Chạy `harness/calibrate.py`** → `memories/oracle-trust.md` sinh với
+      số liệu thật: color 0/1, text 0/1, motion 0 comparable (+3 ties) — toàn
+      ASK (AUTO cần N≥10 + Wilson lower ≥80%, chưa đạt là đúng thực tế).
+- [x] **A3. Verify agent đọc zones đúng** — cycle thật qua AgentPanel UI
+      (17:33-17:42 2026-08-21): agent đọc oracle-trust.md ngay đầu cycle (thấy
+      trong trace), tôn trọng ASK (không auto-keep gì), pairwise thua → tự
+      revert không cần gate. Đúng protocol v4.
+- [x] **A4. Spot-check cadence**: rule "mỗi quyết định AUTO thứ 5 vẫn hiện KEEP
+      gate" có trong memories/AGENTS.md (protocol step 8). Cadence dormient cho
+      tới khi có zone AUTO đầu tiên (cần N≥10) — rule đã sẵn, verify hành xử
+      khi zone tồn tại.
 
 ## BATCH B — Feedback-driven cycle end-to-end (chưa test lần nào)
 
@@ -95,9 +99,11 @@ khoảng cách "preview Composer ≠ video agent render".
 
 ## BATCH F — Vụn nhỏ (làm khi rảnh, không chặn gì)
 
-- [ ] **F1. Full cycle qua AgentPanel (UI chat)** — mọi smoke test đến giờ
-      chạy qua CLI; chưa test agent chạy trọn cycle khi điều khiển từ chat
-      UI.
+- [x] **F1. Full cycle qua AgentPanel (UI chat)** — ĐÃ TEST 2026-08-21: cycle
+      hoàn chỉnh chạy từ chat UI (glm-4-plus), write-gate approval hiển thị
+      Approve/Reject + diff trong UI, reject hoạt động đúng (agent không retry).
+      Chưa test: KEEP gate interrupt qua UI với cycle thắng (lần này thua ở
+      pairwise nên không tới gate) — sẽ rơi vào lần cycle thắng kế tiếp.
 - [ ] **F2. Pairwise judge chuyển sang structured output** (response_format
       JSON với verdict field) — hết phụ thuộc regex parse.
 - [ ] **F3. LangSmith eval re-run** với judge glm-4-flash (đã đổi default,

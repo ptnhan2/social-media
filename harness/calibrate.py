@@ -52,7 +52,7 @@ def load_votes() -> list[dict]:
             continue
         try:
             rec = json.loads(line)
-            if rec.get("user_verdict") in ("a", "b"):
+            if rec.get("user_verdict"):
                 votes.append(rec)
         except json.JSONDecodeError:
             continue
@@ -78,8 +78,12 @@ def main() -> None:
     votes = load_votes()
     feedback = load_feedback()
 
-    # skip user-directed fixes: no VLM verdict to compare against
-    comparable = [v for v in votes if not v.get("user_directed") and v.get("vlm_verdict")]
+    # votes usable for agreement scoring need a real verdict on both sides
+    comparable = [v for v in votes
+                  if v.get("user_verdict") in ("a", "b")
+                  and not v.get("user_directed") and v.get("vlm_verdict")]
+    ties = [v for v in votes if v.get("user_verdict") not in ("a", "b")]
+    user_directed = [v for v in votes if v.get("user_directed")]
 
     if not votes:
         print("No votes recorded yet (preferences.jsonl is empty).")
@@ -87,7 +91,7 @@ def main() -> None:
         return
 
     # per-aspect agreement
-    by_aspect: dict[str, dict] = defaultdict(lambda: {"n": 0, "agree": 0})
+    by_aspect: dict[str, dict] = defaultdict(lambda: {"n": 0, "agree": 0, "ties": 0})
     for v in comparable:
         aspect = v.get("aspect") or "unspecified"
         user = v.get("user_verdict")
@@ -96,6 +100,9 @@ def main() -> None:
         by_aspect[aspect]["n"] += 1
         if user == vlm:
             by_aspect[aspect]["agree"] += 1
+    for v in votes:
+        if v.get("user_verdict") not in ("a", "b"):
+            by_aspect[v.get("aspect") or "unspecified"]["ties"] += 1
 
     lines = [
         "# Oracle Trust — AUTO/ASK zones for pairwise verdicts",
@@ -113,14 +120,14 @@ def main() -> None:
     zones: dict[str, str] = {}
     for aspect in sorted(by_aspect):
         d = by_aspect[aspect]
-        n, agree = d["n"], d["agree"]
+        n, agree, n_ties = d["n"], d["agree"], d["ties"]
         rate = agree / n if n else 0.0
         lo, hi = wilson_interval(agree, n)
         zone = "AUTO" if (n >= 10 and lo >= 0.80) else "ASK"
         if aspect == "motion":
             zone = f"{zone} (PROVISIONAL — montage instrument; revisit with native video input)"
         zones[aspect] = zone
-        lines.append(f"| {aspect} | {n} | {agree}/{n} ({rate:.0%}) | [{lo:.0%}, {hi:.0%}] | {zone} |")
+        lines.append(f"| {aspect} | {n} (+{n_ties} ties) | {agree}/{n} ({rate:.0%}) | [{lo:.0%}, {hi:.0%}] | {zone} |")
 
     if not by_aspect:
         lines.append("| (no comparable votes yet — all user-directed or no VLM verdict) | | | | ASK |")
@@ -143,7 +150,7 @@ def main() -> None:
         "## Vote totals",
         "",
         f"- Total votes: {len(votes)} (comparable with VLM verdicts: {len(comparable)}; "
-        f"user-directed: {len(votes) - len(comparable)})",
+        f"ties: {len(ties)}; user-directed: {len(user_directed)})",
         f"- Feedback notes: {len(feedback)}",
     ]
     if both_bad:
