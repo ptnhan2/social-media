@@ -1,6 +1,6 @@
 # TUTORIAL CANDIDATES — REVIEW CHO USER (D2)
 
-> Sinh tự động lúc 2026-08-21T23:35 bởi generate_review_doc.py.
+> Sinh tự động lúc 2026-08-21T23:59 bởi generate_review_doc.py.
 > Nguồn: 2 video Isaac, 41 candidates thô.
 > Quy trình (roadmap P3): candidates là GIẢ THUYẾT — duyệt của bạn → entry CANDIDATE trong
 > taste-standard.md → verify cycle → nguyên tắc thật. Isaac là một trường phái, không phải
@@ -145,6 +145,8 @@
 
 1. Duyệt từng nhóm theo khuyến nghị (sửa tự do — đây là GIẢ THUYẾT).
 2. Vote 2 cặp 1080p đã render sẵn (hr3_1080_*) — test giả thuyết resolution.
+   (VLM đã nói 'identical' trên cả 2 cặp 1080p — montage downscale về 426px
+   nên oracle resolution-independent; phiếu này thuần là mắt của bạn.)
 3. Quyết định node/detail 1.43x: fix bằng cycle (detailFontSize 14→13) hay kệ.
 4. (Nếu rảnh) Cấp key DashScope quốc tế — F4 giờ là critical path của toàn bộ
    hướng tiến hóa treatment (xem knowledge-base 'blind spot is PERCEPTUAL').

@@ -119,6 +119,8 @@ lines += [
     "",
     "1. Duyệt từng nhóm theo khuyến nghị (sửa tự do — đây là GIẢ THUYẾT).",
     "2. Vote 2 cặp 1080p đã render sẵn (hr3_1080_*) — test giả thuyết resolution.",
+    "   (VLM đã nói 'identical' trên cả 2 cặp 1080p — montage downscale về 426px",
+    "   nên oracle resolution-independent; phiếu này thuần là mắt của bạn.)",
     "3. Quyết định node/detail 1.43x: fix bằng cycle (detailFontSize 14→13) hay kệ.",
     "4. (Nếu rảnh) Cấp key DashScope quốc tế — F4 giờ là critical path của toàn bộ",
     "   hướng tiến hóa treatment (xem knowledge-base 'blind spot is PERCEPTUAL').",
