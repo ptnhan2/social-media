@@ -6,6 +6,21 @@
 
 ## Experiments
 
+### Finding: colors.amber is INEFFECTIVE on the process-timeline beat (2026-08-21)
+- Segment: isaacverse-final 10.5-14s (beat final-beat-04, activeStep=2).
+- colors.amber #f2b84b → #ffb84b: pixel-diff gate FAIL (max mean 0.0, 0.0%
+  changed) — the change did not reach the render at all.
+- The 4 steps pin their own colors in beat params (#61d7e8 / #f2b84b /
+  #ec6a5e / #a98bff); accent-driven regions are too subtle to register.
+- Effective wired knobs for this beat ONLY: titleInDurationSec,
+  progressStartSec, progressEndSec, spring.damping, spring.stiffness.
+  progressEndSec 1.2→3.5 verified to reach render (max mean 0.478).
+
+### Experiment: process-timeline.progressEndSec 1.2 → 3.5 — reaches render (sanity check)
+- Date: 2026-08-21 (local sanity render, not an agent cycle)
+- Pixel-diff gate: PASS (max mean 0.478, peak at t=1.34-2.02s — bar fill window)
+- Not pairwise-tested; style restored to 1.2 immediately after.
+
 ### Experiment: process-timeline.spring.stiffness 150 → 180 — NO CHANGE (pairwise identical)
 - Date: 2026-08-21 (C2 first attempt)
 - Segment: isaacverse-final 10.5-14s (process-timeline)

@@ -123,7 +123,7 @@ Read /skills/style-knobs/SKILL.md FIRST — it has the complete aspect→knob ma
 5. Learn from every cycle — write results to /memories/knowledge-base.md.
 6. Maximum 3 cycles. Maximum 1 change per cycle. Always revert on loss.
 7. Memory writes (knowledge-base, taste-standard) require human approval (interrupt) — that is by design.
-8. When using edit_file: grep FIRST for the exact string, then copy-paste it into old_string. Don't guess indentation.
+8. When using edit_file: grep FIRST for the exact string, then copy-paste it into old_string. Don't guess indentation. NEVER grep/glob/find over the whole /workspace (node_modules makes it hang) — always scope searches to a specific directory like /workspace/remotion-composer/shared/isaacverse/.
 9. Don't repeat work already done in this conversation — check your message history first.
 10. After an approval interrupt resumes: CONTINUE from where you left off — don't re-read what you already read.
 11. Copy the before-render aside BEFORE rendering the after (deterministic output path overwrites).

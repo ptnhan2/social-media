@@ -1,9 +1,9 @@
 {
-  "version": 58,
+  "version": 59,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
-    "amber": "#f2b84b",
+    "amber": "#ffb84b",
     "cyan": "#61d7e8",
     "paper": "#f4e8cf",
     "black": "#07090d"
