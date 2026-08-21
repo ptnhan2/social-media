@@ -1,0 +1,42 @@
+{
+  "damping": {
+    "winner": "after",
+    "raw": "Pairwise verdict: after | (control passed)",
+    "ts": "2026-08-21T15:48:45"
+  },
+  "ptspring": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical | (control skipped)",
+    "ts": "2026-08-21T15:52:23"
+  },
+  "accentfix": {
+    "winner": "after",
+    "raw": "Pairwise verdict: after | (control skipped)",
+    "ts": "2026-08-21T15:52:55"
+  },
+  "amberhue": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical | (control skipped)",
+    "ts": "2026-08-21T15:53:30"
+  },
+  "glow": {
+    "winner": "before",
+    "raw": "Pairwise verdict: before | (control skipped)",
+    "ts": "2026-08-21T15:53:53"
+  },
+  "titlelong": {
+    "winner": "after",
+    "raw": "Pairwise verdict: after | (control skipped)",
+    "ts": "2026-08-21T15:55:53"
+  },
+  "reveal": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical | (control passed)",
+    "ts": "2026-08-21T16:08:46"
+  },
+  "accentline": {
+    "winner": "identical",
+    "raw": "Pairwise verdict: identical | (control passed)",
+    "ts": "2026-08-21T16:16:02"
+  }
+}

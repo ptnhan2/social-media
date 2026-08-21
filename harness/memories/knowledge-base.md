@@ -6,6 +6,20 @@
 
 ## Experiments
 
+### Finding: treatments.host-reflection.subtitle.fontSize NOT WIRED (2026-08-21)
+- Pixel-diff gate: FAIL (max mean 0.0) for 27 → 36 on segment 7-10.5s.
+- Root cause: treatments.tsx hardcodes `fontSize: 28` for the host-reflection
+  caption (~line 296); the style-store knob is never read.
+- Action: do NOT experiment with subtitle knobs until the treatment reads the
+  store (wiring task tracked in TODO-NEXT Batch C3).
+
+### Finding: renders/windows/ab_A_damping18 + ab_B_damping2 are PRE-FIX renders (2026-08-21)
+- Pixel-diff gate between them: FAIL (max mean 0.0) — both were rendered
+  2026-08-19 15:40, BEFORE the 4-root-cause pipeline fix landed that evening.
+- They are stale identical outputs; never reuse them as an A/B pair.
+- The valid damping evidence is the 2026-08-19 evening cycle (mean 0.32-0.80)
+  and the fresh vs_dm_A/vs_dm_B pair (2026-08-21, max mean 0.58).
+
 ### Experiment: chapter-card.reveal.inDurationSec 0.45 → 1.1
 - Date: 2026-08-16
 - Segment: isaacverse-final 0-4s (chapter-card: "The timeline is not the edit")
