@@ -137,8 +137,9 @@ khoảng cách "preview Composer ≠ video agent render".
       montage oracle mù với thay đổi toàn-cục (identical với diff 5.28) và
       user tie trên mọi cặp motion/global — không thể có IMPROVED entry mới
       cho bất kỳ treatment nào ngoài các knob cục bộ cho tới khi có cái này.
-- [ ] **F5. optimize.py**: fix logic so sánh hoặc xóa hẳn (đã demote — taste
-      flywheel mới là outer loop thật).
+- [x] **F5. optimize.py**: ĐÃ XÓA (2026-08-21) — stub với comparison logic giả,
+      proposals hardcoded, tự sửa AGENTS.md không qua write-gate; taste
+      flywheel (calibrate + KEEP gate + knowledge-base) là outer loop thật.
 - [ ] **F6. Docker Postgres persistence test** (build xong từ trước, chưa
       test restart).
 

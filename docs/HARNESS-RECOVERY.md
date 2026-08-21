@@ -233,8 +233,8 @@ cd remotion-composer\composer-app; npx vite --port 5174
 | FilesystemPermission (interrupt/deny) | AGENTS.md (18 rules, 11-step loop) |
 | TodoListMiddleware (planning) | knowledge-base.md (experiment results) |
 | ModelRetryMiddleware (retry) | style-knobs SKILL.md (aspect→knob map) |
-| ToolCallLimitMiddleware (30 max) | eval.py (LangSmith dataset + evaluators) |
-| LangSmith (tracing, datasets, experiments) | optimize.py (outer-loop) |
+| ToolCallLimitMiddleware (60 max) | eval.py (LangSmith dataset + evaluators) |
+| LangSmith (tracing, datasets, experiments) | taste flywheel (vote → calibrate → KEEP gate) |
 
 ## 11. NEXT STEPS
 

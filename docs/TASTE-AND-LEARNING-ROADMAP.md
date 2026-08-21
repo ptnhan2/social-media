@@ -48,9 +48,9 @@
     principles are one school, not gospel (the EVOLUTION doc requires the
     ability to diverge). Tag provenance; cap the share of Isaac-derived
     principles.
-11. **optimize.py demoted (P6):** auto-editing AGENTS.md compliance rules is
+11. **optimize.py deleted (2026-08-21, was demoted P6):** auto-editing AGENTS.md compliance rules is
     low-value and fragile; the taste flywheel (P1) is the real outer loop.
-    Keep optimize.py as optional.
+    The script was a non-functional stub (fake comparison logic) and is gone.
 
 ## P1. Taste calibration — align the oracle with the USER's taste
 

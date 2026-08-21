@@ -53,15 +53,12 @@ the false "agent improves video" claim (see knowledge-base.md invalidation).
 (reads memory, thinks, uses the right tools).
 **What it cannot prove:** videos get better. No evaluator looks at a video.
 
-### Loop B — Outer optimization (optimize.py) — currently non-functional
+### Loop B — Outer optimization — DELETED (2026-08-21, was optimize.py)
 
-`harness/optimize.py` reads LangSmith evaluator scores → proposes AGENTS.md
-rule additions (e.g. "stronger think requirement") → re-runs eval → reverts.
-Broken parts (acknowledged in its own comments):
-- `apply_and_test` calls `get_experiment_scores` twice and compares nothing —
-  there is no real before/after comparison.
-- It always reverts the proposal, so no change is ever kept.
-- It optimizes AGENT COMPLIANCE, not video quality — a local maximum.
+`harness/optimize.py` was removed: `apply_and_test` compared nothing (stub),
+always reverted its proposals, and optimized agent compliance rather than
+video quality — a local maximum. The taste flywheel (vote → calibrate →
+KEEP gate → knowledge-base) is the real outer loop now.
 
 ### Loop C — Video quality loop (the improvement cycle) — oracle unproven
 
