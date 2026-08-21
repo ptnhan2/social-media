@@ -139,7 +139,7 @@ def run_verdicts() -> None:
         if winner in ("after", "before") and "control passed" in out:
             control_ok = True
         cache[p["id"]] = {"winner": winner,
-                          "raw": (first + " | " + out.splitlines()[1] if "\n" in out else "")[:220],
+                          "raw": (first + (" | " + out.splitlines()[1] if len(out.splitlines()) > 1 else ""))[:220],
                           "ts": datetime.datetime.now().isoformat(timespec="seconds")}
         VERDICT_CACHE.write_text(json.dumps(cache, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"      -> {winner}")
