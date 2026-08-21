@@ -120,6 +120,30 @@ def find_default_video() -> Path | None:
     return vids[0] if vids else None
 
 
+def merge_into_store(new_run: dict) -> None:
+    """Append this run into the multi-video tutorial-candidates.json."""
+    existing = {"videos": [], "all_candidates": []}
+    if OUT_FILE.exists():
+        try:
+            loaded = json.loads(OUT_FILE.read_text(encoding="utf-8-sig"))
+            if "videos" in loaded:
+                existing = loaded
+            elif "candidates" in loaded:
+                # legacy single-video format — wrap it
+                existing = {"videos": [loaded], "all_candidates": loaded["candidates"],
+                            "note": loaded.get("note")}
+        except json.JSONDecodeError:
+            pass
+    existing["videos"] = [v for v in existing["videos"] if v.get("video") != new_run["video"]]
+    existing["videos"].append(new_run)
+    existing["all_candidates"] = [c for v in existing["videos"] for c in v["candidates"]]
+    existing["note"] = ("Candidates are HYPOTHESES only — each must pass a standard "
+                        "protocol v4 verification cycle before entering taste-standard.md. "
+                        "Isaac-derived principles are one school, not gospel (divergence "
+                        "is a goal). Human review required.")
+    OUT_FILE.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--video", default=None, help="Path to the reference video")
@@ -163,13 +187,9 @@ def main() -> None:
         "sampled": len(moments),
         "moments": moments,
         "candidates": candidates,
-        "note": ("Candidates are HYPOTHESES only — each must pass a standard "
-                 "protocol v4 verification cycle before entering taste-standard.md. "
-                 "Isaac-derived principles are one school, not gospel (divergence "
-                 "is a goal). Human review required."),
     }
-    OUT_FILE.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\nWrote {OUT_FILE} with {len(candidates)} candidate principles.")
+    merge_into_store(out)
+    print(f"\nMerged into {OUT_FILE}: {len(candidates)} new candidate principles.")
     if candidates:
         print("\nTop candidates (for human review):")
         for c in candidates[:8]:

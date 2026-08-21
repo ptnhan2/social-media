@@ -225,26 +225,30 @@ def _vlm_config() -> dict:
     return cfg
 
 
-def _chat_completions(cfg: dict, content_blocks: list[dict], system: str, timeout: int) -> str:
+def _chat_completions(cfg: dict, content_blocks: list[dict], system: str, timeout: int,
+                      response_format: dict | None = None) -> str:
     """One chat/completions attempt (with transient-network retry) against a single
     provider. Returns text or 'VLM API error...'."""
     import urllib.request, urllib.error
     import time as _time
     if not cfg["api_key"]:
         return f"VLM API error: {cfg['key_env']} not set"
-    payload = json.dumps({
+    payload = {
         "model": cfg["model"],
         "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": content_blocks},
         ],
         "max_tokens": int(cfg.get("max_tokens", 1500)), "temperature": 0.3,
-    }).encode()
+    }
+    if response_format:
+        payload["response_format"] = response_format
+    encoded = json.dumps(payload).encode()
     last_err = None
     for attempt in range(3):
         req = urllib.request.Request(
             f"{cfg['base_url'].rstrip('/')}/chat/completions",
-            data=payload, headers={"Authorization": f"Bearer {cfg['api_key']}", "Content-Type": "application/json"}, method="POST")
+            data=encoded, headers={"Authorization": f"Bearer {cfg['api_key']}", "Content-Type": "application/json"}, method="POST")
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return json.loads(resp.read().decode())["choices"][0]["message"]["content"]
@@ -580,15 +584,46 @@ def _judge_system_prompt() -> str:
 
 _PAIRWISE_PROMPT = (
     "You are given two images. Each shows 3 snapshots of the same video segment "
-    "at successive times, during the entrance animation of diagram nodes.\n"
-    "FIRST, answer honestly: are the two images identical, nearly identical, or "
+    "at successive times.\n"
+    "FIRST decide honestly: are the two images identical, nearly identical, or "
     "clearly different? They might be the same image.\n"
-    "IF AND ONLY IF clearly different:\n"
-    "  - Which image (first or second) shows more visible, purposeful animation movement?\n"
-    "  - Which image's animation looks more polished overall?\n"
-    "  - End with a line: 'WINNER: first' or 'WINNER: second'.\n"
-    "If identical or nearly identical, say exactly that and stop."
+    "Respond with STRICT JSON ONLY (no markdown fences, no extra text):\n"
+    '{"assessment": "identical" | "nearly-identical" | "different", "winner": "first" | "second" | null, "reason": "<one short sentence>"}\n'
+    "Rules: winner MUST be null unless assessment is exactly \"different\". When "
+    "different, pick as winner the image that shows more visible, purposeful "
+    "animation movement and the more polished overall look. "
+    "Never invent differences that are not present in the frames."
 )
+
+
+def _parse_pairwise_verdict(text: str) -> str:
+    """Extract the verdict word from a pairwise response: after|before|identical|unparsed.
+
+    Prefers structured JSON (assessment/winner fields); falls back to legacy
+    'WINNER: first/second' phrasing for robustness."""
+    import re
+    try:
+        m = re.search(r"\{.*\}", text, re.DOTALL)
+        if m:
+            obj = json.loads(m.group(0))
+            assessment = str(obj.get("assessment", "")).lower()
+            winner = str(obj.get("winner") or "").strip().lower() or None
+            if winner in ("first", "second"):
+                return "before" if winner == "first" else "after"
+            if "identical" in assessment:
+                return "identical"
+            if assessment == "different" and winner is None:
+                return "unparsed"
+    except (json.JSONDecodeError, AttributeError):
+        pass
+    low = text.lower().replace("*", "")
+    if "winner: second" in low:
+        return "after"
+    if "winner: first" in low:
+        return "before"
+    if "identical" in low:
+        return "identical"
+    return "unparsed"
 
 
 @tool
@@ -626,28 +661,28 @@ def pairwise_verdict(video_a: str, video_b: str, skip_control: bool = False) -> 
         # the decision-maker uses the stronger model by default (flash is
         # noisy on subtle A/B verdicts); override with VLM_PAIRWISE_MODEL
         cfg["model"] = os.environ.get("VLM_PAIRWISE_MODEL", "qwen3-vl-plus")
-        return _chat_completions(cfg, content, _judge_system_prompt(), 180)
+        out = _chat_completions(cfg, content, _judge_system_prompt(), 180,
+                                response_format={"type": "json_object"})
+        if out.startswith("VLM API error 400"):
+            # endpoint may not support response_format with image inputs —
+            # the prompt still demands JSON, parsing tolerates prose
+            out = _chat_completions(cfg, content, _judge_system_prompt(), 180)
+        return out
 
     if not skip_control:
         ctrl = _pw(ma, ma, "control")
         if ctrl.startswith("VLM API error"):
             return f"ORACLE UNAVAILABLE (control call failed): {ctrl[:200]}"
-        if "identical" not in ctrl.lower():
+        ctrl_verdict = _parse_pairwise_verdict(ctrl)
+        if ctrl_verdict in ("before", "after") or ctrl_verdict == "unparsed":
             return ("CONTROL FAILED — the oracle claims differences between IDENTICAL inputs "
                     "(confabulating). Verdict untrusted. Do NOT use this verdict; treat the "
                     "cycle as unverifiable and revert.\nControl response:\n" + ctrl[:400])
     verdict = _pw(ma, mb, "verdict")
     if verdict.startswith("VLM API error"):
         return f"ORACLE UNAVAILABLE: {verdict[:200]}"
-    low = verdict.lower().replace("*", "")
-    winner = ""
-    if "winner: second" in low:
-        winner = "after"
-    elif "winner: first" in low:
-        winner = "before"
-    elif "identical" in low:
-        winner = "identical"
-    header = f"Pairwise verdict: {winner or 'unparsed'}\n(control {'skipped' if skip_control else 'passed'})\n\n"
+    winner = _parse_pairwise_verdict(verdict)
+    header = f"Pairwise verdict: {winner}\n(control {'skipped' if skip_control else 'passed'})\n\n"
     return header + verdict
 
 

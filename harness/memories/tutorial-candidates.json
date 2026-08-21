@@ -1,41 +1,241 @@
 {
-  "video": "research\\isaacverse\\source\\04 - How I Actually Edit Viral Videos.mp4",
-  "sampled": 8,
-  "moments": [
+  "videos": [
     {
-      "t_sec": 150.0,
-      "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Color palette**: Dominated by black background (near 0% luminance) with a single high-saturation red-orange line as the sole chromatic element. The red line exhibits slight glow/blur, suggesting a soft outer glow or motion blur effect; no other colors are present in the first two frames. In the third frame, a blurred figure appears with warm-toned hair (orange-yellow) and cool-toned clothing (desaturated cyan/blue), introducing a second color family—but only after the line is already established.\n\n- **Motion**: The red line is static across all three frames—no visible movement of the line itself. However, the appearance of the figure in frame 3 implies an entrance animation (likely a fast fade-in or slide-in from right), evidenced by motion blur on the figure and its partial occlusion of the line. No easing is discernible for the line; the figure’s motion suggests abrupt onset (hard cut or quick dissolve).\n\n- **Composition**: The red line occupies the upper ~30% of the frame vertically, running horizontally with irregular undulations—functioning as a visual “horizon” or baseline. Negative space dominates (~70% of frame area). In frame 3, the figure enters from the right edge, positioned so its head intersects the line, creating a deliberate point of contact/composition tension. Alignment is asymmetrical: line is left-to-right continuous; figure breaks symmetry on the right.\n\n- **Typography**: None present.\n\n- **Pacing**: Extremely sparse information density: frames 1–2 contain only one graphical element; frame 3 adds one new object (the figure). Temporal pacing suggests a slow build followed by a sudden introduction—information per moment: 1 element → 1 element → 2 elements (with overlap). No text or rapid cuts observed.\n\nPRINCIPLE: The accent color (red-orange) occupies ≤ 8% of the frame area in static shots and is never overlaid by more than one additional colored object at a time.  \nPRINCIPLE: A primary graphical element (the line) remains spatially fixed across ≥2 consecutive frames before any secondary object enters the frame.  \nPRINCIPLE: Motion blur is applied only to newly introduced objects, not to pre-established graphical elements."
+      "video": "research\\isaacverse\\source\\04 - How I Actually Edit Viral Videos.mp4",
+      "sampled": 8,
+      "moments": [
+        {
+          "t_sec": 150.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Color palette**: Dominated by black background (near 0% luminance) with a single high-saturation red-orange line as the sole chromatic element. The red line exhibits slight glow/blur, suggesting a soft outer glow or motion blur effect; no other colors are present in the first two frames. In the third frame, a blurred figure appears with warm-toned hair (orange-yellow) and cool-toned clothing (desaturated cyan/blue), introducing a second color family—but only after the line is already established.\n\n- **Motion**: The red line is static across all three frames—no visible movement of the line itself. However, the appearance of the figure in frame 3 implies an entrance animation (likely a fast fade-in or slide-in from right), evidenced by motion blur on the figure and its partial occlusion of the line. No easing is discernible for the line; the figure’s motion suggests abrupt onset (hard cut or quick dissolve).\n\n- **Composition**: The red line occupies the upper ~30% of the frame vertically, running horizontally with irregular undulations—functioning as a visual “horizon” or baseline. Negative space dominates (~70% of frame area). In frame 3, the figure enters from the right edge, positioned so its head intersects the line, creating a deliberate point of contact/composition tension. Alignment is asymmetrical: line is left-to-right continuous; figure breaks symmetry on the right.\n\n- **Typography**: None present.\n\n- **Pacing**: Extremely sparse information density: frames 1–2 contain only one graphical element; frame 3 adds one new object (the figure). Temporal pacing suggests a slow build followed by a sudden introduction—information per moment: 1 element → 1 element → 2 elements (with overlap). No text or rapid cuts observed.\n\nPRINCIPLE: The accent color (red-orange) occupies ≤ 8% of the frame area in static shots and is never overlaid by more than one additional colored object at a time.  \nPRINCIPLE: A primary graphical element (the line) remains spatially fixed across ≥2 consecutive frames before any secondary object enters the frame.  \nPRINCIPLE: Motion blur is applied only to newly introduced objects, not to pre-established graphical elements."
+        },
+        {
+          "t_sec": 300.0,
+          "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): [WinError 10054] An existing connection was forcibly closed by the remote host"
+        },
+        {
+          "t_sec": 450.0,
+          "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): The read operation timed out"
+        },
+        {
+          "t_sec": 600.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - Title “Viral recipe 2.0” uses a bold sans-serif with gradient fill (cyan → magenta), centered above the flowchart.  \n  - Font size is large relative to UI elements (~1/6 screen height), creating strong hierarchy.  \n  - No visible body text or labels on nodes—only icons/rectangles in the flowchart; thus, typographic density is low.  \n  - Spacing: generous leading and tracking around title; no kerning adjustments visible.\n\n- **Color Palette**:  \n  - Dominant background: dark gray/black UI (DaVinci Resolve interface).  \n  - Accent colors: cyan/magenta gradient in title, green/purple/blue timeline tracks (consistent across frames), and orange-red hair/beard of character.  \n  - High contrast between light text/icons and dark UI; accent colors occupy ~8–12% of frame area (estimated via bounding boxes of title + timeline bars + character hair).  \n  - No desaturation or grayscale zones—everything is fully saturated where colored.\n\n- **Motion (inferred from static frames)**:  \n  - The character’s pose changes subtly across frames (hand gesture → holding notebook → pointing), suggesting slow, deliberate motion (likely 1–2 sec per pose).  \n  - Flowchart nodes appear static; no visible animation on diagram itself.  \n  - Timeline tracks show no scrubbing indicator or playhead movement—implying paused or still-state presentation.  \n  - Easing not observable, but pose transitions suggest linear or slight ease-in/out (no abrupt jumps).\n\n- **Composition**:  \n  - Tripartite layout: left third = presenter + UI; center/right = larger UI view + presenter overlay.  \n  - Presenter consistently placed on right side of each panel (right-aligned within its column), creating visual anchor.  \n  - Negative space: large black areas in UI panels (projector screen area) used to isolate the flowchart; minimal clutter.  \n  - Alignment: title horizontally centered over flowchart; flowchart nodes aligned on grid; presenter’s eyes roughly align with title baseline across frames.\n\n- **Pacing / Information Density**:  \n  - Each frame presents ~1 primary visual idea: flowchart + presenter gesture.  \n  - UI panels show full interface (bins, timeline, viewer) but are de-emphasized via lower contrast and smaller scale vs. title/presenter.  \n  - No rapid cuts or overlays—single-layer composition per panel.  \n  - Estimated info load: ≤ 4 distinct visual elements per frame (title, flowchart, presenter, timeline bar group).\n\nPRINCIPLE: Accent color (non-neutral, saturated hues like cyan/magenta/orange) occupies ≤ 12% of total frame area and is restricted to title, timeline tracks, and presenter’s hair/beard.  \nPRINCIPLE: Primary focal point (title + flowchart) is vertically centered and horizontally aligned, with presenter positioned at 70–80% horizontal position to avoid symmetry and guide eye flow left→right.  \nPRINCIPLE: Typographic hierarchy is enforced by size alone—no weight variation or case shifts—where the main title is ≥ 3× larger than any UI label (none visible, but inferred from absence)."
+        },
+        {
+          "t_sec": 750.0,
+          "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): The read operation timed out"
+        },
+        {
+          "t_sec": 900.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - Title text (e.g., “REAL AI VIDEO”, “THUMBNAILS”, “VIRAL SHORTS”) uses bold, uppercase sans-serif with high stroke weight and tight letter-spacing.  \n  - Subtitles (e.g., “How I Actually Make Viral Thumbnails”) are smaller, lighter weight, sentence-case, and positioned directly beneath titles—consistent vertical rhythm (~1.2x line height).  \n  - View count labels (“20M VIEWS”) use large numerals (≈1.8× title font size) with condensed weight; unit (“VIEWS”) is smaller and baseline-aligned to numeral’s descender.\n\n- **Color Palette**:  \n  - Dominant background: neutral light gray/white UI (YouTube interface), contrasted by dark charcoal/black in left panel.  \n  - Accent color: saturated orange-red (used for hair, thumbnail borders, and cursor highlight) appears in ≤3 distinct regions per frame.  \n  - High luminance contrast between text (black/dark gray) and background (>15:1 for main titles). Thumbnail thumbnails use warm gradients (orange→yellow) but are desaturated relative to the animated character’s hair.\n\n- **Motion**:  \n  - The stylized character (orange hair, suit) moves *only* his right arm—pointing gesture—across frames; motion is smooth, linear-eased (no overshoot), duration ≈0.8s between poses.  \n  - No camera movement; screen capture remains static.  \n  - Subtle parallax: character appears slightly in front of UI (soft drop shadow + slight scale >100% vs. background), implying depth without full 3D rendering.\n\n- **Composition**:  \n  - Tripartite layout: left third = dramatic portrait (high-contrast lighting, vignette), center/right = UI mockup split vertically.  \n  - Focal point shifts rightward across frames: from character (left) → central video grid → right-side highlighted thumbnail + pointing hand.  \n  - Negative space intentionally preserved around thumbnails (≈15% padding horizontally between items); alignment is strict grid (columns evenly spaced, baselines aligned).  \n  - Character’s gaze and pointing direction guide eye toward target UI element (e.g., “20M VIEWS” card).\n\n- **Pacing**:  \n  - Each snapshot presents ≤4 primary visual units (e.g., 1 character + 3–4 thumbnails + 1 label).  \n  - Information density is controlled: no more than 2 lines of text per thumbnail card; view counts and titles are the only textual elements above 16pt.  \n  - Temporal pacing implied by sequential pointing: one new focal element revealed per ~1–1.5 seconds (inferred from gesture progression).\n\nPRINCIPLE: Accent color (orange-red) occupies ≤12% of total frame area across all three snapshots, concentrated in hair, border highlights, and cursor—never in background or primary text.  \nPRINCIPLE: Text hierarchy enforces a strict 3-tier size ratio: primary title ≥1.8× subtitle ≥1.5× metadata (e.g., view count unit), with weight contrast ≥200 (e.g., Bold vs. Regular).  \nPRINCIPLE: Pointing gestures are timed to coincide with entry of a new focal UI element, and the gesture completes within 0.9s of the element’s visual reveal."
+        },
+        {
+          "t_sec": 1050.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**: Subtitle text is low-contrast white sans-serif, small relative to frame (≈3–4% of height), centered horizontally near bottom edge. No visible weight variation (e.g., bold/regular) or size hierarchy beyond baseline consistency; spacing appears tight with minimal leading. No drop shadow or stroke—relying on background contrast for legibility.\n\n- **Color Palette**: Dominant background is muted green (≈Pantone 7489 C equivalent) on left/right margins; central content area is white (UI mockup). Accent color is orange-red (hair/beard, ≈Pantone 172 C), used *only* on the figure’s hair/beard and nowhere else—highly selective. Overall saturation is moderate; no neon or gradient accents. Contrast ratio between subtitle text and background is marginal (white on light gray UI elements may reduce readability).\n\n- **Motion**: No motion visible in static frames—but the figure’s pose (hands open, tablet held) suggests a frozen gesture mid-explanation. The identical framing across two left panels implies a static shot or very slow dolly/zoom (no parallax or perspective shift). Rightmost panel is pure black—likely a cut to black, not fade or transition.\n\n- **Composition**: Figure is centered vertically, slightly left-of-center horizontally (≈55% from left edge), creating asymmetric negative space on right. UI grid behind occupies full width but is blurred/defocused, establishing depth. Tablet held at ~30° angle creates diagonal line that directs eye toward subtitle area. No rule-of-thirds alignment—the figure dominates center third.\n\n- **Pacing**: Two nearly identical frames suggest a hold (≥1.5 sec) on this moment; black screen likely marks a beat or section break. Information density is low: one visual subject + one line of text per frame. No layered graphics or overlays—minimalist information load.\n\nPRINCIPLE: Accent color (orange-red) occupies ≤2% of total frame area and appears exclusively on non-background elements (hair/beard), never on UI or text.  \nPRINCIPLE: Subtitle text height is ≤4% of frame height and positioned ≥10% above bottom edge, with zero stroke/shadow.  \nPRINCIPLE: Black-screen cuts are used as hard breaks with no transitional motion (instant cut, not fade/dissolve)."
+        },
+        {
+          "t_sec": 1200.0,
+          "description": "The provided image is entirely black, with only a single, tiny typographic element visible in the bottom-right corner: three characters “ll…” rendered in a light gold/yellow hue, likely a serif or slab-serif font at very small scale (estimated ≤ 0.5% of frame height), with tight kerning and no leading. No motion, color variation, or compositional structure beyond this minimal punctuation mark is present. Negative space dominates (>99.9% of frame). There is no evidence of hierarchy, alignment grid, or pacing cues—only a static, near-invisible textual artifact.\n\nPRINCIPLE: A trailing ellipsis (“…”) placed in extreme negative space (<1% of frame area) functions as a visual pause cue, not information delivery.  \nPRINCIPLE: Accent color (gold/yellow) occupies ≤ 0.01% of total frame area when used for micro-typography in black-field contexts."
+        }
+      ],
+      "candidates": [
+        {
+          "principle": "The accent color (red-orange) occupies ≤ 8% of the frame area in static shots and is never overlaid by more than one additional colored object at a time.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "A primary graphical element (the line) remains spatially fixed across ≥2 consecutive frames before any secondary object enters the frame.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Motion blur is applied only to newly introduced objects, not to pre-established graphical elements.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (non-neutral, saturated hues like cyan/magenta/orange) occupies ≤ 12% of total frame area and is restricted to title, timeline tracks, and presenter’s hair/beard.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Primary focal point (title + flowchart) is vertically centered and horizontally aligned, with presenter positioned at 70–80% horizontal position to avoid symmetry and guide eye flow left→right.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Typographic hierarchy is enforced by size alone—no weight variation or case shifts—where the main title is ≥ 3× larger than any UI label (none visible, but inferred from absence).",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (orange-red) occupies ≤12% of total frame area across all three snapshots, concentrated in hair, border highlights, and cursor—never in background or primary text.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@900.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text hierarchy enforces a strict 3-tier size ratio: primary title ≥1.8× subtitle ≥1.5× metadata (e.g., view count unit), with weight contrast ≥200 (e.g., Bold vs. Regular).",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@900.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Pointing gestures are timed to coincide with entry of a new focal UI element, and the gesture completes within 0.9s of the element’s visual reveal.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@900.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (orange-red) occupies ≤2% of total frame area and appears exclusively on non-background elements (hair/beard), never on UI or text.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@1050.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Subtitle text height is ≤4% of frame height and positioned ≥10% above bottom edge, with zero stroke/shadow.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@1050.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Black-screen cuts are used as hard breaks with no transitional motion (instant cut, not fade/dissolve).",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@1050.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "A trailing ellipsis (“…”) placed in extreme negative space (<1% of frame area) functions as a visual pause cue, not information delivery.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@1200.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (gold/yellow) occupies ≤ 0.01% of total frame area when used for micro-typography in black-field contexts.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@1200.0s",
+          "status": "candidate"
+        }
+      ],
+      "note": "Candidates are HYPOTHESES only — each must pass a standard protocol v4 verification cycle before entering taste-standard.md. Isaac-derived principles are one school, not gospel (divergence is a goal). Human review required."
     },
     {
-      "t_sec": 300.0,
-      "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): [WinError 10054] An existing connection was forcibly closed by the remote host"
-    },
-    {
-      "t_sec": 450.0,
-      "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): The read operation timed out"
-    },
-    {
-      "t_sec": 600.0,
-      "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - Title “Viral recipe 2.0” uses a bold sans-serif with gradient fill (cyan → magenta), centered above the flowchart.  \n  - Font size is large relative to UI elements (~1/6 screen height), creating strong hierarchy.  \n  - No visible body text or labels on nodes—only icons/rectangles in the flowchart; thus, typographic density is low.  \n  - Spacing: generous leading and tracking around title; no kerning adjustments visible.\n\n- **Color Palette**:  \n  - Dominant background: dark gray/black UI (DaVinci Resolve interface).  \n  - Accent colors: cyan/magenta gradient in title, green/purple/blue timeline tracks (consistent across frames), and orange-red hair/beard of character.  \n  - High contrast between light text/icons and dark UI; accent colors occupy ~8–12% of frame area (estimated via bounding boxes of title + timeline bars + character hair).  \n  - No desaturation or grayscale zones—everything is fully saturated where colored.\n\n- **Motion (inferred from static frames)**:  \n  - The character’s pose changes subtly across frames (hand gesture → holding notebook → pointing), suggesting slow, deliberate motion (likely 1–2 sec per pose).  \n  - Flowchart nodes appear static; no visible animation on diagram itself.  \n  - Timeline tracks show no scrubbing indicator or playhead movement—implying paused or still-state presentation.  \n  - Easing not observable, but pose transitions suggest linear or slight ease-in/out (no abrupt jumps).\n\n- **Composition**:  \n  - Tripartite layout: left third = presenter + UI; center/right = larger UI view + presenter overlay.  \n  - Presenter consistently placed on right side of each panel (right-aligned within its column), creating visual anchor.  \n  - Negative space: large black areas in UI panels (projector screen area) used to isolate the flowchart; minimal clutter.  \n  - Alignment: title horizontally centered over flowchart; flowchart nodes aligned on grid; presenter’s eyes roughly align with title baseline across frames.\n\n- **Pacing / Information Density**:  \n  - Each frame presents ~1 primary visual idea: flowchart + presenter gesture.  \n  - UI panels show full interface (bins, timeline, viewer) but are de-emphasized via lower contrast and smaller scale vs. title/presenter.  \n  - No rapid cuts or overlays—single-layer composition per panel.  \n  - Estimated info load: ≤ 4 distinct visual elements per frame (title, flowchart, presenter, timeline bar group).\n\nPRINCIPLE: Accent color (non-neutral, saturated hues like cyan/magenta/orange) occupies ≤ 12% of total frame area and is restricted to title, timeline tracks, and presenter’s hair/beard.  \nPRINCIPLE: Primary focal point (title + flowchart) is vertically centered and horizontally aligned, with presenter positioned at 70–80% horizontal position to avoid symmetry and guide eye flow left→right.  \nPRINCIPLE: Typographic hierarchy is enforced by size alone—no weight variation or case shifts—where the main title is ≥ 3× larger than any UI label (none visible, but inferred from absence)."
-    },
-    {
-      "t_sec": 750.0,
-      "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): The read operation timed out"
-    },
-    {
-      "t_sec": 900.0,
-      "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - Title text (e.g., “REAL AI VIDEO”, “THUMBNAILS”, “VIRAL SHORTS”) uses bold, uppercase sans-serif with high stroke weight and tight letter-spacing.  \n  - Subtitles (e.g., “How I Actually Make Viral Thumbnails”) are smaller, lighter weight, sentence-case, and positioned directly beneath titles—consistent vertical rhythm (~1.2x line height).  \n  - View count labels (“20M VIEWS”) use large numerals (≈1.8× title font size) with condensed weight; unit (“VIEWS”) is smaller and baseline-aligned to numeral’s descender.\n\n- **Color Palette**:  \n  - Dominant background: neutral light gray/white UI (YouTube interface), contrasted by dark charcoal/black in left panel.  \n  - Accent color: saturated orange-red (used for hair, thumbnail borders, and cursor highlight) appears in ≤3 distinct regions per frame.  \n  - High luminance contrast between text (black/dark gray) and background (>15:1 for main titles). Thumbnail thumbnails use warm gradients (orange→yellow) but are desaturated relative to the animated character’s hair.\n\n- **Motion**:  \n  - The stylized character (orange hair, suit) moves *only* his right arm—pointing gesture—across frames; motion is smooth, linear-eased (no overshoot), duration ≈0.8s between poses.  \n  - No camera movement; screen capture remains static.  \n  - Subtle parallax: character appears slightly in front of UI (soft drop shadow + slight scale >100% vs. background), implying depth without full 3D rendering.\n\n- **Composition**:  \n  - Tripartite layout: left third = dramatic portrait (high-contrast lighting, vignette), center/right = UI mockup split vertically.  \n  - Focal point shifts rightward across frames: from character (left) → central video grid → right-side highlighted thumbnail + pointing hand.  \n  - Negative space intentionally preserved around thumbnails (≈15% padding horizontally between items); alignment is strict grid (columns evenly spaced, baselines aligned).  \n  - Character’s gaze and pointing direction guide eye toward target UI element (e.g., “20M VIEWS” card).\n\n- **Pacing**:  \n  - Each snapshot presents ≤4 primary visual units (e.g., 1 character + 3–4 thumbnails + 1 label).  \n  - Information density is controlled: no more than 2 lines of text per thumbnail card; view counts and titles are the only textual elements above 16pt.  \n  - Temporal pacing implied by sequential pointing: one new focal element revealed per ~1–1.5 seconds (inferred from gesture progression).\n\nPRINCIPLE: Accent color (orange-red) occupies ≤12% of total frame area across all three snapshots, concentrated in hair, border highlights, and cursor—never in background or primary text.  \nPRINCIPLE: Text hierarchy enforces a strict 3-tier size ratio: primary title ≥1.8× subtitle ≥1.5× metadata (e.g., view count unit), with weight contrast ≥200 (e.g., Bold vs. Regular).  \nPRINCIPLE: Pointing gestures are timed to coincide with entry of a new focal UI element, and the gesture completes within 0.9s of the element’s visual reveal."
-    },
-    {
-      "t_sec": 1050.0,
-      "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**: Subtitle text is low-contrast white sans-serif, small relative to frame (≈3–4% of height), centered horizontally near bottom edge. No visible weight variation (e.g., bold/regular) or size hierarchy beyond baseline consistency; spacing appears tight with minimal leading. No drop shadow or stroke—relying on background contrast for legibility.\n\n- **Color Palette**: Dominant background is muted green (≈Pantone 7489 C equivalent) on left/right margins; central content area is white (UI mockup). Accent color is orange-red (hair/beard, ≈Pantone 172 C), used *only* on the figure’s hair/beard and nowhere else—highly selective. Overall saturation is moderate; no neon or gradient accents. Contrast ratio between subtitle text and background is marginal (white on light gray UI elements may reduce readability).\n\n- **Motion**: No motion visible in static frames—but the figure’s pose (hands open, tablet held) suggests a frozen gesture mid-explanation. The identical framing across two left panels implies a static shot or very slow dolly/zoom (no parallax or perspective shift). Rightmost panel is pure black—likely a cut to black, not fade or transition.\n\n- **Composition**: Figure is centered vertically, slightly left-of-center horizontally (≈55% from left edge), creating asymmetric negative space on right. UI grid behind occupies full width but is blurred/defocused, establishing depth. Tablet held at ~30° angle creates diagonal line that directs eye toward subtitle area. No rule-of-thirds alignment—the figure dominates center third.\n\n- **Pacing**: Two nearly identical frames suggest a hold (≥1.5 sec) on this moment; black screen likely marks a beat or section break. Information density is low: one visual subject + one line of text per frame. No layered graphics or overlays—minimalist information load.\n\nPRINCIPLE: Accent color (orange-red) occupies ≤2% of total frame area and appears exclusively on non-background elements (hair/beard), never on UI or text.  \nPRINCIPLE: Subtitle text height is ≤4% of frame height and positioned ≥10% above bottom edge, with zero stroke/shadow.  \nPRINCIPLE: Black-screen cuts are used as hard breaks with no transitional motion (instant cut, not fade/dissolve)."
-    },
-    {
-      "t_sec": 1200.0,
-      "description": "The provided image is entirely black, with only a single, tiny typographic element visible in the bottom-right corner: three characters “ll…” rendered in a light gold/yellow hue, likely a serif or slab-serif font at very small scale (estimated ≤ 0.5% of frame height), with tight kerning and no leading. No motion, color variation, or compositional structure beyond this minimal punctuation mark is present. Negative space dominates (>99.9% of frame). There is no evidence of hierarchy, alignment grid, or pacing cues—only a static, near-invisible textual artifact.\n\nPRINCIPLE: A trailing ellipsis (“…”) placed in extreme negative space (<1% of frame area) functions as a visual pause cue, not information delivery.  \nPRINCIPLE: Accent color (gold/yellow) occupies ≤ 0.01% of total frame area when used for micro-typography in black-field contexts."
+      "video": "research\\isaacverse\\source\\02 - How I Actually Write Viral Scripts.mp4",
+      "sampled": 6,
+      "moments": [
+        {
+          "t_sec": 150.0,
+          "description": "VISUAL GRAMMAR ANALYSIS:\n\nTypography:\n- Two text layers: “surface problem” (white, sans-serif, medium weight, ~18–20px height relative to frame) positioned above a thin horizontal line; “deeper problem” (orange-yellow gradient fill, bold weight, slightly larger—~22–24px—and lower baseline alignment) below the line.\n- “surface problem” is consistently smaller in visual weight than “deeper problem”, establishing a hierarchy where the lower text dominates despite being semantically secondary.\n- In the rightmost frame, “regular video” appears in small red italicized sans-serif (~10–12px), placed diagonally above and right of “surface problem”, acting as a meta-commentary label.\n\nColor palette:\n- Primary background: pure black (0,0,0), maximizing contrast.\n- “surface problem”: white (#FFFFFF), high luminance, no outline or shadow.\n- “deeper problem”: orange-to-yellow linear gradient (approx. #FF9900 → #FFD700), high saturation, with subtle inner glow or soft drop shadow enhancing lift.\n- Accent red used only for “regular video” (small area), and faint red stroke on the oval highlight in the rightmost frame.\n- Circular portrait icon has warm skin tones and neutral clothing; its glow matches the “deeper problem” gradient.\n\nMotion (inferred from frame sequence):\n- The oval highlight (yellow-orange stroke) animates *into* the rightmost frame—absent in first two, present in third—suggesting a reveal or emphasis motion, likely with ease-in-out timing (smooth onset/offset).\n- The “regular video” label appears simultaneously with the oval, implying synchronized entry.\n- No visible motion blur or velocity lines; transitions appear clean and deliberate, not rapid.\n\nComposition:\n- Three identical layouts horizontally spaced across frame width (~33% each), creating tripartite symmetry.\n- Each unit centers vertically; horizontal line anchors the text pair.\n- Negative space dominates (>85% of frame area is black), forcing focus onto the minimal elements.\n- Focal point shifts rightward across frames: left → center → right unit becomes visually weighted by added oval + red label.\n- Alignment: all units share same vertical axis; horizontal line is consistently positioned at ~40% screen height.\n\nPacing:\n- Very low information density: ≤ 4 distinct visual elements per unit (2 text lines, 1 line, 1 icon).\n- Only one new element added per frame transition (oval + red label in frame 3), suggesting slow, didactic pacing (~2–3 sec per frame in original video).\n- No simultaneous multi-element animation; changes are incremental and isolated.\n\nPRINCIPLE: Accent color (non-white) occupies ≤ 8% of total frame area per unit, concentrated in gradient text and micro-labels.  \nPRINCIPLE: A single animated highlight (e.g., oval stroke) is introduced only after two static frames, following a 2:1 static-to-motion ratio for emphasis buildup.  \nPRINCIPLE: Text size hierarchy inverts semantic priority: the lower (“deeper”) phrase is 1.2–1.3× larger in rendered height than the upper (“surface”) phrase."
+        },
+        {
+          "t_sec": 300.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\nTypography:  \n- Title text (e.g., “Full Course.”, “MEDIA”, “ALTIN”) uses bold sans-serif with high weight (≈700–900), large relative size (≈1.8–2.2× body text), and tight letter-spacing (tracking ≈ –20 to –40).  \n- Subtitles/descriptions use lighter weight (≈400–500), smaller size (≈1/3 title height), and looser spacing.  \n- Channel names (e.g., “AE”, “poly math”) appear in compact, uppercase, medium-weight sans-serif, often overlaid on thumbnails with subtle drop shadow for legibility.  \n- No visible line breaks or paragraph formatting—text is strictly single-line per element.\n\nColor Palette:  \n- Dark mode UI dominates (background ≈ #0D0D0F).  \n- Accent colors are sparse and high-contrast: bright cyan (≈ #00F0FF) used only for vertical dividers between panels; yellow/orange (≈ #FFD700 / #FFA500) appears in thumbnail highlights (e.g., “OLD WAY / NEW WAY” banner) and some title overlays.  \n- Thumbnail content introduces varied hues, but UI elements restrict accent usage to ≤ 3 distinct non-neutral colors per panel.  \n- High luminance contrast: white text on dark bg (Lc ≈ 20:1), accented text maintains ≥ 15:1 contrast.\n\nMotion (inferred from static frames + typical tutorial pacing):  \n- Panels slide horizontally (left-to-right) with consistent offset—middle panel slightly forward (Z-depth ≈ +5% scale), right panel receded (≈ –3% scale), suggesting parallax scroll or carousel motion.  \n- No visible micro-animations *within* panels (e.g., no pulsing, fading, or scaling of thumbnails), implying static layout at this moment.  \n- If animated, transitions would be linear-to-ease-in-out (based on spacing symmetry), duration likely ≈ 0.6–0.8s per panel shift.\n\nComposition:  \n- Tri-panel layout with strict vertical alignment: left/right panels cropped identically; middle panel centered and slightly enlarged (≈ 105% width of side panels).  \n- Focal points are title overlays and central faces (e.g., speaker portraits); thumbnails are grid-aligned with 1:1 aspect ratio, uniform padding (≈ 8px interstitial).  \n- Negative space is minimal but intentional: top/bottom margins ≈ 5% of panel height; no overlapping elements—strict separation via thin dividers or margin.  \n- Asymmetry introduced by staggered thumbnail rows (e.g., top row has 2 items, next has 3), but overall grid remains column-locked.\n\nPacing:  \n- Each panel displays ≈ 8–10 distinct visual units (thumbnails + titles + metadata), totaling ~25–30 info elements across all three.  \n- Density is high but structured: no more than 2 text lines per thumbnail area; metadata (duration, upload time) is minimized (≈ 8–10pt font).  \n- At this frame, information load is maximal—suggests a “summary” or “overview” beat where the editor pauses to let viewer absorb layout.\n\nPRINCIPLE: Accent color (non-white/non-gray) occupies ≤ 8% of total frame area per panel, concentrated in borders, banners, or small icons.  \nPRINCIPLE: Title text height is ≥ 1.7× the height of supporting descriptive text, with letter-spacing ≤ –25 tracked units.  \nPRINCIPLE: In multi-panel layouts, the central panel is scaled 3–5% larger than side panels and positioned 2–4px forward in Z-space to establish visual hierarchy without motion."
+        },
+        {
+          "t_sec": 450.0,
+          "description": "VISUAL GRAMMAR ANALYSIS:\n\n- **Typography**:  \n  - Two text elements per arc: “status quo” (top, smaller, lighter weight) and “call to adventure” (lower-right, slightly larger, bolder weight).  \n  - “status quo” is stacked vertically (two lines), with tight leading; “call to adventure” is single-line, with generous letter-spacing.  \n  - All text is white, sans-serif, high-contrast against black background. No serifs or decorative fonts visible.  \n  - Size hierarchy: “call to adventure” ≈ 1.3× taller than “status quo” in pixel height (estimated from relative bounding boxes).\n\n- **Color Palette**:  \n  - Primary: pure black background (0% luminance).  \n  - Accent: warm amber/gold for circular nodes (≈ #D49A3A–#E6B04A range, based on glow).  \n  - Text: pure white (#FFFFFF), no gradients or shadows.  \n  - No other colors present. Accent color occupies <5% of total frame area (3 arcs × ~6 nodes each × small radius ≈ 18 nodes × ~0.3% each ≈ 5.4% max).\n\n- **Motion (inferred from 3 static frames)**:  \n  - The three identical arcs are horizontally spaced—suggesting a lateral wipe or parallax scroll across time.  \n  - Nodes appear to pulse or glow subtly (soft outer halo visible on all nodes), implying slow fade-in/out or subtle opacity oscillation (easing likely ease-in-out, period >1s).  \n  - No text motion observed across frames—text remains static relative to its arc.  \n  - Arc curves are identical in shape and scale across all three instances → motion is translational, not scaling/rotating.\n\n- **Composition**:  \n  - Tripartite symmetry: three identical arc structures aligned horizontally, evenly spaced (~33% screen width each).  \n  - Each arc’s apex aligns vertically with “status quo”; the rightmost node aligns with “call to adventure”.  \n  - Heavy use of negative space: ~70% of frame is empty black. Focal point is the top node + “status quo” label due to vertical centrality and contrast.  \n  - Alignment: all arcs share same baseline curvature and node count (5 visible nodes per arc), suggesting rigid grid-based layout.\n\n- **Pacing**:  \n  - Only 2 labeled concepts per arc, repeated 3× → low information density (≤ 6 unique textual units visible at once).  \n  - Repetition implies deliberate reinforcement; pacing feels meditative/slow, not rapid-cut.  \n  - No new elements introduced between frames—change is purely positional (horizontal shift), suggesting ≤ 1 new visual unit per second if animated linearly.\n\nPRINCIPLE: Accent color (amber nodes) occupies ≤ 6% of total frame area across all instances.  \nPRINCIPLE: Text uses strict two-tier size/weight hierarchy: secondary label (“call to adventure”) is ≥ 1.2× taller and ≥ 20% heavier stroke weight than primary label (“status quo”).  \nPRINCIPLE: Identical compositional units (arcs + labels) are repeated horizontally with ≤ 5% variation in position or scale across successive frames, indicating translational motion without transformation."
+        },
+        {
+          "t_sec": 600.0,
+          "description": "VISUAL GRAMMAR ANALYSIS:\n\n- **Typography**: Two text elements present. Left: “with no ending…” in small, light-weight sans-serif, low contrast (white on black), bottom-aligned, minimal leading. Right: “it works…” in larger, bold-weight sans-serif, with subtle glow/soft drop shadow; “it” stacked above “works…”, ellipsis included. Size ratio ≈ 1:2.5 (left:right height). Letter-spacing appears tight on right, standard on left.\n\n- **Color palette**: Near-total black background (≈98% of frame). Accent colors only in central animated object (multicolored: red, yellow, green, blue—high saturation) and faint orange glows at tips of surrounding radial elements. Text is white (no hue shift). Accent area occupies <3% of frame area.\n\n- **Motion**: Central object appears to rotate or pulse subtly (implied by blurred edges and radial symmetry); surrounding 10–12 elongated shapes (possibly stylized arrows or capsules) are arranged radially and may be rotating slowly or fading in/out—motion is minimal but implied by soft edges and asymmetry across frames. No visible motion blur beyond slight smearing of central object. Easing feels linear or very slight ease-in-out (no strong acceleration/deceleration visible).\n\n- **Composition**: Strong asymmetry—visual weight concentrated in left third (central object + radial array) vs. sparse right third (text only). Negative space dominates (>90% black). Focal point is the multicolored central object, reinforced by radial framing. Alignment: left text anchored bottom-left; right text anchored mid-right vertically, creating diagonal visual tension.\n\n- **Pacing**: Extremely low information density per frame. Only 2 text phrases + 1 animated cluster visible. No rapid cuts or transitions evident in this still; suggests slow, contemplative pacing. Time-on-screen likely ≥2 seconds per frame based on minimal change.\n\nPRINCIPLE: Accent color occupies ≤3% of frame area and is confined to a single dynamic focal cluster.  \nPRINCIPLE: Text size hierarchy uses ≥2.5× height difference between secondary and primary phrases, with primary phrase using bold weight and subtle emissive effect.  \nPRINCIPLE: Radial compositional framing is used to isolate and elevate a single animated element while leveraging >90% negative space for contrast."
+        },
+        {
+          "t_sec": 750.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - Title “Retention” appears in a clean, medium-weight sans-serif (likely bold or semi-bold), centered at top of each panel, size ~12–14% of panel height.  \n  - Labels “simple concept” and “complex concept” are smaller (~6–7% height), italicized, with thin stroke weight; positioned near respective curves, using leader lines (thin white strokes) for association.  \n  - Subtitles below panels (“that’s indeed”, “good for retention”) are even smaller (~4% height), light weight, left-aligned, minimal leading—no caps, no punctuation emphasis.  \n  - No kerning adjustments visible; spacing between words is uniform.\n\n- **Color Palette**:  \n  - Primary data colors: bright lime green (simple concept) and saturated red (complex concept); both high luminance, high contrast against dark background (~#0A0A0A).  \n  - Accent color usage: green and red appear *only* on the two curves and their labels—no other UI elements use them.  \n  - Background is pure black; chart gridlines are faint gray (~10% opacity), barely visible.  \n  - Circular inset portrait has warm skin tones but is desaturated/muted to avoid competing with data colors.\n\n- **Motion (inferred from frame sequence)**:  \n  - The three panels appear identical except for subtitle text change—suggests a static composition with only text replacement over time (no curve animation, no zoom, no label fade-in/out visible across frames).  \n  - If animated, subtitle change likely uses a quick cut or very short crossfade (<0.3s), given no motion blur or intermediate states.  \n  - No easing visible in static frames; all elements are sharply rendered.\n\n- **Composition**:  \n  - Strong vertical symmetry: each panel centers the chart + circular inset vertically; inset overlaps the Y-axis mid-range (~50% height).  \n  - Negative space dominates: ~60% of each panel is black void; chart occupies central ~40% width × 60% height.  \n  - Alignment: title top-centered; curve labels aligned to curve endpoints via leader lines; subtitles bottom-left, consistent across panels.  \n  - Focal point is the intersection region of the two curves + inset portrait—visually weighted by color contrast and central placement.\n\n- **Pacing / Information Density**:  \n  - Each frame delivers exactly 5 visual elements: title, two curves, two labels, one inset, one subtitle → total ~7 discrete informational units per panel.  \n  - No new visual elements introduced between frames—only subtitle text changes. Suggests slow pacing, allowing viewer to absorb retention graph before semantic reinterpretation via subtitle.\n\nPRINCIPLE: Accent colors (green/red) occupy ≤ 8% of total frame area and appear exclusively on data curves and their direct labels.  \nPRINCIPLE: Subtitle text changes occur without accompanying motion graphics—implying a cut-based pacing where visual stability precedes semantic shift.  \nPRINCIPLE: All non-data elements (gridlines, background, inset portrait) are desaturated or low-contrast to ensure ≥ 4:1 luminance contrast between data curves and surroundings."
+        },
+        {
+          "t_sec": 900.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\nTypography:\n- Three-tier hierarchy: primary label (e.g., “it makes you sound smart”) in small, light-weight sans-serif (~10–12pt equivalent); secondary line (“most viewers don’t really understand all that”) in even smaller, lighter weight; tertiary callout (“see?” / “makes everything more dynamic”) in larger, bold weight (~16–18pt), centered horizontally below the graphic.\n- All text is left-aligned within its block, but blocks are horizontally centered in frame.\n- Letter-spacing is tight; no leading variation visible between lines.\n\nColor Palette:\n- Dominant black background (near 0% luminance).\n- Accent colors: bright red for the rising graph line; orange-to-yellow gradient on the circular portrait glow; green-to-orange gradient on the curved arrow beneath the portrait.\n- Text is white or near-white (high contrast, ~95% luminance).\n- Accent color area (graph line + arrow + glow) occupies ~8–12% of total frame area per panel.\n\nMotion (inferred from sequence):\n- The only animated elements appear to be: (1) the red graph line extending rightward (implied motion trajectory), (2) the curved arrow pulsing or subtly thickening (green→orange gradient shift suggests easing-in/out), and (3) the tertiary text fading in sequentially across panels (“see?” → “makes everything more dynamic”).\n- No camera movement; static composition across frames.\n- Easing appears smooth (no abrupt jumps); likely cubic-bezier(0.33, 0, 0.67, 1) or similar.\n\nComposition:\n- Each panel uses a centered vertical axis: monitor graphic → portrait circle → arrow → text stack.\n- Negative space is high (~60–70% of frame is empty black).\n- Portrait circle overlaps monitor graphic slightly (z-depth implied by glow and partial occlusion).\n- Arrow originates from bottom of portrait, curves downward and rightward, terminating near lower text—creating visual flow toward bottom-right.\n\nPacing:\n- Three panels shown in quick succession (implied short duration per panel, ≤1.5 sec each).\n- Information density per panel: 4 visual elements (monitor, portrait, arrow, text block) + 3 text lines = 7 discrete units.\n- Progressive revelation: only the final line of text changes across panels; all else remains static—suggests *text-driven pacing*.\n\nPRINCIPLE: Accent color (non-white/non-black) occupies ≤12% of frame area and is confined to three contiguous elements: graph line, directional arrow, and portrait glow.  \nPRINCIPLE: Tertiary callout text is 1.5× larger and ≥200% heavier weight than supporting text, and appears only in the final third of a multi-panel sequence.  \nPRINCIPLE: All compositional elements align to a single vertical centerline, with ≥40% horizontal negative space on both sides."
+        }
+      ],
+      "candidates": [
+        {
+          "principle": "Accent color (non-white) occupies ≤ 8% of total frame area per unit, concentrated in gradient text and micro-labels.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "A single animated highlight (e.g., oval stroke) is introduced only after two static frames, following a 2:1 static-to-motion ratio for emphasis buildup.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text size hierarchy inverts semantic priority: the lower (“deeper”) phrase is 1.2–1.3× larger in rendered height than the upper (“surface”) phrase.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (non-white/non-gray) occupies ≤ 8% of total frame area per panel, concentrated in borders, banners, or small icons.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Title text height is ≥ 1.7× the height of supporting descriptive text, with letter-spacing ≤ –25 tracked units.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "In multi-panel layouts, the central panel is scaled 3–5% larger than side panels and positioned 2–4px forward in Z-space to establish visual hierarchy without motion.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (amber nodes) occupies ≤ 6% of total frame area across all instances.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text uses strict two-tier size/weight hierarchy: secondary label (“call to adventure”) is ≥ 1.2× taller and ≥ 20% heavier stroke weight than primary label (“status quo”).",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Identical compositional units (arcs + labels) are repeated horizontally with ≤ 5% variation in position or scale across successive frames, indicating translational motion without transformation.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color occupies ≤3% of frame area and is confined to a single dynamic focal cluster.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text size hierarchy uses ≥2.5× height difference between secondary and primary phrases, with primary phrase using bold weight and subtle emissive effect.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Radial compositional framing is used to isolate and elevate a single animated element while leveraging >90% negative space for contrast.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent colors (green/red) occupy ≤ 8% of total frame area and appear exclusively on data curves and their direct labels.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@750.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Subtitle text changes occur without accompanying motion graphics—implying a cut-based pacing where visual stability precedes semantic shift.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@750.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "All non-data elements (gridlines, background, inset portrait) are desaturated or low-contrast to ensure ≥ 4:1 luminance contrast between data curves and surroundings.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@750.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (non-white/non-black) occupies ≤12% of frame area and is confined to three contiguous elements: graph line, directional arrow, and portrait glow.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Tertiary callout text is 1.5× larger and ≥200% heavier weight than supporting text, and appears only in the final third of a multi-panel sequence.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "All compositional elements align to a single vertical centerline, with ≥40% horizontal negative space on both sides.",
+          "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
+          "status": "candidate"
+        }
+      ],
+      "note": "Candidates are HYPOTHESES only — each must pass a standard protocol v4 verification cycle before entering taste-standard.md. Isaac-derived principles are one school, not gospel (divergence is a goal). Human review required."
     }
   ],
-  "candidates": [
+  "all_candidates": [
     {
       "principle": "The accent color (red-orange) occupies ≤ 8% of the frame area in static shots and is never overlaid by more than one additional colored object at a time.",
       "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@150.0s",
@@ -104,6 +304,96 @@
     {
       "principle": "Accent color (gold/yellow) occupies ≤ 0.01% of total frame area when used for micro-typography in black-field contexts.",
       "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@1200.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (non-white) occupies ≤ 8% of total frame area per unit, concentrated in gradient text and micro-labels.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@150.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "A single animated highlight (e.g., oval stroke) is introduced only after two static frames, following a 2:1 static-to-motion ratio for emphasis buildup.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@150.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Text size hierarchy inverts semantic priority: the lower (“deeper”) phrase is 1.2–1.3× larger in rendered height than the upper (“surface”) phrase.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@150.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (non-white/non-gray) occupies ≤ 8% of total frame area per panel, concentrated in borders, banners, or small icons.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Title text height is ≥ 1.7× the height of supporting descriptive text, with letter-spacing ≤ –25 tracked units.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "In multi-panel layouts, the central panel is scaled 3–5% larger than side panels and positioned 2–4px forward in Z-space to establish visual hierarchy without motion.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (amber nodes) occupies ≤ 6% of total frame area across all instances.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Text uses strict two-tier size/weight hierarchy: secondary label (“call to adventure”) is ≥ 1.2× taller and ≥ 20% heavier stroke weight than primary label (“status quo”).",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Identical compositional units (arcs + labels) are repeated horizontally with ≤ 5% variation in position or scale across successive frames, indicating translational motion without transformation.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color occupies ≤3% of frame area and is confined to a single dynamic focal cluster.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@600.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Text size hierarchy uses ≥2.5× height difference between secondary and primary phrases, with primary phrase using bold weight and subtle emissive effect.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@600.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Radial compositional framing is used to isolate and elevate a single animated element while leveraging >90% negative space for contrast.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@600.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent colors (green/red) occupy ≤ 8% of total frame area and appear exclusively on data curves and their direct labels.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@750.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Subtitle text changes occur without accompanying motion graphics—implying a cut-based pacing where visual stability precedes semantic shift.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@750.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "All non-data elements (gridlines, background, inset portrait) are desaturated or low-contrast to ensure ≥ 4:1 luminance contrast between data curves and surroundings.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@750.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (non-white/non-black) occupies ≤12% of frame area and is confined to three contiguous elements: graph line, directional arrow, and portrait glow.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Tertiary callout text is 1.5× larger and ≥200% heavier weight than supporting text, and appears only in the final third of a multi-panel sequence.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "All compositional elements align to a single vertical centerline, with ≥40% horizontal negative space on both sides.",
+      "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
       "status": "candidate"
     }
   ],
