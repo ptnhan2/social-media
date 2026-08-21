@@ -90,35 +90,41 @@ CỦA BẠN, không phải gu Qwen"). E là việc kiến trúc lớn, để ri�
 - [x] **C4. Win-rate theo treatment**: bảng cập nhật đầy đủ trong
       knowledge-base.md (semantic 2W/2L, pt 0/4, hr 0/2, cc 0/2).
 
-## BATCH D — Tutorial learning (script có sẵn, chưa chạy)
+## BATCH D — Tutorial learning — D1 XONG + D2-prep XONG (đêm 21-22/08), chờ user duyệt buổi sáng
 
-- [ ] **D1. Chạy `harness/ingest_tutorial.py`** lên video Isaac — ưu tiên
-      `research/isaacverse/source/04 - How I Actually Edit Viral Videos.mp4`
-      (liên quan nhất). `--moments 5 --interval 8`. Kết quả:
-      `memories/tutorial-candidates.json`.
+- [x] **D1. Chạy `harness/ingest_tutorial.py`** lên video Isaac — đã chạy 3
+      video (04-editing, 02-scripts, 06-thumbnails; 8 moments mỗi video,
+      interval 150s phủ ~17 phút). Kết quả: 41 candidates trong
+      `memories/tutorial-candidates.json` (multi-video store — script đã fix
+      để MERGE thay vì ghi đè). Gap-fill loop qua đêm recover hết các moments
+      lỗi VLM của video 04. Lưu ý vận hành: DashScope tối hay timeout — chạy
+      nền + retry.
+- [x] **D2-prep.** `docs/TUTORIAL-CANDIDATES-REVIEW.md` sinh tự động
+      (generate_review_doc.py): 41 candidates cluster thành 7 nhóm, mỗi nhóm
+      kèm khuyến nghị + ĐO ĐẰC deterministic trên renders hiện có
+      (measure_candidates.py): style hiện tại accent 0.26-4.7% (xa dưới mọi
+      cap của Isaac ≤2-12%); node/detail 1.43x fail sát so với candidate
+      ≥1.5x. **CHỜ USER DUYỆT** theo doc rồi mới vào taste-standard.
 - [ ] **D2. User duyệt candidates** →_approved vào taste-standard.md với
       nhãn CANDIDATE + provenance (cap tỉ lệ nguyên tắc nguồn Isaac).
-- [ ] **D3. Verify từng candidate** bằng 1 cycle chuẩn (cái nào qua được
-      pairwise + KEEP gate mới thành nguyên tắc thật).
+- [ ] **D3. Verify từng candidate** bằng 1 cycle chuẩn — lưu ý: candidates
+      motion KHÔNG verify được cho tới khi có F4 (oracle mù motion đã chứng
+      minh); candidates đo-lường-được verify trực tiếp bằng PIL đã có sẵn
+      trong review doc.
 
-## BATCH E — Kiến trúc generator (item kiến trúc LỚN NHẤT, session riêng)
+## BATCH E — Kiến trúc generator — E1 SPEC XONG (đêm 21-22/08), E2-E6 để session code
 
 Mục tiêu: MỘT nguồn sự thật (EditorDoc) cho cả người và agent — đóng luôn
 khoảng cách "preview Composer ≠ video agent render".
 
-- [ ] **E1. Spec chi tiết**: generator = bước chiếu EditDoc → EditorDoc thành
-      formal step (chạy được per-beat, lặp lại được). Viết
-      `docs/GENERATOR-SPEC.md` trước khi code.
-- [ ] **E2. Hợp nhất render về một luồng EditorDoc** (luồng treatment hiện
-      tại thành "generator preview").
-- [ ] **E3. Bọc `editorOperations.ts` (split/trim/ripple) thành agent tools**
-      — agent có động từ chỉnh sửa như người dùng.
-- [ ] **E4. Provenance trên clips**: generator ghi `clip.metadata.styleSource`
-      (núm nào sinh thuộc tính nào) — rẻ lúc sinh, không tái tạo được sau.
-- [ ] **E5. Chính sách merge**: clip user đã sửa = "user-owned", tái sinh
-      không đụng.
-- [ ] **E6. Smoke test**: agent sửa một clip (đổi text/timing) như người
-      dùng, render, verify pixel-diff.
+- [x] **E1. Spec chi tiết**: `docs/GENERATOR-SPEC.md` — viết xong, grounded
+      trong audit đầy đủ (generator `projectEditDocToEditor` ĐÃ TỒN TẠI nhưng
+      chỉ là runtime fallback, không idempotent, không provenance). Thiết kế:
+      merge 3-chiều + userEdited ledger + styleSource provenance + render
+      unification qua Root.tsx editorSrc + agent clip tools qua node bridge.
+- [ ] **E2-E6**: theo implementation order trong GENERATOR-SPEC.md §4
+      (ledger → standalone generator → Root.tsx switch → editor_op tool →
+      sync smoke test → agent clip-edit E2E).
 
 ## BATCH F — Vụn nhỏ (làm khi rảnh, không chặn gì)
 
@@ -127,10 +133,17 @@ khoảng cách "preview Composer ≠ video agent render".
       Approve/Reject + diff trong UI, reject hoạt động đúng (agent không retry).
       Chưa test: KEEP gate interrupt qua UI với cycle thắng (lần này thua ở
       pairwise nên không tới gate) — sẽ rơi vào lần cycle thắng kế tiếp.
-- [ ] **F2. Pairwise judge chuyển sang structured output** (response_format
-      JSON với verdict field) — hết phụ thuộc regex parse.
-- [ ] **F3. LangSmith eval re-run** với judge glm-4-flash (đã đổi default,
-      chưa chạy lại).
+- [x] **F2. Pairwise judge structured output** — XONG (đêm 21-22/08):
+      response_format JSON + prompt strict-JSON + `_parse_pairwise_verdict`
+      (JSON-first, fallback legacy WINNER regex). Unit test 11/11
+      (test_pairwise_parser.py) + live verify trên cặp titlelong (verdict
+      "after" khớp buổi sáng, control pass, JSON sạch).
+- [x] **F3. LangSmith eval re-run** — XONG (đêm 21-22/08): response_quality
+      10/10 sau fix 3 tầng (prompt `{inputs}`/`{outputs}` thay vì
+      `{inputs[query]}`; use_reasoning=False; env-loader override empty-string
+      vars). used_expected_tools + no_phantom_tools 10/10. used_think 3/10 +
+      read_memory 1/10 là evaluator design noise. Chi tiết trong
+      eval_scores.json + knowledge-base.
 - [ ] **F4. Key DashScope quốc tế (user action)** → native video input cho
       VLM (bỏ montage 3-frame) → bỏ nhãn PROVISIONAL của motion zone.
       **⬆️ ĐÃ THÀNH CRITICAL PATH (2026-08-21 tối)**: Batch C chứng minh

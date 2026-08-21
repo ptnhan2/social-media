@@ -51,19 +51,20 @@ PREFERENCES = HARNESS / "memories" / "preferences.jsonl"
 VERDICT_CACHE = HARNESS / "memories" / "vote_verdicts.json"
 
 # id, aspect, knob, a/b values (true A = before/old, B = after/new), files.
-# C3 session (2026-08-21 evening): human fallback for VLM-blind pairs —
-# both verified big pixel diffs, oracle said "identical".
+# MORNING session (2026-08-22): 1080p re-vote of the C3 pairs — tests the
+# resolution hypothesis (motion/global changes tied at 360p; maybe the user
+# can discriminate at 1080p). VLM verdicts run fresh on the new sources.
 PAIRS = [
-    {"id": "hr3color", "aspect": "color",
+    {"id": "hr3color1080", "aspect": "color",
      "knob": "treatments.host-reflection.filter",
      "a": "saturate(.72) brightness(.72)", "b": "saturate(.8) brightness(.88)",
-     "a_file": "hr3_baseline.mp4", "b_file": "hr3_after_color.mp4",
-     "desc": "độ sáng/độ rực của đoạn host-reflection (tối mờ vs sáng rõ hơn)"},
-    {"id": "hr3push", "aspect": "motion",
+     "a_file": "hr3_1080_baseline.mp4", "b_file": "hr3_1080_color.mp4",
+     "desc": "độ sáng/độ rực của host-reflection (tối mờ vs sáng) — bản 1080p"},
+    {"id": "hr3push1080", "aspect": "motion",
      "knob": "treatments.host-reflection.pushDurationSec",
      "a": "4", "b": "1.5",
-     "a_file": "hr3_baseline.mp4", "b_file": "hr3_after.mp4",
-     "desc": "tốc độ camera zoom-in (chậm vs nhanh)"},
+     "a_file": "hr3_1080_baseline.mp4", "b_file": "hr3_1080_push.mp4",
+     "desc": "tốc độ camera zoom-in (chậm vs nhanh) — bản 1080p"},
 ]
 
 state = {

@@ -1,6 +1,6 @@
 # TUTORIAL CANDIDATES — REVIEW CHO USER (D2)
 
-> Sinh tự động lúc 2026-08-21T23:16 bởi generate_review_doc.py.
+> Sinh tự động lúc 2026-08-21T23:17 bởi generate_review_doc.py.
 > Nguồn: 2 video Isaac, 41 candidates thô.
 > Quy trình (roadmap P3): candidates là GIẢ THUYẾT — duyệt của bạn → entry CANDIDATE trong
 > taste-standard.md → verify cycle → nguyên tắc thật. Isaac là một trường phái, không phải
