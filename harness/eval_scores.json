@@ -1,0 +1,40 @@
+{
+ "scores": {
+  "used_expected_tools": {
+   "total": 10,
+   "passed": 10
+  },
+  "no_phantom_tools": {
+   "total": 10,
+   "passed": 10
+  },
+  "used_think": {
+   "total": 10,
+   "passed": 3
+  },
+  "read_memory": {
+   "total": 10,
+   "passed": 1
+  },
+  "response_not_empty": {
+   "total": 10,
+   "passed": 9
+  },
+  "response_quality": {
+   "total": 10,
+   "passed": 10
+  }
+ },
+ "failing": [
+  "case 'Read /memories/knowledge-base.md first, then read ': read_memory=0.0",
+  "case 'Read the style store, then think about what to imp': read_memory=0.0, response_not_empty=0.0",
+  "case 'Read /memories/taste-standard.md and tell me what ': used_think=0.0",
+  "case 'Read /skills/style-knobs/SKILL.md and tell me whic': used_think=0.0, read_memory=0.0",
+  "case 'Render isaacverse-final 3.5 to 7 draft': used_think=0.0, read_memory=0.0",
+  "case 'Read the style store, then use the think tool to p': read_memory=0.0",
+  "case 'Read /memories/knowledge-base.md and tell me what ': used_think=0.0, read_memory=0.0",
+  "case 'Change edge stroke mode to gradient. Use update_st': used_think=0.0, read_memory=0.0",
+  "case 'read the style store': used_think=0.0, read_memory=0.0",
+  "case 'What can you do?': used_think=0.0, read_memory=0.0"
+ ]
+}

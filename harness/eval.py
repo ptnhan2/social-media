@@ -5,10 +5,10 @@ Evaluators: code (tool trajectory) + LLM-as-judge (DeepSeek).
 """
 from __future__ import annotations
 import json, os, sys, urllib.request
+from pathlib import Path
 from langsmith import Client
 
-# Load .env
-from pathlib import Path
+# Load .env (an empty-string env var from the parent shell must NOT win)
 env_file = Path(__file__).parent.parent / ".env"
 if env_file.exists():
     for line in env_file.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -18,7 +18,8 @@ if env_file.exists():
             v = v.strip()
             if "#" in v and not (v.startswith('"') or v.startswith("'")):
                 v = v.split("#")[0].strip()
-            os.environ.setdefault(k.strip(), v)
+            if v and not os.environ.get(k.strip()):
+                os.environ[k.strip()] = v
 
 API = "http://localhost:2024"
 ASSISTANT = "agent"
@@ -135,21 +136,29 @@ def eval_response_not_empty(inputs, outputs, reference_outputs):
 # ===== LLM-AS-JUDGE EVALUATOR (DeepSeek) =====
 
 def eval_response_quality(inputs, outputs, reference_outputs):
-    """LLM-as-judge using DeepSeek: is the response helpful and correct?"""
+    """LLM-as-judge using glm-4-flash: is the response helpful and correct?
+
+    NOTE: openevals stringifies inputs/outputs before formatting the prompt —
+    use {inputs}/{outputs} (full JSON), NEVER {inputs[query]} (dict subscript
+    raises TypeError and every score lands 0)."""
     try:
         from openevals.llm import create_llm_as_judge
         judge = create_llm_as_judge(
             prompt="""You are evaluating a video editing agent's response.
 
-User query: {inputs[query]}
-Agent response: {outputs[response]}
+The full inputs JSON (contains the user's query) is:
+{inputs}
+
+The agent's output JSON (contains its final response) is:
+{outputs}
 
 Score 1 if the response directly addresses the query, is helpful, and doesn't hallucinate.
-Score 0 if the response is empty, error, or unhelpful.
+Score 0 if the response is empty, an error, or unhelpful.
 
 Return JSON: {{"score": 0 or 1, "comment": "brief explanation"}}""",
             model=JUDGE_MODEL,
             feedback_key="response_quality",
+            use_reasoning=False,
         )
         return judge(inputs=inputs, outputs=outputs)
     except Exception as e:

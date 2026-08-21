@@ -10,11 +10,11 @@
         },
         {
           "t_sec": 300.0,
-          "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): [WinError 10054] An existing connection was forcibly closed by the remote host"
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - A single line of white sans-serif text appears in the bottom-right corner in the rightmost frame: *“so you want originality?”*  \n  - Font weight is medium (not bold), size is small relative to frame (~2–3% of height), with tight letter-spacing and no leading adjustment.  \n  - No other text is legible; movie titles on posters are too small/blurry to assess hierarchy or weight.\n\n- **Color Palette**:  \n  - Dominant background: near-black (#000000 or very dark gray).  \n  - Accent colors: warm orange/gold glows around poster frames (soft outer glow, ~10–15 px radius), and saturated red-orange for the character’s hair/beard (high chroma, desaturated skin tones contrast).  \n  - Tie color is deep maroon (≈ #7F1A2B), shirt is off-white (≈ #F8F8F8), creating low-saturation foreground vs. high-contrast accent elements.  \n  - Poster borders alternate between teal/cyan and orange glow—no consistent scheme across all posters; appears randomized or staggered.\n\n- **Motion (inferred from 3 static snapshots)**:  \n  - The central figure (caricatured man) shifts pose slightly across frames: left arm crosses chest → points with index finger → arms crossed again. Suggests slow, deliberate gesture animation (~1–2 sec total), likely linear or slight ease-in/ease-out.  \n  - Floating circular icons (4–5 small rings with inner text) appear to rotate or pulse subtly—position unchanged but opacity or scale may vary (not definitively visible).  \n  - Posters remain static in grid layout; no evidence of parallax or zoom.\n\n- **Composition**:  \n  - Focal point is the central caricature (placed at ~60% horizontal, 50% vertical), reinforced by directional gaze and gesture toward left-side posters.  \n  - Grid of posters forms a dense background layer (≈ 12–16 visible tiles), arranged in loose staggered columns—not strict grid alignment; some overlap or tilt.  \n  - Negative space is minimal: background nearly fills frame; only thin margins at edges.  \n  - Character’s body partially occludes lower-left posters, creating depth via layering.\n\n- **Pacing**:  \n  - High information density: ~12+ distinct poster visuals + 4+ floating icons + central figure + subtitle = ≥17 visual elements per frame.  \n  - No rapid cuts between frames shown; continuity suggests sustained shot (~2–3 sec duration).  \n  - Subtitle appears only in final frame—delayed reveal implies narrative timing cue.\n\nPRINCIPLE: Accent color (orange/gold glow) is applied to ≤ 20% of total frame area, concentrated on poster borders and character hair/beard, while foreground subject uses ≤ 2 muted non-accent colors (off-white, maroon).  \nPRINCIPLE: Text appears only once per ~3-second segment, positioned in bottom-right quadrant, occupying < 3% of frame height and using uniform weight/spacing without hierarchy.  \nPRINCIPLE: Motion is restricted to primary subject’s upper-body gestures and subtle icon pulsing; background elements remain static, enforcing focal stability despite high visual density."
         },
         {
           "t_sec": 450.0,
-          "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): The read operation timed out"
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\n- **Typography**:  \n  - Two distinct size tiers: small white sans-serif labels (e.g., “3.5 music”, “1.800M”) on dark gray rectangular buttons, and larger green/white labels (e.g., “27 assets”) on bright green blocks below.  \n  - Font weight appears medium-to-bold for all visible text; no italics or thin variants detected.  \n  - Horizontal spacing between button elements is uniform (~1–2× button width), suggesting grid-based alignment; vertical stacking creates clear layering (top row → middle row → bottom green row).  \n  - No kerning or tracking adjustments visibly applied—spacing appears default.\n\n- **Color Palette**:  \n  - Primary background: pure black (0% luminance).  \n  - Accent colors: vibrant purple (used on top-row active/selectable items), bright green (bottom-row status/summary items), and muted gray (middle-row data items).  \n  - Purple appears only on 1–2 items per frame, always in the top row; green consistently occupies bottom row.  \n  - Contrast ratio between white text and dark gray buttons is high (>10:1); purple-on-black also high; green-on-black moderate but legible due to saturation.  \n  - No gradients or textures—flat color fills only.\n\n- **Motion**:  \n  - From left→right frames: a purple block *slides right* into position (visible as blur/motion smear in center frame), suggesting a linear or slightly eased horizontal entrance (duration ~0.3–0.5s implied by smear length).  \n  - Other elements remain static across frames—no scaling, fading, or rotation observed.  \n  - No parallax or depth motion; all layers appear on same Z-plane (no shadow/offset indicating depth).\n\n- **Composition**:  \n  - Focal point shifts horizontally with the moving purple element; eye is drawn to top row due to brightness and motion.  \n  - Negative space dominates: ~60–70% of frame is empty black, framing the UI cluster centrally.  \n  - Alignment is strict: all buttons share same height, left/right edges snap to invisible grid columns; bottom green blocks align vertically under middle-row items.  \n  - Asymmetry introduced only by the moving purple item—not mirrored.\n\n- **Pacing**:  \n  - Each frame contains ~9–11 discrete labeled elements (excluding blurred motion artifact).  \n  - Information density is low per frame (<12 items), with deliberate spacing to avoid clutter.  \n  - The motion event (purple slide) is isolated—no concurrent animations—suggesting single-action pacing per beat.\n\nPRINCIPLE: Accent color (purple) occupies ≤ 8% of total frame area and appears on exactly 1–2 elements per frame, always confined to the top row.  \nPRINCIPLE: Motion is restricted to one element per temporal beat, using horizontal slide with visible motion blur implying duration ≤ 0.5s at 30fps.  \nPRINCIPLE: Text hierarchy uses exactly two font sizes (small for data labels, large for summary blocks), with size ratio ≈ 1:1.8 (measured by bounding box height)."
         },
         {
           "t_sec": 600.0,
@@ -22,7 +22,7 @@
         },
         {
           "t_sec": 750.0,
-          "description": "VLM API error (dashscope/qwen3-vl-plus, timeout 180s): The read operation timed out"
+          "description": "The visual grammar across the three snapshots reveals a tightly controlled editing craft:\n\n- **Typography**: Interface labels (e.g., “Export”, “Effects”, “Program: Nested Sequence 11A”) use a uniform sans-serif font, small size (~10–12 pt), medium weight, and tight leading. No hierarchy is created via size or weight—everything is functionally legible but visually flat. Timecode overlays (“00:00:47:07”) are slightly larger and bolded for temporal anchoring, creating a subtle secondary hierarchy.\n\n- **Color palette**: The UI employs a dark gray base (#1E1E28 approx.) with blue accents (#3B82F6) used *exclusively* on active UI elements: selected timeline tracks, playhead, and tool icons. Accent color occupies ≤ 8% of frame area per snapshot (measured by bounding box of highlighted UI controls). High luminance contrast (> 4.5:1) between text and background ensures readability; no warm/cool tonal shifts in the UI itself.\n\n- **Motion**: Only two animated elements are visible: (1) the playhead moving horizontally across the timeline at constant speed (no easing—linear motion), and (2) the flame in the rightmost panel flickering with naturalistic, high-frequency micro-motion (≈12–15 Hz), contrasting sharply with the static UI. No UI transitions, fades, or zooms are present—everything is static except these two elements.\n\n- **Composition**: Each snapshot follows a strict tripartite grid: left = effect graph panel, center = program monitor, right = timeline + project bin. Focal point is consistently the program monitor (center third, ~40% width), reinforced by brighter luminance and subject detail (bicycle scene). Negative space is minimized in UI panels but preserved around the program monitor via thin borders. Alignment is rigidly vertical/horizontal—no diagonal or organic placement.\n\n- **Pacing**: Information density is high but segmented: ~22 distinct UI controls visible per frame (counted: track headers, keyframes, time rulers, buttons), yet only 3–4 are *active* (highlighted in blue) at any moment. This creates a “guided overload”—dense interface presented with selective emphasis. No new elements appear between frames; pacing is static, not progressive.\n\nPRINCIPLE: Accent color is used on ≤ 8% of the frame area and exclusively on currently active UI controls.  \nPRINCIPLE: Focal point is maintained via luminance contrast (program monitor ≥ 1.8× brighter than adjacent panels) and central horizontal placement (40–45% of frame width).  \nPRINCIPLE: Motion is restricted to two types: linear (playhead) and naturalistic micro-motion (flame); no UI animations occur."
         },
         {
           "t_sec": 900.0,
@@ -54,6 +54,36 @@
           "status": "candidate"
         },
         {
+          "principle": "Accent color (orange/gold glow) is applied to ≤ 20% of total frame area, concentrated on poster borders and character hair/beard, while foreground subject uses ≤ 2 muted non-accent colors (off-white, maroon).",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text appears only once per ~3-second segment, positioned in bottom-right quadrant, occupying < 3% of frame height and using uniform weight/spacing without hierarchy.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Motion is restricted to primary subject’s upper-body gestures and subtle icon pulsing; background elements remain static, enforcing focal stability despite high visual density.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (purple) occupies ≤ 8% of total frame area and appears on exactly 1–2 elements per frame, always confined to the top row.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Motion is restricted to one element per temporal beat, using horizontal slide with visible motion blur implying duration ≤ 0.5s at 30fps.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text hierarchy uses exactly two font sizes (small for data labels, large for summary blocks), with size ratio ≈ 1:1.8 (measured by bounding box height).",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
           "principle": "Accent color (non-neutral, saturated hues like cyan/magenta/orange) occupies ≤ 12% of total frame area and is restricted to title, timeline tracks, and presenter’s hair/beard.",
           "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
           "status": "candidate"
@@ -66,6 +96,21 @@
         {
           "principle": "Typographic hierarchy is enforced by size alone—no weight variation or case shifts—where the main title is ≥ 3× larger than any UI label (none visible, but inferred from absence).",
           "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color is used on ≤ 8% of the frame area and exclusively on currently active UI controls.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@750.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Focal point is maintained via luminance contrast (program monitor ≥ 1.8× brighter than adjacent panels) and central horizontal placement (40–45% of frame width).",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@750.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Motion is restricted to two types: linear (playhead) and naturalistic micro-motion (flame); no UI animations occur.",
+          "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@750.0s",
           "status": "candidate"
         },
         {
@@ -252,6 +297,36 @@
       "status": "candidate"
     },
     {
+      "principle": "Accent color (orange/gold glow) is applied to ≤ 20% of total frame area, concentrated on poster borders and character hair/beard, while foreground subject uses ≤ 2 muted non-accent colors (off-white, maroon).",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Text appears only once per ~3-second segment, positioned in bottom-right quadrant, occupying < 3% of frame height and using uniform weight/spacing without hierarchy.",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Motion is restricted to primary subject’s upper-body gestures and subtle icon pulsing; background elements remain static, enforcing focal stability despite high visual density.",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (purple) occupies ≤ 8% of total frame area and appears on exactly 1–2 elements per frame, always confined to the top row.",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Motion is restricted to one element per temporal beat, using horizontal slide with visible motion blur implying duration ≤ 0.5s at 30fps.",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Text hierarchy uses exactly two font sizes (small for data labels, large for summary blocks), with size ratio ≈ 1:1.8 (measured by bounding box height).",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
       "principle": "Accent color (non-neutral, saturated hues like cyan/magenta/orange) occupies ≤ 12% of total frame area and is restricted to title, timeline tracks, and presenter’s hair/beard.",
       "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
       "status": "candidate"
@@ -264,6 +339,21 @@
     {
       "principle": "Typographic hierarchy is enforced by size alone—no weight variation or case shifts—where the main title is ≥ 3× larger than any UI label (none visible, but inferred from absence).",
       "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@600.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color is used on ≤ 8% of the frame area and exclusively on currently active UI controls.",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@750.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Focal point is maintained via luminance contrast (program monitor ≥ 1.8× brighter than adjacent panels) and central horizontal placement (40–45% of frame width).",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@750.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Motion is restricted to two types: linear (playhead) and naturalistic micro-motion (flame); no UI animations occur.",
+      "provenance": "tutorial:04 - How I Actually Edit Viral Videos.mp4@750.0s",
       "status": "candidate"
     },
     {
