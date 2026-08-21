@@ -1,0 +1,26 @@
+{
+ "renders": {
+  "chapter-card (0-3.5s)": {
+   "amber_pct": 0.36,
+   "cyan_pct": 0.18
+  },
+  "semantic-diagram (3.5-7s)": {
+   "amber_pct": 0.26,
+   "cyan_pct": 0.1
+  },
+  "host-reflection (7-10.5s)": {
+   "amber_pct": 4.69,
+   "cyan_pct": 0.56
+  },
+  "process-timeline (10.5-14s)": {
+   "amber_pct": 0.39,
+   "cyan_pct": 0.03
+  }
+ },
+ "store_hierarchy": {
+  "semantic_title_node": 2.3,
+  "semantic_node_detail": 1.43,
+  "chapter_title_subtitle": 4.1,
+  "host_sub_height_pct": 2.5
+ }
+}
