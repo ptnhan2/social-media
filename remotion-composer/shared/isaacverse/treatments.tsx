@@ -193,7 +193,7 @@ export const SemanticDiagram: React.FC<SemanticDiagramProps> = ({
           color: PAPER(),
           fontFamily: "Arial Black, Arial, sans-serif",
           fontSize: getStyle<number>("treatments.semantic-diagram.title.fontSize", 46),
-          fontWeight: getStyle<number>("treatments.semantic-diagram.title.fontWeight", 800),
+          fontWeight: getStyle<number>("treatments.semantic-diagram.title.fontWeight", 900),
           letterSpacing: getStyle<string>("treatments.semantic-diagram.title.letterSpacing", "-0.02em"),
           WebkitTextStroke: `1px rgba(0,0,0,0.2)`,
           filter: `drop-shadow(0 3px 10px rgba(0,0,0,0.6)) drop-shadow(0 0 18px ${accent}30)`,

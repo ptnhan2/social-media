@@ -177,8 +177,10 @@ def eval_principle_compliance(inputs, outputs, reference_outputs):
         return {"key": "principle_compliance", "score": 0, "comment": "treatments.tsx unreadable"}
     violations = []
 
-    # typo-001: fontWeight >= 900 everywhere it is explicit
+    # typo-001: fontWeight >= 900 everywhere it is explicit — both direct
+    # literals (fontWeight: 900) and getStyle defaults (..., 900))
     weights = [int(m) for m in _re.findall(r"fontWeight:\s*(\d+)", src)]
+    weights += [int(m) for m in _re.findall(r'fontWeight:\s*getStyle<number>\([^)]*,\s*(\d+)\s*\)', src)]
     light = [w for w in weights if w < 900]
     if light:
         violations.append(f"typo-001: {len(light)} fontWeight values < 900: {sorted(set(light))}")
