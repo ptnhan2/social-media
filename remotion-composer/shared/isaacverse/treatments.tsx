@@ -184,11 +184,19 @@ export const SemanticDiagram: React.FC<SemanticDiagramProps> = ({
 
   return (
     <AbsoluteFill style={{ backgroundColor: BLACK(), color: PAPER(), overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 46%, rgba(242,184,75,0.09), transparent 42%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 50% 46%, ${accent}12, transparent 42%)` }} />
       <div style={{ position: "absolute", left: 86, top: 62, opacity: titleIn, transform: `translateY(${(1 - titleIn) * 18}px)` }}>
-        {kicker ? <div style={{ color: secondaryAccent, fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.kicker.fontSize", 18), fontWeight: getStyle<number>("treatments.semantic-diagram.kicker.fontWeight", 700), letterSpacing: getStyle<string>("treatments.semantic-diagram.kicker.letterSpacing", "0.18em"), textTransform: "uppercase", marginBottom: 12 }}>{kicker}</div> : null}
-        <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.title.fontSize", 46), fontWeight: getStyle<number>("treatments.semantic-diagram.title.fontWeight", 800), letterSpacing: getStyle<string>("treatments.semantic-diagram.title.letterSpacing", "-0.02em") }}>{title}</div>
-        <div style={{ width: 110, height: 4, background: accent, boxShadow: `0 0 14px ${accent}`, marginTop: 16 }} />
+        {kicker ? <div style={{ color: CYAN(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.kicker.fontSize", 18), fontWeight: getStyle<number>("treatments.semantic-diagram.kicker.fontWeight", 700), letterSpacing: getStyle<string>("treatments.semantic-diagram.kicker.letterSpacing", "0.18em"), textTransform: "uppercase", marginBottom: 12, textShadow: `0 2px 8px rgba(0,0,0,0.6)` }}>{kicker}</div> : null}
+        <div style={{
+          color: PAPER(),
+          fontFamily: "Arial Black, Arial, sans-serif",
+          fontSize: getStyle<number>("treatments.semantic-diagram.title.fontSize", 46),
+          fontWeight: getStyle<number>("treatments.semantic-diagram.title.fontWeight", 800),
+          letterSpacing: getStyle<string>("treatments.semantic-diagram.title.letterSpacing", "-0.02em"),
+          WebkitTextStroke: `1px rgba(0,0,0,0.2)`,
+          filter: `drop-shadow(0 3px 10px rgba(0,0,0,0.6)) drop-shadow(0 0 18px ${accent}30)`,
+        }}>{title}</div>
+        <div style={{ width: 130, height: 5, background: `linear-gradient(90deg, ${accent}, ${CYAN()})`, boxShadow: `0 0 16px ${accent}80`, marginTop: 16, borderRadius: 3 }} />
       </div>
       <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
         {edges.map((edge) => <Edge key={`${edge.from}-${edge.to}`} edge={edge} nodes={map} frame={frame} fps={fps} />)}
@@ -225,7 +233,7 @@ export const chapterCardTitleLayout = (title: string): React.CSSProperties => {
   };
 };
 
-/** A restrained chapter reset: black negative space, one semantic word, one light cue. */
+/** Isaac-style chapter card: bold gradient typography with stroke, depth, and vibrant background. */
 export const ChapterCard: React.FC<ChapterCardProps> = ({ title, subtitle, accent = AMBER(), holdFrom = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -233,17 +241,48 @@ export const ChapterCard: React.FC<ChapterCardProps> = ({ title, subtitle, accen
   const inDur = getStyle<number>("treatments.chapter-card.reveal.inDurationSec", 0.45);
   const lineStart = getStyle<number>("treatments.chapter-card.reveal.lineStartSec", 0.15);
   const lineEnd = getStyle<number>("treatments.chapter-card.reveal.lineEndSec", 0.8);
-  const accentHeight = getStyle<number>("treatments.chapter-card.accentLine.height", 5);
-  const accentMaxWidth = getStyle<number>("treatments.chapter-card.accentLine.maxWidth", 190);
+  const accentHeight = getStyle<number>("treatments.chapter-card.accentLine.height", 8);
+  const accentMaxWidth = getStyle<number>("treatments.chapter-card.accentLine.maxWidth", 280);
   const inProgress = interpolate(local, [0, inDur * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const wordScale = interpolate(inProgress, [0, 1], [0.9, 1]);
+  const wordScale = interpolate(inProgress, [0, 1], [0.85, 1]);
   const lineProgress = interpolate(local, [lineStart * fps, lineEnd * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const gradientStart = getStyle<string>("colors.gradientStart", "#ff6b35");
+  const gradientEnd = getStyle<string>("colors.gradientEnd", "#ffd166");
   return (
-    <AbsoluteFill style={{ backgroundColor: BLACK(), justifyContent: "center", alignItems: "center", color: PAPER() }}>
+    <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, ${BLACK()} 100%)`, justifyContent: "center", alignItems: "center" }}>
+      {/* ambient glow behind title */}
+      <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 50% 50%, ${accent}18, transparent 55%)`, opacity: inProgress }} />
       <div style={{ textAlign: "center", opacity: inProgress, transform: `scale(${wordScale})` }}>
-        <div style={{ ...chapterCardTitleLayout(title), fontFamily: "Arial, sans-serif", fontWeight: getStyle<number>("treatments.chapter-card.title.fontWeight", 900), textTransform: "uppercase", textAlign: "center", textShadow: `0 0 22px ${accent}55` }}>{title}</div>
-        <div style={{ height: accentHeight, background: accent, boxShadow: `0 0 ${getStyle<number>("treatments.chapter-card.accentLine.glow", 18)}px ${accent}`, width: `${lineProgress * accentMaxWidth}px`, margin: "20px auto 0" }} />
-        {subtitle ? <div style={{ marginTop: 18, fontFamily: "Arial, sans-serif", fontSize: 20, letterSpacing: "0.06em", color: secondaryColor(accent), textTransform: "uppercase", opacity: 0.8 }}>{subtitle}</div> : null}
+        <div style={{
+          ...chapterCardTitleLayout(title),
+          fontFamily: "Arial Black, Arial, sans-serif",
+          fontWeight: getStyle<number>("treatments.chapter-card.title.fontWeight", 900),
+          textTransform: "uppercase",
+          textAlign: "center",
+          background: `linear-gradient(135deg, ${gradientStart} 0%, ${gradientEnd} 45%, ${gradientStart} 100%)`,
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          WebkitTextStroke: `1.5px rgba(0,0,0,0.25)`,
+          filter: `drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 0 30px ${accent}50)`,
+        }}>{title}</div>
+        <div style={{
+          height: accentHeight,
+          background: `linear-gradient(90deg, transparent, ${gradientStart}, ${gradientEnd}, ${gradientStart}, transparent)`,
+          boxShadow: `0 0 24px ${gradientStart}80, 0 2px 8px rgba(0,0,0,0.5)`,
+          width: `${lineProgress * accentMaxWidth}px`,
+          margin: "26px auto 0",
+          borderRadius: 4,
+        }} />
+        {subtitle ? <div style={{
+          marginTop: 22,
+          fontFamily: "Arial, sans-serif",
+          fontSize: 24,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          color: CYAN(),
+          textTransform: "uppercase",
+          textShadow: `0 2px 10px rgba(0,0,0,0.7)`,
+        }}>{subtitle}</div> : null}
       </div>
     </AbsoluteFill>
   );

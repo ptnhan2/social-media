@@ -3,10 +3,13 @@
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
-    "amber": "#f2b84b",
-    "cyan": "#61d7e8",
-    "paper": "#f4e8cf",
-    "black": "#07090d"
+    "amber": "#ff6b35",
+    "cyan": "#00d4ff",
+    "paper": "#ffffff",
+    "black": "#050508",
+    "accent2": "#e5484d",
+    "gradientStart": "#ff6b35",
+    "gradientEnd": "#ffd166"
   },
   "treatments": {
     "semantic-diagram": {

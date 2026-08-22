@@ -43,6 +43,7 @@ HARNESS_DIR = os.path.dirname(os.path.abspath(__file__))
 #   HARNESS_MODEL=openai:<model>      + OPENAI_BASE_URL/OPENAI_API_KEY   (e.g. Zhipu GLM-4-Flash)
 #   HARNESS_MODEL=dashscope:<model>   + DASHSCOPE_API_KEY                 (e.g. qwen-plus, qwen3-vl-plus)
 #   HARNESS_MODEL=deepseek:<model>    + DEEPSEEK_API_KEY
+#   HARNESS_MODEL=openrouter:<model>  + OPENROUTER_API_KEY                (e.g. stealth/ox-alpha)
 _model_str = os.environ.get("HARNESS_MODEL", "openai:glm-4-flash")
 if _model_str.startswith("dashscope:"):
     from langchain_openai import ChatOpenAI
@@ -50,6 +51,15 @@ if _model_str.startswith("dashscope:"):
         model=_model_str.split(":", 1)[1],
         api_key=os.environ.get("DASHSCOPE_API_KEY", ""),
         base_url=os.environ.get("DASHSCOPE_BASE_URL", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"),
+        use_responses_api=False,
+    )
+elif _model_str.startswith("openrouter:"):
+    # OpenRouter (OpenAI-compatible) — e.g. stealth/ox-alpha
+    from langchain_openai import ChatOpenAI
+    MODEL = ChatOpenAI(
+        model=_model_str.split(":", 1)[1],
+        api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        base_url="https://openrouter.ai/api/v1",
         use_responses_api=False,
     )
 elif _model_str.startswith("openai:") and os.environ.get("OPENAI_BASE_URL"):
