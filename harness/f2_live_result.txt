@@ -1,8 +1,0 @@
-Pairwise verdict: after
-(control passed)
-
-{
-  "assessment": "different",
-  "winner": "second",
-  "reason": "The second image shows clearer, more legible text with proper spacing and alignment (e.g., 'THE EDIT' fully visible vs truncated 'EDIT' in first), indicating a more polished composition and likely smoother animation reveal."
-}
