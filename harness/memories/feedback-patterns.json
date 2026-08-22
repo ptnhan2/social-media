@@ -1,0 +1,88 @@
+{
+  "patterns": [
+    {
+      "category": "typography",
+      "mention_count": 1,
+      "consistent_direction": "bolder+bigger",
+      "bias": "always prefer bold typography (900+) with visual effects (stroke/gradient/shadow)",
+      "confidence": "high",
+      "auto_check": "verify all text elements in treatments.tsx have fontWeight >= 900 AND a visual effect (text-shadow/drop-shadow/gradient fill)",
+      "last_mentioned": "2026-08-22",
+      "source": "user:2026-08-22 design review",
+      "note_samples": [],
+      "vote_evidence": {
+        "decided": 1,
+        "tie": 0
+      }
+    },
+    {
+      "category": "color",
+      "mention_count": 2,
+      "consistent_direction": "more-vivid+higher-contrast",
+      "bias": "always prefer vivid, saturated colors with high contrast; never washed out or muted",
+      "confidence": "high",
+      "auto_check": "verify filter strings have saturate >= 1.0 and brightness >= 0.85; accents must pop against background",
+      "last_mentioned": "2026-08-21T17:52:37",
+      "source": "user:2026-08-22 design review",
+      "note_samples": [
+        "Cả hai đều xấu — màu hơi bệt, đường dày hơn vẫn không có chiều sâu"
+      ],
+      "vote_evidence": {
+        "decided": 4,
+        "tie": 2
+      }
+    },
+    {
+      "category": "composition",
+      "mention_count": 1,
+      "consistent_direction": "gradients+organic-curves",
+      "bias": "prefer gradients over flat fills; organic curves over mechanical straight lines",
+      "confidence": "high",
+      "auto_check": "verify major fills use linear-gradient/radial-gradient; connectors use curved paths, not straight lines",
+      "last_mentioned": "2026-08-22",
+      "source": "user:2026-08-22 design review",
+      "note_samples": [],
+      "vote_evidence": {
+        "decided": 1,
+        "tie": 0
+      }
+    },
+    {
+      "category": "narrative",
+      "mention_count": 1,
+      "consistent_direction": "story-over-information",
+      "bias": "present information as narrative (character/host tells the story), not raw data display",
+      "confidence": "high",
+      "auto_check": "verify information treatments have a narrative element (host presence, story arc) — flag as requires-design if not",
+      "last_mentioned": "2026-08-22",
+      "source": "user:2026-08-22 design review",
+      "note_samples": [],
+      "vote_evidence": null
+    },
+    {
+      "category": "motion",
+      "mention_count": 1,
+      "consistent_direction": "purposeful-motion",
+      "bias": "motion must serve the narrative; keep draw-on reveals and spring entrances",
+      "confidence": "medium",
+      "auto_check": "verify every element has purposeful animation (spring/interpolate, not static)",
+      "last_mentioned": "2026-08-22",
+      "source": "inherited: mot-101 + verified cycles (damping 18→2, reveal 0.65→2)",
+      "note_samples": [],
+      "vote_evidence": {
+        "decided": 0,
+        "tie": 4
+      }
+    }
+  ],
+  "total_feedback_notes": 2,
+  "total_votes": 12,
+  "learning_phase": {
+    "phase": 2,
+    "reasons": [
+      "phase 2: patterns recognized (4 high categories, 6 signals)",
+      "phase 3 blocked: only 1 verified principles (needs >= 2)"
+    ]
+  },
+  "generated_by": "pattern_extractor.py"
+}
