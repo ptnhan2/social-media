@@ -118,6 +118,14 @@ projects/<slug>/
 
 Agent ↔ user = Vietnamese. Scripts, code-facing schemas and video content = English unless explicitly requested otherwise.
 
+## Document Hygiene
+
+- `docs/` chỉ giữ file .md **còn active** (đang dùng, được tham chiếu).
+- File cũ / superseded → `docs/archive/`.
+- Khi một doc bị superseded: **di chuyển vào archive ngay** + thêm 1 dòng note ở đầu file chỉ thay thế bằng gì.
+- Không tạo file md mới nếu file cũ sửa được. Không viết nhiều file cùng mục đích.
+- **Thứ tự đọc cho session mới**: `docs/HARNESS-RECOVERY.md` → `docs/PATTERN-LEARNING-AND-EVAL-SPEC.md` → `docs/TODO-NEXT.md`.
+
 ## Operational Learnings
 
 - Remotion frame ranges are inclusive: a 30-second 30fps composition uses `0-899`; window end uses `ceil(endSec * fps) - 1`.
