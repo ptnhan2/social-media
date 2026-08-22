@@ -69,15 +69,43 @@ LABELS = {
     "other": "### Khác",
 }
 
+# category mapping for the structured schema (see taste-standard.md header)
+CATEGORY_MAP = {
+    "accent-area": "color",
+    "text-hierarchy": "typography",
+    "subtitle": "typography",
+    "motion": "motion",
+    "composition": "composition",
+    "pacing": "pacing",
+    "other": "composition",
+}
+
 lines = [SECTION]
 for key in ("accent-area", "text-hierarchy", "subtitle", "composition", "pacing", "motion", "other"):
     if key not in clusters:
         continue
     lines.append(LABELS[key])
     lines.append("")
-    for c in clusters[key]:
-        prov = c.get("provenance", "").replace("tutorial:", "").replace(" - ", " ")
-        lines.append(f"- CANDIDATE: {c['principle']}  `[{prov}]`")
+    entries = []
+    for i, c in enumerate(sorted(clusters[key], key=lambda x: x.get("provenance", "")), start=1):
+        prov = c.get("provenance", "").replace(" - ", " ")
+        entries.append({
+            "id": f"tut-{key}-{i:03d}",
+            "principle": c["principle"],
+            "scope": "global",
+            "category": CATEGORY_MAP[key],
+            "direction": "unverified",
+            "source": f"tutorial:{prov}",
+            "confidence": "low",
+            "verified": 0,
+            "rejected": 0,
+            "promoted": False,
+            "status": "CANDIDATE",
+        })
+    lines.append("```json")
+    for e in entries:
+        lines.append(json.dumps(e, ensure_ascii=False))
+    lines.append("```")
     lines.append("")
 
 # idempotent: replace the existing section if present
