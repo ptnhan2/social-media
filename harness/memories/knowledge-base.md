@@ -6,6 +6,27 @@
 
 ## Experiments
 
+### D-phase: eval trend proven end-to-end (2026-08-23 overnight)
+Four experiments in LangSmith (dataset isaacverse-harness-evals, 14 cases):
+1. **D1a baseline** (harness-eval-4626481a): principle_compliance 0/14,
+   code_quality 0/14 — the documented "before" state
+2. **D1b after-principles** (harness-eval-7a9dc319): principle_compliance
+   14/14, code_quality 14/14, aesthetic_quality 12/14 (working gemini judge)
+3. **D2 intentionally broken** (harness-eval-db191690, comments.fontWeight
+   default 900→400): principle_compliance 10/14 — all 4 design cases scored
+   0. THE EVALUATOR CATCHES REGRESSIONS.
+4. **D3 restored** (harness-eval-0f937467): principle_compliance 14/14 —
+   recovery confirmed.
+- Answer to "is the agent getting smarter?": the LangSmith comparison view
+  now shows this 4-point trend. Future principle work extends the same chart.
+- Evaluator hardened during D2: getStyle defaults are parsed too (caught a
+  real leftover — SD title.fontWeight 800 → fixed 900).
+- Remaining noise: read_memory/used_think are response-text heuristics and
+  vary run to run; ignore for trend reading. The mutating eval case
+  ("Change edge stroke mode to gradient") flips the real store every run —
+  reset stroke.mode=solid after each full eval (done twice tonight).
+
+
 ### Principle application: 5 user design directives → ALL treatments (2026-08-23 overnight)
 - Protocol: v5 (principle-based, NOT knob A/B) — first full E-phase run
 - Principles: typo-001 (bold 900+ + effects), col-001 (vivid/contrast),

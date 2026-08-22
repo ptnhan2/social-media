@@ -78,10 +78,9 @@
   "total_feedback_notes": 2,
   "total_votes": 12,
   "learning_phase": {
-    "phase": 2,
+    "phase": 3,
     "reasons": [
-      "phase 2: patterns recognized (4 high categories, 6 signals)",
-      "phase 3 blocked: only 1 verified principles (needs >= 2)"
+      "phase 3: self-evaluating (4 high categories, 5 verified principles)"
     ]
   },
   "generated_by": "pattern_extractor.py"

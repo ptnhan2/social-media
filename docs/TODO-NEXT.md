@@ -1,6 +1,18 @@
 # TODO NEXT — các việc còn nợ (source of truth)
 
-> ⚠️ **Cập nhật 2026-08-23**: hướng đã CHUYỂN HƯỚNG từ "knob A/B testing"
+> ✅ **SPEC TODO A1→D3 HOÀN TẤT 2026-08-23 (overnight session)** — xem kết quả
+> trong `docs/HARNESS-RECOVERY.md`. Trend 4 experiments đã chứng minh trong
+> LangSmith: baseline 0% → after 100% → broken 71% → restored 100%.
+>
+> Việc còn lại CHỈ là user input (sáng dậy làm):
+> 1. U3: xem renders sau-principles (Composer :5174) → confirm/chỉnh hướng
+> 2. U2: review `docs/TUTORIAL-CANDIDATES-REVIEW.md` (53 candidates)
+> 3. U1: LangSmith UI → Annotation Queues → render-review (nếu có runs thấp điểm)
+> 4. U4: quyết định hướng narrative (nar-001 đang requires-design-session)
+>
+> ---
+>
+> ⚠️ **Lịch sử 2026-08-23**: hướng đã CHUYỂN HƯỚNG từ "knob A/B testing"
 > sang "principle-based learning + LangSmith native eval". Các batch A-F
 > dưới đây ghi lại lịch sử nhưng **KHÔNG còn là hướng ưu tiên nữa**.
 >
