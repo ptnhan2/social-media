@@ -202,7 +202,9 @@ _COMMON = dict(
     permissions=[
         FilesystemPermission(operations=["write"], paths=["/workspace/libraries/04-visual/**"], mode="interrupt"),
         FilesystemPermission(operations=["write"], paths=["/memories/**"], mode="interrupt"),
-        FilesystemPermission(operations=["write"], paths=["/workspace/remotion-composer/shared/**"], mode="deny"),
+        # P2 Phase 3: agent can evolve treatment code — every edit goes through
+        # an interrupt gate + deterministic QA gates (typecheck + render + pixel-diff)
+        FilesystemPermission(operations=["write"], paths=["/workspace/remotion-composer/shared/**"], mode="interrupt"),
         # memory files exist ONLY at /memories/** (harness/memories) — a stray
         # /workspace/memories/** write once created fabricated memory copies
         # (2026-08-21); deny it outright.
