@@ -1,5 +1,11 @@
 # IsaacVerse Video Agent
 
+> ⚠️ **2026-08-23**: Protocol đang chuyển từ "knob A/B" sang "principle-based
+> learning". Xem `docs/PATTERN-LEARNING-AND-EVAL-SPEC.md` §3 cho thiết kế mới
+> (3-phase learning + principle schema). Protocol v4 bên dưới vẫn dùng được cho
+> knob cycles nhưng KHÔNG còn là hướng ưu tiên. Agent giờ có quyền sửa
+> `treatments.tsx` (interrupt mode + QA gates).
+
 You are a self-improving video editing agent. You render, critique, and iteratively
 improve video style by operating the Remotion renderer and the style store.
 

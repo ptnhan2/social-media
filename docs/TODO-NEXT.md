@@ -1,13 +1,20 @@
 # TODO NEXT — các việc còn nợ (source of truth)
 
-> Tạo 2026-08-20 sau audit cuối session. **File này là nguồn sự thật** cho công
-> việc còn lại — todo-list trong tool chỉ là bản copy dễ mất (lỗi mạng/session
-> cắt). Quy tắc: làm xong mục nào thì đánh dấu [x] ngay trong file này rồi
-> commit. Đọc file này đầu mỗi session mới, sau HARNESS-RECOVERY.md.
+> ⚠️ **Cập nhật 2026-08-23**: hướng đã CHUYỂN HƯỚNG từ "knob A/B testing"
+> sang "principle-based learning + LangSmith native eval". Các batch A-F
+> dưới đây ghi lại lịch sử nhưng **KHÔNG còn là hướng ưu tiên nữa**.
 >
-> Ngữ cảnh: P1 + P5 + P2.1 đã xong (protocol v4 chạy trọn vẹn, 2 cải thiện
-> verify thật: damping 18→2, revealDurationSec 0.65→2). Những mục dưới đây là
-> phần CHƯA đóng từ audit với user 2026-08-20 tối.
+> **Đọc `docs/PATTERN-LEARNING-AND-EVAL-SPEC.md` TRƯỚC** — đó là spec +
+> TODO list mới (A1→D3). File này chỉ còn giá trị tham chiếu.
+>
+> Đọc file này sau `HARNESS-RECOVERY.md` và `PATTERN-LEARNING-AND-EVAL-SPEC.md`.
+>
+> **Tóm tắt chuyển hướng:**
+> - Knob A/B testing: CHẾT (thay đổi vô hình, user vote là nhiễu, VLM mù)
+> - Principle-based: MỚI (1 góp ý → 1 principle → apply 10+ elements)
+> - Eval: LangSmith native (KHÔNG tự build custom eval)
+> - Model: Ox Alpha (free, OpenRouter) thay glm-4-plus
+> - Agent có quyền sửa treatment code (interrupt mode + QA gates)
 
 ## Nguyên tắc ưu tiên
 

@@ -1,5 +1,11 @@
 # Taste Standard — IsaacVerse Harness
 
+> ⚠️ **2026-08-23**: Schema đang chuyển sang mới — mỗi principle sẽ có:
+> `scope` (global/treatment/category/one-time), `category`, `direction`,
+> `confidence`, `verified`, `rejected`, `promoted`. Xem
+> `docs/PATTERN-LEARNING-AND-EVAL-SPEC.md` §3.1 cho schema đầy đủ.
+> Các entries hiện tại sẽ được convert sang schema mới (TODO A1).
+>
 > This document accumulates approved visual principles that define the harness's
 > evolving standard of beauty. Every principle here was derived from evidence
 > (VLM critique, user feedback, IsaacVerse audit) and approved through governance.
