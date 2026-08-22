@@ -439,6 +439,48 @@ def copy_render(source_path: str, destination_path: str) -> str:
     return f"Copied to /workspace/{rel} ({os.path.getsize(dst) // 1024} KB)"
 
 
+@tool
+def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: str) -> str:
+    """QA gate for treatment-code edits (protocol v5 step 5) — build+render+diff in one call.
+
+    Runs the FULL pipeline: remotion bundle build (catches TSX syntax/import
+    errors), a draft render of the window, and a deterministic pixel-diff
+    against the before-render. Call this after EVERY edit_file on treatment
+    code. On FAIL: fix or revert — never leave the tree broken.
+
+    Prerequisite: render the BEFORE with render_window and copy_render it
+    aside BEFORE editing, then pass that copy here as video_before.
+
+    Args:
+        project_slug: Project folder name (e.g. 'isaacverse-final').
+        start_sec: Window start (must match the before-render's window).
+        end_sec: Window end (must match the before-render's window).
+        video_before: Path to the before-render copy (with /workspace/ prefix or relative).
+    """
+    fb = _resolve_workspace_path(video_before)
+    if not os.path.exists(fb):
+        return (f"QA GATE ERROR: video_before not found: {fb}\n"
+                "Render the baseline FIRST (render_window), copy it aside (copy_render), "
+                "then edit, then call qa_gate.")
+    # 1. build + render (render_window already retries transient chrome locks;
+    #    a TSX syntax error makes the build fail and returns 'Render failed: ...')
+    render_result = render_window.invoke({
+        "project_slug": project_slug, "start_sec": start_sec,
+        "end_sec": end_sec, "quality": "draft",
+    })
+    if render_result.startswith("Render failed"):
+        return ("QA GATE: BUILD/RENDER FAIL — your edit broke the build or the render.\n"
+                f"{render_result}\nNEXT: fix the error or revert the edit. Do NOT proceed.")
+    # extract the deterministic output path from the render result
+    out_path = render_result.strip().splitlines()[0] if render_result.startswith("/workspace/") else ""
+    if not out_path:
+        return (f"QA GATE ERROR: could not resolve render output path.\n{render_result[:300]}")
+    # 2. pixel-diff vs baseline
+    diff_result = compare_renders.invoke({"video_a": video_before, "video_b": out_path})
+    header = f"QA GATE for {project_slug} {start_sec}-{end_sec}s\nrender: {out_path}\n\n"
+    return header + diff_result
+
+
 # ---------------------------------------------------------------------------
 # Protocol v4 tools — the layered oracle + the KEEP gate
 # (design: docs/TASTE-AND-LEARNING-ROADMAP.md rev 3)
