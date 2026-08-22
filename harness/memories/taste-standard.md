@@ -63,6 +63,7 @@
 
 - **Stroke rendering mode is a PACE knob, not a MOTION knob** — switching `semantic-diagram.edge.stroke.mode` solid→gradient left motion at 3/5 but raised pacing 3→4. Use mode/color knobs to tune pacing and depth; reach for entrance/damping/displacement knobs when motion is the target. (Source: cycle 2026-08-18; ⚠️ cross-session comparison — NOT controlled, treat as unverified hypothesis)
 
+
 ## Tutorial Candidates — học từ Isaac (CANDIDATE, CHƯA VERIFY)
 
 > Sinh 2026-08-22 từ 3 video Isaac (04-editing, 02-scripts, 06-thumbnails) qua
@@ -88,6 +89,10 @@
 - CANDIDATE: Accent color occupies ≤3% of frame area and is confined to a single dynamic focal cluster.  `[02 How I Actually Write Viral Scripts.mp4@600.0s]`
 - CANDIDATE: Accent colors (green/red) occupy ≤ 8% of total frame area and appear exclusively on data curves and their direct labels.  `[02 How I Actually Write Viral Scripts.mp4@750.0s]`
 - CANDIDATE: Accent color (non-white/non-black) occupies ≤12% of frame area and is confined to three contiguous elements: graph line, directional arrow, and portrait glow.  `[02 How I Actually Write Viral Scripts.mp4@900.0s]`
+- CANDIDATE: Accent color (orange-red hair/beard) occupies ≤10% of frame area and is the only non-neutral chromatic element.  `[06 How I Actually Make Viral Thumbnails.mp4@150.0s]`
+- CANDIDATE: Accent color (non-white/non-black) occupies ≤ 12% of total frame area and appears in ≤ 3 distinct non-contiguous regions per frame.  `[06 How I Actually Make Viral Thumbnails.mp4@300.0s]`
+- CANDIDATE: Accent color (cyan) occupies ≤15% of frame area and is strictly confined to diegetic UI elements (holograms), never applied to non-diegetic text or background.  `[06 How I Actually Make Viral Thumbnails.mp4@450.0s]`
+- CANDIDATE: Accent color (yellow-orange) occupies ≤10% of frame area and is restricted to title text and character highlights only.  `[06 How I Actually Make Viral Thumbnails.mp4@600.0s]`
 
 ### Text hierarchy (tỉ lệ cỡ chữ các tầng)
 
@@ -105,15 +110,20 @@
 - CANDIDATE: Text size hierarchy uses ≥2.5× height difference between secondary and primary phrases, with primary phrase using bold weight and subtle emissive effect.  `[02 How I Actually Write Viral Scripts.mp4@600.0s]`
 - CANDIDATE: Subtitle text changes occur without accompanying motion graphics—implying a cut-based pacing where visual stability precedes semantic shift.  `[02 How I Actually Write Viral Scripts.mp4@750.0s]`
 - CANDIDATE: Tertiary callout text is 1.5× larger and ≥200% heavier weight than supporting text, and appears only in the final third of a multi-panel sequence.  `[02 How I Actually Write Viral Scripts.mp4@900.0s]`
+- CANDIDATE: Overlay captions use font size ≥ 2.3× that of embedded UI text and are positioned within 10% of the bottom-left corner margin.  `[06 How I Actually Make Viral Thumbnails.mp4@300.0s]`
+- CANDIDATE: Subtitle typography remains static in size, weight, and position across sequential frames—even during motion—preserving legibility through consistency.  `[06 How I Actually Make Viral Thumbnails.mp4@450.0s]`
 
 ### Composition
 
 - CANDIDATE: Identical compositional units (arcs + labels) are repeated horizontally with ≤ 5% variation in position or scale across successive frames, indicating translational motion without transformation.  `[02 How I Actually Write Viral Scripts.mp4@450.0s]`
 - CANDIDATE: All compositional elements align to a single vertical centerline, with ≥40% horizontal negative space on both sides.  `[02 How I Actually Write Viral Scripts.mp4@900.0s]`
+- CANDIDATE: Text is uniformly sized, lowercase, white-on-black, and positioned at fixed vertical offset (≈10% from bottom) across all panels.  `[06 How I Actually Make Viral Thumbnails.mp4@150.0s]`
 
 ### Pacing
 
 - CANDIDATE: Black-screen cuts are used as hard breaks with no transitional motion (instant cut, not fade/dissolve).  `[04 How I Actually Edit Viral Videos.mp4@1050.0s]`
+- CANDIDATE: Panel transitions use abrupt cuts (not motion-blurred or eased), with pose changes timed to coincide with new textual phrase introduction.  `[06 How I Actually Make Viral Thumbnails.mp4@150.0s]`
+- CANDIDATE: Subject entry occurs via hard cut (0-frame transition) without motion interpolation, coinciding with a new textual cue.  `[06 How I Actually Make Viral Thumbnails.mp4@300.0s]`
 
 ### Motion (HOÃN verify — oracle mù motion tới khi có F4)
 
@@ -124,8 +134,11 @@
 - CANDIDATE: Pointing gestures are timed to coincide with entry of a new focal UI element, and the gesture completes within 0.9s of the element’s visual reveal.  `[04 How I Actually Edit Viral Videos.mp4@900.0s]`
 - CANDIDATE: A single animated highlight (e.g., oval stroke) is introduced only after two static frames, following a 2:1 static-to-motion ratio for emphasis buildup.  `[02 How I Actually Write Viral Scripts.mp4@150.0s]`
 - CANDIDATE: Radial compositional framing is used to isolate and elevate a single animated element while leveraging >90% negative space for contrast.  `[02 How I Actually Write Viral Scripts.mp4@600.0s]`
+- CANDIDATE: State changes occur via discrete text replacement (not animated transitions), with ≤1 semantic element changing per edit point.  `[06 How I Actually Make Viral Thumbnails.mp4@600.0s]`
 
 ### Khác
 
 - CANDIDATE: Motion is restricted to two types: linear (playhead) and naturalistic micro-motion (flame); no UI animations occur.  `[04 How I Actually Edit Viral Videos.mp4@750.0s]`
 - CANDIDATE: All non-data elements (gridlines, background, inset portrait) are desaturated or low-contrast to ensure ≥ 4:1 luminance contrast between data curves and surroundings.  `[02 How I Actually Write Viral Scripts.mp4@750.0s]`
+- CANDIDATE: Motion within diegetic graphics (e.g., hologram ring emergence) follows discrete stage progression (0 → partial → full structure) rather than continuous interpolation, suggesting keyframed reveal timing.  `[06 How I Actually Make Viral Thumbnails.mp4@450.0s]`
+- CANDIDATE: Primary textual overlays are placed within the lower-left third of the frame, maintaining ≥15% vertical margin from bottom edge and avoiding occlusion of facial features.  `[06 How I Actually Make Viral Thumbnails.mp4@600.0s]`

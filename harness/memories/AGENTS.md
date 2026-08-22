@@ -45,8 +45,12 @@ memory is worse than missing memory.**
    - CONTROL FAILED → oracle confabulating: revert, report unverifiable.
    - ORACLE UNAVAILABLE → revert (fail-safe).
    - Verdict "before" or "identical" → revert, record, done.
-8. **KEEP gate**: request_keep(knob, old, new, baseline, after, verdict_summary, aspect).
+8. **KEEP gate**: request_keep(knob, old, new, baseline, after, verdict_summary, aspect, motivation=...).
    - The user decides: keep / keep+note / reject+note.
+   - **motivation is REQUIRED whenever a taste-standard CANDIDATE or knowledge-base
+     entry inspired your knob choice** (e.g. motivation="taste-standard#accent-area").
+     The user's vote is attributed back to that source — principles you never cite
+     never gain credit; cycles with no inspiration may omit it.
    - In AUTO zones (oracle-trust.md) with a passing verdict you may skip request_keep and keep directly — but every 5th AUTO decision, call request_keep anyway (spot check).
 9. **Record**: append to /memories/knowledge-base.md (knob, old→new, gate numbers, verdict, KEPT/REVERTED). Memory writes go through the approval gate — that is expected.
 10. **Revert on loss**: update_style(knob, old_value) — no interrupt needed.

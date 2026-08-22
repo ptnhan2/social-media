@@ -695,7 +695,8 @@ def _append_jsonl(path: str, record: dict) -> None:
 @tool
 def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
                  video_after: str, verdict_summary: str, aspect: str = "",
-                 user_directed: bool = False, feedback_context: str = "") -> str:
+                 user_directed: bool = False, feedback_context: str = "",
+                 motivation: str = "") -> str:
     """The KEEP gate (protocol v4 step 8) — ask the human whether to keep a style change.
 
     PAUSES for a human decision. Show up with both renders + the verdict.
@@ -717,6 +718,10 @@ def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
         aspect: Which critique aspect this targets (motion/color/text/pacing/composition).
         user_directed: True when this change came from the user's feedback (skip VLM framing).
         feedback_context: For user-directed fixes: the user's original feedback text.
+        motivation: WHY this knob/value was chosen — cite the source, e.g.
+            'taste-standard#accent-area' or 'knowledge-base pending experiment'.
+            The user's keep/reject is attributed back to that source (principle
+            tallies), closing the learning loop.
     """
     from langgraph.types import interrupt
     import datetime
@@ -731,6 +736,7 @@ def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
         "aspect": aspect,
         "user_directed": user_directed,
         "feedback_context": feedback_context,
+        "motivation": motivation,
     }
     decision = interrupt(payload)
     # decision: {"type": "keep" | "reject", "note": str}
@@ -743,6 +749,7 @@ def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
         "ts": ts, "knob": knob, "a": old_value, "b": new_value,
         "user_verdict": vote, "vlm_verdict": vlm_verdict, "aspect": aspect,
         "user_directed": user_directed, "segment_note": os.path.basename(video_before),
+        "motivation": motivation,
     })
     if note:
         _append_jsonl(FEEDBACK_FILE, {

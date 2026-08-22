@@ -278,6 +278,90 @@
         }
       ],
       "note": "Candidates are HYPOTHESES only — each must pass a standard protocol v4 verification cycle before entering taste-standard.md. Isaac-derived principles are one school, not gospel (divergence is a goal). Human review required."
+    },
+    {
+      "video": "research\\isaacverse\\source\\06 - How I Actually Make Viral Thumbnails.mp4",
+      "sampled": 4,
+      "moments": [
+        {
+          "t_sec": 150.0,
+          "description": "VISUAL GRAMMAR ANALYSIS:\n\nTypography:  \n- All text is set in a clean, sans-serif typeface (likely geometric or neo-grotesque), all lowercase.  \n- Text size is uniform across all three panels (~12–14% of frame height), with no hierarchy by weight or scale—no bolding, italics, or size variation between phrases.  \n- Letter-spacing appears tight but legible; word spacing is standard.  \n- Baseline alignment is consistent: text sits ~10% above bottom edge, horizontally centered under each figure.\n\nColor Palette:  \n- Dominant background: pure black (#000000), creating maximum luminance contrast.  \n- Figure’s skin/hair uses saturated orange-red tones (hair ~#FF7F2A, beard ~#D2691E), acting as the sole chromatic accent.  \n- Clothing: light blue shirt (desaturated cyan, ~#ADD8E6) in first two panels; white t-shirt (~#FFFFFF) in third.  \n- Text color: white (#FFFFFF), high-contrast against black, no drop shadow or stroke.  \n- Accent usage: orange-red hair/beard occupies ~8–10% of total frame area per panel; no other saturated colors present.\n\nMotion (inferred from static snapshots):  \n- First two panels are identical—suggesting a static hold or very slow zoom-in (no motion blur, no displacement).  \n- Third panel shows a clear pose shift: arms extended downward, index fingers pointing; likely a quick cut or snap transition (no motion trails), implying abrupt change rather than smooth interpolation.  \n- No visible text animation (e.g., fade, slide, typewriter); text appears fully rendered in all frames.\n\nComposition:  \n- Triptych layout: three equal-width vertical panels, separated by thin black gutters (~2% of frame width).  \n- Each figure is positioned slightly left-of-center within its panel (~35% from left edge), leaving right-side negative space for gesture or future text.  \n- In panel 3, the pointing gesture directs attention toward lower-right quadrant—text is placed precisely beneath the hands’ implied trajectory.  \n- Head/eye direction: figure looks rightward in panels 1–2; in panel 3, gaze follows hand direction (down-right), reinforcing visual flow.\n\nPacing:  \n- Three discrete moments presented simultaneously (side-by-side), suggesting parallel comparison rather than sequential progression.  \n- Information density per panel is low: 1 figure + 1 text line (~6–8 words max), total ~18 words across 3 panels.  \n- No overlapping elements; minimal cognitive load per frame.\n\nPRINCIPLE: Accent color (orange-red hair/beard) occupies ≤10% of frame area and is the only non-neutral chromatic element.  \nPRINCIPLE: Text is uniformly sized, lowercase, white-on-black, and positioned at fixed vertical offset (≈10% from bottom) across all panels.  \nPRINCIPLE: Panel transitions use abrupt cuts (not motion-blurred or eased), with pose changes timed to coincide with new textual phrase introduction."
+        },
+        {
+          "t_sec": 300.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\nTypography:\n- Two distinct text layers: (1) video title cards on screen (e.g., “I Tried Making an Anime Edit”, “I Learned Blender in a Week”) — sans-serif, medium weight, white with subtle black drop shadow; size consistent across thumbnails (~12–14px relative to thumbnail height). (2) Overlay captions (“or the final result”, “have I…”) — larger, bold sans-serif, white, no shadow, positioned bottom-left; ~2.5× taller than thumbnail titles, leading suggests tight line spacing (~1.1x font size).\n- No visible kerning adjustments; letter-spacing appears default.\n- Caption text appears incrementally: first frame shows “or the final result”, third shows truncated “have I…”, implying left-to-right reveal or fade-in with offset timing.\n\nColor Palette:\n- Dominant background: near-black UI (YouTube dark mode), ~#0D0D0D.\n- Accent colors: vibrant magenta/pink (in thumbnail graphics, e.g., Day 1/Day 7), lime green (bottom-left thumbnail), and orange (character’s hair, matching warm tone in thumbnail highlights).\n- Character’s shirt is cyan-blue (#3AB8E6 approx), contrasting against black background and complementing orange hair — creates triadic-like contrast (blue/orange/magenta).\n- Accent usage is localized: magenta appears only in thumbnail UI elements and one overlay highlight; orange only in hair and thumbnail highlights; total accent area ≤ 10% of frame (visually estimated).\n\nMotion:\n- Character enters from right (frame 2 → frame 3): full-body cut-in, no motion blur — implies jump-cut or hard cut, not smooth slide.\n- Overlay text appears/disappears abruptly (no visible easing); “or the final result” is fully present in frame 1, then replaced by new text in frame 3 — suggests discrete state change, not continuous animation.\n- Thumbnails remain static across frames — no parallax, zoom, or hover effects visible.\n\nComposition:\n- Rule of thirds applied: character positioned right third in frames 2 & 3; left third occupied by screen UI.\n- Negative space: large black void above/below character’s head and to left of screen — used to isolate subject and emphasize overlay text.\n- Alignment: all thumbnail titles baseline-aligned; overlay captions left-aligned with screen edge, not with character.\n- Focal point shifts: frame 1 = screen thumbnails; frame 2 = character + screen (dual focus); frame 3 = character dominates due to gesture + caption entry.\n\nPacing:\n- 3 frames span ~1–2 seconds (inferred from typical tutorial pacing); each frame delivers one primary information unit:\n  - Frame 1: context (thumbnails + caption)\n  - Frame 2: subject introduction (character enters)\n  - Frame 3: rhetorical pivot (new caption + open-handed gesture)\n- Information density: ~4–5 visual elements per frame (thumbnails ×4 + character + caption + UI chrome); no clutter — high signal-to-noise.\n\nPRINCIPLE: Accent color (non-white/non-black) occupies ≤ 12% of total frame area and appears in ≤ 3 distinct non-contiguous regions per frame.  \nPRINCIPLE: Overlay captions use font size ≥ 2.3× that of embedded UI text and are positioned within 10% of the bottom-left corner margin.  \nPRINCIPLE: Subject entry occurs via hard cut (0-frame transition) without motion interpolation, coinciding with a new textual cue."
+        },
+        {
+          "t_sec": 450.0,
+          "description": "VISUAL GRAMMAR ANALYSIS:\n\nTypography:  \n- Subtitle text is white, sans-serif, medium weight, with tight letter-spacing and no stroke or drop shadow.  \n- Text is horizontally centered at the bottom third of the frame, aligned to a consistent baseline across all three frames.  \n- No size variation between frames; font size appears fixed (~3–4% of frame height).  \n- No hierarchy beyond placement—no bolding, italics, or scaling for emphasis.\n\nColor Palette:  \n- Dominant background: muted warm browns/greys (studio interior), low saturation.  \n- Accent color: vibrant cyan-blue used exclusively for the holographic sphere and its particle effects (~12–15% of frame area per frame).  \n- High luminance contrast between cyan hologram and dark background; white subtitle provides secondary contrast against mid-tone floor.  \n- No other saturated colors—Iron Man suits in background are desaturated and out-of-focus.\n\nMotion:  \n- Hologram shows progressive animation: left → center → right frames show increasing complexity of internal wireframe geometry (concentric rings appear only in rightmost frame).  \n- Particle dots inside sphere drift slowly outward with slight parallax; motion feels linear (no visible easing curves).  \n- Subject’s hand movement is continuous across frames (covering face → lowering), implying ~0.5s total duration between first and last frame.  \n- No camera movement; static framing.\n\nComposition:  \n- Focal point is the man’s face/hands, positioned slightly left-of-center; hologram encircles him symmetrically.  \n- Negative space: upper-left quadrant contains empty wall + light panel; lower-right has blurred suit display—both serve as visual anchors without competing.  \n- Alignment: hologram’s center aligns with subject’s torso; subtitle baseline aligns with bottom edge of hologram’s lower boundary.  \n- Rule of thirds loosely followed: subject’s eyes sit near upper horizontal third line.\n\nPacing:  \n- Three frames represent ~1 second of footage (implied by subtitle repetition and subtle motion).  \n- Information density is low: one primary visual element (hologram), one action (hand gesture), one textual element (subtitle).  \n- No rapid cuts or overlay clutter—each frame delivers a single evolving state.\n\nPRINCIPLE: Accent color (cyan) occupies ≤15% of frame area and is strictly confined to diegetic UI elements (holograms), never applied to non-diegetic text or background.  \nPRINCIPLE: Subtitle typography remains static in size, weight, and position across sequential frames—even during motion—preserving legibility through consistency.  \nPRINCIPLE: Motion within diegetic graphics (e.g., hologram ring emergence) follows discrete stage progression (0 → partial → full structure) rather than continuous interpolation, suggesting keyframed reveal timing."
+        },
+        {
+          "t_sec": 600.0,
+          "description": "VISUAL GRAMMAR OBSERVATIONS:\n\nTypography:\n- “THUMBNAILS” is set in a bold, sans-serif uppercase font, large scale (~25–30% of frame height), centered at top, with tight letter-spacing and subtle inner glow or bevel (yellow-to-orange gradient fill, black stroke/outline).\n- Lower text (“CAN”, “BETTER”) is smaller (~10–12% of frame height), bold sans-serif uppercase, white with black drop shadow, positioned bottom-left over the left figure’s chest.\n- Text placement avoids overlapping key facial features; maintains consistent vertical alignment across frames.\n- No kerning adjustments visible between frames—text appears static except for content change.\n\nColor Palette:\n- Dominant background: cool blue gradient (top-to-bottom) with blurred studio monitors (warm orange/yellow highlights) creating complementary contrast.\n- Accent color: bright yellow-orange used *only* for the main title and hair/beard highlights—high saturation, limited to ~8–10% of total frame area.\n- Foreground figures wear grayscale suits (dark gray/black) with white shirts—neutral base allowing accent colors to pop.\n- Red YouTube play button icon appears consistently bottom-right of left figure; size fixed (~3% frame width), high-contrast against dark suit.\n\nMotion (inferred from frame sequence):\n- Only textual content changes: “CAN” → “BETTER” (left figure’s overlay); right figure’s overlay remains “BETTER” in frames 2–3.\n- No visible motion blur, scaling, or rotation—suggests cut-based replacement (hard cut or quick fade) rather than smooth animation.\n- Hair/beard highlights show identical luminance across frames—no flicker or shimmer; implies static asset reuse.\n- Right figure’s arm position shifts slightly between frames 1→2 (elbow raised), suggesting staged posing rather than continuous motion.\n\nComposition:\n- Rule of thirds applied: left figure occupies left third, right figure right third; title anchors top third.\n- Negative space preserved above title and below figures (~15% top/bottom margin).\n- Figures are symmetrically posed but not mirrored—left figure faces right, right figure faces left, creating convergent gaze toward center.\n- Alignment: title baseline aligned horizontally across all frames; lower text baseline aligned to same vertical position relative to figure’s torso.\n\nPacing:\n- Three frames show only two distinct states: Frame 1 = “CAN”, Frames 2–3 = “BETTER” (with minor pose variation).\n- Information density low: ≤2 textual elements + 2 figures per frame; no UI clutter or secondary graphics.\n- Time-on-screen per text state appears ≥1 second (based on typical tutorial pacing), implying deliberate emphasis.\n\nPRINCIPLE: Accent color (yellow-orange) occupies ≤10% of frame area and is restricted to title text and character highlights only.  \nPRINCIPLE: Primary textual overlays are placed within the lower-left third of the frame, maintaining ≥15% vertical margin from bottom edge and avoiding occlusion of facial features.  \nPRINCIPLE: State changes occur via discrete text replacement (not animated transitions), with ≤1 semantic element changing per edit point."
+        }
+      ],
+      "candidates": [
+        {
+          "principle": "Accent color (orange-red hair/beard) occupies ≤10% of frame area and is the only non-neutral chromatic element.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Text is uniformly sized, lowercase, white-on-black, and positioned at fixed vertical offset (≈10% from bottom) across all panels.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Panel transitions use abrupt cuts (not motion-blurred or eased), with pose changes timed to coincide with new textual phrase introduction.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@150.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (non-white/non-black) occupies ≤ 12% of total frame area and appears in ≤ 3 distinct non-contiguous regions per frame.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Overlay captions use font size ≥ 2.3× that of embedded UI text and are positioned within 10% of the bottom-left corner margin.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Subject entry occurs via hard cut (0-frame transition) without motion interpolation, coinciding with a new textual cue.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@300.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (cyan) occupies ≤15% of frame area and is strictly confined to diegetic UI elements (holograms), never applied to non-diegetic text or background.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Subtitle typography remains static in size, weight, and position across sequential frames—even during motion—preserving legibility through consistency.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Motion within diegetic graphics (e.g., hologram ring emergence) follows discrete stage progression (0 → partial → full structure) rather than continuous interpolation, suggesting keyframed reveal timing.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@450.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Accent color (yellow-orange) occupies ≤10% of frame area and is restricted to title text and character highlights only.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "Primary textual overlays are placed within the lower-left third of the frame, maintaining ≥15% vertical margin from bottom edge and avoiding occlusion of facial features.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@600.0s",
+          "status": "candidate"
+        },
+        {
+          "principle": "State changes occur via discrete text replacement (not animated transitions), with ≤1 semantic element changing per edit point.",
+          "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@600.0s",
+          "status": "candidate"
+        }
+      ]
     }
   ],
   "all_candidates": [
@@ -484,6 +568,66 @@
     {
       "principle": "All compositional elements align to a single vertical centerline, with ≥40% horizontal negative space on both sides.",
       "provenance": "tutorial:02 - How I Actually Write Viral Scripts.mp4@900.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (orange-red hair/beard) occupies ≤10% of frame area and is the only non-neutral chromatic element.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@150.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Text is uniformly sized, lowercase, white-on-black, and positioned at fixed vertical offset (≈10% from bottom) across all panels.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@150.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Panel transitions use abrupt cuts (not motion-blurred or eased), with pose changes timed to coincide with new textual phrase introduction.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@150.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (non-white/non-black) occupies ≤ 12% of total frame area and appears in ≤ 3 distinct non-contiguous regions per frame.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Overlay captions use font size ≥ 2.3× that of embedded UI text and are positioned within 10% of the bottom-left corner margin.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Subject entry occurs via hard cut (0-frame transition) without motion interpolation, coinciding with a new textual cue.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@300.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (cyan) occupies ≤15% of frame area and is strictly confined to diegetic UI elements (holograms), never applied to non-diegetic text or background.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Subtitle typography remains static in size, weight, and position across sequential frames—even during motion—preserving legibility through consistency.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Motion within diegetic graphics (e.g., hologram ring emergence) follows discrete stage progression (0 → partial → full structure) rather than continuous interpolation, suggesting keyframed reveal timing.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@450.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Accent color (yellow-orange) occupies ≤10% of frame area and is restricted to title text and character highlights only.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@600.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "Primary textual overlays are placed within the lower-left third of the frame, maintaining ≥15% vertical margin from bottom edge and avoiding occlusion of facial features.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@600.0s",
+      "status": "candidate"
+    },
+    {
+      "principle": "State changes occur via discrete text replacement (not animated transitions), with ≤1 semantic element changing per edit point.",
+      "provenance": "tutorial:06 - How I Actually Make Viral Thumbnails.mp4@600.0s",
       "status": "candidate"
     }
   ],

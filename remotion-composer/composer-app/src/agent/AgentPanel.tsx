@@ -276,6 +276,7 @@ function KeepGate({ gate, onDecide, busy }: { gate: any; onDecide: (type: "keep"
         <strong>KEEP GATE — {gate.knob}: {String(gate.old_value)} → {String(gate.new_value)}</strong>
         <div className="ap-approval-path">📊 {gate.verdict_summary}</div>
         {gate.aspect ? <div className="ap-approval-path">🎯 aspect: {gate.aspect}</div> : null}
+        {gate.motivation ? <div className="ap-approval-path">💡 inspired by: {gate.motivation} — phiếu của bạn quy hồi về nguồn này</div> : null}
         {gate.feedback_context ? <div className="ap-approval-path">💬 your feedback: {gate.feedback_context}</div> : null}
       </div>
       <BeforeAfterPlayer beforePath={gate.video_before} afterPath={gate.video_after} />
