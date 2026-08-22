@@ -144,12 +144,15 @@ khoảng cách "preview Composer ≠ video agent render".
       vars). used_expected_tools + no_phantom_tools 10/10. used_think 3/10 +
       read_memory 1/10 là evaluator design noise. Chi tiết trong
       eval_scores.json + knowledge-base.
-- [ ] **F4. Key DashScope quốc tế (user action)** → native video input cho
-      VLM (bỏ montage 3-frame) → bỏ nhãn PROVISIONAL của motion zone.
-      **⬆️ ĐÃ THÀNH CRITICAL PATH (2026-08-21 tối)**: Batch C chứng minh
-      montage oracle mù với thay đổi toàn-cục (identical với diff 5.28) và
-      user tie trên mọi cặp motion/global — không thể có IMPROVED entry mới
-      cho bất kỳ treatment nào ngoài các knob cục bộ cho tới khi có cái này.
+- [x] **F4. Key DashScope quốc tế / VLM khác** — RESOLVED (2026-08-22):
+      test 6+ cấu hình VLM (Qwen3-VL-Plus qua DashScope, GLM-4V-Plus, GLM-4.6V
+      thinking on/off, Gemini 3 Flash native video) trên 4 cặp ground-truth.
+      **Kết luận dứt khoát**: KHÔNG VLM nào (frame tĩnh HAY video native) nhìn
+      thấy được thay đổi toàn-cục (brightness/zoom). Giới hạn cơ bản của VLM
+      hiện tại. Key Google AI Studio đã có (GOOGLE_API_KEY trong .env) — dùng
+      cho visual_critique/tutorial-ingest (task MÔ TẢ nội dung — VLM giỏi
+      cái đó, chỉ KHÔNG giỏi A/B subtle comparison). Pairwise gate chỉ hiệu
+      quả cho thay đổi CỤC BỘ nổi bật (text/glow/accent).
 - [x] **F5. optimize.py**: ĐÃ XÓA (2026-08-21) — stub với comparison logic giả,
       proposals hardcoded, tự sửa AGENTS.md không qua write-gate; taste
       flywheel (calibrate + KEEP gate + knowledge-base) là outer loop thật.
