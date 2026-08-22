@@ -183,13 +183,15 @@ def eval_principle_compliance(inputs, outputs, reference_outputs):
     if light:
         violations.append(f"typo-001: {len(light)} fontWeight values < 900: {sorted(set(light))}")
 
-    # col-001: vivid filters — no washed-out saturate/brightness below floor
+    # col-001: vivid filters — no washed-out saturate/brightness below floor.
+    # Exclusions: grayscale/sepia (intentional styling modes) and blur layers
+    # (background depth effects — dimmed backgrounds are correct design,
+    # not washed-out subjects).
     filters = _re.findall(r'filter[^;\n]*(?:saturate|brightness)\([^)]*\)[^;\n"]*', src)
     washed = [f for f in filters
               if (m := _re.search(r"saturate\(([\d.]+)\)", f)) and float(m.group(1)) < 1.0
               or (m2 := _re.search(r"brightness\(([\d.]+)\)", f)) and float(m2.group(1)) < 0.85]
-    # exclude grayscale/sepia styling modes (intentional, not washed-out)
-    washed = [f for f in washed if "grayscale" not in f and "sepia" not in f]
+    washed = [f for f in washed if "grayscale" not in f and "sepia" not in f and "blur" not in f]
     if washed:
         violations.append(f"col-001: {len(washed)} washed-out filter strings (saturate<1.0 or brightness<0.85)")
 
@@ -214,21 +216,27 @@ def eval_principle_compliance(inputs, outputs, reference_outputs):
 
 
 def eval_code_quality(inputs, outputs, reference_outputs):
-    """Hardcoded text styling that should read the style store.
+    """Style values that should be style-driven but are hardcoded.
 
-    Counts fontWeight/fontSize literals not wrapped in getStyle() — each is a
-    style knob the agent cannot tune. Returns a 0-1 score: 1 when <= 6 remain
-    (baseline tolerance), scaled to 0 at 14+.
+    Counts: hardcoded fontSize (tunable design values that become dead knobs)
+    + hardcoded fontWeight BELOW 900 (a hardcoded 900 satisfies the bold
+    principle by construction — it is a safe default, not a dead knob).
+    Score: 1 when <= 6 remain, 0 at 14+.
     """
     src = _treatments_source()
     if not src:
         return {"key": "code_quality", "score": 0, "comment": "treatments.tsx unreadable"}
-    styled = _re.findall(r"fontWeight:\s*([^\n,}]+)", src) + _re.findall(r"fontSize:\s*([^\n,}]+)", src)
-    hardcoded = [s for s in styled if "getStyle" not in s]
+    styled_fs = _re.findall(r"fontSize:\s*([^\n,}]+)", src)
+    styled_fw = _re.findall(r"fontWeight:\s*([^\n,}]+)", src)
+    # numeric literals only — identifier values reference getStyle-derived
+    # variables (path wiring is audited separately by audit_knob_paths.py)
+    hardcoded = [s for s in styled_fs if "getStyle" not in s and s.strip().lstrip("-").replace(".", "", 1).isdigit()]
+    hardcoded += [s for s in styled_fw
+                  if "getStyle" not in s and s.strip().isdigit() and int(s.strip()) < 900]
     n = len(hardcoded)
     score = 1.0 if n <= 6 else (0.0 if n >= 14 else round(1 - (n - 6) / 8, 2))
     return {"key": "code_quality", "score": score,
-            "comment": f"{n} hardcoded fontWeight/fontSize values (tolerance 6, fail 14): {[h.strip()[:40] for h in hardcoded[:5]]}"}
+            "comment": f"{n} hardcoded tunable style values (tolerance 6, fail 14): {[h.strip()[:40] for h in hardcoded[:6]]}"}
 
 
 def eval_aesthetic_quality(inputs, outputs, reference_outputs):

@@ -1,5 +1,5 @@
 {
-  "version": 64,
+  "version": 70,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -25,7 +25,8 @@
           ],
           "brushDasharray": "3 1 5 2"
         },
-        "revealDurationSec": 2
+        "revealDurationSec": 2,
+        "curvature": 0.12
       },
       "node": {
         "borderWidth": 2,
@@ -34,16 +35,17 @@
         "fontSize": 20,
         "detailFontSize": 14,
         "glow": 18,
-        "padding": "14px 18px 13px"
+        "padding": "14px 18px 13px",
+        "fontWeight": 900
       },
       "title": {
         "fontSize": 46,
-        "fontWeight": 800,
+        "fontWeight": 900,
         "letterSpacing": "-0.02em"
       },
       "kicker": {
         "fontSize": 18,
-        "fontWeight": 700,
+        "fontWeight": 900,
         "letterSpacing": "0.18em"
       },
       "entrance": {
@@ -51,6 +53,9 @@
         "stiffness": 140,
         "mass": 0.8,
         "durationSec": 0.75
+      },
+      "centerLabel": {
+        "fontSize": 20
       }
     },
     "chapter-card": {
@@ -69,10 +74,13 @@
         "inDurationSec": 0.45,
         "lineStartSec": 0.15,
         "lineEndSec": 1.5
+      },
+      "subtitle": {
+        "fontSize": 24
       }
     },
     "host-reflection": {
-      "filter": "saturate(.72) contrast(1.18) brightness(.72)",
+      "filter": "saturate(1.05) contrast(1.15) brightness(.9)",
       "pushStart": 1.06,
       "pushDurationSec": 4,
       "entranceDurationSec": 0.5,
@@ -81,7 +89,8 @@
       "subtitle": {
         "fontFamily": "Georgia, serif",
         "fontStyle": "italic",
-        "fontSize": 27
+        "fontSize": 27,
+        "fontWeight": 900
       }
     },
     "screen-proof": {
@@ -89,7 +98,10 @@
       "cameraDurationSec": 4,
       "entranceDurationSec": 0.8,
       "focusStartSec": 0.65,
-      "focusEndSec": 1.15
+      "focusEndSec": 1.15,
+      "caption": {
+        "fontSize": 28
+      }
     },
     "audience-demand": {
       "contextInStartSec": 2.4,
@@ -99,6 +111,17 @@
       "spring": {
         "damping": 17,
         "stiffness": 170
+      },
+      "kicker": {
+        "fontSize": 18,
+        "fontWeight": 900
+      },
+      "comments": {
+        "fontSize": 25,
+        "fontWeight": 900
+      },
+      "caption": {
+        "fontSize": 28
       }
     },
     "process-timeline": {
@@ -108,6 +131,18 @@
       "spring": {
         "damping": 18,
         "stiffness": 150
+      },
+      "kicker": {
+        "fontSize": 17,
+        "fontWeight": 900
+      },
+      "title": {
+        "fontSize": 48,
+        "fontWeight": 900
+      },
+      "step": {
+        "fontSize": 16,
+        "fontWeight": 900
       }
     },
     "candidate-comparison": {
@@ -116,12 +151,33 @@
       "spring": {
         "damping": 18,
         "stiffness": 160
+      },
+      "kicker": {
+        "fontSize": 17,
+        "fontWeight": 900
+      },
+      "title": {
+        "fontSize": 44,
+        "fontWeight": 900
+      },
+      "criteria": {
+        "fontSize": 18
+      },
+      "candidate": {
+        "fontSize": 18
       }
     },
     "cinematic-metaphor": {
       "entranceDurationSec": 0.7,
       "pushStart": 1.08,
-      "pushDurationSec": 4
+      "pushDurationSec": 4,
+      "label": {
+        "fontSize": 16,
+        "fontWeight": 900
+      },
+      "subtitle": {
+        "fontSize": 28
+      }
     }
   }
 }
