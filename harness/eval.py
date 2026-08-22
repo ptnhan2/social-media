@@ -59,6 +59,19 @@ def create_dataset():
          "outputs": {"expected_tools": ["read_file", "think"], "must_not_contain": ["read_style"], "category": "behavioral"}},
         {"inputs": {"query": "Read /memories/knowledge-base.md first, then read the style store, then think about what to improve next. Avoid repeating failed experiments from the knowledge base."},
          "outputs": {"expected_tools": ["read_file", "read_file", "think"], "must_not_contain": ["read_style"], "category": "behavioral"}},
+        # --- Design quality cases (spec C1) ---
+        {"inputs": {"query": "Read /memories/taste-standard.md and the current treatment code at /workspace/remotion-composer/shared/isaacverse/treatments.tsx. List every violation of the ACTIVE typography principle (all text bold 900+ with visual effects). Do NOT edit anything — report only."},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": ["edit_file"], "category": "design_quality",
+                     "checks": ["reports_fontWeight_violations", "reports_text_effect_violations"]}},
+        {"inputs": {"query": "Read /memories/taste-standard.md and /memories/self-check.md, then run the self-check checklist against the treatment code at /workspace/remotion-composer/shared/isaacverse/treatments.tsx. Report compliance per checklist item. Do NOT edit anything."},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": ["edit_file"], "category": "design_quality",
+                     "checks": ["covers_all_HIGH_items", "cites_specific_code"]}},
+        {"inputs": {"query": "Read /memories/taste-standard.md. Explain the difference between ACTIVE and CANDIDATE principles and give one example of each. Which 5 principles are the user's design direction?"},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": [], "category": "design_quality",
+                     "checks": ["explains_ACTIVE_vs_CANDIDATE", "names_user_directives"]}},
+        {"inputs": {"query": "Read /memories/feedback-patterns.json and /memories/taste-standard.md. For each HIGH-confidence pattern, tell me which taste-standard principle ids implement it."},
+         "outputs": {"expected_tools": ["read_file"], "must_not_contain": [], "category": "design_quality",
+                     "checks": ["maps_patterns_to_principles"]}},
     ]
     client.create_examples(dataset_id=dataset.id, examples=examples)
     print(f"Created dataset: {DATASET_NAME} with {len(examples)} examples")
@@ -133,6 +146,125 @@ def eval_response_not_empty(inputs, outputs, reference_outputs):
             "comment": f"Response length: {len(response)}"}
 
 
+# ===== DESIGN QUALITY EVALUATORS (spec C2) =====
+# These evaluators check the REPO STATE (not the agent's answer) — they
+# measure whether the treatments/style store currently comply with the
+# HIGH-confidence ACTIVE principles. Score 1 = compliant, 0 = violations.
+# This makes design regressions visible as eval regressions in LangSmith.
+
+_TREATMENTS_TSX = Path(__file__).parent.parent / "remotion-composer" / "shared" / "isaacverse" / "treatments.tsx"
+_STYLE_JSON = Path(__file__).parent.parent / "libraries" / "04-visual" / "isaacverse-style.json"
+
+import re as _re
+
+
+def _treatments_source() -> str:
+    try:
+        return _TREATMENTS_TSX.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+
+def eval_principle_compliance(inputs, outputs, reference_outputs):
+    """Check repo compliance with the 5 ACTIVE user principles (typo-001, col-001, col-002, comp-001).
+
+    typography: every explicit fontWeight in treatments.tsx >= 900 (or bold)
+    color-vivid: no filter string with saturate(<1.0) or brightness(<0.85)
+    gradients: at least N gradient fills present (>= 8 across treatments)
+    """
+    src = _treatments_source()
+    if not src:
+        return {"key": "principle_compliance", "score": 0, "comment": "treatments.tsx unreadable"}
+    violations = []
+
+    # typo-001: fontWeight >= 900 everywhere it is explicit
+    weights = [int(m) for m in _re.findall(r"fontWeight:\s*(\d+)", src)]
+    light = [w for w in weights if w < 900]
+    if light:
+        violations.append(f"typo-001: {len(light)} fontWeight values < 900: {sorted(set(light))}")
+
+    # col-001: vivid filters — no washed-out saturate/brightness below floor
+    filters = _re.findall(r'filter[^;\n]*(?:saturate|brightness)\([^)]*\)[^;\n"]*', src)
+    washed = [f for f in filters
+              if (m := _re.search(r"saturate\(([\d.]+)\)", f)) and float(m.group(1)) < 1.0
+              or (m2 := _re.search(r"brightness\(([\d.]+)\)", f)) and float(m2.group(1)) < 0.85]
+    # exclude grayscale/sepia styling modes (intentional, not washed-out)
+    washed = [f for f in washed if "grayscale" not in f and "sepia" not in f]
+    if washed:
+        violations.append(f"col-001: {len(washed)} washed-out filter strings (saturate<1.0 or brightness<0.85)")
+
+    # col-002: gradients present on major elements
+    n_gradients = len(_re.findall(r"linear-gradient|radial-gradient", src))
+    if n_gradients < 8:
+        violations.append(f"col-002: only {n_gradients} gradient fills (need >= 8)")
+
+    # style-store subtitle/brightness knobs
+    try:
+        style = json.loads(_STYLE_JSON.read_text(encoding="utf-8-sig"))
+        hr_filter = style.get("treatments", {}).get("host-reflection", {}).get("filter", "")
+        m = _re.search(r"saturate\(([\d.]+)\)", hr_filter)
+        m2 = _re.search(r"brightness\(([\d.]+)\)", hr_filter)
+        if (m and float(m.group(1)) < 1.0) or (m2 and float(m2.group(1)) < 0.85):
+            violations.append(f"col-001: host-reflection.filter washed out: {hr_filter}")
+    except (OSError, json.JSONDecodeError):
+        violations.append("col-001: style store unreadable")
+
+    return {"key": "principle_compliance", "score": 1 if not violations else 0,
+            "comment": "All principles satisfied" if not violations else "Violations: " + "; ".join(violations)}
+
+
+def eval_code_quality(inputs, outputs, reference_outputs):
+    """Hardcoded text styling that should read the style store.
+
+    Counts fontWeight/fontSize literals not wrapped in getStyle() — each is a
+    style knob the agent cannot tune. Returns a 0-1 score: 1 when <= 6 remain
+    (baseline tolerance), scaled to 0 at 14+.
+    """
+    src = _treatments_source()
+    if not src:
+        return {"key": "code_quality", "score": 0, "comment": "treatments.tsx unreadable"}
+    styled = _re.findall(r"fontWeight:\s*([^\n,}]+)", src) + _re.findall(r"fontSize:\s*([^\n,}]+)", src)
+    hardcoded = [s for s in styled if "getStyle" not in s]
+    n = len(hardcoded)
+    score = 1.0 if n <= 6 else (0.0 if n >= 14 else round(1 - (n - 6) / 8, 2))
+    return {"key": "code_quality", "score": score,
+            "comment": f"{n} hardcoded fontWeight/fontSize values (tolerance 6, fail 14): {[h.strip()[:40] for h in hardcoded[:5]]}"}
+
+
+def eval_aesthetic_quality(inputs, outputs, reference_outputs):
+    """LLM-as-judge (Gemini 3 Flash, free tier): does the agent's answer show
+    design understanding (principles, specifics, honest limits)?
+
+    Text-only judging of the RESPONSE (not frames — the VLM-blindness finding
+    makes frame-scoring unreliable; visual quality enters through
+    principle_compliance + user review instead).
+    """
+    try:
+        from openevals.llm import create_llm_as_judge
+        judge = create_llm_as_judge(
+            prompt="""You are evaluating a video-design agent's answer about visual style work.
+
+The inputs JSON (user query) is:
+{inputs}
+
+The agent's output JSON is:
+{outputs}
+
+Score 1 if the answer demonstrates real design understanding: cites specific
+treatments/elements/values, applies stated principles (bold 900+, gradients,
+vivid contrast, organic curves), and is honest about limits.
+Score 0 if vague, generic, hallucinated, or ignores the principles.
+
+Return JSON: {{"score": 0 or 1, "comment": "brief explanation"}}""",
+            model=os.environ.get("EVAL_AESTHETIC_MODEL", "gemini-2.0-flash"),
+            feedback_key="aesthetic_quality",
+            use_reasoning=False,
+        )
+        return judge(inputs=inputs, outputs=outputs)
+    except Exception as e:
+        return {"key": "aesthetic_quality", "score": 0, "comment": f"Judge error: {e}"}
+
+
 # ===== LLM-AS-JUDGE EVALUATOR (DeepSeek) =====
 
 def eval_response_quality(inputs, outputs, reference_outputs):
@@ -183,6 +315,9 @@ def main():
             eval_read_memory,
             eval_response_not_empty,
             eval_response_quality,
+            eval_principle_compliance,
+            eval_code_quality,
+            eval_aesthetic_quality,
         ],
         experiment_prefix="harness-eval",
         max_concurrency=1,
