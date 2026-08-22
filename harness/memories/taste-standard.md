@@ -62,3 +62,70 @@
 - **Fade duration length is not perceived as motion** — extending `chapter-card.reveal.inDurationSec` (0.45→1.1s) left the motion score at 1/5 and slightly hurt pacing (2→1). A lone opacity-fade does not read as movement to the VLM. To register as motion, an element needs translate/scale/spring displacement, not just a slower fade. Don't waste a change on fade-duration knobs alone for motion issues. (Source: cycle 2026-08-15; within-session comparison — direction plausible, magnitudes uncertain)
 
 - **Stroke rendering mode is a PACE knob, not a MOTION knob** — switching `semantic-diagram.edge.stroke.mode` solid→gradient left motion at 3/5 but raised pacing 3→4. Use mode/color knobs to tune pacing and depth; reach for entrance/damping/displacement knobs when motion is the target. (Source: cycle 2026-08-18; ⚠️ cross-session comparison — NOT controlled, treat as unverified hypothesis)
+
+## Tutorial Candidates — học từ Isaac (CANDIDATE, CHƯA VERIFY)
+
+> Sinh 2026-08-22 từ 3 video Isaac (04-editing, 02-scripts, 06-thumbnails) qua
+> montage VLM. Đây là GIẢ THUYẾT — mỗi nguyên tắc phải qua verification cycle
+> (pixel-diff + pairwise + KEEP gate của user) trước khi thành nguyên tắc
+> thật trong các mục ở trên. Không tự áp nguyên tắc CANDIDATE khi phán xét;
+> chỉ dùng để gợi ý knob/khía cạnh cần thử. Khi promote: cap tỉ lệ nguyên tắc
+> nguồn-Isaac ≤ 50% của standard (divergence là mục tiêu). Xem gốc: docs/
+> learning-browser.html + harness/memories/tutorial-candidates.json.
+
+### Accent area (màu nhấn chiếm bao nhiêu % khung)
+
+- CANDIDATE: The accent color (red-orange) occupies ≤ 8% of the frame area in static shots and is never overlaid by more than one additional colored object at a time.  `[04 How I Actually Edit Viral Videos.mp4@150.0s]`
+- CANDIDATE: Accent color (orange/gold glow) is applied to ≤ 20% of total frame area, concentrated on poster borders and character hair/beard, while foreground subject uses ≤ 2 muted non-accent colors (off-white, maroon).  `[04 How I Actually Edit Viral Videos.mp4@300.0s]`
+- CANDIDATE: Accent color (purple) occupies ≤ 8% of total frame area and appears on exactly 1–2 elements per frame, always confined to the top row.  `[04 How I Actually Edit Viral Videos.mp4@450.0s]`
+- CANDIDATE: Accent color (non-neutral, saturated hues like cyan/magenta/orange) occupies ≤ 12% of total frame area and is restricted to title, timeline tracks, and presenter’s hair/beard.  `[04 How I Actually Edit Viral Videos.mp4@600.0s]`
+- CANDIDATE: Accent color is used on ≤ 8% of the frame area and exclusively on currently active UI controls.  `[04 How I Actually Edit Viral Videos.mp4@750.0s]`
+- CANDIDATE: Accent color (orange-red) occupies ≤12% of total frame area across all three snapshots, concentrated in hair, border highlights, and cursor—never in background or primary text.  `[04 How I Actually Edit Viral Videos.mp4@900.0s]`
+- CANDIDATE: Accent color (orange-red) occupies ≤2% of total frame area and appears exclusively on non-background elements (hair/beard), never on UI or text.  `[04 How I Actually Edit Viral Videos.mp4@1050.0s]`
+- CANDIDATE: Accent color (non-white) occupies ≤ 8% of total frame area per unit, concentrated in gradient text and micro-labels.  `[02 How I Actually Write Viral Scripts.mp4@150.0s]`
+- CANDIDATE: Accent color (non-white/non-gray) occupies ≤ 8% of total frame area per panel, concentrated in borders, banners, or small icons.  `[02 How I Actually Write Viral Scripts.mp4@300.0s]`
+- CANDIDATE: Accent color (amber nodes) occupies ≤ 6% of total frame area across all instances.  `[02 How I Actually Write Viral Scripts.mp4@450.0s]`
+- CANDIDATE: Accent color occupies ≤3% of frame area and is confined to a single dynamic focal cluster.  `[02 How I Actually Write Viral Scripts.mp4@600.0s]`
+- CANDIDATE: Accent colors (green/red) occupy ≤ 8% of total frame area and appear exclusively on data curves and their direct labels.  `[02 How I Actually Write Viral Scripts.mp4@750.0s]`
+- CANDIDATE: Accent color (non-white/non-black) occupies ≤12% of frame area and is confined to three contiguous elements: graph line, directional arrow, and portrait glow.  `[02 How I Actually Write Viral Scripts.mp4@900.0s]`
+
+### Text hierarchy (tỉ lệ cỡ chữ các tầng)
+
+- CANDIDATE: Text appears only once per ~3-second segment, positioned in bottom-right quadrant, occupying < 3% of frame height and using uniform weight/spacing without hierarchy.  `[04 How I Actually Edit Viral Videos.mp4@300.0s]`
+- CANDIDATE: Text hierarchy uses exactly two font sizes (small for data labels, large for summary blocks), with size ratio ≈ 1:1.8 (measured by bounding box height).  `[04 How I Actually Edit Viral Videos.mp4@450.0s]`
+- CANDIDATE: Primary focal point (title + flowchart) is vertically centered and horizontally aligned, with presenter positioned at 70–80% horizontal position to avoid symmetry and guide eye flow left→right.  `[04 How I Actually Edit Viral Videos.mp4@600.0s]`
+- CANDIDATE: Typographic hierarchy is enforced by size alone—no weight variation or case shifts—where the main title is ≥ 3× larger than any UI label (none visible, but inferred from absence).  `[04 How I Actually Edit Viral Videos.mp4@600.0s]`
+- CANDIDATE: Focal point is maintained via luminance contrast (program monitor ≥ 1.8× brighter than adjacent panels) and central horizontal placement (40–45% of frame width).  `[04 How I Actually Edit Viral Videos.mp4@750.0s]`
+- CANDIDATE: Text hierarchy enforces a strict 3-tier size ratio: primary title ≥1.8× subtitle ≥1.5× metadata (e.g., view count unit), with weight contrast ≥200 (e.g., Bold vs. Regular).  `[04 How I Actually Edit Viral Videos.mp4@900.0s]`
+- CANDIDATE: Subtitle text height is ≤4% of frame height and positioned ≥10% above bottom edge, with zero stroke/shadow.  `[04 How I Actually Edit Viral Videos.mp4@1050.0s]`
+- CANDIDATE: Text size hierarchy inverts semantic priority: the lower (“deeper”) phrase is 1.2–1.3× larger in rendered height than the upper (“surface”) phrase.  `[02 How I Actually Write Viral Scripts.mp4@150.0s]`
+- CANDIDATE: Title text height is ≥ 1.7× the height of supporting descriptive text, with letter-spacing ≤ –25 tracked units.  `[02 How I Actually Write Viral Scripts.mp4@300.0s]`
+- CANDIDATE: In multi-panel layouts, the central panel is scaled 3–5% larger than side panels and positioned 2–4px forward in Z-space to establish visual hierarchy without motion.  `[02 How I Actually Write Viral Scripts.mp4@300.0s]`
+- CANDIDATE: Text uses strict two-tier size/weight hierarchy: secondary label (“call to adventure”) is ≥ 1.2× taller and ≥ 20% heavier stroke weight than primary label (“status quo”).  `[02 How I Actually Write Viral Scripts.mp4@450.0s]`
+- CANDIDATE: Text size hierarchy uses ≥2.5× height difference between secondary and primary phrases, with primary phrase using bold weight and subtle emissive effect.  `[02 How I Actually Write Viral Scripts.mp4@600.0s]`
+- CANDIDATE: Subtitle text changes occur without accompanying motion graphics—implying a cut-based pacing where visual stability precedes semantic shift.  `[02 How I Actually Write Viral Scripts.mp4@750.0s]`
+- CANDIDATE: Tertiary callout text is 1.5× larger and ≥200% heavier weight than supporting text, and appears only in the final third of a multi-panel sequence.  `[02 How I Actually Write Viral Scripts.mp4@900.0s]`
+
+### Composition
+
+- CANDIDATE: Identical compositional units (arcs + labels) are repeated horizontally with ≤ 5% variation in position or scale across successive frames, indicating translational motion without transformation.  `[02 How I Actually Write Viral Scripts.mp4@450.0s]`
+- CANDIDATE: All compositional elements align to a single vertical centerline, with ≥40% horizontal negative space on both sides.  `[02 How I Actually Write Viral Scripts.mp4@900.0s]`
+
+### Pacing
+
+- CANDIDATE: Black-screen cuts are used as hard breaks with no transitional motion (instant cut, not fade/dissolve).  `[04 How I Actually Edit Viral Videos.mp4@1050.0s]`
+
+### Motion (HOÃN verify — oracle mù motion tới khi có F4)
+
+- CANDIDATE: A primary graphical element (the line) remains spatially fixed across ≥2 consecutive frames before any secondary object enters the frame.  `[04 How I Actually Edit Viral Videos.mp4@150.0s]`
+- CANDIDATE: Motion blur is applied only to newly introduced objects, not to pre-established graphical elements.  `[04 How I Actually Edit Viral Videos.mp4@150.0s]`
+- CANDIDATE: Motion is restricted to primary subject’s upper-body gestures and subtle icon pulsing; background elements remain static, enforcing focal stability despite high visual density.  `[04 How I Actually Edit Viral Videos.mp4@300.0s]`
+- CANDIDATE: Motion is restricted to one element per temporal beat, using horizontal slide with visible motion blur implying duration ≤ 0.5s at 30fps.  `[04 How I Actually Edit Viral Videos.mp4@450.0s]`
+- CANDIDATE: Pointing gestures are timed to coincide with entry of a new focal UI element, and the gesture completes within 0.9s of the element’s visual reveal.  `[04 How I Actually Edit Viral Videos.mp4@900.0s]`
+- CANDIDATE: A single animated highlight (e.g., oval stroke) is introduced only after two static frames, following a 2:1 static-to-motion ratio for emphasis buildup.  `[02 How I Actually Write Viral Scripts.mp4@150.0s]`
+- CANDIDATE: Radial compositional framing is used to isolate and elevate a single animated element while leveraging >90% negative space for contrast.  `[02 How I Actually Write Viral Scripts.mp4@600.0s]`
+
+### Khác
+
+- CANDIDATE: Motion is restricted to two types: linear (playhead) and naturalistic micro-motion (flame); no UI animations occur.  `[04 How I Actually Edit Viral Videos.mp4@750.0s]`
+- CANDIDATE: All non-data elements (gridlines, background, inset portrait) are desaturated or low-contrast to ensure ≥ 4:1 luminance contrast between data curves and surroundings.  `[02 How I Actually Write Viral Scripts.mp4@750.0s]`
