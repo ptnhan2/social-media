@@ -196,7 +196,7 @@ class TextOnlyContentMiddleware(AgentMiddleware):
 _COMMON = dict(
     model=MODEL,
     tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate],
-    memory=["/memories/AGENTS.md", "/memories/taste-standard.md"],
+    memory=["/memories/AGENTS.md", "/memories/taste-standard.md", "/memories/self-check.md"],
     skills=["/skills/"],
     subagents=[CRITIC_SUBAGENT],
     permissions=[
