@@ -6,6 +6,58 @@
 
 ## Experiments
 
+### Principle application: 5 user design directives → ALL treatments (2026-08-23 overnight)
+- Protocol: v5 (principle-based, NOT knob A/B) — first full E-phase run
+- Principles: typo-001 (bold 900+ + effects), col-001 (vivid/contrast),
+  col-002 (gradients), comp-001 (organic curves); nar-001 documented as
+  requires-design-session (host/narrative needs a design decision, not a
+  mechanical edit — pending user direction U4)
+- Changes: ~30 fontWeight→900 + shadows across 9 treatments; host-reflection +
+  cinematic-metaphor filters de-washed (saturate≥1.0, brightness≥0.9);
+  gradient titles (ProcessTimeline, CandidateComparison); curved quadratic
+  bezier edges (curvature knob 0.12); curved gradient progress bar; organic
+  step dots; ~20 new wired style knobs
+- QA: 4/4 qa_gate PASS (pixel-diff means: chapter 1.4, semantic 2.6,
+  host 5.8, process 3.6 — changes verifiably reached every render)
+- Eval transition (offline evaluators): principle_compliance 0→1,
+  code_quality 0.0→1.0 (36→5 hardcoded tunable values)
+- Learning: principle-based application works — one pass over the treatments
+  fixed violations the knob protocol could never address. The QA gate
+  (build+render+diff in one call) made 4 sequential edit batches safe.
+
+### Eval baseline (D1a) — experiment harness-eval-4626481a (2026-08-23)
+- 14/14 cases ran (42 min, Ox Alpha, max_concurrency=1)
+- Baseline scores: used_expected_tools 14/14, no_phantom_tools 14/14,
+  response_not_empty 14/14, response_quality 13/14, read_memory 7/14,
+  used_think 4/14, principle_compliance 0/14, code_quality 0/14
+- CAVEAT: aesthetic_quality 0/14 is a JUDGE MISCONFIG, not a real score —
+  the gemini model prefix resolved to a missing vertexai package (fixed:
+  google_genai:gemini-3.6-flash). Baseline aesthetic scores are invalid;
+  before/after trend rests on principle_compliance + code_quality
+  (deterministic, unchanged logic).
+- NOTE: eval case "Change edge stroke mode to gradient" EXECUTES update_style
+  against the real store — the eval agent flipped stroke.mode to gradient
+  (user-rejected state). Reset to solid after detection. Future: mutating
+  eval cases should target a scratch copy of the store, or the reset belongs
+  in the eval teardown.
+- Evaluator refinements AFTER baseline (documented for honest trend reading):
+  code_quality now counts numeric fontSize literals + fontWeight<900 only
+  (identifier values reference getStyle vars — were false positives);
+  washed-filter check excludes blur layers (background depth is intentional).
+
+### Pattern learning system live (2026-08-23)
+- taste-standard.md: 71 structured principles (20 ACTIVE, 51 CANDIDATE),
+  schema-validated by validate_principles.py
+- pattern_extractor.py: 5 meta-patterns (4 HIGH) in feedback-patterns.json;
+  learning phase 2 (patterns recognized; phase 3 blocked on <2 verified
+  principles — promote after user confirms principle application)
+- self-check.md auto-generated, injected into agent memory; verified live:
+  agent reports patterns + phase correctly
+- online_evaluators.py: tool_discipline + response_quality_online feedback
+  on new traces (native LangSmith create_feedback), low scorers routed to
+  the render-review annotation queue; watermark idempotent
+
+
 ### Experiment: host-reflection.pushDurationSec 4 → 1.5 — UNVERIFIABLE (oracle blind)
 - Date: 2026-08-21 (C3, deterministic protocol run)
 - Segment: isaacverse-final 7-10.5s (host-reflection, critique motion 2/5 weakest)
