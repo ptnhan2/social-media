@@ -256,7 +256,7 @@ vivid contrast, organic curves), and is honest about limits.
 Score 0 if vague, generic, hallucinated, or ignores the principles.
 
 Return JSON: {{"score": 0 or 1, "comment": "brief explanation"}}""",
-            model=os.environ.get("EVAL_AESTHETIC_MODEL", "gemini-2.0-flash"),
+            model=os.environ.get("EVAL_AESTHETIC_MODEL", "google_genai:gemini-3.6-flash"),
             feedback_key="aesthetic_quality",
             use_reasoning=False,
         )
@@ -303,11 +303,28 @@ def main():
     except Exception:
         print("ERROR: LangGraph server not running on port 2024")
         sys.exit(1)
-    create_dataset()
+    category_filter = None
+    for i, a in enumerate(sys.argv):
+        if a == "--filter" and i + 1 < len(sys.argv):
+            category_filter = sys.argv[i + 1]
+    if category_filter:
+        # reuse the existing dataset, filter examples by category (no recreate)
+        client = Client()
+        ds = list(client.list_datasets(dataset_name=DATASET_NAME))[0]
+        examples = [e for e in client.list_examples(dataset_id=ds.id)
+                    if (e.outputs or {}).get("category") == category_filter]
+        print(f"Filtered dataset: {DATASET_NAME} [{category_filter}] with {len(examples)} examples")
+        if not examples:
+            print("ERROR: no examples match the filter (create the full dataset first: run without --filter once)")
+            sys.exit(1)
+    else:
+        create_dataset()
+        examples = None
     client = Client()
+    data = DATASET_NAME if examples is None else examples
     results = client.evaluate(
         target,
-        data=DATASET_NAME,
+        data=data,
         evaluators=[
             eval_used_expected_tools,
             eval_no_phantom_tools,
