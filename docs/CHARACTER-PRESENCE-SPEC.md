@@ -185,19 +185,31 @@ character/
 - **manifest.json**: mỗi pose có `headAnchor: {x%, y%, scale, rotate}` —
   điểm gắn đầu, tỉ lệ, góc nghiêng.
 
-### 7.2 Body — 2 track (user chọn)
+### 7.2 Body — ĐÃ CHỐT: stock photos (2026-08-23)
 
-| | **Track AI-gen (đề xuất)** | **Track stock photo** |
-|---|---|---|
-| Nguồn | generate_image: "person neck-down, head out of frame, [pose], studio lighting, plain background" | Pexels/Unsplash (license-free) — tôi đưa search recipes, user duyệt ảnh |
-| Style | Kiểm soát bằng prompt lock → đồng đều | Đa dạng thật nhưng khó đồng nhất model/ánh sáng |
-| Bản quyền | Sạch 100% | License-free nếu chọn đúng nguồn (tránh ảnh random web) |
-| Pose theo yêu cầu | Đúng pose cần, muốn gì ra đó | Phụ thuộc ảnh có sẵn |
-| Xử lý sau | Auto: bg removal + normalize + anchor | Thủ công hơn: user download → inbox → tôi xử lý tiếp |
-| Rủi ro | Chất lượng photo-real cần test batch đầu | Tốn công chọn ảnh, style lệch |
+**Quy trình** (user duyệt 2026-08-23):
+1. Tải ảnh stock body (Pexels/Unsplash, license-free, ưu tiên nền isolated)
+2. Tách nền bằng tool (bg removal)
+3. **Crop tại cổ** — đầu người trong ảnh stock bị cắt bỏ, head của kênh gắn
+   vào chỗ cắt (auto-anchor: top-center của ảnh crop)
+4. Normalize PNG ~800×1100 trong suốt → vào pose library
 
-Cả 2 track dùng chung pipeline xử lý: `inbox/ → bg removal → normalize →
-anchor annotate → manifest → dùng được`.
+Lưu ý pipeline: ảnh stock luôn có đầu → crop cổ là bước chuẩn hoá bắt buộc
+(không cần tìm ảnh "headless" — lấy full-body rồi crop).
+
+### 7.2b Compositing — ĐÃ CHỐT: auto + edit + manual (2026-08-23)
+
+Ba cơ chế song song (user yêu cầu):
+
+1. **Auto-composite**: anchor tự động (top-center tại cổ, scale theo tỉ lệ
+   body/head) — dùng cho pose mới ngay khi add
+2. **Edit composited asset**: mọi pose đã ghép chỉnh sửa được — anchor editor
+   (kéo đầu, scale, rotate trên body) → lưu lại vào manifest → re-render
+3. **Manual composite từ đầu**: chế độ đặt tay (không auto) → tạo asset mới
+   → lưu vào library như pose thường
+
+Manifest là source of truth: body PNG + head PNG + anchor. Render có thể
+composite runtime (2 layer) hoặc bake PNG ghép sẵn — tuỳ chỗ dùng.
 
 ### 7.3 Head — quy trình gen có hướng dẫn (giải quyết "mất định hướng")
 
