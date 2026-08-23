@@ -25,7 +25,19 @@
   {"id": "col-001", "principle": "Colors are vivid, saturated and high-contrast — never washed out or muted; accent elements must pop against the background", "scope": "global", "category": "color", "direction": "more-vivid+higher-contrast", "source": "user:2026-08-22", "confidence": "high", "verified": 2, "rejected": 0, "promoted": true, "status": "ACTIVE"},
   {"id": "col-002", "principle": "Use gradients and color transitions instead of flat single-color fills — titles, lines, bars and borders all benefit from gradient treatment", "scope": "global", "category": "color", "direction": "gradients+transitions", "source": "user:2026-08-22", "confidence": "high", "verified": 2, "rejected": 0, "promoted": true, "status": "ACTIVE"},
   {"id": "comp-001", "principle": "Lines and connectors are organic curves (bezier paths, brush-like strokes), not mechanical straight lines", "scope": "global", "category": "composition", "direction": "organic-curves", "source": "user:2026-08-22", "confidence": "high", "verified": 2, "rejected": 0, "promoted": true, "status": "ACTIVE"},
-  {"id": "nar-001", "principle": "Information is presented as narrative — a character or host presence tells the story — instead of raw data display", "scope": "global", "category": "narrative", "direction": "story-over-information", "source": "user:2026-08-22", "confidence": "high", "verified": 0, "rejected": 0, "promoted": false, "status": "ACTIVE", "note": "U4 decision 2026-08-23: direction = A (host presence hint) + B (story-framing kickers); implement AFTER generator E2-E6 lands as the first unified-pipeline test"}
+  {"id": "nar-001", "principle": "Information is presented as narrative — a character or host presence tells the story — instead of raw data display", "scope": "global", "category": "narrative", "direction": "story-over-information", "source": "user:2026-08-22", "confidence": "high", "verified": 0, "rejected": 0, "promoted": false, "status": "ACTIVE", "note": "U4 2026-08-23: A+B confirmed; A upgraded to full character-presence system per gold standard brief (see nar-002 + docs/CHARACTER-PRESENCE-SPEC.md)"}
+]
+```
+
+### Character presence (nar-001 A+ — user gold standard brief 2026-08-23)
+
+> Spec đầy đủ: docs/CHARACTER-PRESENCE-SPEC.md. 1 branded head x pose library
+> x position/motion/size grammar — moi lan xuat hien la 1 shot khac nhau.
+
+```json
+[
+  {"id": "nar-002", "principle": "Character appears with a DIFFERENT pose, position, motion and size every time - never the same framing twice in a row; pose/gesture matches the narrative context (Isaac head-on-many-bodies model)", "scope": "global", "category": "narrative", "direction": "context-matched-variety", "source": "user:2026-08-23 gold standard brief", "confidence": "high", "verified": 0, "rejected": 0, "promoted": false, "status": "ACTIVE", "note": "see docs/CHARACTER-PRESENCE-SPEC.md"},
+  {"id": "comp-201", "principle": "Character placement follows photography composition (rule-of-thirds power points, lead room, negative-space balance) and never covers the focal content", "scope": "global", "category": "composition", "direction": "composition-aware-presence", "source": "user:2026-08-23 gold standard brief", "confidence": "high", "verified": 0, "rejected": 0, "promoted": false, "status": "ACTIVE"}
 ]
 ```
 
