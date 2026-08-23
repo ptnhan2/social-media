@@ -1,25 +1,103 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-23 05:30 (overnight session). Previous: 2026-08-23 00:25.
-> **TRẠNG THÁI: spec A1→D3 HOÀN TẤT TOÀN BỘ. Pattern Learning + Eval chạy
-> end-to-end. Còn 4 việc USER INPUT (xem cuối file).**
+> Updated 2026-08-23 16:00 (afternoon: U1-U4 user decisions + E2-E6 generator
+> session on top of the overnight pattern-learning session). Previous: 05:30.
+> **TRẠNG THÁI: Pattern Learning + Eval CHẠY (đêm) → user duyệt U1-U4 (sáng)
+> → Generator E2-E6 IMPLEMENT (chiều). Preview trong Composer giờ hiển thị
+> style hiện tại (lần đầu tiên).**
 
 ---
 
-## 🌅 USER MORNING CHECKLIST (làm 4 việc này)
+## 🌅 VIỆC TIẾP THEO CHO USER
 
-1. **U3 — Xem renders sau-principles**: mở `http://localhost:5174/?project=isaacverse-final`
-   (vite :5174 đang chạy) → xem 4 segments. Toàn bộ treatments đã transform:
-   chữ 900+ bold + shadows, gradient titles, curved bezier edges, màu rực.
-   → Nếu đúng hướng: nói "confirm" → principles được promote hẳn.
-   → Nếu sai: 1 góp ý → agent extract principle mới → apply lại (protocol v5).
-2. **U2 — Review tutorial candidates**: `docs/TUTORIAL-CANDIDATES-REVIEW.md`
-   (51 Isaac candidates, chọn cái nào promote thành CANDIDATE thật).
-3. **U1 — LangSmith annotation queue**: UI → Annotation Queues → `render-review`
-   (runs thấp điểm <0.7 được auto-route; có thể trống nếu mọi run đạt chuẩn).
-4. **U4 — Narrative direction** (nar-001): muốn host/character xuất hiện trong
-   SemanticDiagram + ProcessTimeline kiểu nào? (silhouette? cutaway? voice?)
-   Hiện đang đánh dấu requires-design-session.
+1. **Mở Composer :5174** → preview giờ render theo editor path với style v73
+   (bold 900+, gradient titles, màu rực) — confirm lần nữa trong editor thật.
+2. **Narrative (nar-001)**: đã chốt hướng A+B (host presence + story-framing),
+   implement khi muốn — agent có đủ tools (editor_op + treatments).
+3. **Tutorial candidates**: đã duyệt + gộp (col-201 accent ≤10%, typo-201
+   3-tier ≥1.5x) — tự động trong taste-standard.
+4. **Xem LangSmith render-review queue** nếu rảnh (4 runs là eval artifacts,
+   không có vấn đề thật).
+
+## ✅ CHIỀU QUA (generator E2-E6 — 2 đường render hợp nhất phần lớn)
+
+- **E4 userEdited ledger**: mọi editor op đánh dấu clip userEdited; xóa clip
+  vào userDeletedClipIds — generator KHÔNG BAO GIỜ mất/đẻ lại công sức user
+- **E5 generator**: `scripts/generate-editor.mjs` (cold/sync/scoped) — style
+  resolve tại projection + styleSource provenance trên clips; 3 tests
+- **E2**: composition `-editor` + `render-window --path editor|treatment`;
+  gradient text hỗ trợ trong EditorClipOverlay. **Gate pixel-identity
+  CHƯA ĐẠT** (mean 9.4 — element language thiếu bezier edges/springs) →
+  treatment vẫn là default render; flip để sau parity
+- **E3**: `editor_op` tool (agent chỉnh clip được: list/split/trim/move/
+  metadata/ripple/delete) qua bridge `scripts/editor-ops.mjs`
+- **E6**: pipeline PROVEN — editor_op → render editor → diff 1.438 PASS
+  (kèm fix quan trọng: render-window giờ sync LIVE editor JSON — trước đó
+  public copy cũ 7 ngày). Agent-autonomy loop chưa tin được (Ox Alpha
+  quirks) — cần subagent hẹp; e6_e2e.py là driver re-run
+- **current.json**: cold-regenerated tại store v73 — golden backup ở
+  `.bak-golden`. Preview :5174 = style hiện tại LẦN ĐẦU TIÊN
+
+## 📚 THỨ TỰ ĐỌC SESSION MỚI
+
+1. File này → 2. `docs/GENERATOR-SPEC.md` (status implemented + gaps) →
+3. `harness/memories/knowledge-base.md` (2 entries mới: generator session +
+   D-phase trend) → 4. `docs/PATTERN-LEARNING-AND-EVAL-SPEC.md` khi cần
+
+## 🔧 VẬN HÀNH (servers)
+
+```powershell
+# LangGraph (:2024) — đang chạy
+harness\.venv\Scripts\python.exe -m langgraph_cli dev --port 2024 --host 127.0.0.1
+# Composer (:5174) — đang chạy
+cd remotion-composer\composer-app; npx vite --port 5174
+```
+
+### Key commands (mới nhất)
+```powershell
+# Generator (cold/sync/scoped) — style → clips
+node remotion-composer\scripts\generate-editor.mjs --project isaacverse-final --mode sync
+
+# Agent clip editing qua bridge
+node remotion-composer\scripts\editor-ops.mjs --project isaacverse-final --op list
+
+# Render 2 paths
+node remotion-composer\scripts\render-window.mjs --project isaacverse-final --start 3.5 --end 7 --path editor
+node remotion-composer\scripts\render-window.mjs --project isaacverse-final --start 3.5 --end 7 --path treatment
+
+# Generator tests
+node --test remotion-composer\scripts\generate-editor.test.mjs
+```
+
+## ⚠️ GOTCHAS MỚI (chiều)
+
+1. **Agent + clip edits**: agent từng hand-edit current.json trực tiếp (bị
+   permission interrupt chặn) — AGENTS.md giờ cấm rõ (editor_op là con đường
+   duy nhất). Ox Alpha hay end-turn rỗng giữa task → cần stepper hoặc subagent.
+2. **Eval case mutates store** (từ đêm): reset stroke.mode=solid sau mỗi
+   full eval run.
+3. **Ledger bootstrap**: clips tồn tại TRƯỚC 2026-08-23 không có userEdited
+   flag → sync trên doc cũ = thay tất cả. Golden doc đã cold-regenerate
+   (backup .bak-golden). Từ giờ mọi op ghi ledger.
+
+## 📊 TRẠNG THÁI HỌC TẬP
+
+- 40 principles (22 ACTIVE) — 4 promoted thật (typo-001, col-001, col-002,
+  comp-001: verified=2) + col-201/typo-201 (duyệt U2)
+- Learning phase 3 (self-evaluating)
+- nar-001: hướng A+B chốt, đợi implement
+- Eval trend 4-experiment trong LangSmith (0% → 100% → bắt regression → 100%)
+
+## 0. PROJECT / MODEL / GIT (không đổi từ đêm)
+
+Ox Alpha free (OpenRouter) — KHÔNG gửi ảnh. VLM riêng (mù global changes —
+proven). LangSmith native. Repo: master, CI xanh mọi commit.
+
+## 1. GIT (chiều)
+
+Commits chiều: U2+U4 decisions → E4 ledger → E5 generator → E2 dual paths →
+E3+E6 bridge+sync-fix. Xem `git log --oneline -8`.
+
 
 ---
 

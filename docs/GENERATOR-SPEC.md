@@ -1,8 +1,29 @@
 # GENERATOR SPEC — EditDoc → EditorDoc as a formal, repeatable projection
 
-> Status: SPEC (E1 of the generator-architecture batch, TODO-NEXT.md Batch E).
-> Written 2026-08-21 night session, grounded in the code audit below.
-> Implementation is a separate session (E2–E6); this document is the contract.
+> Status: **IMPLEMENTED 2026-08-23** (E2-E6, afternoon session after the
+> pattern-learning overnight). Written 2026-08-21 night session, grounded in
+> the code audit below.
+>
+> Implementation status per acceptance criteria (§2.6):
+> - E2 (render unification): PARTIAL — dual compositions + --path flag live;
+>   PATH-IDENTITY GATE NOT MET (paths differ mean 9.4 / 14% px — element
+>   language lacks bezier edges + spring physics). Treatment path stays the
+>   master default until parity. The Composer preview DOES show current style
+>   (current.json cold-regenerated with styleSource provenance).
+> - E3 (agent clip tools): DONE — scripts/editor-ops.mjs bridge + harness
+>   editor_op tool (list/split/trim/move/metadata/ripple/delete).
+> - E4 (provenance): DONE — styleSource + styleResolvedAt baked into element
+>   clips; ~33 clips carry provenance at store v73.
+> - E5 (merge preservation): DONE — userEdited ledger in all 37 editor ops +
+>   userDeletedClipIds; 3 generator tests (cold/sync/scoped) + 10 ledger
+>   tests. NOTE: the pre-ledger golden doc could not be merged safely (no
+>   userEdited data existed) — it was cold-regenerated instead (backed up at
+>   editor/current.json.bak-golden). Future syncs are safe.
+> - E6 (agent clip-edit E2E): MECHANICALLY PROVEN — editor_op → editor-path
+>   render → pixel-diff 1.438 PASS. Full agent-driven autonomy through Ox
+>   Alpha is NOT reliable yet (turn-ending quirks, exploration sprawl);
+>   harness/e6_e2e.py is the re-runnable E2E driver. Follow-up: narrow
+>   clip-edit subagent.
 
 ## 0. Problem
 

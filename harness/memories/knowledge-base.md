@@ -6,6 +6,37 @@
 
 ## Experiments
 
+### Generator session (E2-E6) — 2026-08-23 afternoon
+- E4: userEdited ledger live in ALL editorOperations (37 ops) + userDeletedClipIds
+  (EditorDoc field) — regeneration can never lose or resurrect user work.
+  10 ledger tests.
+- E5: style-aware projection — treatmentElements resolves style-store knobs at
+  projection time (StyleResolver, node-safe); element clips carry styleSource
+  (prop→knob) + styleResolvedAt{storeVersion}; textGradient metadata for
+  gradient titles. scripts/generate-editor.mjs: cold/sync/scoped, 3-way merge
+  (3 node tests). current.json cold-regenerated at store v73 — **preview now
+  shows the current style for the first time** (golden doc backed up).
+- E2: dual compositions (isaacverse-final-30s + -30s-editor), render-window
+  --path editor|treatment, EditorClipOverlay gradient-text support.
+  PATH-IDENTITY GATE NOT MET: paths differ (max mean 9.4, 14% px on 3.5-7s) —
+  the element language lacks bezier edges/spring physics. Editor flip DEFERRED
+  until parity; treatment stays the master render default.
+- E3: editor-ops bridge + harness editor_op tool (10 tools). AGENTS.md clip
+  editing protocol added.
+- E6: MECHANICALLY PROVEN — editor_op metadata (kicker fontSize 18→30) →
+  editor-path render → pixel-diff PASS (1.438). Root cause found on the way:
+  render-window never synced the LIVE editor JSON (public copy was 7 days
+  stale — clip edits invisible in renders). Fixed: syncRuntimePublic pulls
+  projects/<slug>/editor/current.json every render.
+- E6 agent-driven LOOP: NOT reliable yet — 2 Ox Alpha attempts failed
+  (empty-turn endings, exploration sprawl, one rogue hand-edit of current.json
+  caught by the permission interrupt — no damage, restored from backup).
+  Next step for full autonomy: narrow clip-edit subagent or better tool-
+  following model. e6_e2e.py is the driver for re-running the E2E.
+- GOTCHA for eval: the 'Change edge stroke mode' dataset case mutates the real
+  store every full run (reset stroke.mode=solid after; done 2x overnight).
+
+
 ### U3 user review — principles CONFIRMED + PROMOTED (2026-08-23 morning)
 - User viewed side-by-side before/after frames for all 4 windows:
   "cac phien ban after co cai thien ro hon (du toi nghi van co the tot hon nua)"
