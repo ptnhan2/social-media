@@ -1,10 +1,10 @@
-"""Bake character poses v5 — quality iteration loop.
+"""Bake character poses v6 — angle-matched direct head replacement.
 
-Fixes applied per VLM self-review round 1:
-  - Head size: 50% canvas height (Isaac proportion, was too small)
-  - Alpha patch: opaque backing ellipse behind head covers neck-joint gaps
-  - Color grade: subtle warm tint on head to match body photo temperature
-  - Feathered edges: slight blur on head boundary for smoother transition
+Per user feedback 2026-08-23:
+- Head asset is HEAD ONLY (no neck, no shoulders) — generated per angle
+- Angle variant matched to body orientation (front body → front head)
+- Head bottom aligns with the neck cut line on the body
+- Isaac proportion: head = ~40% of visible body height
 """
 from __future__ import annotations
 
@@ -18,21 +18,8 @@ from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 CANVAS_W, CANVAS_H = 800, 1300
 
 
-def _vertical_gradient(size: int, top_hex: str, bottom_hex: str) -> Image.Image:
-    top = tuple(int(top_hex[i:i + 2], 16) for i in (1, 3, 5))
-    bottom = tuple(int(bottom_hex[i:i + 2], 16) for i in (1, 3, 5))
-    grad = Image.new("RGB", (size, size))
-    px = grad.load()
-    for y in range(size):
-        t = y / max(1, size - 1)
-        row = tuple(int(top[c] + (bottom[c] - top[c]) * t) for c in range(3))
-        for x in range(size):
-            px[x, y] = row
-    return grad.convert("RGBA")
-
-
 def _color_grade(head: Image.Image, warmth: float = 0.08) -> Image.Image:
-    """Subtle warm tint to help the cartoon head sit in a warm-lit scene."""
+    """Subtle warm tint so cartoon head sits in warm-lit scenes."""
     result = head.copy()
     r, g, b, a = result.split()
     r = r.point(lambda v: min(255, int(v * (1 + warmth))))
@@ -41,50 +28,50 @@ def _color_grade(head: Image.Image, warmth: float = 0.08) -> Image.Image:
     return ImageEnhance.Color(result).enhance(1.06)
 
 
-def composite(body: Image.Image, head: Image.Image, anchor: dict) -> Image.Image:
+def composite(body: Image.Image, heads: dict, anchor: dict) -> Image.Image:
+    """heads: {"front": img, "3q": img} — angle matched to pose orientation."""
     canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
 
-    # --- body: fit full width, anchored at bottom ---
+    # --- body: fit width, anchored at bottom ---
     scale = CANVAS_W / body.width if body.width > CANVAS_W else min(CANVAS_W / body.width, CANVAS_H / body.height)
     bw, bh = int(body.width * scale), int(body.height * scale)
     body_scaled = body.resize((bw, bh), Image.LANCZOS)
     body_top = CANVAS_H - bh
     canvas.alpha_composite(body_scaled, ((CANVAS_W - bw) // 2, body_top))
 
-    # --- head: Isaac proportion — 45% of canvas height ---
-    head_h = int(CANVAS_H * 0.45)
-    head_w = int(head.width * (head_h / head.height))
+    # --- head: pick angle variant ---
+    angle = anchor.get("angle", "front")
+    head_img = heads.get(angle) or heads.get("front") or next(iter(heads.values()), None)
+    if head_img is None:
+        print(f"WARNING: no head asset available")
 
-    # position: centered horizontally near detected neck-x, vertically so the
-    # head BOTTOM sits just above the body's shoulder line
-    neck_x = int(anchor.get("headCX", CANVAS_W // 2))
-    hx = max(head_w // 2 + 6, min(CANVAS_W - head_w // 2 - 6, neck_x))
-    hy = max(8, body_top - int(head_h * 0.72))  # head bottom dips 72% into frame
+    # Isaac proportion: head = ~40% of visible body height (bh)
+    head_h = int(bh * 0.42)
+    head_w = int(head_img.width * (head_h / head_img.height))
+
+    # position: centered on detected head-x; bottom of head overlaps collar slightly
+    neck_x = int(anchor.get("neckX", CANVAS_W // 2))
+    hx = max(head_w // 2 + 4, min(CANVAS_W - head_w // 2 - 4, neck_x))
+    hy = body_top - head_h + int(head_h * 0.14)  # chin dips 14% into collar zone
 
     # --- drop shadow for depth ---
     shadow = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
     sh_draw = ImageDraw.Draw(shadow)
-    sh_draw.ellipse([hx - head_w // 2 + 10, hy + 12, hx + head_w // 2 + 10, hy + head_h + 12], fill=(0, 0, 0, 55))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=14))
+    sh_draw.ellipse([hx - head_w // 2 + 8, hy + 10,
+                     hx + head_w // 2 + 8, hy + head_h + 10], fill=(0, 0, 0, 50))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=12))
     canvas.alpha_composite(shadow)
 
-    # --- head: scale + color grade + feather edges ---
-    head_layer = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
-    head_scaled = _color_grade(head.resize((head_w, head_h), Image.LANCZOS), warmth=0.08)
-
-    # feather edges: dilate alpha then blur boundary for smooth transition
+    # --- color grade + feathered edges ---
+    head_scaled = _color_grade(head_img.resize((head_w, head_h), Image.LANCZOS))
     h_alpha = np.asarray(head_scaled.getchannel("A")).copy()
-    # dilate: expand solid area by 3px to cover any cutout gaps
     from scipy import ndimage as ndi
     dilated = ndi.binary_dilation(h_alpha > 10, iterations=3)
     h_alpha[dilated & (h_alpha < 200)] = np.maximum(h_alpha[dilated & (h_alpha < 200)], 180)
-    head_alpha_img = Image.fromarray(h_alpha)
-    head_alpha_img = head_alpha_img.filter(ImageFilter.GaussianBlur(radius=1.5))
+    head_alpha_img = Image.fromarray(h_alpha).filter(ImageFilter.GaussianBlur(radius=1.5))
     head_scaled.putalpha(head_alpha_img)
 
-    head_layer.paste(head_scaled, (hx - head_w // 2, hy), head_scaled)
-    canvas.alpha_composite(head_layer)
-
+    canvas.alpha_composite(head_scaled, (hx - head_w // 2, hy))
     return canvas
 
 
@@ -95,21 +82,43 @@ def main() -> int:
     def arg(name: str, default: str = "") -> str:
         return args[args.index(name) + 1] if name in args and args.index(name) + 1 < len(args) else default
 
-    head_path, bodies_dir, out_dir = arg("--head"), arg("--bodies"), arg("--out")
-    if not (head_path and bodies_dir and out_dir):
+    heads_dir, bodies_dir, out_dir = arg("--heads"), arg("--bodies"), arg("--out")
+    if not (heads_dir and bodies_dir and out_dir):
         print(__doc__)
         return 1
-    head = Image.open(head_path).convert("RGBA")
+
+    heads_dir_path = Path(heads_dir)
+    heads = {}
+    for f in sorted(heads_dir_path.glob("*.png")):
+        if "head-front" in f.stem:
+            heads["front"] = Image.open(f).convert("RGBA")
+        elif "head-3q" in f.stem:
+            heads["3q"] = Image.open(f).convert("RGBA")
+        elif f.stem == "head":
+            heads["default"] = Image.open(f).convert("RGBA")
+    print(f"loaded {len(heads)} head variants: {list(heads.keys())}")
+
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+
     for body_file in sorted(Path(bodies_dir).glob("*.png")):
         if any(kw in body_file.stem for kw in ("sheet", "proof", "composite", "cutout", "test")):
             continue
         anchor_file = body_file.with_suffix(".json")
         anchor = json.loads(anchor_file.read_text(encoding="utf-8")) if anchor_file.exists() else {}
-        merged = composite(body := Image.open(body_file).convert("RGBA"), head, anchor)
+
+        # angle matching: front-facing bodies get front head, turned bodies get 3q
+        pose_name = body_file.stem
+        if "celebrate" in pose_name or "energetic" in pose_name:
+            angle = "front"
+        elif "point" in pose_name or "side" in pose_name or "turn" in pose_name:
+            angle = "3q"
+        else:
+            angle = "front"
+
+        merged = composite(Image.open(body_file).convert("RGBA"), heads, {**anchor, "angle": angle})
         merged.save(out / f"{body_file.stem}.png")
-        print(f"baked {body_file.stem}")
+        print(f"baked {body_file.stem}: angle={angle}")
     return 0
 
 
