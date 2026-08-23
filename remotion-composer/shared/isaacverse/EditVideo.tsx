@@ -268,6 +268,15 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
     zIndex: typeof md.z === "number" ? Math.round(md.z) : 10,
   };
   if (md.isTextClip) {
+    // gradient text (spec E2-1): generated titles carry textGradient {start, end}
+    const gradient = md.textGradient as { start?: string; end?: string } | undefined;
+    const gradientStyle: React.CSSProperties = gradient?.start && gradient?.end ? {
+      background: `linear-gradient(135deg, ${gradient.start} 0%, ${gradient.end} 55%, ${gradient.start} 100%)`,
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      // gradient fills need the shadow on a wrapper effect, not textShadow
+      filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.7))",
+    } : {};
     return (
       <div style={baseStyle}>
         <div style={{
@@ -285,9 +294,11 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
           lineHeight: typeof md.lineHeight === "number" ? md.lineHeight : undefined,
           textTransform: typeof md.textTransform === "string" ? md.textTransform as React.CSSProperties["textTransform"] : undefined,
           WebkitTextStroke: typeof md.strokeWidth === "number" ? `${md.strokeWidth}px ${typeof md.strokeColor === "string" ? md.strokeColor : "#000"}` : undefined,
-          background: typeof md.bgColor === "string" ? md.bgColor : undefined,
-          textShadow: typeof md.shadowBlur === "number" ? `0 0 ${md.shadowBlur}px ${typeof md.shadowColor === "string" ? md.shadowColor : "rgba(0,0,0,.7)"}` : (typeof md.textShadow === "string" ? md.textShadow : "0 2px 8px rgba(0,0,0,.55)"),
-          filter: typeof md.glowBlur === "number" ? `drop-shadow(0 0 ${md.glowBlur}px ${typeof md.glowColor === "string" ? md.glowColor : "#fff"})` : undefined,
+          background: typeof md.bgColor === "string" ? md.bgColor : gradientStyle.background,
+          WebkitBackgroundClip: gradientStyle.WebkitBackgroundClip,
+          WebkitTextFillColor: gradientStyle.WebkitTextFillColor,
+          textShadow: gradient ? undefined : (typeof md.shadowBlur === "number" ? `0 0 ${md.shadowBlur}px ${typeof md.shadowColor === "string" ? md.shadowColor : "rgba(0,0,0,.7)"}` : (typeof md.textShadow === "string" ? md.textShadow : "0 2px 8px rgba(0,0,0,.55)")),
+          filter: typeof md.glowBlur === "number" ? `drop-shadow(0 0 ${md.glowBlur}px ${typeof md.glowColor === "string" ? md.glowColor : "#fff"})` : gradientStyle.filter,
           padding: "0 2%", boxSizing: "border-box", overflow: "hidden",
         }}>
           {String(md.text ?? "")}

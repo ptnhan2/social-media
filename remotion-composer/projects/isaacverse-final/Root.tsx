@@ -2,7 +2,13 @@ import React from "react";
 import { Composition, staticFile } from "remotion";
 import { ProjectLoader } from "../../shared/isaacverse/ProjectLoader";
 
+// Treatment path — the v009-master render flow (BeatTreatment reads the style store live).
 const FinalProject = () => <ProjectLoader src="isaacverse-final/05-edit-doc.json" />;
+
+// Editor path (spec E2) — the clip-first render flow driven by editor/current.json.
+// The generator (scripts/generate-editor.mjs) keeps that doc in sync with the
+// style store while preserving user edits (userEdited ledger).
+const FinalProjectEditor = () => <ProjectLoader src="isaacverse-final/05-edit-doc.json" editorSrc="isaacverse-final/editor/current.json" />;
 
 const calculateFinalMetadata = async () => {
   const editDoc = await fetch(staticFile("isaacverse-final/05-edit-doc.json")).then((response) => response.json()) as { beats?: { startSec: number; durationSec: number }[] };
@@ -13,5 +19,8 @@ const calculateFinalMetadata = async () => {
 };
 
 export const Root: React.FC = () => (
-  <Composition id="isaacverse-final-30s" component={FinalProject} durationInFrames={900} calculateMetadata={calculateFinalMetadata} fps={30} width={1920} height={1080} />
+  <>
+    <Composition id="isaacverse-final-30s" component={FinalProject} durationInFrames={900} calculateMetadata={calculateFinalMetadata} fps={30} width={1920} height={1080} />
+    <Composition id="isaacverse-final-30s-editor" component={FinalProjectEditor} durationInFrames={900} calculateMetadata={calculateFinalMetadata} fps={30} width={1920} height={1080} />
+  </>
 );

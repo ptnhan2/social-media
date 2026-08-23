@@ -102,11 +102,35 @@
           "hidden": false
         },
         {
-          "id": "clip:beat:final-beat-04",
+          "id": "clip:beat:final-beat-04:part-a",
           "kind": "beat",
           "trackId": "video-main",
           "range": {
             "startSec": 10.5,
+            "endSec": 12
+          },
+          "label": "give a repeatable process",
+          "source": {
+            "beatId": "final-beat-04"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Start with the story, then place the voice, evidence, and cut.",
+            "treatmentId": "process-timeline",
+            "splitFrom": "clip:beat:final-beat-04",
+            "splitPart": "a"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:final-beat-04:part-b",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 12,
             "endSec": 14
           },
           "label": "give a repeatable process",
@@ -116,7 +140,9 @@
           "color": "cyan",
           "metadata": {
             "transcript": "Start with the story, then place the voice, evidence, and cut.",
-            "treatmentId": "process-timeline"
+            "treatmentId": "process-timeline",
+            "splitFrom": "clip:beat:final-beat-04",
+            "splitPart": "b"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -216,7 +242,7 @@
     {
       "id": "visual-1",
       "kind": "overlay",
-      "name": "Visual 1",
+      "name": "Overlay 1",
       "order": 4,
       "locked": false,
       "muted": false,
@@ -268,30 +294,16 @@
             "text": "The timeline is not the edit",
             "z": 15,
             "opacity": 1,
-            "fontSize": 82,
+            "fontSize": 96,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "Arial, sans-serif",
             "textAlign": "center",
             "textTransform": "uppercase",
             "color": "#f4e8cf",
             "textShadow": "0 0 22px #f2b84b55",
-            "textGradient": {
-              "start": "#ff6b35",
-              "end": "#ffd166"
-            },
             "animIn": "scale",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "styleSource": {
-              "fontSize": "treatments.chapter-card.title.fontSizeLong",
-              "fontWeight": "treatments.chapter-card.title.fontWeight",
-              "textGradientStart": "colors.gradientStart",
-              "textGradientEnd": "colors.gradientEnd"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -332,10 +344,6 @@
             "letterSpacing": 1.6,
             "color": "rgba(244,232,207,0.45)",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -371,17 +379,10 @@
             "z": 1,
             "opacity": 1,
             "fit": "cover",
-            "filter": "saturate(1.05) contrast(1.15) brightness(.9)",
+            "filter": "saturate(.72) contrast(1.18) brightness(.72)",
             "animIn": "fade",
             "animDurationSec": 0.5,
             "startSec": 0,
-            "styleSource": {
-              "filter": "treatments.host-reflection.filter"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "image"
@@ -417,10 +418,6 @@
             "opacity": 1,
             "background": "rgba(244,232,207,.2)",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -456,7 +453,7 @@
             "z": 10,
             "opacity": 1,
             "fontSize": 17,
-            "fontWeight": 900,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 3.2,
@@ -464,15 +461,6 @@
             "animIn": "fade",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.candidate-comparison.kicker.fontSize",
-              "fontWeight": "treatments.candidate-comparison.kicker.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -508,14 +496,10 @@
             "z": 1,
             "opacity": 1,
             "fit": "cover",
-            "filter": "saturate(1.08) contrast(1.15) brightness(.9)",
+            "filter": "saturate(.76) contrast(1.18) brightness(.72)",
             "animIn": "fade",
             "animDurationSec": 0.7,
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "image"
@@ -551,17 +535,10 @@
             "z": 1,
             "opacity": 1,
             "fit": "cover",
-            "filter": "saturate(1.05) contrast(1.15) brightness(.9)",
+            "filter": "saturate(.72) contrast(1.18) brightness(.72)",
             "animIn": "fade",
             "animDurationSec": 0.5,
             "startSec": 0,
-            "styleSource": {
-              "filter": "treatments.host-reflection.filter"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "image"
@@ -596,30 +573,16 @@
             "text": "Choose the decision first",
             "z": 15,
             "opacity": 1,
-            "fontSize": 82,
+            "fontSize": 96,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "Arial, sans-serif",
             "textAlign": "center",
             "textTransform": "uppercase",
             "color": "#f4e8cf",
             "textShadow": "0 0 22px #61d7e855",
-            "textGradient": {
-              "start": "#ff6b35",
-              "end": "#ffd166"
-            },
             "animIn": "scale",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "styleSource": {
-              "fontSize": "treatments.chapter-card.title.fontSizeLong",
-              "fontWeight": "treatments.chapter-card.title.fontWeight",
-              "textGradientStart": "colors.gradientStart",
-              "textGradientEnd": "colors.gradientEnd"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -634,7 +597,7 @@
     {
       "id": "visual-2",
       "kind": "overlay",
-      "name": "Visual 2",
+      "name": "Overlay 2",
       "order": 5,
       "locked": false,
       "muted": false,
@@ -685,19 +648,11 @@
             "h": 0.004629629629629629,
             "z": 12,
             "opacity": 1,
-            "background": "linear-gradient(90deg, transparent, #ff6b35, #ffd166, #ff6b35, transparent)",
-            "boxShadow": "0 0 24px #ff6b3580",
-            "startSec": 0.2,
+            "background": "#f2b84b",
+            "boxShadow": "0 0 18px #f2b84b",
             "animIn": "scale",
             "animDurationSec": 0.65,
-            "styleSource": {
-              "width": "treatments.chapter-card.accentLine.maxWidth",
-              "height": "treatments.chapter-card.accentLine.height"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
+            "startSec": 0.2,
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -733,7 +688,7 @@
             "z": 15,
             "opacity": 1,
             "fontSize": 18,
-            "fontWeight": 900,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 3.2,
@@ -741,15 +696,6 @@
             "animIn": "fade",
             "animDurationSec": 0.55,
             "startSec": 0,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.kicker.fontSize",
-              "fontWeight": "treatments.semantic-diagram.kicker.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -785,10 +731,6 @@
             "opacity": 0.7,
             "background": "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -822,13 +764,9 @@
             "h": 0.002777777777777778,
             "z": 6,
             "opacity": 1,
-            "background": "linear-gradient(90deg, #ff6b35, #ffd166)",
-            "boxShadow": "0 0 16px #ff6b35",
+            "background": "#f2b84b",
+            "boxShadow": "0 0 16px #f2b84b",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -870,21 +808,6 @@
             "animIn": "fade",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "textGradient": {
-              "start": "#ff6b35",
-              "end": "#ffd166"
-            },
-            "textShadow": "0 3px 10px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.candidate-comparison.title.fontSize",
-              "fontWeight": "treatments.candidate-comparison.title.fontWeight",
-              "textGradientStart": "colors.gradientStart",
-              "textGradientEnd": "colors.gradientEnd"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -920,10 +843,6 @@
             "opacity": 1,
             "background": "radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, #f2b84b22, transparent 55%)",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -959,10 +878,6 @@
             "opacity": 0.7,
             "background": "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -996,19 +911,11 @@
             "h": 0.004629629629629629,
             "z": 12,
             "opacity": 1,
-            "background": "linear-gradient(90deg, transparent, #ff6b35, #ffd166, #ff6b35, transparent)",
-            "boxShadow": "0 0 24px #ff6b3580",
-            "startSec": 0.2,
+            "background": "#61d7e8",
+            "boxShadow": "0 0 18px #61d7e8",
             "animIn": "scale",
             "animDurationSec": 0.65,
-            "styleSource": {
-              "width": "treatments.chapter-card.accentLine.maxWidth",
-              "height": "treatments.chapter-card.accentLine.height"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
+            "startSec": 0.2,
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1023,7 +930,7 @@
     {
       "id": "visual-3",
       "kind": "overlay",
-      "name": "Visual 3",
+      "name": "Overlay 3",
       "order": 6,
       "locked": false,
       "muted": false,
@@ -1075,8 +982,8 @@
             "text": "it is only the evidence",
             "z": 12,
             "opacity": 0.8,
-            "fontSize": 24,
-            "fontWeight": 900,
+            "fontSize": 20,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textAlign": "center",
             "textTransform": "uppercase",
@@ -1085,14 +992,6 @@
             "animIn": "fade",
             "animDurationSec": 0.8,
             "startSec": 0.4,
-            "textShadow": "0 2px 10px rgba(0,0,0,0.8)",
-            "styleSource": {
-              "fontSize": "treatments.chapter-card.subtitle.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1128,21 +1027,12 @@
             "z": 15,
             "opacity": 1,
             "fontSize": 46,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "color": "#f4e8cf",
             "animIn": "fade",
             "animDurationSec": 0.55,
             "startSec": 0,
-            "textShadow": "0 3px 10px rgba(0,0,0,0.6)",
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.title.fontSize",
-              "fontWeight": "treatments.semantic-diagram.title.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1178,10 +1068,6 @@
             "opacity": 1,
             "background": "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1222,10 +1108,6 @@
             "letterSpacing": 1.6,
             "color": "rgba(244,232,207,.5)",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1266,14 +1148,6 @@
             "animIn": "fade",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "fontWeight": 900,
-            "styleSource": {
-              "fontSize": "treatments.candidate-comparison.criteria.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1309,7 +1183,7 @@
             "z": 14,
             "opacity": 1,
             "fontSize": 16,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 2.6,
@@ -1318,14 +1192,6 @@
             "animIn": "fade",
             "animDurationSec": 0.7,
             "startSec": 0.3,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
-              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1361,10 +1227,6 @@
             "opacity": 1,
             "background": "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1399,8 +1261,8 @@
             "text": "then let the frame move",
             "z": 12,
             "opacity": 0.8,
-            "fontSize": 24,
-            "fontWeight": 900,
+            "fontSize": 20,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textAlign": "center",
             "textTransform": "uppercase",
@@ -1409,14 +1271,6 @@
             "animIn": "fade",
             "animDurationSec": 0.8,
             "startSec": 0.4,
-            "textShadow": "0 2px 10px rgba(0,0,0,0.8)",
-            "styleSource": {
-              "fontSize": "treatments.chapter-card.subtitle.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1431,7 +1285,7 @@
     {
       "id": "visual-4",
       "kind": "overlay",
-      "name": "Visual 4",
+      "name": "Overlay 4",
       "order": 7,
       "locked": false,
       "muted": false,
@@ -1485,13 +1339,9 @@
             "borderRadius": 250,
             "borderWidth": 2,
             "borderColor": "#f2b84b88",
-            "background": "linear-gradient(135deg, rgba(0,212,255,0.10), rgba(255,107,53,0.08))",
+            "background": "rgba(97,215,232,0.06)",
             "boxShadow": "0 0 38px #f2b84b28",
             "startSec": 0.15,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1527,10 +1377,6 @@
             "opacity": 1,
             "background": "#07090d",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1566,7 +1412,7 @@
             "z": 10,
             "opacity": 1,
             "fontSize": 17,
-            "fontWeight": 900,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 3.2,
@@ -1574,15 +1420,6 @@
             "animIn": "fade",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.process-timeline.kicker.fontSize",
-              "fontWeight": "treatments.process-timeline.kicker.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1624,10 +1461,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.2,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1664,21 +1497,13 @@
             "opacity": 1,
             "fontSize": 28,
             "fontStyle": "italic",
-            "fontWeight": 900,
             "fontFamily": "Georgia, serif",
             "textAlign": "center",
             "color": "#f2b84b",
-            "textShadow": "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)",
+            "textShadow": "0 2px 8px #000",
             "animIn": "fade",
             "animDurationSec": 0.7,
             "startSec": 0.5,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.subtitle.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1714,10 +1539,6 @@
             "opacity": 1,
             "background": "#07090d",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1732,7 +1553,7 @@
     {
       "id": "visual-5",
       "kind": "overlay",
-      "name": "Visual 5",
+      "name": "Overlay 5",
       "order": 8,
       "locked": false,
       "muted": false,
@@ -1785,21 +1606,13 @@
             "z": 6,
             "opacity": 1,
             "fontSize": 20,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 1.6,
             "color": "#61d7e8",
             "textAlign": "center",
             "startSec": 0.15,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.centerLabel.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1835,10 +1648,6 @@
             "opacity": 1,
             "background": "#07090d",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1880,21 +1689,6 @@
             "animIn": "fade",
             "animDurationSec": 0.45,
             "startSec": 0,
-            "textGradient": {
-              "start": "#ff6b35",
-              "end": "#ffd166"
-            },
-            "textShadow": "0 3px 10px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.process-timeline.title.fontSize",
-              "fontWeight": "treatments.process-timeline.title.fontWeight",
-              "textGradientStart": "colors.gradientStart",
-              "textGradientEnd": "colors.gradientEnd"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -1934,10 +1728,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.2,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "image"
@@ -1973,10 +1763,6 @@
             "opacity": 1,
             "background": "#07090d",
             "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -1991,7 +1777,7 @@
     {
       "id": "visual-6",
       "kind": "overlay",
-      "name": "Visual 6",
+      "name": "Overlay 6",
       "order": 9,
       "locked": false,
       "muted": false,
@@ -2042,13 +1828,9 @@
             "h": 0.003703703703703704,
             "z": 12,
             "opacity": 1,
-            "background": "linear-gradient(90deg, #ff6b35, #ffd166)",
+            "background": "#f2b84b",
             "boxShadow": "0 0 14px #f2b84b",
             "startSec": 0.15,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2088,19 +1870,10 @@
             "fontFamily": "Georgia, serif",
             "textAlign": "center",
             "color": "#f2b84b",
-            "fontWeight": 900,
-            "textShadow": "0 3px 12px #000, 0 0 24px rgba(0,0,0,0.8)",
+            "textShadow": "0 2px 8px #000",
             "animIn": "fade",
             "animDurationSec": 0.5,
             "startSec": 0.3,
-            "styleSource": {
-              "fontSize": "treatments.host-reflection.subtitle.fontSize",
-              "fontWeight": "treatments.host-reflection.subtitle.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2135,17 +1908,13 @@
             "z": 8,
             "opacity": 1,
             "borderRadius": 50,
-            "background": "radial-gradient(circle at 35% 30%, #61d7e8, #61d7e899)",
+            "background": "#61d7e8",
             "boxShadow": "0 0 12px #61d7e888",
             "borderWidth": 3,
             "borderColor": "#07090d",
             "animIn": "scale",
             "animDurationSec": 0.6,
             "startSec": 0.3,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2181,18 +1950,13 @@
             "z": 7,
             "opacity": 1,
             "fontSize": 13,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 1.6,
             "color": "#f4e8cf",
             "background": "rgba(0,0,0,.68)",
             "startSec": 0.2,
-            "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2232,19 +1996,10 @@
             "fontFamily": "Georgia, serif",
             "textAlign": "center",
             "color": "#f2b84b",
-            "fontWeight": 900,
-            "textShadow": "0 3px 12px #000, 0 0 24px rgba(0,0,0,0.8)",
+            "textShadow": "0 2px 8px #000",
             "animIn": "fade",
             "animDurationSec": 0.5,
             "startSec": 0.3,
-            "styleSource": {
-              "fontSize": "treatments.host-reflection.subtitle.fontSize",
-              "fontWeight": "treatments.host-reflection.subtitle.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2259,7 +2014,7 @@
     {
       "id": "visual-7",
       "kind": "overlay",
-      "name": "Visual 7",
+      "name": "Overlay 7",
       "order": 10,
       "locked": false,
       "muted": false,
@@ -2318,10 +2073,6 @@
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.3,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2362,10 +2113,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.3,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2401,21 +2148,13 @@
             "z": 7,
             "opacity": 1,
             "fontSize": 18,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "color": "#ec6a5e",
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.2,
-            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.candidate-comparison.candidate.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2430,7 +2169,7 @@
     {
       "id": "visual-8",
       "kind": "overlay",
-      "name": "Visual 8",
+      "name": "Overlay 8",
       "order": 11,
       "locked": false,
       "muted": false,
@@ -2483,7 +2222,7 @@
             "z": 11,
             "opacity": 1,
             "fontSize": 20,
-            "fontWeight": 900,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -2491,15 +2230,6 @@
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.3,
-            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.node.fontSize",
-              "fontWeight": "treatments.semantic-diagram.node.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2535,7 +2265,7 @@
             "z": 9,
             "opacity": 1,
             "fontSize": 16,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -2544,15 +2274,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.3,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
-            "styleSource": {
-              "fontSize": "treatments.process-timeline.step.fontSize",
-              "fontWeight": "treatments.process-timeline.step.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2594,10 +2315,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.2,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2612,7 +2329,7 @@
     {
       "id": "visual-9",
       "kind": "overlay",
-      "name": "Visual 9",
+      "name": "Overlay 9",
       "order": 12,
       "locked": false,
       "muted": false,
@@ -2664,21 +2381,13 @@
             "text": "what changed",
             "z": 11,
             "opacity": 0.78,
-            "fontSize": 13,
+            "fontSize": 14,
             "fontFamily": "Arial, sans-serif",
             "color": "#f4e8cf",
             "lineHeight": 1.35,
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.3,
-            "fontWeight": 900,
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.node.detailFontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2721,11 +2430,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.3,
-            "fontWeight": 900,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -2767,10 +2471,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.4,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2785,7 +2485,7 @@
     {
       "id": "visual-10",
       "kind": "overlay",
-      "name": "Visual 10",
+      "name": "Overlay 10",
       "order": 13,
       "locked": false,
       "muted": false,
@@ -2844,10 +2544,6 @@
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.55,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2882,17 +2578,13 @@
             "z": 8,
             "opacity": 1,
             "borderRadius": 50,
-            "background": "radial-gradient(circle at 35% 30%, #f2b84b, #f2b84b99)",
+            "background": "#f2b84b",
             "boxShadow": "0 0 12px #f2b84b88",
             "borderWidth": 3,
             "borderColor": "#07090d",
             "animIn": "scale",
             "animDurationSec": 0.6,
             "startSec": 0.6,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -2932,10 +2624,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.4,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "image"
@@ -2950,7 +2638,7 @@
     {
       "id": "visual-11",
       "kind": "overlay",
-      "name": "Visual 11",
+      "name": "Overlay 11",
       "order": 14,
       "locked": false,
       "muted": false,
@@ -3003,7 +2691,7 @@
             "z": 11,
             "opacity": 1,
             "fontSize": 20,
-            "fontWeight": 900,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -3011,15 +2699,6 @@
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.55,
-            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.node.fontSize",
-              "fontWeight": "treatments.semantic-diagram.node.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3060,10 +2739,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -3099,18 +2774,13 @@
             "z": 8,
             "opacity": 1,
             "fontSize": 13,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 1.6,
             "color": "#f2b84b",
             "background": "rgba(0,0,0,.68)",
             "startSec": 0.4,
-            "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3125,7 +2795,7 @@
     {
       "id": "visual-12",
       "kind": "overlay",
-      "name": "Visual 12",
+      "name": "Overlay 12",
       "order": 15,
       "locked": false,
       "muted": false,
@@ -3177,21 +2847,13 @@
             "text": "what stays",
             "z": 11,
             "opacity": 0.78,
-            "fontSize": 13,
+            "fontSize": 14,
             "fontFamily": "Arial, sans-serif",
             "color": "#f4e8cf",
             "lineHeight": 1.35,
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.55,
-            "fontWeight": 900,
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.node.detailFontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3227,7 +2889,7 @@
             "z": 9,
             "opacity": 1,
             "fontSize": 16,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -3236,15 +2898,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
-            "styleSource": {
-              "fontSize": "treatments.process-timeline.step.fontSize",
-              "fontWeight": "treatments.process-timeline.step.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3280,21 +2933,13 @@
             "z": 8,
             "opacity": 1,
             "fontSize": 18,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "color": "#f2b84b",
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.4,
-            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.candidate-comparison.candidate.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3309,7 +2954,7 @@
     {
       "id": "visual-13",
       "kind": "overlay",
-      "name": "Visual 13",
+      "name": "Overlay 13",
       "order": 16,
       "locked": false,
       "muted": false,
@@ -3368,10 +3013,6 @@
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.8,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -3414,11 +3055,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6,
-            "fontWeight": 900,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3460,10 +3096,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.4,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3478,7 +3110,7 @@
     {
       "id": "visual-14",
       "kind": "overlay",
-      "name": "Visual 14",
+      "name": "Overlay 14",
       "order": 17,
       "locked": false,
       "muted": false,
@@ -3531,7 +3163,7 @@
             "z": 11,
             "opacity": 1,
             "fontSize": 20,
-            "fontWeight": 900,
+            "fontWeight": 700,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -3539,15 +3171,6 @@
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.8,
-            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.node.fontSize",
-              "fontWeight": "treatments.semantic-diagram.node.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3582,17 +3205,13 @@
             "z": 8,
             "opacity": 1,
             "borderRadius": 50,
-            "background": "radial-gradient(circle at 35% 30%, #ec6a5e, #ec6a5e99)",
-            "boxShadow": "0 0 24px #ec6a5e, 0 0 48px #ec6a5e66",
+            "background": "#ec6a5e",
+            "boxShadow": "0 0 24px #ec6a5e",
             "borderWidth": 3,
             "borderColor": "#07090d",
             "animIn": "scale",
             "animDurationSec": 0.6,
             "startSec": 0.8999999999999999,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -3634,10 +3253,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6000000000000001,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -3652,7 +3267,7 @@
     {
       "id": "visual-15",
       "kind": "overlay",
-      "name": "Visual 15",
+      "name": "Overlay 15",
       "order": 18,
       "locked": false,
       "muted": false,
@@ -3704,21 +3319,13 @@
             "text": "what the viewer gets",
             "z": 11,
             "opacity": 0.78,
-            "fontSize": 13,
+            "fontSize": 14,
             "fontFamily": "Arial, sans-serif",
             "color": "#f4e8cf",
             "lineHeight": 1.35,
             "animIn": "scale",
             "animDurationSec": 0.75,
             "startSec": 0.8,
-            "fontWeight": 900,
-            "styleSource": {
-              "fontSize": "treatments.semantic-diagram.node.detailFontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3759,10 +3366,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.8999999999999999,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -3802,10 +3405,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6000000000000001,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "image"
@@ -3820,7 +3419,7 @@
     {
       "id": "visual-16",
       "kind": "overlay",
-      "name": "Visual 16",
+      "name": "Overlay 16",
       "order": 19,
       "locked": false,
       "muted": false,
@@ -3873,7 +3472,7 @@
             "z": 9,
             "opacity": 1,
             "fontSize": 16,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -3882,15 +3481,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.8999999999999999,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
-            "styleSource": {
-              "fontSize": "treatments.process-timeline.step.fontSize",
-              "fontWeight": "treatments.process-timeline.step.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3926,18 +3516,13 @@
             "z": 9,
             "opacity": 1,
             "fontSize": 13,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 1.6,
             "color": "#f4e8cf",
             "background": "rgba(0,0,0,.68)",
             "startSec": 0.6000000000000001,
-            "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -3952,7 +3537,7 @@
     {
       "id": "visual-17",
       "kind": "overlay",
-      "name": "Visual 17",
+      "name": "Overlay 17",
       "order": 20,
       "locked": false,
       "muted": false,
@@ -4012,11 +3597,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.8999999999999999,
-            "fontWeight": 900,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -4052,21 +3632,13 @@
             "z": 9,
             "opacity": 1,
             "fontSize": 18,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "color": "#61d7e8",
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6000000000000001,
-            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
-            "styleSource": {
-              "fontSize": "treatments.candidate-comparison.candidate.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -4081,7 +3653,7 @@
     {
       "id": "visual-18",
       "kind": "overlay",
-      "name": "Visual 18",
+      "name": "Overlay 18",
       "order": 21,
       "locked": false,
       "muted": false,
@@ -4133,17 +3705,13 @@
             "z": 8,
             "opacity": 1,
             "borderRadius": 50,
-            "background": "radial-gradient(circle at 35% 30%, #a98bff, #a98bff99)",
+            "background": "#a98bff",
             "boxShadow": "0 0 12px #a98bff88",
             "borderWidth": 3,
             "borderColor": "#07090d",
             "animIn": "scale",
             "animDurationSec": 0.6,
             "startSec": 1.2,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -4185,10 +3753,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 0.6000000000000001,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -4203,7 +3767,7 @@
     {
       "id": "visual-19",
       "kind": "overlay",
-      "name": "Visual 19",
+      "name": "Overlay 19",
       "order": 22,
       "locked": false,
       "muted": false,
@@ -4261,10 +3825,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 1.2,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
@@ -4279,7 +3839,7 @@
     {
       "id": "visual-20",
       "kind": "overlay",
-      "name": "Visual 20",
+      "name": "Overlay 20",
       "order": 23,
       "locked": false,
       "muted": false,
@@ -4332,7 +3892,7 @@
             "z": 9,
             "opacity": 1,
             "fontSize": 16,
-            "fontWeight": 900,
+            "fontWeight": 800,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
@@ -4341,15 +3901,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 1.2,
-            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
-            "styleSource": {
-              "fontSize": "treatments.process-timeline.step.fontSize",
-              "fontWeight": "treatments.process-timeline.step.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -4364,7 +3915,7 @@
     {
       "id": "visual-21",
       "kind": "overlay",
-      "name": "Visual 21",
+      "name": "Overlay 21",
       "order": 24,
       "locked": false,
       "muted": false,
@@ -4424,11 +3975,6 @@
             "animIn": "slide-up",
             "animDurationSec": 0.6,
             "startSec": 1.2,
-            "fontWeight": 900,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
             "rotation": 0,
             "isTextClip": true,
             "elementType": "text"
@@ -5122,7 +4668,7 @@
   ],
   "revision": {
     "baseEditVersion": "v021",
-    "revision": 0,
-    "updatedAt": "2026-08-23T06:20:44.682Z"
+    "revision": 6,
+    "updatedAt": "2026-08-16T10:03:51.620Z"
   }
 }

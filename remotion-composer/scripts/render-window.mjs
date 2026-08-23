@@ -161,13 +161,16 @@ export function buildWindowRender({ slug, composition, entry, editDocPath, start
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {
   const args = parseArgs(process.argv.slice(2));
   if (args.help || args.h) {
-    console.log("Usage: node scripts/render-window.mjs --project isaacverse-final --start 4 --end 8 [--quality draft] [--dry-run]");
+    console.log("Usage: node scripts/render-window.mjs --project isaacverse-final --start 4 --end 8 [--quality draft] [--path treatment|editor] [--dry-run]");
     process.exit(0);
   }
   if (args.start === undefined || args.end === undefined) throw new Error("--start and --end are required");
+  // --path editor renders the clip-first flow (composition <slug>-30s-editor);
+  // default treatment keeps the v009-master flow (BeatTreatment + style store).
+  const pathMode = args.path === "editor" ? "editor" : "treatment";
   const result = buildWindowRender({
     slug: args.project || "isaacverse-final",
-    composition: args.composition,
+    composition: args.composition || (pathMode === "editor" ? `${args.project || "isaacverse-final"}-30s-editor` : undefined),
     entry: args.entry,
     editDocPath: args.editDoc,
     startSec: Number(args.start),
