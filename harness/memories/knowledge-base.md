@@ -6,6 +6,17 @@
 
 ## Experiments
 
+### U3 user review — principles CONFIRMED + PROMOTED (2026-08-23 morning)
+- User viewed side-by-side before/after frames for all 4 windows:
+  "cac phien ban after co cai thien ro hon (du toi nghi van co the tot hon nua)"
+- Result: typo-001, col-001, col-002, comp-001 → verified=2, promoted=true
+  (1: eval compliance pass; 2: user visual confirmation) — now REAL standard.
+- The "van co the tot hon nua" part is recorded in feedback.jsonl as a
+  continuing-improvement signal — NOT yet a new principle (too vague to
+  classify; next specific feedback will refine direction).
+- Learning phase stays 3 (self-evaluating). nar-001 still awaits U4.
+
+
 ### D-phase: eval trend proven end-to-end (2026-08-23 overnight)
 Four experiments in LangSmith (dataset isaacverse-harness-evals, 14 cases):
 1. **D1a baseline** (harness-eval-4626481a): principle_compliance 0/14,
