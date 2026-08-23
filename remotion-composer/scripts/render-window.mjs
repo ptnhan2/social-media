@@ -101,6 +101,15 @@ const sourceHash = (entryPoint) => {
 };
 
 export function syncRuntimePublic(slug) {
+  // Pull the LIVE editor doc into the repo public dir first — clip edits
+  // (editor_op / generator) write projects/<slug>/editor/current.json and the
+  // render must see them without a manual sync step.
+  const liveEditor = path.join(workspaceRoot, "projects", slug, "editor", "current.json");
+  const publicEditor = path.join(composerRoot, "public", slug, "editor", "current.json");
+  if (fs.existsSync(liveEditor)) {
+    fs.mkdirSync(path.dirname(publicEditor), { recursive: true });
+    fs.copyFileSync(liveEditor, publicEditor);
+  }
   // Copy the runtime-fetched JSONs into the bundle's public dir so renders
   // pick up style/edit-doc changes WITHOUT a bundle rebuild.
   const srcs = [

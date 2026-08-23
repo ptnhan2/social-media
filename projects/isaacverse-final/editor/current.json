@@ -752,7 +752,8 @@
             },
             "rotation": 0,
             "isTextClip": true,
-            "elementType": "text"
+            "elementType": "text",
+            "userEdited": true
           },
           "linkedClipIds": [],
           "locked": false,
@@ -5122,7 +5123,7 @@
   ],
   "revision": {
     "baseEditVersion": "v021",
-    "revision": 0,
-    "updatedAt": "2026-08-23T06:20:44.682Z"
+    "revision": 3,
+    "updatedAt": "2026-08-23T07:21:23.440Z"
   }
 }

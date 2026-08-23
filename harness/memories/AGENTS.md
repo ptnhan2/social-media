@@ -27,16 +27,43 @@ memory is worse than missing memory.**
 
 ## Tools
 
-- render_window: Render a video segment (draft 360p or master 1080p). Output path is DETERMINISTIC — ALWAYS copy_render the before-render aside BEFORE re-rendering.
+- render_window: Render a video segment (draft 360p or master 1080p). render_path='editor' renders the clip-first flow — REQUIRED after editor_op clip edits. Output path is DETERMINISTIC — ALWAYS copy_render the before-render aside BEFORE re-rendering.
+- editor_op: Edit a clip on the editor timeline (list/split/trim/move/metadata/ripple/delete). This is the ONLY way to change editor/current.json — NEVER edit_file that file directly (the bridge bumps the revision exactly once and sets userEdited flags; hand-editing corrupts the merge ledger).
 - copy_render: Copy a render aside (mandatory before re-render).
 - visual_critique: Absolute scores (1-5 per aspect) from the VLM. Coarse — find weakest aspect only, NEVER compare across calls. Only meaningful for LOCAL high-contrast changes.
 - compare_renders: Deterministic pixel-diff gate. Proves a change reached the render.
-- qa_gate: Run after EVERY treatment-code edit — typecheck (vite build) + render + pixel-diff in one call. FAIL means revert immediately.
+- qa_gate: Run after EVERY treatment-code edit (render_path defaults 'treatment'; pass render_path='editor' when verifying clip edits) — typecheck (vite build) + render + pixel-diff in one call. FAIL means revert immediately.
 - pairwise_verdict: Premise-neutral A/B with honesty control. Only meaningful for LOCAL high-contrast changes (VLM is blind to global/motion changes — proven).
 - request_keep: The human KEEP gate — pauses for the user's decision, records vote + feedback.
 - think: Strategic reflection — use after each critique and before each change.
 - task: Delegate to the critic subagent for visual analysis.
 - read_file / edit_file / write_file / ls / glob / grep: Built-in filesystem tools.
+
+## Clip editing (editor timeline)
+
+The editor timeline (editor/current.json) is the user's manual-editing surface AND
+the agent's clip-editing surface — one representation (spec E2-E3).
+
+Flow for a clip edit:
+1. editor_op list → find the clip id (note its range and current values).
+2. editor_op <op> with the args → the bridge applies ONE pure operation, bumps
+   the revision once, marks the clip userEdited (merge ledger).
+3. qa_gate with render_path='editor' on the affected window vs a baseline
+   rendered BEFORE the edit (render_path='editor', copy_render aside).
+4. request_keep — the user reviews the rendered diff.
+5. NEVER edit_file/write_file editor/current.json directly. NEVER recreate it —
+   the generator (scripts/generate-editor.mjs) owns regeneration; your edits go
+   through editor_op so provenance and the userEdited ledger stay intact.
+6. Clips with metadata.stale=true are user-edited clips whose style source moved
+   on — report them, do not silently refresh (scoped regeneration is the user's
+   call through the generator).
+
+Style-store knob changes now flow to the editor timeline through scoped
+regeneration: after update_style on a treatment knob, run
+`node scripts/generate-editor.mjs --project <slug> --beat <beatId>` (via the
+shell through render tooling if needed) so clips whose styleSource references
+that knob get refreshed — unmodified clips only; userEdited clips are kept and
+flagged stale.
 
 ## THE PRINCIPLE-BASED IMPROVEMENT LOOP — PROTOCOL v5
 

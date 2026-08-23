@@ -75,7 +75,7 @@ def _resolve_workspace_path(video_path: str) -> str:
 
 
 @tool
-def render_window(project_slug: str, start_sec: float, end_sec: float, quality: str = "draft") -> str:
+def render_window(project_slug: str, start_sec: float, end_sec: float, quality: str = "draft", render_path: str = "treatment") -> str:
     """Render a video segment. Returns the video path for read_file.
 
     Args:
@@ -83,6 +83,9 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
         start_sec: Start time in seconds.
         end_sec: End time in seconds.
         quality: 'draft' (360p) or 'master' (1080p).
+        render_path: 'treatment' (style-store live flow, default) or 'editor'
+            (clip-first flow driven by editor/current.json — use after editor_op
+            clip edits so the render reflects timeline changes).
     """
     import shutil
     cmd = [
@@ -90,6 +93,8 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
         "--project", project_slug, "--start", str(start_sec),
         "--end", str(end_sec), "--quality", quality,
     ]
+    if render_path in ("editor", "treatment"):
+        cmd += ["--path", render_path]
     src_style = os.path.join(PROJECT_ROOT, STYLE_REL)
     dst_style = os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json")
     # styleLoader.ts now fetches the style at RUNTIME from public/ (bypassing
@@ -440,7 +445,61 @@ def copy_render(source_path: str, destination_path: str) -> str:
 
 
 @tool
-def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: str) -> str:
+def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
+              start_sec: float = 0.0, from_sec: float = 0.0, delta_sec: float = 0.0,
+              changes: str = "", project_slug: str = "isaacverse-final") -> str:
+    """Edit a clip on the editor timeline (protocol v5 clip editing, spec E3).
+
+    Bridges ONE pure editorOperation onto projects/<slug>/editor/current.json —
+    same functions the Composer UI uses, revision bumped exactly once. After a
+    clip edit, render with qa_gate/--path editor to verify, then request_keep.
+
+    Ops:
+      list                        — list all clips (id, kind, range, userEdited)
+      split  clip_id time_sec     — split a clip at a time
+      trim   clip_id edge time_sec — trim start/end edge to a time
+      move   clip_id start_sec    — move a clip in time (collision-safe)
+      metadata clip_id changes    — set clip metadata (JSON string, e.g. '{"fontSize":72}')
+      ripple from_sec delta_sec   — shift all clips from a time
+      delete clip_id              — delete (ledgered: never resurrected by the generator)
+
+    Args:
+        op: One of list|split|trim|move|metadata|ripple|delete.
+        clip_id: Target clip id (from list).
+        time_sec: Time for split/trim.
+        edge: 'start'|'end' for trim.
+        start_sec: New start for move.
+        from_sec/delta_sec: Ripple parameters.
+        changes: JSON string of metadata changes.
+        project_slug: Project folder name.
+    """
+    cmd = ["node", os.path.join(RENDERER_DIR, "scripts", "editor-ops.mjs"),
+           "--project", project_slug, "--op", op]
+    if clip_id:
+        cmd += ["--clipId", clip_id]
+    if time_sec:
+        cmd += ["--timeSec", str(time_sec)]
+    if edge:
+        cmd += ["--edge", edge]
+    if start_sec:
+        cmd += ["--startSec", str(start_sec)]
+    if from_sec:
+        cmd += ["--fromSec", str(from_sec)]
+    if delta_sec:
+        cmd += ["--deltaSec", str(delta_sec)]
+    if changes:
+        cmd += ["--changes", changes]
+    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
+                            errors="replace", cwd=RENDERER_DIR, timeout=120)
+    out = (result.stdout or "").strip()
+    err = (result.stderr or "").strip()
+    if result.returncode != 0:
+        return f"EDITOR OP FAILED: {err or out or 'unknown error'}"
+    return f"EDITOR OP OK:\n{out}"
+
+
+@tool
+def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: str, render_path: str = "treatment") -> str:
     """QA gate for treatment-code edits (protocol v5 step 5) — build+render+diff in one call.
 
     Runs the FULL pipeline: remotion bundle build (catches TSX syntax/import
@@ -456,6 +515,7 @@ def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: s
         start_sec: Window start (must match the before-render's window).
         end_sec: Window end (must match the before-render's window).
         video_before: Path to the before-render copy (with /workspace/ prefix or relative).
+        render_path: 'treatment' (default) or 'editor' — must MATCH the before-render's path.
     """
     fb = _resolve_workspace_path(video_before)
     if not os.path.exists(fb):
@@ -466,7 +526,7 @@ def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: s
     #    a TSX syntax error makes the build fail and returns 'Render failed: ...')
     render_result = render_window.invoke({
         "project_slug": project_slug, "start_sec": start_sec,
-        "end_sec": end_sec, "quality": "draft",
+        "end_sec": end_sec, "quality": "draft", "render_path": render_path,
     })
     if render_result.startswith("Render failed"):
         return ("QA GATE: BUILD/RENDER FAIL — your edit broke the build or the render.\n"
