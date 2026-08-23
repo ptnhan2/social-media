@@ -110,6 +110,9 @@ export type EditorDoc = {
   assets?: EditorAsset[];
   groups?: EditorGroup[];
   revision: EditorRevision;
+  /** Generator merge ledger (spec §2.3): clip ids the user deleted —
+   *  regeneration must NOT resurrect them. */
+  userDeletedClipIds?: string[];
 };
 
 export type EditorProjectionOptions = {

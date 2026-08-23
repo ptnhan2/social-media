@@ -22,6 +22,17 @@ const neighbors = (clips: EditorClip[], clipIndex: number) => {
   return { previous: position > 0 ? ordered[position - 1] : undefined, next: position < ordered.length - 1 ? ordered[position + 1] : undefined };
 };
 
+/** Mark a clip as touched by the user — the generator merge ledger (spec §2.3):
+ *  user-modified clips are kept on regeneration, never silently overwritten. */
+const userTouched = (clip: EditorClip): EditorClip => ({
+  ...clip,
+  metadata: { ...clip.metadata, userEdited: true },
+});
+
+/** Append a deleted clip id to the user-deletion ledger (regeneration must not resurrect). */
+const withDeleted = (editor: EditorDoc, clipId: string): string[] =>
+  [...(editor.userDeletedClipIds ?? []).filter((id) => id !== clipId), clipId];
+
 export const trimEditorClip = (editor: EditorDoc, clipId: string, edge: "start" | "end", timeSec: number, minimumDurationSec = 1 / editor.fps): EditorDoc => {
   const location = locateClip(editor, clipId);
   if (location.clip.locked || editor.tracks[location.trackIndex].locked) throw new Error("clip is locked");
@@ -35,7 +46,7 @@ export const trimEditorClip = (editor: EditorDoc, clipId: string, edge: "start" 
     ...editor,
     tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
       ...track,
-      clips: track.clips.map((clip) => clip.id === clipId ? { ...clip, range } : clip),
+      clips: track.clips.map((clip) => clip.id === clipId ? { ...userTouched(clip), range } : clip),
     }),
     revision: updateRevision(editor),
   };
@@ -56,7 +67,7 @@ export const splitEditorClip = (editor: EditorDoc, clipId: string, timeSec: numb
     id: `${location.clip.id}:part-${suffix}`,
     range,
     sourceRange: splitSourceRange(location.clip.sourceRange, startRatio, endRatio),
-    metadata: { ...location.clip.metadata, splitFrom: location.clip.id, splitPart: suffix },
+    metadata: { ...location.clip.metadata, splitFrom: location.clip.id, splitPart: suffix, userEdited: true },
   });
   return {
     ...editor,
@@ -88,7 +99,7 @@ export const rippleEditorDoc = (editor: EditorDoc, fromSec: number, deltaSec: nu
       if (!shouldShift) return clip;
       const range = { startSec: clip.range.startSec + deltaSec, endSec: clip.range.endSec + deltaSec };
       if (range.startSec < 0) throw new Error("ripple would move a clip before the document start");
-      return { ...clip, range };
+      return { ...userTouched(clip), range };
     }),
   }));
   const durationSec = Math.max(0, ...tracks.flatMap((track) => track.clips.map((clip) => clip.range.endSec)));
@@ -167,6 +178,7 @@ export const setEditorClipAudioState = (editor: EditorDoc, clipId: string, chang
         muted: changes.muted ?? clip.muted,
         metadata: {
           ...clip.metadata,
+          userEdited: true,
           ...(changes.gainDb === undefined ? {} : { gainDb: changes.gainDb }),
           ...(changes.fadeInSec === undefined ? {} : { fadeInSec: changes.fadeInSec }),
           ...(changes.fadeOutSec === undefined ? {} : { fadeOutSec: changes.fadeOutSec }),
@@ -183,7 +195,7 @@ export const setEditorTransitionState = (editor: EditorDoc, clipId: string, chan
   const range = changes.durationSec === undefined ? location.clip.range : { ...location.clip.range, endSec: location.clip.range.startSec + Math.max(0.05, changes.durationSec) };
   return {
     ...editor,
-    tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : { ...track, clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, range, metadata: { ...clip.metadata, ...(changes.transitionType === undefined ? {} : { transitionType: changes.transitionType }) } }) }),
+    tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : { ...track, clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...userTouched(clip), range, metadata: { ...clip.metadata, userEdited: true, ...(changes.transitionType === undefined ? {} : { transitionType: changes.transitionType }) } }) }),
     revision: updateRevision(editor),
   };
 };
@@ -196,7 +208,7 @@ export const setEditorClipMetadata = (editor: EditorDoc, clipId: string, changes
       ...track,
       clips: track.clips.map((clip) => clip.id !== clipId ? clip : {
         ...clip,
-        metadata: { ...clip.metadata, ...changes },
+        metadata: { ...clip.metadata, ...changes, userEdited: true },
       }),
     }),
     revision: updateRevision(editor),
@@ -215,7 +227,7 @@ export const setEditorClipRange = (editor: EditorDoc, clipId: string, range: { s
     ...editor,
     tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
       ...track,
-      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, range: newRange }),
+      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...userTouched(clip), range: newRange }),
     }),
     revision: updateRevision(editor),
   };
@@ -231,7 +243,7 @@ export const deleteEditorClip = (editor: EditorDoc, clipId: string): EditorDoc =
   });
   const cleanedTracks = tracks.map((track) => (track.clips.length === 0 && track.id !== "video-main" && track.id !== "voice" && track.id !== "music" && track.id !== "sfx" && track.id !== "transitions")
     ? null : track).filter((track): track is NonNullable<typeof track> => track !== null).map((track, order) => ({ ...track, order }));
-  return { ...editor, tracks: cleanedTracks, revision: updateRevision(editor) };
+  return { ...editor, tracks: cleanedTracks, userDeletedClipIds: withDeleted(editor, clipId), revision: updateRevision(editor) };
 };
 
 export const addTextClip = (editor: EditorDoc, text: string, startSec: number, durationSec = 3, preset: "heading" | "body" | "caption" | "lower-third" = "heading"): EditorDoc => {
@@ -262,6 +274,7 @@ export const addTextClip = (editor: EditorDoc, text: string, startSec: number, d
       isTextClip: true,
       opacity: 1,
       z: 10,
+      userEdited: true,
       ...presets[preset],
     },
   };
@@ -342,11 +355,11 @@ export const moveClipToTrack = (editor: EditorDoc, clipId: string, targetTrackId
     if (!isAudioClip) throw new Error("visual clips cannot be moved to audio tracks");
   }
   const duration = location.clip.range.endSec - location.clip.range.startSec;
-  const movedClip: EditorClip = {
+  const movedClip: EditorClip = userTouched({
     ...location.clip,
     trackId: targetTrackId,
     range: { startSec: Math.max(0, newStartSec), endSec: Math.max(0, newStartSec) + duration },
-  };
+  });
   const tracks = editor.tracks.map((track, trackIndex) => {
     if (trackIndex === location.trackIndex) return { ...track, clips: track.clips.filter((clip) => clip.id !== clipId) };
     if (trackIndex === targetIndex) return { ...track, clips: [...track.clips, movedClip] };
@@ -366,7 +379,7 @@ export const duplicateEditorClip = (editor: EditorDoc, clipId: string, atSec: nu
     id: `${location.clip.id}:dup:${Date.now()}`,
     range: { startSec: Math.max(0, atSec), endSec: Math.max(0, atSec) + duration },
     linkedClipIds: [],
-    metadata: { ...location.clip.metadata },
+    metadata: { ...location.clip.metadata, userEdited: true },
   };
   return {
     ...editor,
@@ -385,7 +398,7 @@ export const setEditorClipSpeed = (editor: EditorDoc, clipId: string, speed: num
     ...editor,
     tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
       ...track,
-      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, range: { ...clip.range, endSec: clip.range.startSec + newDuration }, metadata: { ...clip.metadata, speed } }),
+      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...userTouched(clip), range: { ...clip.range, endSec: clip.range.startSec + newDuration }, metadata: { ...clip.metadata, speed, userEdited: true } }),
     }),
     revision: updateRevision(editor),
   };
@@ -407,7 +420,7 @@ export const addClipKeyframe = (editor: EditorDoc, clipId: string, property: str
       ...track,
       clips: track.clips.map((clip) => clip.id !== clipId ? clip : {
         ...clip,
-        metadata: { ...clip.metadata, keyframes: { ...record, [property]: [...existing, { t, v: value }].sort((a, b) => a.t - b.t) } },
+        metadata: { ...clip.metadata, keyframes: { ...record, [property]: [...existing, { t, v: value }].sort((a, b) => a.t - b.t) }, userEdited: true },
       }),
     }),
     revision: updateRevision(editor),
@@ -425,7 +438,7 @@ export const removeClipKeyframe = (editor: EditorDoc, clipId: string, property: 
     ...editor,
     tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
       ...track,
-      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, metadata: { ...clip.metadata, keyframes: next } }),
+      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, metadata: { ...clip.metadata, keyframes: next, userEdited: true } }),
     }),
     revision: updateRevision(editor),
   };
@@ -521,7 +534,7 @@ export const addTransitionClip = (editor: EditorDoc, atSec: number, transitionTy
     locked: false,
     muted: false,
     hidden: false,
-    metadata: { transitionType },
+    metadata: { transitionType, userEdited: true },
   };
   if (transitionsTrack) {
     return {
@@ -555,7 +568,7 @@ export const moveClipInTime = (editor: EditorDoc, clipId: string, newStartSec: n
     ...editor,
     tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
       ...track,
-      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, range: { startSec: Math.max(0, newStartSec), endSec: Math.max(0, newStartSec) + duration } }),
+      clips: track.clips.map((clip) => clip.id !== clipId ? clip : { ...userTouched(clip), range: { startSec: Math.max(0, newStartSec), endSec: Math.max(0, newStartSec) + duration } }),
     }),
     revision: updateRevision(editor),
   };
@@ -566,7 +579,7 @@ export const addClipToTrack = (editor: EditorDoc, trackId: string, clip: EditorC
   if (targetIndex < 0) throw new Error(`Unknown editor track: ${trackId}`);
   return {
     ...editor,
-    tracks: editor.tracks.map((track, trackIndex) => trackIndex !== targetIndex ? track : { ...track, clips: [...track.clips, { ...clip, trackId }] }),
+    tracks: editor.tracks.map((track, trackIndex) => trackIndex !== targetIndex ? track : { ...track, clips: [...track.clips, userTouched({ ...clip, trackId })] }),
     revision: updateRevision(editor),
   };
 };
@@ -590,7 +603,7 @@ export const addOverlayClip = (editor: EditorDoc, assetId: string, startSec: num
     locked: false,
     muted: false,
     hidden: false,
-    metadata: { src: asset.src, assetId, assetKind: asset.kind, fit: "contain", x: position?.x ?? 0.1, y: position?.y ?? 0.1, w: 0.3, h: 0.3, opacity: 1, z: 10, speed: 1 },
+    metadata: { src: asset.src, assetId, assetKind: asset.kind, fit: "contain", x: position?.x ?? 0.1, y: position?.y ?? 0.1, w: 0.3, h: 0.3, opacity: 1, z: 10, speed: 1, userEdited: true },
   };
   if (overlayTrack) return addClipToTrack(editor, overlayTrack.id, clip);
   const newTrack = {
@@ -618,7 +631,7 @@ export const setTrackFilter = (editor: EditorDoc, trackId: string, filter: strin
     ...editor,
     tracks: editor.tracks.map((track, index) => index !== trackIndex ? track : {
       ...track,
-      clips: track.clips.map((clip) => ({ ...clip, metadata: { ...clip.metadata, filter: filter === "none" ? undefined : filter } })),
+      clips: track.clips.map((clip) => ({ ...clip, metadata: { ...clip.metadata, filter: filter === "none" ? undefined : filter, userEdited: true } })),
     }),
     revision: updateRevision(editor),
   };
@@ -645,7 +658,7 @@ export const moveClipInTimeSafe = (editor: EditorDoc, clipId: string, newStartSe
     ...editor,
     tracks: editor.tracks.map((t, trackIndex) => trackIndex !== location.trackIndex ? t : {
       ...t,
-      clips: t.clips.map((clip) => clip.id !== clipId ? clip : { ...clip, range: { startSec: clampedStart, endSec: clampedStart + duration } }),
+      clips: t.clips.map((clip) => clip.id !== clipId ? clip : { ...userTouched(clip), range: { startSec: clampedStart, endSec: clampedStart + duration } }),
     }),
     revision: updateRevision(editor),
   };
@@ -689,7 +702,7 @@ export const moveGroupClips = (editor: EditorDoc, groupId: string, deltaX: numbe
         if (!group.clipIds.includes(clip.id)) return clip;
         const x = typeof clip.metadata.x === "number" ? clip.metadata.x : 0.1;
         const y = typeof clip.metadata.y === "number" ? clip.metadata.y : 0.1;
-        return { ...clip, metadata: { ...clip.metadata, x: x + deltaX, y: y + deltaY } };
+        return { ...clip, metadata: { ...clip.metadata, x: x + deltaX, y: y + deltaY, userEdited: true } };
       }),
     })),
     revision: updateRevision(editor),
@@ -709,7 +722,7 @@ export const rippleDeleteClip = (editor: EditorDoc, clipId: string): EditorDoc =
       ...track,
       clips: remaining.map((clip) => {
         if (clip.range.startSec >= location.clip.range.endSec) {
-          return { ...clip, range: { startSec: clip.range.startSec - clipDuration, endSec: clip.range.endSec - clipDuration } };
+          return { ...userTouched(clip), range: { startSec: clip.range.startSec - clipDuration, endSec: clip.range.endSec - clipDuration } };
         }
         return clip;
       }),
@@ -719,5 +732,5 @@ export const rippleDeleteClip = (editor: EditorDoc, clipId: string): EditorDoc =
     .filter((track) => track.clips.length > 0 || track.id === "video-main" || track.metadata?.userCreated === true)
     .map((track, order) => ({ ...track, order }));
   const durationSec = Math.max(0, ...cleanedTracks.flatMap((track) => track.clips.map((clip) => clip.range.endSec)));
-  return { ...editor, tracks: cleanedTracks, durationSec: Math.max(0.1, durationSec), revision: updateRevision(editor) };
+  return { ...editor, tracks: cleanedTracks, userDeletedClipIds: withDeleted(editor, clipId), durationSec: Math.max(0.1, durationSec), revision: updateRevision(editor) };
 };
