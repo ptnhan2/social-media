@@ -101,14 +101,25 @@ const sourceHash = (entryPoint) => {
 };
 
 export function syncRuntimePublic(slug) {
-  // Pull the LIVE editor doc into the repo public dir first — clip edits
-  // (editor_op / generator) write projects/<slug>/editor/current.json and the
-  // render must see them without a manual sync step.
-  const liveEditor = path.join(workspaceRoot, "projects", slug, "editor", "current.json");
-  const publicEditor = path.join(composerRoot, "public", slug, "editor", "current.json");
-  if (fs.existsSync(liveEditor)) {
-    fs.mkdirSync(path.dirname(publicEditor), { recursive: true });
-    fs.copyFileSync(liveEditor, publicEditor);
+  // Character assets live in public/<slug>/character/ (bake_poses.py writes
+  // there directly). Sync head + whole poses dir into the bundle so renders
+  // pick up re-baked art WITHOUT a bundle rebuild.
+  const charFrom = path.join(composerRoot, "public", slug, "character");
+  const charTo = path.join(composerRoot, bundleCacheDir(), "public", slug, "character");
+  if (fs.existsSync(charFrom)) {
+    fs.mkdirSync(charTo, { recursive: true });
+    for (const f of fs.readdirSync(path.join(charFrom))) {
+      const s = path.join(charFrom, f);
+      if (!f.startsWith(".") && fs.statSync(s).isFile()) fs.copyFileSync(s, path.join(charTo, f));
+    }
+    const posesFrom = path.join(charFrom, "poses");
+    const posesTo = path.join(charTo, "poses");
+    if (fs.existsSync(posesFrom)) {
+      fs.mkdirSync(posesTo, { recursive: true });
+      for (const f of fs.readdirSync(posesFrom)) {
+        if (!f.startsWith(".")) fs.copyFileSync(path.join(posesFrom, f), path.join(posesTo, f));
+      }
+    }
   }
   // Copy the runtime-fetched JSONs into the bundle's public dir so renders
   // pick up style/edit-doc changes WITHOUT a bundle rebuild.
@@ -134,12 +145,11 @@ export function buildBundle(entry, { slug = "isaacverse-final" } = {}) {
   const currentHash = sourceHash(entryPoint);
   const bundleExists = fs.existsSync(path.join(composerRoot, outDir, "bundle.js"));
   if (bundleExists && fs.existsSync(hashFile) && fs.readFileSync(hashFile, "utf8") === currentHash) {
-    // source unchanged — reuse bundle, just sync runtime-fetched JSONs
+    // source unchanged - reuse bundle, just sync runtime-fetched JSONs
     syncRuntimePublic(slug);
     return outDir;
   }
-  // source changed (or first run): wipe bundle + ALL caches and rebuild, so
-  // stale cached modules can never leak into the render.
+  // source changed (or first run): wipe bundle + ALL caches and rebuild
   try { fs.rmSync(path.join(composerRoot, outDir), { recursive: true, force: true }); } catch {}
   try { fs.rmSync(path.join(composerRoot, "node_modules", ".cache", "webpack"), { recursive: true, force: true }); } catch {}
   try {

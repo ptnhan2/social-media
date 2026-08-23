@@ -76,25 +76,28 @@ def op_remove_bg(cmd: dict) -> dict:
     src = Path(cmd["in"])
     img = Image.open(src)
     algo = cmd.get("algo", "auto")
-    # quality order; only cached models — no in-request downloads
-    chain = [m for m in ("birefnet-general", "bria-rmbg", "isnet-general-use", "u2net") if _model_cached(m)]
-    if algo != "auto" and algo != "flood" and _model_cached(algo):
+    # quality-passed models only (user verdict 2026-08-23), LIGHTEST FIRST:
+    # isnet-general-use (170MB) > bria-rmbg (977MB) > birefnet-general (973MB).
+    # flood-fill REMOVED from options (fails on dark clothing — user verdict).
+    # Only cached models — no in-request downloads.
+    chain = [m for m in ("isnet-general-use", "bria-rmbg", "birefnet-general") if _model_cached(m)]
+    if algo in ("isnet-general-use", "bria-rmbg", "birefnet-general"):
         chain = [algo] + [m for m in chain if m != algo]
+    if not chain:
+        return {"ok": False, "error": "no bg-removal model cached yet — run tools/assets/compare_bg_models.py once to warm the cache"}
     result = None
     errors = []
     for model in chain:
         try:
             from rembg import remove
             result = remove(img, session=_rembg_session(model))
+            used = model
             break
         except Exception as error:
             errors.append(f"{model}: {str(error)[:80]}")
-    if result is None:
-        result = flood_fill_background(img)
     out = Path(cmd["out"])
     out.parent.mkdir(parents=True, exist_ok=True)
     result.save(out)
-    used = "flood-fill" if result is not None and not chain else (chain[0] if chain else "flood-fill")
     return {"ok": True, "out": str(out), "algoUsed": used, "fallbacks": errors}
 
 
