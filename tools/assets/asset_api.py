@@ -1,0 +1,280 @@
+"""Asset Studio processing bridge — one JSON command per invocation.
+
+Called by the composer-app API middleware (vite.config.ts) via subprocess:
+  python tools/assets/asset_api.py '<json command>'
+
+Commands (JSON): {"op": "...", ...}
+  remove-bg    {in, algo: auto|birefnet-general|bria-rmbg|isnet-general-use|flood, out}
+  detect-neck  {in}                        -> {neckX, neckY, neckWidth, method}
+  composite    {body, head, anchor, out}   -> bakes pose PNG (800x1100)
+  coverage     {body, head, anchor}        -> {covered: bool, exposedPx}
+  list-poses   {project}                   -> [{name, anchor}]
+  save-pose    {project, name, png (b64), anchor}
+  save-head    {project, png (b64)}
+  crop-neck    {in, neckY, out}            -> crop above neckY + normalize
+
+All results print as JSON to stdout. Model sessions are cached per-process
+(rembg loads once); the API server keeps this stateless per call for now —
+rembg model cache lives on disk after first download.
+"""
+from __future__ import annotations
+
+import base64
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(ROOT / "tools" / "assets"))
+
+from process_body import CANVAS_W, CANVAS_H, flood_fill_background, detect_neck, _row_runs  # noqa: E402
+
+import numpy as np  # noqa: E402
+from PIL import Image  # noqa: E402
+from scipy import ndimage  # noqa: E402
+
+
+def _load_env() -> None:
+    env_file = ROOT / ".env"
+    if not env_file.exists():
+        return
+    for line in env_file.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = line.strip()
+        if "=" in line and not line.startswith("#"):
+            key, _, value = line.partition("=")
+            value = value.strip()
+            if "#" in value and not (value.startswith('"') or value.startswith("'")):
+                value = value.split("#")[0].strip()
+            import os
+            if value and not os.environ.get(key.strip()):
+                os.environ[key.strip()] = value
+
+
+_session_cache: dict[str, object] = {}
+
+
+def _model_cached(model: str) -> bool:
+    """Only use models whose weights are already on disk — NEVER download
+    inside a request (a 1GB download blocks the API for minutes; downloads
+    happen via tools/assets/compare_bg_models.py or first-use warmup)."""
+    home = Path.home()
+    if model == "u2net":
+        f = home / ".u2net" / "u2net.onnx"
+        return f.exists() and f.stat().st_size > 50_000_000
+    f = home / ".rembg" / "models" / model / f"{model}.onnx"
+    return f.exists() and f.stat().st_size > 50_000_000
+
+
+def _rembg_session(model: str):
+    if model not in _session_cache:
+        from rembg import new_session
+        _session_cache[model] = new_session(model)
+    return _session_cache[model]
+
+
+def op_remove_bg(cmd: dict) -> dict:
+    src = Path(cmd["in"])
+    img = Image.open(src)
+    algo = cmd.get("algo", "auto")
+    # quality order; only cached models — no in-request downloads
+    chain = [m for m in ("birefnet-general", "bria-rmbg", "isnet-general-use", "u2net") if _model_cached(m)]
+    if algo != "auto" and algo != "flood" and _model_cached(algo):
+        chain = [algo] + [m for m in chain if m != algo]
+    result = None
+    errors = []
+    for model in chain:
+        try:
+            from rembg import remove
+            result = remove(img, session=_rembg_session(model))
+            break
+        except Exception as error:
+            errors.append(f"{model}: {str(error)[:80]}")
+    if result is None:
+        result = flood_fill_background(img)
+    out = Path(cmd["out"])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    result.save(out)
+    used = "flood-fill" if result is not None and not chain else (chain[0] if chain else "flood-fill")
+    return {"ok": True, "out": str(out), "algoUsed": used, "fallbacks": errors}
+
+
+def op_detect_neck(cmd: dict) -> dict:
+    img = Image.open(cmd["in"]).convert("RGBA")
+    alpha = np.asarray(img.getchannel("A"))
+    mask = alpha > 0
+    if not mask.any():
+        return {"ok": False, "error": "no subject"}
+    ys, xs = np.where(mask)
+    x0, y0 = int(xs.min()), int(ys.min())
+    subject = img.crop((x0, y0, int(xs.max()) + 1, int(ys.max()) + 1))
+    detection = detect_neck(np.asarray(subject.getchannel("A")))
+    if not detection:
+        return {"ok": False, "error": "neck not found"}
+    neck_y, neck_x, neck_w = detection
+    return {"ok": True, "neckX": neck_x + x0, "neckY": neck_y + y0, "neckWidth": neck_w, "method": "detected"}
+
+
+def op_crop_neck(cmd: dict) -> dict:
+    """Crop the original head OFF at neckY (with coverage margin) and normalize
+    to the pose canvas. Returns the neck anchor in CANVAS coordinates."""
+    img = Image.open(cmd["in"]).convert("RGBA")
+    alpha = np.asarray(img.getchannel("A"))
+    mask = alpha > 0
+    ys, xs = np.where(mask)
+    if not len(ys):
+        return {"ok": False, "error": "empty"}
+    x0, y0, x1, y1 = int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1
+    subject = img.crop((x0, y0, x1, y1))
+    neck_y = int(cmd.get("neckY", subject.height * 0.22)) - y0
+    neck_x = int(cmd.get("neckX", subject.width // 2 + x0)) - x0
+    neck_w = int(cmd.get("neckWidth", max(20, subject.width // 8)))
+    # coverage margin: crop LOWER than the neck line so no chin remnants stay
+    margin = int(subject.height * 0.06)
+    crop_at = max(0, min(neck_y + margin, subject.height - 10))
+    body = subject.crop((0, crop_at, subject.width, subject.height))
+    scale = min(CANVAS_W / body.width, CANVAS_H / body.height)
+    new_size = (int(body.width * scale), int(body.height * scale))
+    body = body.resize(new_size, Image.LANCZOS)
+    canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
+    offset_x = (CANVAS_W - new_size[0]) // 2
+    canvas.paste(body, (offset_x, 0), body)
+    out = Path(cmd["out"])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out)
+    return {
+        "ok": True, "out": str(out),
+        "neckX": int(offset_x + neck_x * scale),
+        "neckWidth": max(6, int(neck_w * scale)),
+        "cropAt": crop_at, "scale": scale, "offsetX": offset_x,
+    }
+
+
+def _head_transform(head: Image.Image, anchor: dict):
+    """Returns (head_rgba_resized, paste_x, paste_y) on the 800x1100 canvas."""
+    neck_w = max(8, int(anchor.get("neckWidth", 60)))
+    neck_x = int(anchor.get("neckX", CANVAS_W // 2))
+    ratio = float(anchor.get("headWidthRatio", 2.6))
+    rotate = float(anchor.get("headRotate", 0))
+    overlap = float(anchor.get("headOverlap", 0.18))
+    head_w = int(neck_w * ratio)
+    head_h = int(head.height * (head_w / head.width))
+    head_scaled = head.resize((head_w, head_h), Image.LANCZOS)
+    if abs(rotate) > 0.5:
+        head_scaled = head_scaled.rotate(rotate, expand=True, resample=Image.BICUBIC)
+    x = neck_x - head_scaled.width // 2
+    y = -int(head_scaled.height * overlap)
+    return head_scaled, x, y
+
+
+def op_composite(cmd: dict) -> dict:
+    body = Image.open(cmd["body"]).convert("RGBA")
+    head = Image.open(cmd["head"]).convert("RGBA")
+    anchor = cmd.get("anchor", {})
+    head_scaled, x, y = _head_transform(head, anchor)
+    canvas = body.copy()
+    canvas.alpha_composite(head_scaled, (int(x), int(y)))
+    out = Path(cmd["out"])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out)
+    return {"ok": True, "out": str(out)}
+
+
+def op_coverage(cmd: dict) -> dict:
+    """Check: does the head cover every subject pixel above the neck line?"""
+    body = Image.open(cmd["body"]).convert("RGBA")
+    head = Image.open(cmd["head"]).convert("RGBA")
+    anchor = cmd.get("anchor", {})
+    head_scaled, x, y = _head_transform(head, anchor)
+    neck_w = max(8, int(anchor.get("neckWidth", 60)))
+    neck_x = int(anchor.get("neckX", CANVAS_W // 2))
+    # subject pixels above y=0 (canvas top) don't exist post-crop; the check is
+    # about the composite: any BODY pixels visible above the head bottom edge
+    # that are horizontally INSIDE the head span = exposed remnants.
+    body_alpha = np.asarray(body.getchannel("A"))
+    head_mask = np.zeros_like(body_alpha, dtype=bool)
+    hx0, hy0 = max(0, x), max(0, y)
+    hx1 = min(CANVAS_W, x + head_scaled.width)
+    hy1 = min(CANVAS_H, y + head_scaled.height)
+    head_arr = np.asarray(head_scaled.getchannel("A"))
+    head_mask[hy0:hy1, hx0:hx1] = head_arr[hy0 - y:hy1 - y, hx0 - x:hx1 - x] > 24
+    # exposed = body pixels that are visible AND in the head column zone AND above the neck join (y < 60)
+    join_zone = body_alpha > 24
+    column_zone = np.zeros_like(body_alpha, dtype=bool)
+    col0 = max(0, neck_x - neck_w)
+    col1 = min(CANVAS_W, neck_x + neck_w)
+    column_zone[:70, col0:col1] = True
+    exposed = join_zone & column_zone & ~head_mask
+    exposed_px = int(exposed.sum())
+    return {"ok": True, "covered": exposed_px < 120, "exposedPx": exposed_px}
+
+
+def op_list_poses(cmd: dict) -> dict:
+    project = cmd.get("project", "isaacverse-final")
+    poses_dir = ROOT / "remotion-composer" / "public" / project / "character" / "poses"
+    poses = []
+    if poses_dir.exists():
+        for png in sorted(poses_dir.glob("*.png")):
+            anchor_file = png.with_suffix(".json")
+            anchor = json.loads(anchor_file.read_text(encoding="utf-8")) if anchor_file.exists() else {}
+            poses.append({"name": png.stem, "anchor": anchor})
+    return {"ok": True, "poses": poses}
+
+
+def op_save_pose(cmd: dict) -> dict:
+    project = cmd.get("project", "isaacverse-final")
+    name = "".join(c for c in cmd["name"].strip() if c.isalnum() or c in "-_").lower() or "pose"
+    poses_dir = ROOT / "remotion-composer" / "public" / project / "character" / "poses"
+    poses_dir.mkdir(parents=True, exist_ok=True)
+    target = poses_dir / f"{name}.png"
+    if target.exists():
+        backup_dir = poses_dir / ".backups"
+        backup_dir.mkdir(exist_ok=True)
+        import time as _t
+        target.rename(backup_dir / f"{name}-{int(_t.time())}.png")
+    source = Path(cmd["from"])
+    import shutil as _sh
+    _sh.copy2(source, target)
+    anchor_file = poses_dir / f"{name}.json"
+    anchor_file.write_text(json.dumps(cmd.get("anchor", {}), indent=2), encoding="utf-8")
+    return {"ok": True, "name": name, "out": str(target)}
+
+
+def op_save_head(cmd: dict) -> dict:
+    project = cmd.get("project", "isaacverse-final")
+    head_dir = ROOT / "remotion-composer" / "public" / project / "character"
+    head_dir.mkdir(parents=True, exist_ok=True)
+    png_data = base64.b64decode(cmd["png"])
+    (head_dir / "head.png").write_bytes(png_data)
+    return {"ok": True, "out": str(head_dir / "head.png")}
+
+
+OPS = {
+    "remove-bg": op_remove_bg,
+    "detect-neck": op_detect_neck,
+    "crop-neck": op_crop_neck,
+    "composite": op_composite,
+    "coverage": op_coverage,
+    "list-poses": op_list_poses,
+    "save-pose": op_save_pose,
+    "save-head": op_save_head,
+}
+
+
+def main() -> int:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    _load_env()
+    try:
+        # command via stdin (large payloads: base64 PNGs) or argv (small)
+        raw = sys.stdin.read().strip() if not sys.stdin.isatty() else ""
+        if not raw and len(sys.argv) > 1:
+            raw = sys.argv[1]
+        cmd = json.loads(raw or "{}")
+        result = OPS[cmd.get("op", "")](cmd)
+    except Exception as error:
+        result = {"ok": False, "error": str(error)[:300]}
+    print(json.dumps(result, ensure_ascii=False))
+    return 0 if result.get("ok", False) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

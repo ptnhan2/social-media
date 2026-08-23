@@ -161,7 +161,7 @@ const ExportDialog: React.FC<{
   );
 };
 
-export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void }> = ({ projectId = "isaacverse-final", onExit }) => {
+export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; onOpenStudio?: () => void }> = ({ projectId = "isaacverse-final", onExit, onOpenStudio }) => {
   const playerRef = React.useRef<PlayerRef>(null);
   const stageWrapRef = React.useRef<HTMLDivElement>(null);
   const [doc, setDoc] = React.useState<IsaacVerseEditDoc | null>(null);
@@ -801,6 +801,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void }> 
           <small>{projectId} · {doc.version ?? "v001"} · 1920×1080 · {fps} fps</small>
         </div>
         <div className="ve-header-right">
+          {onOpenStudio ? <button className="ve-btn" type="button" onClick={onOpenStudio} title="Asset Studio">Asset Studio</button> : null}
           <button onClick={handleUndo} disabled={!editorUndo.length} aria-label="Undo" title={`Undo (${editorUndo.length})`}>↶{editorUndo.length ? <sup>{editorUndo.length}</sup> : null}</button>
           <button onClick={handleRedo} disabled={!editorRedo.length} aria-label="Redo" title={`Redo (${editorRedo.length})`}>↷{editorRedo.length ? <sup>{editorRedo.length}</sup> : null}</button>
           <button className="ve-btn primary ve-export-btn" type="button" onClick={() => setExportOpen(true)}>Export</button>

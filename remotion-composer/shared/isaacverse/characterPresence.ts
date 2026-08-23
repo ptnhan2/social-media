@@ -96,8 +96,11 @@ export const resolveCharacterPresence = (
   return merged;
 };
 
-/** Character asset path for a pose (public-relative). */
+/** Character asset path for a pose (public-relative).
+ *  Poses are BAKED composited assets (real body + channel head, see
+ *  tools/assets/bake_poses.py + process_body.py) — regenerate by editing the
+ *  pose anchor json and re-running the pipeline. */
 export const presenceAsset = (pose: PresencePose | undefined): string =>
   !pose || pose === "none"
-    ? "isaacverse-final/character/head.svg"
-    : `isaacverse-final/character/poses/${pose}.svg`;
+    ? "isaacverse-final/character/head.png"
+    : `isaacverse-final/character/poses/${pose}.png`;

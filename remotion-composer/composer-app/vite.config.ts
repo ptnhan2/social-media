@@ -22,6 +22,35 @@ const sendJson = (res: any, status: number, value: unknown) => {
 
 const COMPOSER_ROOT = resolve("C:/DevWork/social-media/remotion-composer");
 const WORKSPACE_ROOT = resolve("C:/DevWork/social-media");
+const PY = resolve(WORKSPACE_ROOT, "harness/.venv/Scripts/python.exe");
+const ASSET_API = resolve(WORKSPACE_ROOT, "tools/assets/asset_api.py");
+const STUDIO_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IsaacVerseComposer/1.0";
+
+// .env keys needed by the asset studio (stock search)
+const ENV_MAP: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  const envFile = resolve(WORKSPACE_ROOT, ".env");
+  if (existsSync(envFile)) {
+    for (const line of readFileSync(envFile, "utf-8").split(/\r?\n/)) {
+      const m = line.match(/^([A-Za-z0-9_]+)=(.*)$/);
+      if (m && m[2].trim()) map[m[1]] = m[2].split("#")[0].trim().replace(/^["']|["']$/g, "");
+    }
+  }
+  return map;
+})();
+const PEXELS_API_KEY = ENV_MAP.PEXELS_API_KEY || process.env.PEXELS_API_KEY || "";
+const UNSPLASH_ACCESS_KEY = ENV_MAP.UNSPLASH_ACCESS_KEY || process.env.UNSPLASH_ACCESS_KEY || "";
+
+const runAssetBridge = (cmd: Record<string, unknown>): Record<string, unknown> => {
+  const proc = spawnSync(PY, [ASSET_API], {
+    cwd: WORKSPACE_ROOT, windowsHide: true, encoding: "utf-8",
+    input: JSON.stringify(cmd), timeout: 300000, maxBuffer: 64 * 1024 * 1024,
+  });
+  if (proc.status !== 0 || !proc.stdout) {
+    throw new Error(String(proc.stderr || "asset bridge failed").slice(0, 400));
+  }
+  return JSON.parse(proc.stdout.trim());
+};
 const renderJobs = new Map<string, { status: "rendering" | "done" | "error"; startedAt: number; outputPath: string; message?: string }>();
 
 const readBody = (req: any, res: any, done: (body: any) => void) => {
@@ -201,6 +230,78 @@ export default defineConfig({
             }
           });
         });
+        // ============ ASSET STUDIO ============
+        // Stock photo search (Pexels + Unsplash, keys from .env)
+        server.middlewares.use("/api/assets/search-stock", async (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const q = url.searchParams.get("q") || "";
+          if (!q) { sendJson(res, 400, { error: "q required" }); return; }
+          const results: unknown[] = [];
+          try {
+            const px = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=12&orientation=portrait`, { headers: { Authorization: PEXELS_API_KEY, "User-Agent": STUDIO_UA } });
+            if (px.ok) {
+              const data = await px.json() as any;
+              for (const p of data.photos || []) results.push({ id: `pexels-${p.id}`, source: "pexels", thumb: p.src?.medium, large: p.src?.large2x || p.src?.large, alt: p.alt || "", photographer: p.photographer });
+            }
+          } catch { /* pexels down -> unsplash still returns */ }
+          try {
+            const us = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=12&orientation=portrait`, { headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` } });
+            if (us.ok) {
+              const data = await us.json() as any;
+              for (const p of data.results || []) results.push({ id: `unsplash-${p.id}`, source: "unsplash", thumb: p.urls?.small, large: p.urls?.regular, alt: p.alt_description || "", photographer: p.user?.name });
+            }
+          } catch { /* ignore */ }
+          sendJson(res, 200, { results });
+        });
+
+        // Import a body photo: {projectId, url} (stock) or {projectId, data} (base64 upload)
+        server.middlewares.use("/api/assets/body", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, async (body) => {
+            try {
+              const project = String(body.projectId || "isaacverse-final");
+              const inbox = resolve(WORKSPACE_ROOT, "projects", project, "assets", "character", "bodies", "inbox");
+              mkdirSync(inbox, { recursive: true });
+              let fileName = "";
+              if (body.url) {
+                fileName = `stock-${Date.now()}.jpg`;
+                const resp = await fetch(String(body.url), { headers: { "User-Agent": STUDIO_UA } });
+                if (!resp.ok) throw new Error(`download failed: ${resp.status}`);
+                writeFileSync(resolve(inbox, fileName), Buffer.from(await resp.arrayBuffer()));
+              } else if (body.data) {
+                fileName = `upload-${Date.now()}.png`;
+                writeFileSync(resolve(inbox, fileName), Buffer.from(String(body.data).replace(/^data:[^;]+;base64,/, ""), "base64"));
+              } else throw new Error("url or data required");
+              const abs = resolve(inbox, fileName);
+              sendJson(res, 200, { path: abs, rel: abs.slice(WORKSPACE_ROOT.length + 1).replace(/\\/g, "/") });
+            } catch (e) { sendJson(res, 500, { error: String((e as Error).message || e) }); }
+          });
+        });
+
+        // Python processing bridge: forwards {op, ...} to tools/assets/asset_api.py
+        server.middlewares.use("/api/assets/bridge", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (cmd) => {
+            try { sendJson(res, 200, runAssetBridge(cmd)); }
+            catch (e) { sendJson(res, 500, { error: String((e as Error).message || e) }); }
+          });
+        });
+
+        // Serve studio files (inbox/poses/head) — path-restricted
+        server.middlewares.use("/api/assets/file", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const rel = url.searchParams.get("p") || "";
+          const abs = resolve(WORKSPACE_ROOT, rel);
+          const allowed = [
+            resolve(WORKSPACE_ROOT, "projects"),
+            resolve(PUBLIC_DIR, "isaacverse-final", "character"),
+          ].some((prefix) => abs.startsWith(prefix));
+          if (!allowed || !existsSync(abs)) { res.statusCode = 404; res.end("404"); return; }
+          const type = abs.endsWith(".png") ? "image/png" : abs.endsWith(".jpg") || abs.endsWith(".jpeg") ? "image/jpeg" : "application/octet-stream";
+          res.setHeader("Content-Type", type);
+          res.end(readFileSync(abs));
+        });
+
         server.middlewares.use("/api/render/status", (req, res) => {
           const url = new URL(req.url || "/", "http://composer.local");
           const jobId = url.searchParams.get("jobId") || "";
