@@ -202,6 +202,18 @@ def eval_principle_compliance(inputs, outputs, reference_outputs):
     if n_gradients < 8:
         violations.append(f"col-002: only {n_gradients} gradient fills (need >= 8)")
 
+    # nar-002: character presence wired into the information treatments
+    edit_video = ""
+    try:
+        edit_video = (Path(__file__).parent.parent / "remotion-composer" / "shared" / "isaacverse" / "EditVideo.tsx").read_text(encoding="utf-8")
+    except OSError:
+        violations.append("nar-002: EditVideo.tsx unreadable")
+    for tid in ("semantic-diagram", "process-timeline"):
+        if f'presence={{resolveCharacterPresence("{tid}"' not in edit_video:
+            violations.append(f"nar-002: character presence not wired into {tid}")
+    if "characterPresence" not in src:
+        violations.append("nar-002: characterPresence grammar missing from treatments")
+
     # style-store subtitle/brightness knobs
     try:
         style = json.loads(_STYLE_JSON.read_text(encoding="utf-8-sig"))

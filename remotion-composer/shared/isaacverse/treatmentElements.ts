@@ -1,4 +1,8 @@
 import type { SemanticBeat } from "./types";
+import {
+  PRESENCE_ANCHOR, PRESENCE_HEIGHT, PRESENCE_TO_CLIP_ANIM, DEFAULT_PRESENCE,
+  presenceAsset, resolveCharacterPresence, type CharacterPresenceConfig,
+} from "./characterPresence";
 
 export type TreatmentElementType = "text" | "image" | "shape";
 
@@ -69,6 +73,30 @@ const accent = (beat: SemanticBeat) => {
   return typeof p.accent === "string" ? p.accent : "#f2b84b";
 };
 
+/** Character presence as a projected element (render path mirror of
+ *  treatments.tsx CharacterPresence — spec: CHARACTER-PRESENCE-SPEC.md). */
+const characterPresenceElement = (treatmentId: string, beat: SemanticBeat, resolve: StyleResolver): TreatmentElement | null => {
+  const p = beat.treatment.params as Record<string, unknown>;
+  // store gate through the same resolver the other knobs use
+  const gate = resolve<(CharacterPresenceConfig & { enabled?: boolean }) | null>(`treatments.${treatmentId}.characterPresence`, null);
+  const lookup = (tid: string) => (tid === treatmentId ? gate : null);
+  const config = resolveCharacterPresence(treatmentId, p, beat.narrativeFunction, lookup);
+  if (!config) return null;
+  const merged = { ...DEFAULT_PRESENCE, ...config };
+  const anchor = PRESENCE_ANCHOR[merged.position ?? "thirds-br"];
+  const height = PRESENCE_HEIGHT[merged.size ?? "small"];
+  const width = Math.round(height * 0.75); // pose asset aspect ~420x560
+  const cx = anchor.left / 100 * W;
+  const cy = anchor.top / 100 * H;
+  return image(`${beat.id}:character-presence`, cx - width / 2, cy - height / 2, width, height, presenceAsset(merged.pose), {
+    z: 30, opacity: merged.opacity ?? 0.95,
+    animIn: PRESENCE_TO_CLIP_ANIM[merged.motion ?? "fade-scale"],
+    animDurationSec: 0.6, startSec: merged.startSec ?? 0.7,
+    filter: "drop-shadow(0 6px 22px rgba(0,0,0,0.6))",
+    styleSource: { width: `treatments.${treatmentId}.characterPresence`, opacity: `treatments.${treatmentId}.characterPresence` },
+  });
+};
+
 const asStr = (v: unknown, fb = "") => typeof v === "string" ? v : fb;
 const asNum = (v: unknown, fb: number) => typeof v === "number" ? v : fb;
 const asArr = <T,>(v: unknown): T[] => Array.isArray(v) ? v as T[] : [];
@@ -120,7 +148,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       const nodeFontWeight = s("treatments.semantic-diagram.node.fontWeight", 900);
       const detailFontSize = s("treatments.semantic-diagram.node.detailFontSize", 13);
       const els: TreatmentElement[] = [
-        asStr(p.kicker) ? text(`${id}:kicker`, 86, 62, 800, 30, asStr(p.kicker), {
+        (asStr(p.kicker) || beat.narrativeFunction) ? text(`${id}:kicker`, 86, 62, 800, 30, asStr(p.kicker) || beat.narrativeFunction, {
           fontSize: s("treatments.semantic-diagram.kicker.fontSize", 18), fontWeight: s("treatments.semantic-diagram.kicker.fontWeight", 900),
           fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 3.2,
           color: "#61d7e8", animIn: "fade", animDurationSec: 0.55, z: 15, startSec: 0, textShadow: "0 2px 8px rgba(0,0,0,0.7)",
@@ -160,6 +188,8 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           styleSource: { fontSize: "treatments.semantic-diagram.node.detailFontSize" },
         }));
       });
+      const sdPresence = characterPresenceElement("semantic-diagram", beat, s);
+      if (sdPresence) els.push(sdPresence);
       els.push(text(`${id}:footer`, 1340, 990, 500, 30, "follow the thread", {
         fontSize: 14, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.6, color: "rgba(244,232,207,0.45)", z: 8, startSec: 0,
       }));
@@ -249,7 +279,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       const gradientStart = s("colors.gradientStart", "#ff6b35");
       const gradientEnd = s("colors.gradientEnd", "#ffd166");
       const els: TreatmentElement[] = [
-        text(`${id}:label`, 76, 62, 600, 30, "workflow", {
+        text(`${id}:label`, 76, 62, 600, 30, asStr(p.kicker) || beat.narrativeFunction || "workflow", {
           fontSize: s("treatments.process-timeline.kicker.fontSize", 17), fontWeight: s("treatments.process-timeline.kicker.fontWeight", 900),
           fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 3.2, color: a, animIn: "fade", animDurationSec: 0.45, z: 10, startSec: 0,
           textShadow: "0 2px 8px rgba(0,0,0,0.7)",
@@ -287,6 +317,8 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           fontSize: 12, fontFamily: "Arial, sans-serif", color: "#f4e8cf", opacity: 0.7, lineHeight: 1.3, textAlign: "center", z: 9, animIn: "slide-up", animDurationSec: 0.6, startSec: stepStart, fontWeight: 900,
         }));
       });
+      const ptPresence = characterPresenceElement("process-timeline", beat, s);
+      if (ptPresence) els.push(ptPresence);
       els.push(text(`${id}:footer`, 1380, 990, 500, 30, `step ${active + 1} / ${steps.length}`, {
         fontSize: 14, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.6, color: "rgba(244,232,207,.5)", z: 8, startSec: 0,
       }));

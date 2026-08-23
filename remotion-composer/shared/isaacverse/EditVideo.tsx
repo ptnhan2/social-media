@@ -11,6 +11,7 @@ import {
   SceneTransition,
   ScreenProofInWorld,
   SemanticDiagram,
+  resolveCharacterPresence,
 } from "./treatments";
 import type { IsaacVerseEditDoc, SemanticBeat } from "./types";
 import type { EditorDoc } from "./editor";
@@ -76,6 +77,8 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           edges={Array.isArray(params.edges) ? params.edges as any : []}
           accent={asString(params.accent) || undefined}
           secondaryAccent={asString(params.secondaryAccent) || undefined}
+          narrativeLabel={beat.narrativeFunction}
+          presence={resolveCharacterPresence("semantic-diagram", params, beat.narrativeFunction)}
         />
       );
     case "chapter-card":
@@ -136,6 +139,8 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           steps={Array.isArray(params.steps) ? params.steps as any : []}
           activeStep={asNumber(params.activeStep, 0)}
           accent={asString(params.accent) || undefined}
+          narrativeLabel={beat.narrativeFunction}
+          presence={resolveCharacterPresence("process-timeline", params, beat.narrativeFunction)}
         />
       );
     default:

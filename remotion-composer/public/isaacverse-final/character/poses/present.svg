@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560">
+  <!-- POSE: present — standing, right arm extended presenting/pointing content.
+       Placeholder art Phase 1; head design identical to character/head.svg. -->
+  <defs>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#ffd166"/>
+    </linearGradient>
+  </defs>
+  <!-- extended arm (points right, toward content) -->
+  <path d="M238 300 L400 244" stroke="#28414f" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="402" cy="243" r="17" fill="#1d2c3a" stroke="url(#ring)" stroke-width="5"/>
+  <!-- head (identical design) -->
+  <path d="M210 76c-38 0-64 28-64 66 0 21-6 32-17 42 13 9 25 13 32 14v21c0 25-23 36-49 43 24 28 39 41 98 41s74-13 98-41c-26-7-49-18-49-43v-21c7-1 19-5 32-14-11-10-17-21-17-42 0-38-26-66-64-66z" fill="#1d2c3a" stroke="url(#ring)" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="193" cy="152" r="6" fill="#61d7e8"/>
+  <circle cx="229" cy="152" r="6" fill="#61d7e8"/>
+  <path d="M197 181q14 10 28 0" stroke="#61d7e8" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- torso -->
+  <path d="M148 320c0-56 28-88 62-88s62 32 62 88l-10 190h-24l-18-120-18 120h-24z" fill="#1d2c3a" stroke="#28414f" stroke-width="5"/>
+  <!-- left arm on hip -->
+  <path d="M150 330 Q120 380 128 420" stroke="#28414f" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <!-- legs -->
+  <path d="M186 508h-14l-10 42h34zM238 508h14l10 42h-34z" fill="#1d2c3a" stroke="#28414f" stroke-width="4"/>
+</svg>

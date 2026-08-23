@@ -5,10 +5,24 @@ import {
   Img,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 import { getStyle, defaultStroke, type StrokeStyle } from "./styleLoader";
+import {
+  type CharacterPresenceConfig,
+  PRESENCE_ANCHOR,
+  PRESENCE_HEIGHT,
+  DEFAULT_PRESENCE,
+  type PresenceMotion,
+  presenceAsset,
+  resolveCharacterPresence,
+} from "./characterPresence";
+export type {
+  CharacterPresenceConfig, PresencePose, PresencePosition, PresenceMotion, PresenceSize, PresenceTiming,
+} from "./characterPresence";
+export { resolveCharacterPresence };
 
 export type DiagramNode = {
   id: string;
@@ -36,6 +50,10 @@ export type SemanticDiagramProps = {
   durationInFrames?: number;
   accent?: string;
   secondaryAccent?: string;
+  /** nar-001 B: story-phase label (narrativeFunction) — kicker fallback */
+  narrativeLabel?: string;
+  /** nar-001 A: character presence config (see CHARACTER-PRESENCE-SPEC) */
+  presence?: CharacterPresenceConfig | null;
 };
 
 // Palette reads from the style store (colors.*) so the agent can learn
@@ -162,6 +180,57 @@ const DiagramNodeView: React.FC<{
   );
 };
 
+const presenceEntrance = (motion: PresenceMotion, frame: number, fps: number, startFrame: number): { transform: string; opacity: number } => {
+  const t = Math.max(0, frame - startFrame);
+  const dur = 0.6 * fps;
+  const p = Math.min(1, t / dur);
+  const eased = interpolate(p, [0, 1], [0, 1], { easing: Easing.out(Easing.cubic) });
+  const pop = spring({ frame: t, fps, config: { damping: 9, stiffness: 170, mass: 0.7 }, durationInFrames: Math.round(dur) });
+  const jump = interpolate(p, [0, 0.55, 0.8, 1], [0, 1.12, 0.94, 1], { easing: Easing.out(Easing.cubic) });
+  switch (motion) {
+    case "slide-l": return { transform: `translateX(${(1 - eased) * -70}px)`, opacity: Math.min(1, p * 2) };
+    case "slide-r": return { transform: `translateX(${(1 - eased) * 70}px)`, opacity: Math.min(1, p * 2) };
+    case "slide-u": return { transform: `translateY(${(1 - eased) * 70}px)`, opacity: Math.min(1, p * 2) };
+    case "slide-d": return { transform: `translateY(${(1 - eased) * -70}px)`, opacity: Math.min(1, p * 2) };
+    case "pop": return { transform: `scale(${0.4 + 0.6 * pop})`, opacity: Math.min(1, p * 3) };
+    case "jump-in": return { transform: `translateY(${(1 - jump) * 46}px) scale(${0.86 + 0.14 * jump})`, opacity: Math.min(1, p * 3) };
+    case "drop-in": {
+      const bounce = interpolate(p, [0, 0.6, 0.8, 1], [0, 1.06, 0.97, 1]);
+      return { transform: `translateY(${(1 - bounce) * -90}px)`, opacity: Math.min(1, p * 3) };
+    }
+    case "peek": return { transform: `translateX(${(1 - eased) * -46}%)`, opacity: Math.min(1, p * 4) };
+    default: return { transform: `scale(${0.85 + 0.15 * eased})`, opacity: eased };
+  }
+};
+
+/** Character presence renderer (spec: docs/CHARACTER-PRESENCE-SPEC.md). */
+export const CharacterPresence: React.FC<{ config: CharacterPresenceConfig; accent?: string }> = ({ config, accent = AMBER() }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const merged = { ...DEFAULT_PRESENCE, ...config };
+  const startFrame = (merged.startSec ?? 0.7) * fps;
+  if (frame < startFrame - 1) return null;
+  const { transform, opacity } = presenceEntrance(merged.motion ?? "fade-scale", frame, fps, startFrame);
+  const anchor = PRESENCE_ANCHOR[merged.position ?? "thirds-br"];
+  const height = PRESENCE_HEIGHT[merged.size ?? "small"];
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: `${anchor.left}%`,
+        top: `${anchor.top}%`,
+        height,
+        transform: `translate(-50%, -50%) ${transform}`,
+        opacity: opacity * (merged.opacity ?? 0.95),
+        zIndex: 30,
+        filter: `drop-shadow(0 6px 22px rgba(0,0,0,0.6)) drop-shadow(0 0 26px ${accent}33)`,
+      }}
+    >
+      <Img src={staticFile(presenceAsset(merged.pose))} style={{ height: "100%", width: "auto", display: "block" }} />
+    </div>
+  );
+};
+
 /**
  * Relationship-first diagram treatment observed in the script/thumbnail videos.
  * Nodes reveal in causal order; edges draw before/with their destination node.
@@ -174,6 +243,8 @@ export const SemanticDiagram: React.FC<SemanticDiagramProps> = ({
   edges,
   accent = AMBER(),
   secondaryAccent = CYAN(),
+  narrativeLabel,
+  presence,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -188,7 +259,7 @@ export const SemanticDiagram: React.FC<SemanticDiagramProps> = ({
     <AbsoluteFill style={{ backgroundColor: BLACK(), color: PAPER(), overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 50% 46%, ${accent}12, transparent 42%)` }} />
       <div style={{ position: "absolute", left: 86, top: 62, opacity: titleIn, transform: `translateY(${(1 - titleIn) * 18}px)` }}>
-        {kicker ? <div style={{ color: CYAN(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.kicker.fontSize", 18), fontWeight: getStyle<number>("treatments.semantic-diagram.kicker.fontWeight", 900), letterSpacing: getStyle<string>("treatments.semantic-diagram.kicker.letterSpacing", "0.18em"), textTransform: "uppercase", marginBottom: 12, textShadow: `0 2px 8px rgba(0,0,0,0.7)` }}>{kicker}</div> : null}
+        {(kicker ?? narrativeLabel) ? <div style={{ color: CYAN(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.kicker.fontSize", 18), fontWeight: getStyle<number>("treatments.semantic-diagram.kicker.fontWeight", 900), letterSpacing: getStyle<string>("treatments.semantic-diagram.kicker.letterSpacing", "0.18em"), textTransform: "uppercase", marginBottom: 12, textShadow: `0 2px 8px rgba(0,0,0,0.7)` }}>{kicker ?? narrativeLabel}</div> : null}
         <div style={{
           color: PAPER(),
           fontFamily: "Arial Black, Arial, sans-serif",
@@ -208,6 +279,7 @@ export const SemanticDiagram: React.FC<SemanticDiagramProps> = ({
       ) : null}
       {nodes.map((node) => <DiagramNodeView key={node.id} node={node} frame={frame} fps={fps} accent={accent} secondaryAccent={secondaryAccent} />)}
       <div style={{ position: "absolute", right: 70, bottom: 45, color: "rgba(244,232,207,0.45)", fontFamily: "Arial, sans-serif", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>follow the thread</div>
+      {presence ? <CharacterPresence config={presence} accent={accent} /> : null}
     </AbsoluteFill>
   );
 };
@@ -446,10 +518,14 @@ export type ProcessTimelineProps = {
   steps: ProcessStep[];
   activeStep?: number;
   accent?: string;
+  /** nar-001 B: story-phase label (narrativeFunction) — replaces the generic "workflow" kicker */
+  narrativeLabel?: string;
+  /** nar-001 A: character presence config */
+  presence?: CharacterPresenceConfig | null;
 };
 
 /** Workflow/timeline proof treatment observed in Premiere, voice and AI-video episodes. */
-export const ProcessTimeline: React.FC<ProcessTimelineProps> = ({ title, steps, activeStep = 0, accent = AMBER() }) => {
+export const ProcessTimeline: React.FC<ProcessTimelineProps> = ({ title, steps, activeStep = 0, accent = AMBER(), narrativeLabel, presence }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const titleIn = interpolate(frame, [0, getStyle<number>("treatments.process-timeline.titleInDurationSec", 0.45) * fps], [0, 1], { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -459,7 +535,7 @@ export const ProcessTimeline: React.FC<ProcessTimelineProps> = ({ title, steps, 
     <AbsoluteFill style={{ background: BLACK(), color: PAPER(), overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at 50% 60%, ${accent}14, transparent 48%)` }} />
       <div style={{ position: "absolute", left: 76, top: 62, opacity: titleIn, transform: `translateY(${(1 - titleIn) * 18}px)`, fontFamily: "Arial, sans-serif" }}>
-        <div style={{ color: accent, fontSize: getStyle<number>("treatments.process-timeline.kicker.fontSize", 17), fontWeight: getStyle<number>("treatments.process-timeline.kicker.fontWeight", 900), letterSpacing: "0.18em", textTransform: "uppercase", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>workflow</div>
+        <div style={{ color: accent, fontSize: getStyle<number>("treatments.process-timeline.kicker.fontSize", 17), fontWeight: getStyle<number>("treatments.process-timeline.kicker.fontWeight", 900), letterSpacing: "0.18em", textTransform: "uppercase", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>{narrativeLabel ?? "workflow"}</div>
         <div style={{ fontSize: getStyle<number>("treatments.process-timeline.title.fontSize", 48), fontWeight: getStyle<number>("treatments.process-timeline.title.fontWeight", 900), marginTop: 12, background: `linear-gradient(135deg, ${getStyle<string>("colors.gradientStart", "#ff6b35")} 0%, ${getStyle<string>("colors.gradientEnd", "#ffd166")} 55%, ${getStyle<string>("colors.gradientStart", "#ff6b35")} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", filter: `drop-shadow(0 3px 10px rgba(0,0,0,0.7)) drop-shadow(0 0 16px ${accent}40)` }}>{title}</div>
       </div>
       <svg style={{ position: "absolute", left: "9%", width: "82%", top: "46%", height: 60, overflow: "visible", transform: "translateY(-50%)" }} viewBox="0 0 100 12" preserveAspectRatio="none">
@@ -488,6 +564,7 @@ export const ProcessTimeline: React.FC<ProcessTimelineProps> = ({ title, steps, 
         );
       })}
       <div style={{ position: "absolute", right: 76, bottom: 48, color: "rgba(244,232,207,.5)", fontFamily: "Arial, sans-serif", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase" }}>step {active + 1} / {steps.length}</div>
+      {presence ? <CharacterPresence config={presence} accent={accent} /> : null}
     </AbsoluteFill>
   );
 };

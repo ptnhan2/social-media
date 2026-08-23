@@ -6,6 +6,25 @@
 
 ## Experiments
 
+### nar-001 A+ — character presence system live (2026-08-23 evening)
+- User gold-standard brief: 1 branded head x pose library x position/motion/
+  size grammar — never the same framing twice (docs/CHARACTER-PRESENCE-SPEC.md)
+- Phase 1 shipped: grammar module (characterPresence.ts, shared by BOTH render
+  paths), head + 4 placeholder poses, context mapping (narrativeFunction ->
+  config), params.characterPresence override per beat
+- First applications: SD beat-02 (present pose, beside-content, pop, medium)
+  + PT beat-04 (point-right, edge-l-in pointing INTO the timeline, slide-r)
+  — 2 DIFFERENT shots; PT kicker now shows narrativeFunction (Part B)
+- QA: treatment path diff 1.47 vs pre-nar; pose swap diff 1.13; editor path
+  diff 1.70 — presence reaches BOTH render flows
+- Generator sync PRODUCTION-VERIFIED: added 2 presence elements + keptUser 1
+  (the E6-edited kicker clip preserved via userEdited ledger — merge works)
+- Evaluator: nar-002 compliance check added; principle_compliance stays 1
+- Gotcha: render baselines BEFORE editing code (rendered after = both sides
+  identical, gate FAIL 0.0 falsely)
+
+## Experiments
+
 ### Generator session (E2-E6) — 2026-08-23 afternoon
 - E4: userEdited ledger live in ALL editorOperations (37 ops) + userDeletedClipIds
   (EditorDoc field) — regeneration can never lose or resurrect user work.

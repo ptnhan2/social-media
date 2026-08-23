@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 560">
+  <!-- POSE: point-right — dynamic stance, decisive point to the right. Phase 1 placeholder. -->
+  <defs>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#ffd166"/>
+    </linearGradient>
+  </defs>
+  <!-- pointing arm, strong diagonal -->
+  <path d="M250 296 L438 210" stroke="#28414f" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="440" cy="209" r="19" fill="#1d2c3a" stroke="url(#ring)" stroke-width="6"/>
+  <!-- head (identical) -->
+  <path d="M212 72c-38 0-64 28-64 66 0 21-6 32-17 42 13 9 25 13 32 14v21c0 25-23 36-49 43 24 28 39 41 98 41s74-13 98-41c-26-7-49-18-49-43v-21c7-1 19-5 32-14-11-10-17-21-17-42 0-38-26-66-64-66z" fill="#1d2c3a" stroke="url(#ring)" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="195" cy="148" r="6" fill="#61d7e8"/>
+  <circle cx="231" cy="148" r="6" fill="#61d7e8"/>
+  <path d="M199 178q14 9 28 0" stroke="#61d7e8" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- torso dynamic lean -->
+  <path d="M142 316c4-58 36-88 68-84s58 36 54 94l-24 186-30 2-6-124-22 122-30-4z" fill="#1d2c3a" stroke="#28414f" stroke-width="5"/>
+  <!-- back arm swung back for balance -->
+  <path d="M148 330 Q104 372 118 424" stroke="#28414f" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <!-- legs planted wide -->
+  <path d="M172 506l-28 44h34zM252 504l30 46h-36z" fill="#1d2c3a" stroke="#28414f" stroke-width="4"/>
+</svg>
