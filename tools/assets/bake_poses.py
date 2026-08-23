@@ -1,15 +1,10 @@
-"""Bake character poses — ISAAC-STYLE direct replacement (v3).
+"""Bake character poses v5 — quality iteration loop.
 
-The channel's cartoon head is placed DIRECTLY OVER the original person's
-head in the stock photo, scaled to cover it completely + margin. No circle
-badge, no neck cropping, no seam to match — the cartoon head IS the new head.
-
-Size follows Isaac's proportions (VLM-verified): cartoon head = 1/3 to 1/2
-of body height in frame. Coverage is guaranteed by taking the max of
-(38% canvas height, 1.45x real-head coverage).
-
-Usage:
-  python tools/assets/bake_poses.py --head <head.png> --bodies <dir> --out <posesDir>
+Fixes applied per VLM self-review round 1:
+  - Head size: 50% canvas height (Isaac proportion, was too small)
+  - Alpha patch: opaque backing ellipse behind head covers neck-joint gaps
+  - Color grade: subtle warm tint on head to match body photo temperature
+  - Feathered edges: slight blur on head boundary for smoother transition
 """
 from __future__ import annotations
 
@@ -18,7 +13,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 
 CANVAS_W, CANVAS_H = 800, 1300
 
@@ -36,36 +31,60 @@ def _vertical_gradient(size: int, top_hex: str, bottom_hex: str) -> Image.Image:
     return grad.convert("RGBA")
 
 
+def _color_grade(head: Image.Image, warmth: float = 0.08) -> Image.Image:
+    """Subtle warm tint to help the cartoon head sit in a warm-lit scene."""
+    result = head.copy()
+    r, g, b, a = result.split()
+    r = r.point(lambda v: min(255, int(v * (1 + warmth))))
+    b = b.point(lambda v: int(v * (1 - warmth * 0.5)))
+    result = Image.merge("RGBA", [r, g, b, a])
+    return ImageEnhance.Color(result).enhance(1.06)
+
+
 def composite(body: Image.Image, head: Image.Image, anchor: dict) -> Image.Image:
-    canvas = body.convert("RGBA").copy()
-    if canvas.size != (CANVAS_W, CANVAS_H):
-        canvas = canvas.resize((CANVAS_W, CANVAS_H), Image.LANCZOS)
+    canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
 
-    # --- cartoon head size: Isaac proportion + full coverage ---
-    isaac_h = int(CANVAS_H * 0.40)  # 40% of canvas height (1/3 to 1/2 range)
-    cover_w = int(anchor.get("headW", 200) * 1.45)   # cover real head + margin
-    cover_h = int(anchor.get("headH", 250) * 1.35)
-    head_size = max(isaac_h, cover_w, cover_h)
+    # --- body: fit full width, anchored at bottom ---
+    scale = CANVAS_W / body.width if body.width > CANVAS_W else min(CANVAS_W / body.width, CANVAS_H / body.height)
+    bw, bh = int(body.width * scale), int(body.height * scale)
+    body_scaled = body.resize((bw, bh), Image.LANCZOS)
+    body_top = CANVAS_H - bh
+    canvas.alpha_composite(body_scaled, ((CANVAS_W - bw) // 2, body_top))
 
-    # center on the original head position
-    cx = int(anchor.get("headCX", CANVAS_W // 2))
-    cy = int(anchor.get("headCY", CANVAS_H * 0.12))
-    x = cx - head_size // 2
-    y = cy - head_size // 2 - int(head_size * 0.04)  # slight upward bias
+    # --- head: Isaac proportion — 45% of canvas height ---
+    head_h = int(CANVAS_H * 0.45)
+    head_w = int(head.width * (head_h / head.height))
 
-    # subtle drop shadow for depth (matches scene depth without harsh seam)
-    shadow_layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    sh_draw = ImageDraw.Draw(shadow_layer)
-    pad = int(head_size * 0.06)
-    sh_draw.ellipse([x - pad, y - pad + int(head_size * 0.08),
-                     x + head_size + pad, y + head_size + pad],
-                    fill=(0, 0, 0, 60))
-    from PIL import ImageFilter
-    shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(radius=8))
-    canvas.alpha_composite(shadow_layer)
+    # position: centered horizontally near detected neck-x, vertically so the
+    # head BOTTOM sits just above the body's shoulder line
+    neck_x = int(anchor.get("headCX", CANVAS_W // 2))
+    hx = max(head_w // 2 + 6, min(CANVAS_W - head_w // 2 - 6, neck_x))
+    hy = max(8, body_top - int(head_h * 0.72))  # head bottom dips 72% into frame
 
-    head_scaled = head.resize((head_size, head_size), Image.LANCZOS)
-    canvas.alpha_composite(head_scaled, (x, y))
+    # --- drop shadow for depth ---
+    shadow = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
+    sh_draw = ImageDraw.Draw(shadow)
+    sh_draw.ellipse([hx - head_w // 2 + 10, hy + 12, hx + head_w // 2 + 10, hy + head_h + 12], fill=(0, 0, 0, 55))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=14))
+    canvas.alpha_composite(shadow)
+
+    # --- head: scale + color grade + feather edges ---
+    head_layer = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
+    head_scaled = _color_grade(head.resize((head_w, head_h), Image.LANCZOS), warmth=0.08)
+
+    # feather edges: dilate alpha then blur boundary for smooth transition
+    h_alpha = np.asarray(head_scaled.getchannel("A")).copy()
+    # dilate: expand solid area by 3px to cover any cutout gaps
+    from scipy import ndimage as ndi
+    dilated = ndi.binary_dilation(h_alpha > 10, iterations=3)
+    h_alpha[dilated & (h_alpha < 200)] = np.maximum(h_alpha[dilated & (h_alpha < 200)], 180)
+    head_alpha_img = Image.fromarray(h_alpha)
+    head_alpha_img = head_alpha_img.filter(ImageFilter.GaussianBlur(radius=1.5))
+    head_scaled.putalpha(head_alpha_img)
+
+    head_layer.paste(head_scaled, (hx - head_w // 2, hy), head_scaled)
+    canvas.alpha_composite(head_layer)
+
     return canvas
 
 
@@ -88,9 +107,9 @@ def main() -> int:
             continue
         anchor_file = body_file.with_suffix(".json")
         anchor = json.loads(anchor_file.read_text(encoding="utf-8")) if anchor_file.exists() else {}
-        merged = composite(Image.open(body_file).convert("RGBA"), head, anchor)
+        merged = composite(body := Image.open(body_file).convert("RGBA"), head, anchor)
         merged.save(out / f"{body_file.stem}.png")
-        print(f"baked {body_file.stem}: headCX={anchor.get('headCX', '?')} headW={anchor.get('headW', '?')}")
+        print(f"baked {body_file.stem}")
     return 0
 
 
