@@ -1,11 +1,12 @@
-"""Bake character poses — AVATAR-CIRCLE style v2 (user feedback 2026-08-23).
+"""Bake character poses — ISAAC-STYLE direct replacement (v3).
 
-Layout (canvas 800x1100):
-  - BODY scaled to fit 800x720, anchored at the BOTTOM
-  - HEAD badge: circular clip + gradient ring, D=400, top of canvas,
-    bottom overlapping the body collar by ~30px
-Fixes vs v1: backing-disc alpha bug (paste overwrote alpha -> transparent
-circle), absurd neck-derived sizes (fixed D=380-400), head sunk into chest.
+The channel's cartoon head is placed DIRECTLY OVER the original person's
+head in the stock photo, scaled to cover it completely + margin. No circle
+badge, no neck cropping, no seam to match — the cartoon head IS the new head.
+
+Size follows Isaac's proportions (VLM-verified): cartoon head = 1/3 to 1/2
+of body height in frame. Coverage is guaranteed by taking the max of
+(38% canvas height, 1.45x real-head coverage).
 
 Usage:
   python tools/assets/bake_poses.py --head <head.png> --bodies <dir> --out <posesDir>
@@ -17,12 +18,9 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageOps
+from PIL import Image, ImageDraw
 
-CANVAS_W, CANVAS_H = 800, 1100
-BODY_MAX_H = 720          # body occupies the lower part
-BADGE_D = 400             # fixed head-badge diameter (mascot proportion)
-BADGE_TOP = 10
+CANVAS_W, CANVAS_H = 800, 1300
 
 
 def _vertical_gradient(size: int, top_hex: str, bottom_hex: str) -> Image.Image:
@@ -38,53 +36,36 @@ def _vertical_gradient(size: int, top_hex: str, bottom_hex: str) -> Image.Image:
     return grad.convert("RGBA")
 
 
-def head_badge(head: Image.Image, diameter: int = BADGE_D, ring_colors: tuple[str, str] = ("#ff6b35", "#ffd166")) -> Image.Image:
-    """Circular-clipped head with gradient ring. Alpha-safe: the backing disc
-    can never be punched through by transparent regions of the head art."""
-    ring_w = max(6, diameter // 34)
-    badge = Image.new("RGBA", (diameter, diameter), (0, 0, 0, 0))
-    # 1. opaque backing disc
-    ImageDraw.Draw(badge).ellipse(
-        [ring_w, ring_w, diameter - ring_w - 1, diameter - ring_w - 1],
-        fill=(14, 19, 26, 255),
-    )
-    # 2. head content clipped to the inner circle, alpha-intersected
-    inner = diameter - 2 * ring_w - 6
-    fitted = ImageOps.contain(head, (inner, inner))
-    layer = Image.new("RGBA", (diameter, diameter), (0, 0, 0, 0))
-    layer.paste(fitted, ((diameter - fitted.width) // 2, (diameter - fitted.height) // 2), fitted)
-    circle_mask = Image.new("L", (diameter, diameter), 0)
-    ImageDraw.Draw(circle_mask).ellipse(
-        [ring_w, ring_w, diameter - ring_w - 1, diameter - ring_w - 1], fill=255,
-    )
-    layer_alpha = np.minimum(
-        np.asarray(layer.getchannel("A")),
-        np.asarray(circle_mask),
-    )
-    layer.putalpha(Image.fromarray(layer_alpha))
-    badge.alpha_composite(layer)
-    # 3. gradient ring (opaque paste — ring is solid by definition)
-    grad = _vertical_gradient(diameter, ring_colors[0].lstrip("#"), ring_colors[1].lstrip("#"))
-    ring_mask = Image.new("L", (diameter, diameter), 0)
-    ImageDraw.Draw(ring_mask).ellipse([1, 1, diameter - 2, diameter - 2], outline=255, width=ring_w)
-    badge.paste(grad, (0, 0), ring_mask)
-    return badge
-
-
 def composite(body: Image.Image, head: Image.Image, anchor: dict) -> Image.Image:
-    canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
-    # body: fit 800x720, bottom-anchored
-    scale = min(CANVAS_W / body.width, BODY_MAX_H / body.height)
-    bw, bh = int(body.width * scale), int(body.height * scale)
-    body_scaled = body.resize((bw, bh), Image.LANCZOS)
-    body_top = CANVAS_H - bh
-    body_left = (CANVAS_W - bw) // 2
-    canvas.alpha_composite(body_scaled, (body_left, body_top))
-    # head badge: fixed size, centered on neck-x, overlapping the collar
-    neck_x = int(anchor.get("neckX", CANVAS_W // 2))
-    bx = max(BADGE_D // 2 + 6, min(CANVAS_W - BADGE_D // 2 - 6, neck_x))
-    badge = head_badge(head, BADGE_D)
-    canvas.alpha_composite(badge, (bx - BADGE_D // 2, BADGE_TOP))
+    canvas = body.convert("RGBA").copy()
+    if canvas.size != (CANVAS_W, CANVAS_H):
+        canvas = canvas.resize((CANVAS_W, CANVAS_H), Image.LANCZOS)
+
+    # --- cartoon head size: Isaac proportion + full coverage ---
+    isaac_h = int(CANVAS_H * 0.40)  # 40% of canvas height (1/3 to 1/2 range)
+    cover_w = int(anchor.get("headW", 200) * 1.45)   # cover real head + margin
+    cover_h = int(anchor.get("headH", 250) * 1.35)
+    head_size = max(isaac_h, cover_w, cover_h)
+
+    # center on the original head position
+    cx = int(anchor.get("headCX", CANVAS_W // 2))
+    cy = int(anchor.get("headCY", CANVAS_H * 0.12))
+    x = cx - head_size // 2
+    y = cy - head_size // 2 - int(head_size * 0.04)  # slight upward bias
+
+    # subtle drop shadow for depth (matches scene depth without harsh seam)
+    shadow_layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    sh_draw = ImageDraw.Draw(shadow_layer)
+    pad = int(head_size * 0.06)
+    sh_draw.ellipse([x - pad, y - pad + int(head_size * 0.08),
+                     x + head_size + pad, y + head_size + pad],
+                    fill=(0, 0, 0, 60))
+    from PIL import ImageFilter
+    shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(radius=8))
+    canvas.alpha_composite(shadow_layer)
+
+    head_scaled = head.resize((head_size, head_size), Image.LANCZOS)
+    canvas.alpha_composite(head_scaled, (x, y))
     return canvas
 
 
@@ -103,13 +84,13 @@ def main() -> int:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     for body_file in sorted(Path(bodies_dir).glob("*.png")):
-        if "sheet" in body_file.stem or "proof" in body_file.stem or "composite" in body_file.stem:
+        if any(kw in body_file.stem for kw in ("sheet", "proof", "composite", "cutout", "test")):
             continue
         anchor_file = body_file.with_suffix(".json")
         anchor = json.loads(anchor_file.read_text(encoding="utf-8")) if anchor_file.exists() else {}
         merged = composite(Image.open(body_file).convert("RGBA"), head, anchor)
         merged.save(out / f"{body_file.stem}.png")
-        print(f"baked {body_file.stem}: badge D={BADGE_D} at x={anchor.get('neckX', '?')}")
+        print(f"baked {body_file.stem}: headCX={anchor.get('headCX', '?')} headW={anchor.get('headW', '?')}")
     return 0
 
 
