@@ -155,7 +155,7 @@ const DiagramNodeView: React.FC<{
         <div style={{ color, fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.node.fontSize", 20), fontWeight: getStyle<number>("treatments.semantic-diagram.node.fontWeight", 900), letterSpacing: "0.04em", textTransform: "uppercase", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>
           {node.label}
         </div>
-        {node.detail ? <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.node.detailFontSize", 14), lineHeight: 1.35, marginTop: 6, opacity: 0.78, fontWeight: 900 }}>{node.detail}</div> : null}
+        {node.detail ? <div style={{ color: PAPER(), fontFamily: "Arial, sans-serif", fontSize: getStyle<number>("treatments.semantic-diagram.node.detailFontSize", 13), lineHeight: 1.35, marginTop: 6, opacity: 0.78, fontWeight: 900 }}>{node.detail}</div> : null}
       </div>
       <div style={{ width: 8, height: 8, borderRadius: "50%", background: `linear-gradient(135deg, ${secondaryAccent}, ${accent})`, boxShadow: `0 0 12px ${secondaryAccent}`, margin: "-4px auto 0" }} />
     </div>

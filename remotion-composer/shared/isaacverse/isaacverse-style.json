@@ -1,5 +1,5 @@
 {
-  "version": 72,
+  "version": 73,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -33,7 +33,7 @@
         "borderRadius": 10,
         "background": "rgba(7,9,13,0.84)",
         "fontSize": 20,
-        "detailFontSize": 14,
+        "detailFontSize": 13,
         "glow": 18,
         "padding": "14px 18px 13px",
         "fontWeight": 900
