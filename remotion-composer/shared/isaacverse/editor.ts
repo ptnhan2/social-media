@@ -118,6 +118,11 @@ export type EditorDoc = {
 export type EditorProjectionOptions = {
   projectId?: string;
   now?: string;
+  /** Style store object — when provided, generated element clips resolve knob
+   *  values and record provenance (spec §2.2). */
+  style?: Record<string, unknown>;
+  /** Provenance stamp baked into generated clips: which store version resolved. */
+  styleResolvedAt?: { storeVersion: number; seed?: string };
 };
 
 export type EditorOperation =

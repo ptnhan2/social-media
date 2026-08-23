@@ -1,9 +1,22 @@
 import type { IsaacVerseEditDoc, SemanticBeat } from "./types";
 import type { ClipRange, EditorAcceptedAssetKind, EditorClip, EditorDoc, EditorMarker, EditorProjectionOptions, EditorTrack, EditorTrackKind } from "./editor";
-import { generateTreatmentElements, type TreatmentElement } from "./treatmentElements";
+import { generateTreatmentElements, type StyleResolver, type TreatmentElement } from "./treatmentElements";
 
 const visualCapabilities = { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false };
 const audioCapabilities = { visual: false, audio: true, canvas: false, trim: true, split: true, gain: true, fade: true, mute: true, solo: true };
+
+/** Dot-path resolver over a plain style-store object (node-safe, no fetch). */
+const resolveFromStyle = (style: Record<string, unknown>): StyleResolver => <T,>(path: string, fallback: T): T => {
+  let obj: unknown = style;
+  for (const part of path.split(".")) {
+    if (obj && typeof obj === "object" && part in (obj as Record<string, unknown>)) {
+      obj = (obj as Record<string, unknown>)[part];
+    } else {
+      return fallback;
+    }
+  }
+  return (obj as T) ?? fallback;
+};
 
 const FIXED_TRACKS: { id: string; kind: EditorTrackKind; name: string; source: EditorTrack["source"]; accepts: EditorAcceptedAssetKind[]; capabilities: EditorTrack["capabilities"] }[] = [
   { id: "video-main", kind: "video", name: "Main track", source: { kind: "project", projectRef: "semantic-beats" }, accepts: ["image", "video"], capabilities: visualCapabilities },
@@ -32,7 +45,7 @@ const elementRange = (beat: SemanticBeat, el: TreatmentElement): ClipRange => ({
   endSec: beat.startSec + (el.endSec ?? beat.durationSec),
 });
 
-const elementClipFromTreatment = (el: TreatmentElement, beat: SemanticBeat, beatClipId: string): EditorClip => {
+const elementClipFromTreatment = (el: TreatmentElement, beat: SemanticBeat, beatClipId: string, styleResolvedAt?: EditorProjectionOptions["styleResolvedAt"]): EditorClip => {
   const isText = el.type === "text";
   const range = elementRange(beat, el);
   return clip({
@@ -46,6 +59,9 @@ const elementClipFromTreatment = (el: TreatmentElement, beat: SemanticBeat, beat
     color: isText ? "amber" : "coral",
     metadata: {
       ...el,
+      // provenance (spec §2.2): which knobs fed this clip, at which store version.
+      // styleSource flows in via ...el (null/absent = fixed by treatment code).
+      styleResolvedAt: styleResolvedAt ?? null,
       x: el.x, y: el.y, w: el.w, h: el.h,
       rotation: el.rotation || 0,
       opacity: el.opacity ?? 1,
@@ -116,7 +132,7 @@ const addAudioPlanClips = (doc: IsaacVerseEditDoc, tracks: Map<string, EditorTra
   }
 };
 
-const collectBeatClips = (doc: IsaacVerseEditDoc, tracks: Map<string, EditorTrack>, markers: EditorMarker[]): EditorClip[] => {
+const collectBeatClips = (doc: IsaacVerseEditDoc, tracks: Map<string, EditorTrack>, markers: EditorMarker[], resolve?: StyleResolver, styleResolvedAt?: EditorProjectionOptions["styleResolvedAt"]): EditorClip[] => {
   const elementClips: EditorClip[] = [];
   for (const beat of doc.beats) {
     const beatClipId = `clip:beat:${beat.id}`;
@@ -134,9 +150,9 @@ const collectBeatClips = (doc: IsaacVerseEditDoc, tracks: Map<string, EditorTrac
       markers.push({ id: `marker:motion:${phase.id}`, kind: "motion-phase", range, label: phase.name, source: { beatId: beat.id, shotId: beat.shotIds?.[0], motionPhaseId: phase.id } });
     }
 
-    const elements = generateTreatmentElements(beat);
+    const elements = generateTreatmentElements(beat, resolve);
     for (const el of elements) {
-      elementClips.push(elementClipFromTreatment(el, beat, beatClipId));
+      elementClips.push(elementClipFromTreatment(el, beat, beatClipId, styleResolvedAt));
     }
 
     for (const cue of beat.audioCues ?? []) {
@@ -156,7 +172,8 @@ const addTransitionMarkers = (doc: IsaacVerseEditDoc, markers: EditorMarker[]) =
 export const projectEditDocToEditor = (doc: IsaacVerseEditDoc, options: EditorProjectionOptions = {}): EditorDoc => {
   const tracks = new Map<string, EditorTrack>(FIXED_TRACKS.map((track, order) => [track.id, { id: track.id, kind: track.kind, name: track.name, order, locked: false, muted: false, solo: false, hidden: false, source: track.source, accepts: track.accepts, capabilities: track.capabilities, clips: [] }]));
   const markers: EditorMarker[] = [];
-  const elementClips = collectBeatClips(doc, tracks, markers);
+  const resolve = options.style ? resolveFromStyle(options.style) : undefined;
+  const elementClips = collectBeatClips(doc, tracks, markers, resolve, options.styleResolvedAt);
   addAudioPlanClips(doc, tracks);
   addTransitionMarkers(doc, markers);
 
