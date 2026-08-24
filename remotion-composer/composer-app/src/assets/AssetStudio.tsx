@@ -15,6 +15,7 @@ import {
   bridge,
   cacheImage,
   fileUrl,
+  fileUrlBusted,
   getLayerCanvas,
   loadImage,
   uploadCanvas,
@@ -176,7 +177,7 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
         dispatch({
           type: "REPLACE_LAYER_IMAGE",
           id: layer.id,
-          src: fileUrl(String(data.out)),
+          src: fileUrlBusted(String(data.out)),
           path: String(data.out),
           label: `Lasso cut ${layer.name}`,
         });

@@ -8,9 +8,10 @@ import {
   cacheImage,
   cachedImage,
   eraseSegment,
-  fileUrl,
+  fileUrlBusted,
   floodFillMask,
   getLayerCanvas,
+  hitLayerAtPixel,
   loadImage,
   maskToPreviewCanvas,
   uploadCanvas,
@@ -167,15 +168,13 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     return { x: (p.x - viewport.x) / viewport.scale, y: (p.y - viewport.y) / viewport.scale };
   };
 
-  const hitLayerAt = (pt: Pt): Layer | null => {
-    for (let i = doc.layers.length - 1; i >= 0; i--) {
-      const l = doc.layers[i];
-      if (!l.visible) continue;
-      const b = layerAABB(l);
-      if (pt.x >= b.x && pt.x <= b.x + b.width && pt.y >= b.y && pt.y <= b.y + b.height) return l;
-    }
-    return null;
-  };
+  /** Pixel-accurate hit (async: loads layer canvases on demand). */
+  const hitLayerAtPixelAsync = async (pt: Pt): Promise<Layer | null> =>
+    hitLayerAtPixel(
+      doc.layers.map((layer) => ({ layer, aabb: layerAABB(layer) })),
+      pt,
+      (layer, p) => docToImage(layer, p),
+    );
 
   const zoomAt = (factor: number, anchorDocPt?: Pt) => {
     const stage = stageRef.current;
@@ -198,7 +197,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
   };
 
   // --- stage mouse: lasso / wand / eraser / bgremove / zoom / select ---
-  const onStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
+  const onStageMouseDown = async (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (spaceDown) return;
     const pt = docPointer();
     if (!pt) return;
@@ -221,7 +220,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     }
 
     if (tool === "wand") {
-      const hit = hitLayerAt(pt);
+      const hit = await hitLayerAtPixelAsync(pt);
       if (!hit) {
         dispatch({ type: "SET_WAND", wand: null });
         return;
@@ -248,8 +247,9 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     }
 
     if (tool === "bgremove") {
-      const hit = hitLayerAt(pt);
+      const hit = await hitLayerAtPixelAsync(pt);
       if (hit) void runBgRemove(hit);
+      else dispatch({ type: "SET_STATUS", status: "Không có pixel layer nào tại điểm click" });
       return;
     }
 
@@ -362,11 +362,11 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
       dispatch({
         type: "REPLACE_LAYER_IMAGE",
         id: layer.id,
-        src: fileUrl(String(data.out)),
+        src: fileUrlBusted(String(data.out)),
         path: String(data.out),
         label: `BG remove ${layer.name}`,
       });
-      dispatch({ type: "SET_STATUS", status: `✓ Tách nền xong (${data.algoUsed})` });
+      dispatch({ type: "SET_STATUS", status: `✓ Tách nền xong (${data.algoUsed}) — layer "${layer.name}"` });
     } catch (err) {
       dispatch({ type: "SET_STATUS", status: `❌ ${String((err as Error).message)}` });
     } finally {

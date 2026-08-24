@@ -20,6 +20,42 @@ export function fileUrl(p: string): string {
   return `/api/assets/file?p=${encodeURIComponent(rel)}`;
 }
 
+/** Cache-busted URL — guarantees fresh bytes after server-side pixel edits. */
+export function fileUrlBusted(p: string): string {
+  return `${fileUrl(p)}&v=${Date.now()}`;
+}
+
+/**
+ * Pixel-accurate layer hit: topmost layer whose AABB contains the point AND
+ * has an opaque pixel there (loads the layer canvas when needed).
+ * Prevents acting on transparent regions of stacked layers.
+ */
+export async function hitLayerAtPixel(
+  layers: { layer: Layer; aabb: { x: number; y: number; width: number; height: number } }[],
+  docPt: { x: number; y: number },
+  toImage: (layer: Layer, pt: { x: number; y: number }) => { x: number; y: number },
+): Promise<Layer | null> {
+  const candidates = layers.filter(
+    ({ aabb }) => docPt.x >= aabb.x && docPt.x <= aabb.x + aabb.width && docPt.y >= aabb.y && docPt.y <= aabb.y + aabb.height,
+  );
+  for (let i = candidates.length - 1; i >= 0; i--) {
+    const { layer } = candidates[i];
+    if (!layer.visible) continue;
+    try {
+      const canvas = await getLayerCanvas(layer);
+      const imgPt = toImage(layer, docPt);
+      const x = Math.floor(imgPt.x);
+      const y = Math.floor(imgPt.y);
+      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) continue;
+      const alpha = canvas.getContext("2d")!.getImageData(x, y, 1, 1).data[3];
+      if (alpha > 10) return layer;
+    } catch {
+      return layer; // canvas unavailable (e.g. load failed) — fall back to AABB hit
+    }
+  }
+  return null;
+}
+
 export function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
