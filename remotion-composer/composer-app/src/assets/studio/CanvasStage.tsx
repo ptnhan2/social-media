@@ -40,6 +40,7 @@ export const RULER_SIZE = 18;
 
 export interface StageActions {
   fit: () => void;
+  zoomToSelection: () => void;
   /** Flatten the doc (visible layers, opacity/filters/blend) to a PNG dataURL at doc resolution. */
   exportDoc: () => Promise<string | null>;
 }
@@ -88,6 +89,30 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
   // --- fit / export actions exposed to shell ---
   React.useEffect(() => {
     actionsRef.current = {
+      zoomToSelection: () => {
+        const el = containerRef.current;
+        const ids = new Set(ui.selectedIds);
+        const sel = doc.layers.filter((l) => ids.has(l.id));
+        if (!el || sel.length === 0) return;
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (const l of sel) {
+          const b = layerAABB(l);
+          minX = Math.min(minX, b.x); minY = Math.min(minY, b.y);
+          maxX = Math.max(maxX, b.x + b.width); maxY = Math.max(maxY, b.y + b.height);
+        }
+        const pad = 80;
+        const w = Math.max(1, maxX - minX + pad * 2);
+        const h = Math.max(1, maxY - minY + pad * 2);
+        const scale = Math.max(0.05, Math.min(16, Math.min(el.clientWidth / w, el.clientHeight / h)));
+        dispatch({
+          type: "SET_VIEWPORT",
+          viewport: {
+            scale,
+            x: el.clientWidth / 2 - ((minX + maxX) / 2) * scale,
+            y: el.clientHeight / 2 - ((minY + maxY) / 2) * scale,
+          },
+        });
+      },
       fit: () => {
         const el = containerRef.current;
         if (!el) return;
@@ -133,7 +158,8 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
           img.src = url;
         }),
     };
-  }, [doc.docWidth, doc.docHeight, viewport, dispatch, actionsRef, stageRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc.docWidth, doc.docHeight, viewport, ui.selectedIds, dispatch, actionsRef, stageRef]);
 
   // --- space bar = temporary pan ---
   React.useEffect(() => {
@@ -561,12 +587,12 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
             />
           ))}
 
-          {/* wand selection overlay */}
+          {/* wand selection overlay (pulsing — marching-ants approximation) */}
           {ui.wand?.maskCanvas && (() => {
             const l = doc.layers.find((x) => x.id === ui.wand!.layerId);
             if (!l) return null;
             return (
-              <KonvaImage
+              <WandPulseImage
                 image={ui.wand.maskCanvas}
                 x={l.x}
                 y={l.y}
@@ -577,7 +603,6 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
                 scaleX={l.scaleX * (l.flipX ? -1 : 1)}
                 scaleY={l.scaleY * (l.flipY ? -1 : 1)}
                 rotation={l.rotation}
-                listening={false}
               />
             );
           })()}
@@ -789,6 +814,27 @@ const KonvaLineGuide: React.FC<{
       }}
     />
   );
+};
+
+/** Wand selection overlay with a node-level opacity pulse (0.55..1, ~1.2s
+ *  cycle) — communicates an ACTIVE selection without React re-renders. */
+const WandPulseImage: React.FC<React.ComponentProps<typeof KonvaImage>> = (props) => {
+  const ref = React.useRef<Konva.Image>(null);
+  React.useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const loop = (now: number) => {
+      const node = ref.current;
+      if (node) {
+        node.opacity(0.55 + 0.45 * Math.abs(Math.sin(((now - start) / 1200) * Math.PI)));
+        node.getLayer()?.batchDraw();
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return <KonvaImage ref={ref} listening={false} {...props} />;
 };
 
 // --- studio project id (set by shell; used by pixel uploads) ---

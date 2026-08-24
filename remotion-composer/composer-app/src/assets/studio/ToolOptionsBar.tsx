@@ -6,10 +6,11 @@ import { TOOL_BY_ID } from "./tools";
  * Contextual tool options bar (Photopea pattern): parameters of the
  * currently active tool, directly under the menu bar.
  */
-export const ToolOptionsBar: React.FC<{ onLassoApply: () => void; onFit: () => void; onZoom: (f: number) => void }> = ({
+export const ToolOptionsBar: React.FC<{ onLassoApply: () => void; onFit: () => void; onZoom: (f: number) => void; onZoomToSelection?: () => void }> = ({
   onLassoApply,
   onFit,
   onZoom,
+  onZoomToSelection,
 }) => {
   const { state, dispatch } = useStore();
   const { ui, doc } = state;
@@ -44,14 +45,21 @@ export const ToolOptionsBar: React.FC<{ onLassoApply: () => void; onFit: () => v
             </button>
           )}
           {ui.selectedIds.length > 0 && (
-            <button
-              type="button"
-              className="as4-btn ghost danger"
-              onClick={() => dispatch({ type: "DELETE_LAYERS", ids: ui.selectedIds })}
-              title="Delete"
-            >
-              🗑 Delete
-            </button>
+            <>
+              {onZoomToSelection ? (
+                <button type="button" className="as4-btn ghost" onClick={onZoomToSelection} title="Zoom to selection">
+                  🔍→ Selection
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className="as4-btn ghost danger"
+                onClick={() => dispatch({ type: "DELETE_LAYERS", ids: ui.selectedIds })}
+                title="Delete"
+              >
+                🗑 Delete
+              </button>
+            </>
           )}
         </>
       )}

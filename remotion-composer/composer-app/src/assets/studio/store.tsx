@@ -64,6 +64,7 @@ export type Action =
   | { type: "TOGGLE_GRID" }
   | { type: "TOGGLE_RULERS" }
   | { type: "RESET_DOC" }
+  | { type: "SET_ENTRY_THUMB"; index: number; thumb: string }
   | { type: "HISTORY_MARK"; label: string }
   | { type: "HISTORY_COMMIT" }
   | { type: "UNDO" }
@@ -355,6 +356,13 @@ export function reducer(state: StoreState, action: Action): StoreState {
     case "RESET_DOC": {
       const fresh = initialState();
       return { ...fresh, viewport: state.viewport };
+    }
+
+    case "SET_ENTRY_THUMB": {
+      const i = Math.max(0, Math.min(state.entries.length - 1, action.index));
+      if (state.entries[i].thumb === action.thumb) return state;
+      const entries = state.entries.map((e, idx) => (idx === i ? { ...e, thumb: action.thumb } : e));
+      return { ...state, entries };
     }
 
     case "HISTORY_MARK":

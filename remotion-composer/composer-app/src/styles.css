@@ -1778,3 +1778,8 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .as4-shortcut-row { display: flex; gap: 10px; align-items: baseline; font-size: 12px; }
 .as4-shortcut-row kbd { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 1px 6px; font-size: 10px; color: #f0883e; white-space: nowrap; min-width: 90px; text-align: center; font-family: Consolas, monospace; }
 .as4-shortcut-row span { color: #adbac7; }
+
+.as4-history-item { display: flex; align-items: center; gap: 6px; }
+.as4-history-thumb { width: 34px; height: 24px; border-radius: 3px; object-fit: cover; background: #16181d; border: 1px solid #21262d; flex: none; }
+.as4-history-thumb-empty { display: inline-block; }
+.as4-history-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -118,6 +118,8 @@ export type UiState = {
 export interface HistoryEntry {
   label: string;
   doc: DocState;
+  /** Small JPEG dataURL of the stage at commit time (history panel preview). */
+  thumb?: string;
 }
 
 export const DEFAULT_TOOL_OPTIONS: ToolOptions = {

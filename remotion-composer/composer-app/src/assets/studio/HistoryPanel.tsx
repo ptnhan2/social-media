@@ -27,7 +27,8 @@ export const HistoryPanel: React.FC = () => {
             className={`as4-history-item ${i === state.pointer ? "current" : ""} ${i > state.pointer ? "future" : ""}`}
             onClick={() => dispatch({ type: "HISTORY_JUMP", index: i })}
           >
-            {entry.label}
+            {entry.thumb ? <img className="as4-history-thumb" src={entry.thumb} alt="" /> : <span className="as4-history-thumb as4-history-thumb-empty" />}
+            <span className="as4-history-label">{entry.label}</span>
           </button>
         ))}
       </div>

@@ -85,6 +85,34 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
     return () => window.clearTimeout(t);
   }, [state, projectId]);
 
+  // --- history panel thumbnails (D2): newest entry = current stage view ---
+  const lastEntry = state.entries[state.entries.length - 1];
+  const entryCount = state.entries.length;
+  const pointer = state.pointer;
+  React.useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || !lastEntry || lastEntry.thumb) return;
+    const t = window.setTimeout(() => {
+      try {
+        const vp = state.viewport;
+        const thumbW = 56;
+        const url = stage.toDataURL({
+          x: vp.x, y: vp.y,
+          width: state.doc.docWidth * vp.scale,
+          height: state.doc.docHeight * vp.scale,
+          pixelRatio: thumbW / Math.max(1, state.doc.docWidth * vp.scale),
+          mimeType: "image/jpeg",
+          quality: 0.6,
+        });
+        dispatch({ type: "SET_ENTRY_THUMB", index: entryCount - 1, thumb: url });
+      } catch {
+        /* stage not ready — skip */
+      }
+    }, 120);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entryCount, pointer]);
+
   // --- context menu ---
   const [ctxMenu, setCtxMenu] = React.useState<{ layerId: string; x: number; y: number } | null>(null);
   const [showShortcuts, setShowShortcuts] = React.useState(false);
@@ -434,7 +462,7 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
         </button>
       </header>
 
-      <ToolOptionsBar onLassoApply={applyLasso} onFit={() => actionsRef.current?.fit()} onZoom={zoomBy} />
+      <ToolOptionsBar onLassoApply={applyLasso} onFit={() => actionsRef.current?.fit()} onZoom={zoomBy} onZoomToSelection={() => actionsRef.current?.zoomToSelection()} />
 
       <div className="as4-main">
         <Toolbar />
