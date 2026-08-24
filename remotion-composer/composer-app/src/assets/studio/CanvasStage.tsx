@@ -15,7 +15,7 @@ import {
   maskToPreviewCanvas,
   uploadCanvas,
 } from "./imageOps";
-import { Layer, Pt } from "./types";
+import { Guide, Layer, Pt } from "./types";
 import { layerAABB } from "./types";
 
 /** Registry of live Konva.Image nodes by layer id (for Transformer + redraw). */
@@ -34,6 +34,8 @@ const checkerPattern = (() => {
   return c;
 })();
 
+export const RULER_SIZE = 18;
+
 export interface StageActions {
   fit: () => void;
   /** Flatten the doc (visible layers, opacity/filters/blend) to a PNG dataURL at doc resolution. */
@@ -43,23 +45,34 @@ export interface StageActions {
 interface CanvasStageProps {
   stageRef: React.MutableRefObject<Konva.Stage | null>;
   actionsRef: React.MutableRefObject<StageActions | null>;
+  onLayerContextMenu?: (layerId: string, clientX: number, clientY: number) => void;
 }
 
-export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }) => {
+export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, onLayerContextMenu }) => {
   const { state, dispatch } = useStore();
   const { doc, ui, viewport } = state;
   const tool = ui.activeTool;
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const holderRef = React.useRef<HTMLDivElement>(null);
   const [size, setSize] = React.useState({ w: 900, h: 600 });
   const [mouseDoc, setMouseDoc] = React.useState<Pt | null>(null);
   const [guides, setGuides] = React.useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
   const [spaceDown, setSpaceDown] = React.useState(false);
   const [panning, setPanning] = React.useState(false);
   const eraserState = React.useRef<{ layerId: string; last: Pt } | null>(null);
+  const rulerDragRef = React.useRef<{ id: string; axis: "v" | "h" } | null>(null);
 
-  // --- container size tracking ---
+  const userGuides = React.useMemo(
+    () => ({
+      v: ui.guides.filter((g) => g.axis === "v").map((g) => g.pos),
+      h: ui.guides.filter((g) => g.axis === "h").map((g) => g.pos),
+    }),
+    [ui.guides],
+  );
+
+  // --- container size tracking (stage holder = area inside rulers) ---
   React.useEffect(() => {
-    const el = containerRef.current;
+    const el = holderRef.current;
     if (!el) return;
     const ro = new ResizeObserver(() => {
       setSize({ w: el.clientWidth, h: el.clientHeight });
@@ -139,7 +152,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }
   }, []);
 
   // auto-fit when the first layer arrives
-  const hadLayersRef = React.useRef(false);
+  const hadLayersRef = React.useRef(doc.layers.length > 0);
   React.useEffect(() => {
     if (!hadLayersRef.current && doc.layers.length > 0 && size.w > 100) {
       actionsRef.current?.fit();
@@ -361,8 +374,62 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }
     }
   };
 
+  // --- ruler → guide drag ---
+  const startRulerDrag = (axis: "v" | "h", e: React.MouseEvent) => {
+    e.preventDefault();
+    const rect = holderRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const guide: Guide = {
+      id: `guide-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      axis,
+      pos: axis === "v" ? (e.clientX - rect.left - viewport.x) / viewport.scale : (e.clientY - rect.top - viewport.y) / viewport.scale,
+    };
+    dispatch({ type: "ADD_GUIDE", guide });
+    rulerDragRef.current = { id: guide.id, axis };
+
+    const onMove = (ev: MouseEvent) => {
+      const g = rulerDragRef.current;
+      if (!g) return;
+      const pos =
+        g.axis === "v" ? (ev.clientX - rect.left - viewport.x) / viewport.scale : (ev.clientY - rect.top - viewport.y) / viewport.scale;
+      dispatch({ type: "MOVE_GUIDE", id: g.id, pos });
+    };
+    const onUp = () => {
+      rulerDragRef.current = null;
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
+
   const panningActive = spaceDown || tool === "hand" || panning;
   const layersInteractive = tool === "move";
+
+  // --- DOM-level context menu (Konva has no contextmenu node event) ---
+  const layerIds = doc.layers.map((l) => l.id).join(",");
+  React.useEffect(() => {
+    const container = stageRef.current?.container();
+    if (!container) return;
+    const ids = new Set(layerIds ? layerIds.split(",") : []);
+    const onCtx = (e: MouseEvent) => {
+      const stage = stageRef.current;
+      if (!stage) return;
+      const rect = container.getBoundingClientRect();
+      const pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      const shape = stage.getIntersection(pointer);
+      e.preventDefault(); // always suppress the browser menu inside the canvas
+      e.stopPropagation(); // the shell's window-level contextmenu closer must not fire on the opening event
+      const layerId = shape?.getAttr("layerId");
+      if (typeof layerId === "string" && ids.has(layerId)) {
+        onLayerContextMenu?.(layerId, e.clientX, e.clientY);
+      }
+    };
+    container.addEventListener("contextmenu", onCtx);
+    return () => container.removeEventListener("contextmenu", onCtx);
+  }, [layerIds, onLayerContextMenu, stageRef]);
+
+  const ruler = useRulerTicks(viewport, size);
 
   return (
     <div
@@ -379,26 +446,33 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }
         }
       }}
     >
-      <Stage
-        ref={(node) => {
-          if (node) stageRef.current = node;
-        }}
-        width={size.w}
-        height={size.h}
-        scaleX={viewport.scale}
-        scaleY={viewport.scale}
-        x={viewport.x}
-        y={viewport.y}
-        draggable={panningActive}
-        onWheel={onWheel}
-        onMouseDown={onStageMouseDown}
-        onMouseMove={onStageMouseMove}
-        onMouseUp={onStageMouseUp}
-        onMouseLeave={onStageMouseUp}
-        onDragStart={() => setPanning(true)}
-        onDragEnd={() => setPanning(false)}
-        style={{ cursor: panningActive ? "grab" : tool === "move" ? "default" : "crosshair" }}
+      <div
+        ref={holderRef}
+        className="as4-stage-holder"
+        style={ui.showRulers ? { left: RULER_SIZE, top: RULER_SIZE } : undefined}
       >
+        <Stage
+          ref={(node) => {
+            if (node) stageRef.current = node;
+          }}
+          width={size.w}
+          height={size.h}
+          scaleX={viewport.scale}
+          scaleY={viewport.scale}
+          x={viewport.x}
+          y={viewport.y}
+          draggable={panningActive}
+          onWheel={onWheel}
+          onMouseDown={onStageMouseDown}
+          onMouseMove={onStageMouseMove}
+          onMouseUp={onStageMouseUp}
+          onMouseLeave={onStageMouseUp}
+          onDragStart={() => setPanning(true)}
+          onDragEnd={() => setPanning(false)}
+          style={{
+            cursor: panningActive ? "grab" : tool === "move" ? "default" : "crosshair",
+          }}
+        >
         <KonvaLayer>
           <Rect
             name="doc-bg"
@@ -418,6 +492,18 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }
             listening={false}
           />
 
+          {/* rule-of-thirds grid */}
+          {ui.showGrid && (
+            <Group listening={false}>
+              {[1, 2].map((i) => (
+                <Line key={`gv-${i}`} points={[(doc.docWidth * i) / 3, 0, (doc.docWidth * i) / 3, doc.docHeight]} stroke="rgba(255,255,255,0.14)" strokeWidth={1 / viewport.scale} />
+              ))}
+              {[1, 2].map((i) => (
+                <Line key={`gh-${i}`} points={[0, (doc.docHeight * i) / 3, doc.docWidth, (doc.docHeight * i) / 3]} stroke="rgba(255,255,255,0.14)" strokeWidth={1 / viewport.scale} />
+              ))}
+            </Group>
+          )}
+
           {doc.layers.map((layer) => (
             <LayerImageNode
               key={layer.id}
@@ -429,6 +515,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }
               viewportScale={viewport.scale}
               docWidth={doc.docWidth}
               docHeight={doc.docHeight}
+              userGuides={userGuides}
             />
           ))}
 
@@ -501,9 +588,116 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef }
 
         <KonvaLayer>
           <TransformerComponent selectedIds={ui.selectedIds} tool={tool} />
+          {/* user guides (draggable, double-click to remove) */}
+          {ui.guides.map((g) => (
+            <KonvaLineGuide
+              key={g.id}
+              guide={g}
+              scale={viewport.scale}
+              dispatch={dispatch}
+            />
+          ))}
         </KonvaLayer>
       </Stage>
+      </div>
+
+      {/* rulers (HTML overlay, positions relative to stage origin = holder top-left) */}
+      {ui.showRulers && (
+        <>
+          <div className="as4-ruler as4-ruler-corner" />
+          <div
+            className="as4-ruler as4-ruler-top"
+            onMouseDown={(e) => startRulerDrag("h", e)}
+            title="Kéo xuống để tạo guide ngang"
+          >
+            {ruler.x.map((t) => (
+              <div key={`tx-${t}`} className="as4-ruler-tick-x" style={{ left: viewport.x + t * viewport.scale }}>
+                <i />
+                <span>{t}</span>
+              </div>
+            ))}
+          </div>
+          <div
+            className="as4-ruler as4-ruler-left"
+            onMouseDown={(e) => startRulerDrag("v", e)}
+            title="Kéo sang phải để tạo guide dọc"
+          >
+            {ruler.y.map((t) => (
+              <div key={`ty-${t}`} className="as4-ruler-tick-y" style={{ top: viewport.y + t * viewport.scale }}>
+                <i />
+                <span>{t}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
+  );
+};
+
+// --- ruler tick computation ---
+
+function useRulerTicks(viewport: ViewportLike, size: { w: number; h: number }): { x: number[]; y: number[] } {
+  return React.useMemo(() => {
+    const steps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000];
+    const pick = (px: number) => steps.find((s) => s * viewport.scale >= 60) ?? 10000;
+    const axis = (span: number, offset: number) => {
+      const step = pick(span);
+      const from = Math.floor((0 - offset) / viewport.scale / step) * step;
+      const to = Math.ceil((span - offset) / viewport.scale / step) * step;
+      const ticks: number[] = [];
+      for (let v = from; v <= to; v += step) ticks.push(v);
+      return ticks;
+    };
+    return { x: axis(size.w, viewport.x), y: axis(size.h, viewport.y) };
+  }, [viewport, size]);
+}
+
+interface ViewportLike {
+  scale: number;
+  x: number;
+  y: number;
+}
+
+/** A draggable guide line; drag moves it, double-click removes it. */
+const KonvaLineGuide: React.FC<{
+  guide: Guide;
+  scale: number;
+  dispatch: ReturnType<typeof useStore>["dispatch"];
+}> = ({ guide, scale, dispatch }) => {
+  const lineRef = React.useRef<Konva.Line>(null);
+
+  React.useEffect(() => {
+    const node = lineRef.current;
+    if (!node) return;
+    if (guide.axis === "v") node.x(guide.pos);
+    else node.y(guide.pos);
+    node.getLayer()?.batchDraw();
+  }, [guide.pos, guide.axis]);
+
+  return (
+    <Line
+      ref={lineRef}
+      points={guide.axis === "v" ? [0, -100000, 0, 100000] : [-100000, 0, 100000, 0]}
+      stroke="#29a3ff"
+      strokeWidth={1 / scale}
+      hitStrokeWidth={8 / scale}
+      draggable
+      dragBoundFunc={(pos) => (guide.axis === "v" ? { x: pos.x, y: 0 } : { x: 0, y: pos.y })}
+      onDragMove={(e) => {
+        const node = e.target;
+        dispatch({ type: "MOVE_GUIDE", id: guide.id, pos: guide.axis === "v" ? node.x() : node.y() });
+      }}
+      onDblClick={() => dispatch({ type: "REMOVE_GUIDE", id: guide.id })}
+      onMouseEnter={(e) => {
+        const stage = e.target.getStage();
+        if (stage) stage.container().style.cursor = "ew-resize";
+      }}
+      onMouseLeave={(e) => {
+        const stage = e.target.getStage();
+        if (stage) stage.container().style.cursor = "";
+      }}
+    />
   );
 };
 
@@ -538,6 +732,7 @@ interface LayerImageProps {
   viewportScale: number;
   docWidth: number;
   docHeight: number;
+  userGuides: { v: number[]; h: number[] };
 }
 
 const LayerImageNode: React.FC<LayerImageProps> = ({
@@ -548,6 +743,7 @@ const LayerImageNode: React.FC<LayerImageProps> = ({
   viewportScale,
   docWidth,
   docHeight,
+  userGuides,
 }) => {
   const [image, setImage] = React.useState<CanvasImageSource | null>(null);
   const nodeRef = React.useRef<Konva.Image>(null);
@@ -588,6 +784,7 @@ const LayerImageNode: React.FC<LayerImageProps> = ({
   return (
     <KonvaImage
       ref={nodeRef}
+      layerId={layer.id}
       x={layer.x}
       y={layer.y}
       offsetX={layer.width / 2}
@@ -617,7 +814,14 @@ const LayerImageNode: React.FC<LayerImageProps> = ({
         dispatch({ type: "HISTORY_MARK", label: `Move ${layer.name}` });
       }}
       onDragMove={(e) => {
-        const snap = snapLayer({ x: e.target.x(), y: e.target.y() }, layer, docWidth, docHeight, 6 / viewportScale);
+        const snap = snapLayer(
+          { x: e.target.x(), y: e.target.y() },
+          layer,
+          docWidth,
+          docHeight,
+          6 / viewportScale,
+          userGuides,
+        );
         if (snap.guidesX.length || snap.guidesY.length) {
           e.target.x(snap.x);
           e.target.y(snap.y);

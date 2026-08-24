@@ -2,6 +2,7 @@ import React from "react";
 import {
   DEFAULT_TOOL_OPTIONS,
   DocState,
+  Guide,
   HistoryEntry,
   Layer,
   LassoState,
@@ -56,6 +57,13 @@ export type Action =
   | { type: "SET_STATUS"; status: string }
   | { type: "SET_BUSY"; busy: boolean }
   | { type: "SET_VIEWPORT"; viewport: Partial<Viewport> }
+  | { type: "ADD_GUIDE"; guide: Guide }
+  | { type: "MOVE_GUIDE"; id: string; pos: number }
+  | { type: "REMOVE_GUIDE"; id: string }
+  | { type: "CLEAR_GUIDES" }
+  | { type: "TOGGLE_GRID" }
+  | { type: "TOGGLE_RULERS" }
+  | { type: "RESET_DOC" }
   | { type: "HISTORY_MARK"; label: string }
   | { type: "HISTORY_COMMIT" }
   | { type: "UNDO" }
@@ -70,6 +78,10 @@ function initialDoc(): DocState {
 
 export function initialState(): StoreState {
   const doc = initialDoc();
+  return freshUiState(doc);
+}
+
+function freshUiState(doc: DocState): StoreState {
   return {
     doc,
     ui: {
@@ -80,12 +92,82 @@ export function initialState(): StoreState {
       toolOptions: DEFAULT_TOOL_OPTIONS,
       status: "Import body → tách nền → gen head → ghép → save pose",
       busy: false,
+      guides: [],
+      showGrid: false,
+      showRulers: true,
     },
     viewport: { scale: 1, x: 0, y: 0 },
     entries: [{ label: "Open", doc }],
     pointer: 0,
     pending: null,
   };
+}
+
+// --- session persistence (localStorage, per project) ---
+
+export interface PersistPayload {
+  doc: DocState;
+  entries: HistoryEntry[];
+  pointer: number;
+  guides: Guide[];
+  showGrid: boolean;
+  showRulers: boolean;
+}
+
+/** Serialize the persist-relevant parts of a store state. */
+export function serializePersisted(state: StoreState): PersistPayload {
+  return {
+    doc: state.doc,
+    entries: state.entries,
+    pointer: state.pointer,
+    guides: state.ui.guides,
+    showGrid: state.ui.showGrid,
+    showRulers: state.ui.showRulers,
+  };
+}
+
+/**
+ * Parse a persisted payload (JSON string) back into a StoreState.
+ * Returns null when the payload is missing/corrupt/shape-mismatched.
+ */
+export function parsePersisted(json: string | null): StoreState | null {
+  if (!json) return null;
+  try {
+    const p = JSON.parse(json) as PersistPayload;
+    const shapeOk =
+      p &&
+      Array.isArray(p.doc?.layers) &&
+      Number.isFinite(p.doc?.docWidth) &&
+      Number.isFinite(p.doc?.docHeight) &&
+      Array.isArray(p.entries) &&
+      p.entries.length > 0 &&
+      p.entries.every((e) => e && typeof e.label === "string" && Array.isArray(e.doc?.layers)) &&
+      Number.isInteger(p.pointer) &&
+      p.pointer >= 0 &&
+      p.pointer < p.entries.length &&
+      Array.isArray(p.guides) &&
+      p.guides.every((g) => g && (g.axis === "v" || g.axis === "h") && Number.isFinite(g.pos));
+    if (!shapeOk) return null;
+    const base = freshUiState(p.doc);
+    return {
+      ...base,
+      doc: p.doc,
+      entries: p.entries,
+      pointer: p.pointer,
+      ui: {
+        ...base.ui,
+        guides: p.guides,
+        showGrid: Boolean(p.showGrid),
+        showRulers: p.showRulers !== false,
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function persistKey(projectId: string): string {
+  return `asset-studio:${projectId}`;
 }
 
 /** Push a committed doc into the history, truncating the redo tail. */
@@ -243,6 +325,38 @@ export function reducer(state: StoreState, action: Action): StoreState {
     case "SET_VIEWPORT":
       return { ...state, viewport: { ...state.viewport, ...action.viewport } };
 
+    case "ADD_GUIDE":
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          guides: [...state.ui.guides, action.guide],
+        },
+      };
+
+    case "MOVE_GUIDE":
+      return {
+        ...state,
+        ui: { ...state.ui, guides: state.ui.guides.map((g) => (g.id === action.id ? { ...g, pos: action.pos } : g)) },
+      };
+
+    case "REMOVE_GUIDE":
+      return { ...state, ui: { ...state.ui, guides: state.ui.guides.filter((g) => g.id !== action.id) } };
+
+    case "CLEAR_GUIDES":
+      return { ...state, ui: { ...state.ui, guides: [] } };
+
+    case "TOGGLE_GRID":
+      return { ...state, ui: { ...state.ui, showGrid: !state.ui.showGrid } };
+
+    case "TOGGLE_RULERS":
+      return { ...state, ui: { ...state.ui, showRulers: !state.ui.showRulers } };
+
+    case "RESET_DOC": {
+      const fresh = initialState();
+      return { ...fresh, viewport: state.viewport };
+    }
+
     case "HISTORY_MARK":
       return { ...state, pending: { label: action.label, before: state.doc } };
 
@@ -274,8 +388,20 @@ export function reducer(state: StoreState, action: Action): StoreState {
 
 const StoreContext = React.createContext<{ state: StoreState; dispatch: React.Dispatch<Action> } | null>(null);
 
-export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = React.useReducer(reducer, undefined, initialState);
+export function StoreProvider({
+  children,
+  projectId,
+}: {
+  children: React.ReactNode;
+  projectId: string;
+}) {
+  const [state, dispatch] = React.useReducer(reducer, undefined, () => {
+    try {
+      return parsePersisted(window.localStorage.getItem(persistKey(projectId))) ?? initialState();
+    } catch {
+      return initialState();
+    }
+  });
   const value = React.useMemo(() => ({ state, dispatch }), [state]);
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }

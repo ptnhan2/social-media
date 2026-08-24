@@ -2,14 +2,13 @@ import { Layer, Pt } from "./types";
 
 /**
  * Snap target: while dragging a layer, snap its center / edges to doc
- * center / edges when within threshold (doc coords). Returns adjusted
- * layer center + which guides are active (for rendering guide lines).
+ * center / edges / user guides when within threshold (doc coords).
  */
 export interface SnapResult {
   x: number;
   y: number;
-  guidesX: number[]; // doc-space vertical guide positions
-  guidesY: number[]; // doc-space horizontal guide positions
+  guidesX: number[]; // doc-space vertical guide positions that engaged
+  guidesY: number[]; // doc-space horizontal guide positions that engaged
 }
 
 export function snapLayer(
@@ -18,6 +17,7 @@ export function snapLayer(
   docWidth: number,
   docHeight: number,
   threshold: number,
+  userGuides?: { v: number[]; h: number[] },
 ): SnapResult {
   const w = layer.width * layer.scaleX;
   const h = layer.height * layer.scaleY;
@@ -25,14 +25,16 @@ export function snapLayer(
   const halfH = h / 2;
 
   const targetsX = [
-    { at: docWidth / 2, layerAt: 0 }, // layer center -> doc center
-    { at: 0, layerAt: -halfW }, // layer left edge -> doc left
-    { at: docWidth, layerAt: halfW }, // layer right edge -> doc right
+    { at: docWidth / 2, layerAt: 0 },
+    { at: 0, layerAt: -halfW },
+    { at: docWidth, layerAt: halfW },
+    ...(userGuides?.v ?? []).map((g) => ({ at: g, layerAt: 0 })),
   ];
   const targetsY = [
     { at: docHeight / 2, layerAt: 0 },
     { at: 0, layerAt: -halfH },
     { at: docHeight, layerAt: halfH },
+    ...(userGuides?.h ?? []).map((g) => ({ at: g, layerAt: 0 })),
   ];
 
   let x = center.x;

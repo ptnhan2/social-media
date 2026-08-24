@@ -84,6 +84,12 @@ export interface WandSelection {
   height: number;
 }
 
+export interface Guide {
+  id: string;
+  axis: "v" | "h"; // v = vertical line at x, h = horizontal line at y
+  pos: number; // doc coords
+}
+
 export interface ToolOptions {
   eraser: { size: number; hardness: number };
   wand: { tolerance: number; contiguous: boolean };
@@ -104,6 +110,9 @@ export type UiState = {
   toolOptions: ToolOptions;
   status: string;
   busy: boolean;
+  guides: Guide[];
+  showGrid: boolean;
+  showRulers: boolean;
 };
 
 export interface HistoryEntry {

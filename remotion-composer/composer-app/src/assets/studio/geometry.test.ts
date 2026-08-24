@@ -27,6 +27,29 @@ describe("snapLayer", () => {
     expect(r.guidesX).toEqual([]);
     expect(r.guidesY).toEqual([]);
   });
+
+  it("snaps layer center to user guides", () => {
+    const layer = makeLayer({ id: "a", name: "a", src: "s", path: "p", width: 100, height: 100, scaleX: 1, scaleY: 1 });
+    const guides = { v: [300], h: [77] };
+    const r = snapLayer({ x: 302, y: 200 }, layer, 1000, 800, 8, guides);
+    expect(r.x).toBe(300);
+    expect(r.guidesX).toEqual([300]);
+    // h guide at 77 not near y=200 → no y snap
+    expect(r.y).toBe(200);
+    expect(r.guidesY).toEqual([]);
+
+    const r2 = snapLayer({ x: 500, y: 80 }, layer, 1000, 800, 8, guides);
+    expect(r2.y).toBe(77);
+    expect(r2.guidesY).toEqual([77]);
+  });
+
+  it("doc center takes precedence over user guides at same distance", () => {
+    const layer = makeLayer({ id: "a", name: "a", src: "s", path: "p", width: 100, height: 100, scaleX: 1, scaleY: 1 });
+    // doc center 500 vs guide 498, center at 499 → both within threshold
+    const r = snapLayer({ x: 499, y: 400 }, layer, 1000, 800, 8, { v: [498], h: [] });
+    expect(r.x).toBe(500);
+    expect(r.guidesX).toEqual([500]);
+  });
 });
 
 describe("docToImage", () => {

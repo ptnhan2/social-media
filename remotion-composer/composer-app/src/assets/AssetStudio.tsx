@@ -6,7 +6,7 @@ import { ImportPanel } from "./studio/ImportPanel";
 import { LayersPanel } from "./studio/LayersPanel";
 import { PropertiesPanel } from "./studio/PropertiesPanel";
 import { StatusBar } from "./studio/StatusBar";
-import { StoreProvider, useStore } from "./studio/store";
+import { persistKey, serializePersisted, StoreProvider, useStore } from "./studio/store";
 import { ToolOptionsBar } from "./studio/ToolOptionsBar";
 import { Toolbar } from "./studio/Toolbar";
 import { docToImage } from "./studio/geometry";
@@ -23,7 +23,7 @@ import {
 import { makeLayer, Pt, ToolId } from "./studio/types";
 
 export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = ({ projectId, onBack }) => (
-  <StoreProvider>
+  <StoreProvider projectId={projectId}>
     <AssetStudioInner projectId={projectId} onBack={onBack} />
   </StoreProvider>
 );
@@ -51,6 +51,45 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
   React.useEffect(() => {
     setStudioProject(projectId);
   }, [projectId]);
+
+  // --- session persist (debounced localStorage per project) ---
+  React.useEffect(() => {
+    const t = window.setTimeout(() => {
+      try {
+        window.localStorage.setItem(persistKey(projectId), JSON.stringify(serializePersisted(state)));
+      } catch {
+        /* storage full or unavailable — ignore */
+      }
+    }, 400);
+    return () => window.clearTimeout(t);
+  }, [state, projectId]);
+
+  // --- context menu ---
+  const [ctxMenu, setCtxMenu] = React.useState<{ layerId: string; x: number; y: number } | null>(null);
+  React.useEffect(() => {
+    if (!ctxMenu) return;
+    const close = () => setCtxMenu(null);
+    window.addEventListener("click", close);
+    window.addEventListener("contextmenu", close);
+    window.addEventListener("blur", close);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("contextmenu", close);
+      window.removeEventListener("blur", close);
+    };
+  }, [ctxMenu]);
+
+  const ctxLayer = ctxMenu ? state.doc.layers.find((l) => l.id === ctxMenu.layerId) : null;
+  const resetDoc = () => {
+    if (window.confirm("Xoá toàn bộ layer + lịch sử của doc này?")) {
+      try {
+        window.localStorage.removeItem(persistKey(projectId));
+      } catch {
+        /* ignore */
+      }
+      dispatch({ type: "RESET_DOC" });
+    }
+  };
 
   const run = React.useCallback(
     async (label: string, fn: () => Promise<void>) => {
@@ -347,6 +386,9 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
         <h1>Asset Studio</h1>
         <small>{projectId}</small>
         <div className="as4-header-spacer" />
+        <button type="button" className="as4-btn ghost danger" onClick={resetDoc} title="Doc mới — xoá layer + lịch sử + session lưu">
+          ✚ New
+        </button>
         <button type="button" className="as4-btn ghost" onClick={() => dispatch({ type: "UNDO" })}
           disabled={state.pointer <= 0} title="Ctrl+Z">
           ↶
@@ -364,7 +406,11 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
 
       <div className="as4-main">
         <Toolbar />
-        <CanvasStage stageRef={stageRef} actionsRef={actionsRef} />
+        <CanvasStage
+          stageRef={stageRef}
+          actionsRef={actionsRef}
+          onLayerContextMenu={(layerId, x, y) => setCtxMenu({ layerId, x, y })}
+        />
         <aside className="as4-sidebar">
           <LayersPanel />
           <PropertiesPanel />
@@ -403,6 +449,59 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* layer context menu (right-click) */}
+      {ctxMenu && ctxLayer && (
+        <div
+          className="as4-ctx-menu"
+          style={{ left: Math.min(ctxMenu.x, window.innerWidth - 180), top: Math.min(ctxMenu.y, window.innerHeight - 220) }}
+        >
+          <div className="as4-ctx-title">{ctxLayer.name}</div>
+          <button type="button" onClick={() => { dispatch({ type: "DUPLICATE_LAYER", id: ctxLayer.id }); setCtxMenu(null); }}>
+            ⧉ Duplicate <small>Ctrl+J</small>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const idx = state.doc.layers.findIndex((l) => l.id === ctxLayer.id);
+              dispatch({ type: "REORDER_LAYER", id: ctxLayer.id, toIndex: state.doc.layers.length - 1, label: `Bring forward ${ctxLayer.name}` });
+              setCtxMenu(null);
+            }}
+          >
+            ⬆ Bring to front
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({ type: "REORDER_LAYER", id: ctxLayer.id, toIndex: 0, label: `Send back ${ctxLayer.name}` });
+              setCtxMenu(null);
+            }}
+          >
+            ⬇ Send to back
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({ type: "UPDATE_LAYER", id: ctxLayer.id, updates: { locked: !ctxLayer.locked }, label: `${ctxLayer.locked ? "Unlock" : "Lock"} ${ctxLayer.name}` });
+              setCtxMenu(null);
+            }}
+          >
+            {ctxLayer.locked ? "🔓 Unlock" : "🔒 Lock"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              dispatch({ type: "UPDATE_LAYER", id: ctxLayer.id, updates: { visible: !ctxLayer.visible }, label: `${ctxLayer.visible ? "Hide" : "Show"} ${ctxLayer.name}` });
+              setCtxMenu(null);
+            }}
+          >
+            {ctxLayer.visible ? "👁 Hide" : "👁 Show"}
+          </button>
+          <button type="button" className="danger" onClick={() => { dispatch({ type: "DELETE_LAYERS", ids: [ctxLayer.id] }); setCtxMenu(null); }}>
+            🗑 Delete <small>Del</small>
+          </button>
         </div>
       )}
     </div>

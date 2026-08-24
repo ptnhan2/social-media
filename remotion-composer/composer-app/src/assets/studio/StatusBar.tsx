@@ -40,6 +40,20 @@ export const StatusBar: React.FC<{ onFit: () => void }> = ({ onFit }) => {
         {doc.layers.length} layer{doc.layers.length === 1 ? "" : "s"}
       </span>
       <span className="as4-status-item grow">{toolDef ? `${toolDef.icon} ${toolDef.label} — ${toolDef.hint}` : ""}</span>
+      <button type="button" className={`as4-status-toggle ${ui.showRulers ? "on" : ""}`} title="Rulers (kéo từ ruler để tạo guide)"
+        onClick={() => dispatch({ type: "TOGGLE_RULERS" })}>
+        ⌒ Rulers
+      </button>
+      <button type="button" className={`as4-status-toggle ${ui.showGrid ? "on" : ""}`} title="Grid rule-of-thirds"
+        onClick={() => dispatch({ type: "TOGGLE_GRID" })}>
+        ▦ Grid
+      </button>
+      {ui.guides.length > 0 && (
+        <button type="button" className="as4-status-toggle on" title="Xoá hết guides (double-click 1 guide để xoá riêng)"
+          onClick={() => dispatch({ type: "CLEAR_GUIDES" })}>
+          ✕ {ui.guides.length} guide{ui.guides.length > 1 ? "s" : ""}
+        </button>
+      )}
       {ui.busy && <span className="as4-status-item busy">● Đang xử lý…</span>}
       <span className={`as4-status-item ${ui.status.startsWith("❌") ? "error" : ""}`}>{ui.status}</span>
     </footer>

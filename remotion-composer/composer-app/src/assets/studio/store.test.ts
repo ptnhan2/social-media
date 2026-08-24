@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { initialState, reducer } from "./store";
+import { initialState, parsePersisted, persistKey, reducer, serializePersisted } from "./store";
 import { makeLayer } from "./types";
 
 const layer = (id: string, x = 0): ReturnType<typeof makeLayer> =>
@@ -124,5 +124,72 @@ describe("asset studio store", () => {
     }
     expect(s.entries.length).toBeLessThanOrEqual(60);
     expect(s.pointer).toBe(s.entries.length - 1);
+  });
+
+  it("guide add/move/remove/clear", () => {
+    let s = initialState();
+    const g = { id: "g1", axis: "v" as const, pos: 100 };
+    s = reducer(s, { type: "ADD_GUIDE", guide: g });
+    expect(s.ui.guides).toHaveLength(1);
+    s = reducer(s, { type: "MOVE_GUIDE", id: "g1", pos: 250 });
+    expect(s.ui.guides[0].pos).toBe(250);
+    s = reducer(s, { type: "ADD_GUIDE", guide: { id: "g2", axis: "h", pos: 50 } });
+    expect(s.ui.guides).toHaveLength(2);
+    s = reducer(s, { type: "REMOVE_GUIDE", id: "g1" });
+    expect(s.ui.guides.map((x) => x.id)).toEqual(["g2"]);
+    s = reducer(s, { type: "CLEAR_GUIDES" });
+    expect(s.ui.guides).toHaveLength(0);
+  });
+
+  it("grid/rulers toggles", () => {
+    let s = initialState();
+    expect(s.ui.showRulers).toBe(true);
+    expect(s.ui.showGrid).toBe(false);
+    s = reducer(s, { type: "TOGGLE_GRID" });
+    expect(s.ui.showGrid).toBe(true);
+    s = reducer(s, { type: "TOGGLE_RULERS" });
+    expect(s.ui.showRulers).toBe(false);
+  });
+
+  it("RESET_DOC returns to empty doc and single-entry history", () => {
+    let s = initialState();
+    s = reducer(s, { type: "ADD_LAYER", layer: layer("a"), label: "Add layer" });
+    s = reducer(s, { type: "ADD_GUIDE", guide: { id: "g1", axis: "v", pos: 10 } });
+    s = reducer(s, { type: "RESET_DOC" });
+    expect(s.doc.layers).toHaveLength(0);
+    expect(s.entries).toHaveLength(1);
+    expect(s.entries[0].label).toBe("Open");
+    expect(s.pointer).toBe(0);
+    expect(s.ui.guides).toHaveLength(0);
+  });
+
+  it("serialize + parse round-trips persisted state", () => {
+    let s = initialState();
+    s = reducer(s, { type: "ADD_LAYER", layer: layer("a"), label: "Add layer" });
+    s = reducer(s, { type: "ADD_GUIDE", guide: { id: "g1", axis: "v", pos: 42 } });
+    const json = JSON.stringify(serializePersisted(s));
+    const restored = parsePersisted(json);
+    expect(restored).not.toBeNull();
+    expect(restored!.doc.layers.map((l) => l.id)).toEqual(["a"]);
+    expect(restored!.entries.map((e) => e.label)).toEqual(["Open", "Add layer"]);
+    expect(restored!.pointer).toBe(1);
+    expect(restored!.ui.guides).toHaveLength(1);
+    // undo continues from restored pointer
+    const undone = reducer(restored!, { type: "UNDO" });
+    expect(undone.doc.layers).toHaveLength(0);
+  });
+
+  it("parsePersisted rejects corrupt payloads", () => {
+    expect(parsePersisted(null)).toBeNull();
+    expect(parsePersisted("")).toBeNull();
+    expect(parsePersisted("not json")).toBeNull();
+    expect(parsePersisted(JSON.stringify({ doc: { layers: [] } }))).toBeNull(); // missing entries
+    expect(parsePersisted(JSON.stringify({ doc: { layers: [], docWidth: 100, docHeight: 100 }, entries: [], pointer: 0 }))).toBeNull(); // empty entries
+    const badPointer = JSON.stringify({ doc: { layers: [], docWidth: 1, docHeight: 1 }, entries: [{ label: "Open", doc: { layers: [], docWidth: 1, docHeight: 1 } }], pointer: 5 });
+    expect(parsePersisted(badPointer)).toBeNull();
+  });
+
+  it("persistKey is project-scoped", () => {
+    expect(persistKey("isaacverse-final")).toBe("asset-studio:isaacverse-final");
   });
 });
