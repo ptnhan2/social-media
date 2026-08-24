@@ -1760,3 +1760,10 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .as4-preset-save { display: flex; gap: 4px; margin-top: 2px; }
 .as4-preset-save input { flex: 1; min-width: 0; background: #0d1117; border: 1px solid #30363d; border-radius: 5px; color: #e8edf2; font-size: 11px; padding: 4px 8px; }
 .as4-preset-save input:focus { border-color: #f0883e; outline: none; }
+
+.as4-field-row { display: flex; gap: 3px; align-items: center; }
+.as4-field-row select, .as4-field-row input { flex: 1; min-width: 0; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; color: #e8edf2; font-size: 11px; padding: 3px 4px; }
+.as4-field-row input:focus { border-color: #f0883e; outline: none; }
+.as4-prompt-resolved { background: #0d1117; border: 1px solid #21262d; border-radius: 5px; padding: 5px 7px; font-size: 10px; color: #8b949e; line-height: 1.45; max-height: 70px; overflow-y: auto; }
+.as4-prompt-resolved b { color: #f0883e; }
+.as4-prompt-wrap code { background: #21262d; border-radius: 3px; padding: 0 3px; color: #f0883e; }

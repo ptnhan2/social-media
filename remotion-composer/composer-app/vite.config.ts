@@ -46,6 +46,15 @@ const runAssetBridge = (cmd: Record<string, unknown>): Record<string, unknown> =
     cwd: WORKSPACE_ROOT, windowsHide: true, encoding: "utf-8",
     input: JSON.stringify(cmd), timeout: 300000, maxBuffer: 64 * 1024 * 1024,
   });
+  // python exits 1 for {ok: false} results too — surface that JSON instead of
+  // a generic crash message when stdout is parseable.
+  if (proc.stdout && proc.stdout.trim().startsWith("{")) {
+    try {
+      return JSON.parse(proc.stdout.trim());
+    } catch {
+      /* fall through to error path */
+    }
+  }
   if (proc.status !== 0 || !proc.stdout) {
     throw new Error(String(proc.stderr || "asset bridge failed").slice(0, 400));
   }

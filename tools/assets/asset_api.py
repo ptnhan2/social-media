@@ -449,38 +449,80 @@ def op_list_recipes(cmd: dict) -> dict:
     # filter out disabled
     active = {k: v for k, v in recipes.items() if v.get("enabled", True)}
     # merge project user presets (fixed-prompt recipes saved from the UI)
-    project = cmd.get("project", "isaacverse-final")
-    user_file = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
-    if user_file.exists():
-        try:
-            user = json.loads(user_file.read_text(encoding="utf-8-sig"))
-            for k, v in user.items():
-                active[k] = v
-        except Exception:
-            pass
+    for k, v in _load_user_recipes(cmd.get("project", "isaacverse-final")).items():
+        active[k] = v
     return {"ok": True, "recipes": active}
 
 
+def _load_user_recipes(project: str) -> dict:
+    """Load project user recipes; corrupt/empty file → {} (never crash)."""
+    path = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8-sig")) or {}
+    except Exception:
+        return {}
+
+
+def _write_json_atomic(path: Path, data: dict) -> None:
+    """Atomic JSON write: temp file + os.replace — never leaves a truncated file
+    if a concurrent read or crash interrupts us."""
+    import os as _os
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    _os.replace(tmp, path)
+
+
 def op_save_recipe(cmd: dict) -> dict:
-    """Save a user prompt preset for this project (appears in the recipe dropdown)."""
+    """Create or update a STRUCTURED user recipe (template + fields + defaults).
+
+    Body: {project, id?, label, promptTemplate, fields: [{name,label,options}],
+    defaults: {field: value}} — placeholders in promptTemplate stay live, so
+    options remain independently selectable after saving.
+    """
     import re as _re
     project = cmd.get("project", "isaacverse-final")
     label = str(cmd.get("label", "")).strip()
-    prompt = str(cmd.get("prompt", "")).strip()
-    if not label or not prompt:
-        return {"ok": False, "error": "label and prompt required"}
-    slug = _re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")[:40] or "preset"
-    path = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
-    data = {}
-    if path.exists():
-        data = json.loads(path.read_text(encoding="utf-8-sig"))
-    rid, n = slug, 2
-    while rid in data:
-        rid = f"{slug}-{n}"
-        n += 1
-    data[rid] = {"label": label, "description": "User preset", "prompt": prompt, "user": True, "fields": []}
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    template = str(cmd.get("promptTemplate", "")).strip()
+    fields = cmd.get("fields", [])
+    defaults = cmd.get("defaults", {}) or {}
+    if not label or not template:
+        return {"ok": False, "error": "label and promptTemplate required"}
+    if not isinstance(fields, list):
+        return {"ok": False, "error": "fields must be a list"}
+    # validate field shape (name/label/options)
+    clean_fields = []
+    for f in fields:
+        if not isinstance(f, dict) or not f.get("name") or not isinstance(f.get("options"), list):
+            return {"ok": False, "error": "each field needs name + options"}
+        clean_fields.append({
+            "name": str(f["name"]),
+            "label": str(f.get("label", f["name"])),
+            "type": "choice",
+            "options": [str(o) for o in f["options"]],
+            "optional": bool(f.get("optional", False)),
+        })
+    data = _load_user_recipes(project)
+    rid = str(cmd.get("id", "") or "")
+    if rid and (rid not in data or not data[rid].get("user")):
+        rid = ""  # unknown/built-in id → create new instead of overwrite
+    if not rid:
+        slug = _re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")[:40] or "recipe"
+        rid, n = slug, 2
+        while rid in data:
+            rid = f"{slug}-{n}"
+            n += 1
+    data[rid] = {
+        "label": label,
+        "description": "User recipe",
+        "promptTemplate": template,
+        "fields": clean_fields,
+        "defaults": defaults,
+        "user": True,
+    }
+    _write_json_atomic(ROOT / "projects" / project / "assets" / "character" / "recipes.json", data)
     return {"ok": True, "id": rid}
 
 
@@ -488,16 +530,13 @@ def op_delete_recipe(cmd: dict) -> dict:
     """Delete a user preset (built-in recipes cannot be deleted)."""
     project = cmd.get("project", "isaacverse-final")
     rid = cmd.get("id", "")
-    path = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
-    if not path.exists():
-        return {"ok": False, "error": "preset not found"}
-    data = json.loads(path.read_text(encoding="utf-8-sig"))
+    data = _load_user_recipes(project)
     if rid not in data:
         return {"ok": False, "error": "preset not found"}
     if not data[rid].get("user"):
         return {"ok": False, "error": "only user presets can be deleted"}
     del data[rid]
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    _write_json_atomic(ROOT / "projects" / project / "assets" / "character" / "recipes.json", data)
     return {"ok": True}
 
 
@@ -520,7 +559,13 @@ OPS = {
 
 
 def main() -> int:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    # Windows python pipes default to cp1252+surrogateescape — browser JSON is
+    # always utf-8. Force utf-8 on ALL stdio BEFORE reading stdin, with
+    # errors='replace' so no byte sequence can crash a save (lone surrogates
+    # from mis-decoded bytes previously caused UnicodeEncodeError on write).
+    sys.stdin.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
     _load_env()
     try:
         # command via stdin (large payloads: base64 PNGs) or argv (small)

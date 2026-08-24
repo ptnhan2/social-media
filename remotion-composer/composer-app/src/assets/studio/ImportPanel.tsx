@@ -37,17 +37,23 @@ export const ImportPanel: React.FC<{
   const [recipes, setRecipes] = React.useState<Record<string, Recipe>>({});
   const [selectedRecipe, setSelectedRecipe] = React.useState("");
   const [recipeFields, setRecipeFields] = React.useState<Record<string, string>>({});
-  // prompt overrides per recipe key ("__custom__" for custom mode) — persisted
-  // to localStorage per project so edits survive reloads.
-  const [overrides, setOverrides] = React.useState<Record<string, string>>(() => {
+  // editable template draft for the selected recipe (placeholders stay live)
+  const [templateDraft, setTemplateDraft] = React.useState("");
+  // options added per field this session: fieldName → added options
+  const [extraOptions, setExtraOptions] = React.useState<Record<string, string[]>>({});
+  const [addingField, setAddingField] = React.useState<string | null>(null);
+  const [addOptionText, setAddOptionText] = React.useState("");
+  // custom-mode prompt — persisted per project
+  const [customPrompt, setCustomPrompt] = React.useState(() => {
     try {
-      return JSON.parse(window.localStorage.getItem(overridesKey(projectId)) || "{}") as Record<string, string>;
+      const stored = JSON.parse(window.localStorage.getItem(overridesKey(projectId)) || "{}") as Record<string, string>;
+      return stored.__custom__ ?? "";
     } catch {
-      return {};
+      return "";
     }
   });
-  const [presetName, setPresetName] = React.useState("");
-  const [presetSaving, setPresetSaving] = React.useState(false);
+  const [newRecipeName, setNewRecipeName] = React.useState("");
+  const [recipeSaving, setRecipeSaving] = React.useState(false);
   const [genResults, setGenResults] = React.useState<{ url: string; path: string }[]>([]);
 
   const [poses, setPoses] = React.useState<PoseEntry[]>([]);
@@ -82,48 +88,95 @@ export const ImportPanel: React.FC<{
     }
   }, [projectId]);
 
-  // persist overrides (debounced)
+  const selectRecipe = React.useCallback((id: string, all?: Record<string, Recipe>) => {
+    const r = (all ?? recipes)[id];
+    setSelectedRecipe(id);
+    setRecipeFields(r ? defaultFields(r) : {});
+    setTemplateDraft(r ? r.promptTemplate ?? r.prompt ?? "" : "");
+    setExtraOptions({});
+    setAddingField(null);
+    setAddOptionText("");
+  }, [recipes]);
+
+  // persist custom prompt (debounced)
   React.useEffect(() => {
     const t = window.setTimeout(() => {
       try {
-        window.localStorage.setItem(overridesKey(projectId), JSON.stringify(overrides));
+        window.localStorage.setItem(overridesKey(projectId), JSON.stringify({ __custom__: customPrompt }));
       } catch {
         /* ignore */
       }
     }, 300);
     return () => window.clearTimeout(t);
-  }, [overrides, projectId]);
+  }, [customPrompt, projectId]);
 
-  const effectivePrompt = React.useMemo(() => {
-    if (selectedRecipe === "__custom__") return overrides.__custom__ ?? "";
-    const r = recipes[selectedRecipe];
-    if (!r) return "";
-    if (r.user) return overrides[selectedRecipe] ?? r.prompt ?? "";
-    const resolved = r.promptTemplate ? resolvePrompt(r.promptTemplate, recipeFields) : "";
-    return overrides[selectedRecipe] ?? resolved;
-  }, [selectedRecipe, overrides, recipes, recipeFields]);
+  const selectedRecipeDef = selectedRecipe === "__custom__" ? null : recipes[selectedRecipe];
 
-  const savePreset = () =>
+  const effectiveOptions = React.useCallback(
+    (fieldName: string): string[] => {
+      const f = selectedRecipeDef?.fields.find((x) => x.name === fieldName);
+      return [...(f?.options ?? []), ...(extraOptions[fieldName] ?? [])];
+    },
+    [selectedRecipeDef, extraOptions],
+  );
+
+  const resolvedPrompt = React.useMemo(() => {
+    if (selectedRecipe === "__custom__") return customPrompt.trim();
+    if (!selectedRecipeDef) return "";
+    return resolvePrompt(templateDraft, recipeFields);
+  }, [selectedRecipe, selectedRecipeDef, templateDraft, recipeFields, customPrompt]);
+
+  const effectivePrompt = resolvedPrompt;
+
+  /** Fields with session-added options merged — what gets saved. */
+  const fieldsForSave = React.useMemo(() => {
+    if (!selectedRecipeDef) return [];
+    return selectedRecipeDef.fields.map((f) => ({
+      ...f,
+      options: [...f.options, ...(extraOptions[f.name] ?? [])],
+    }));
+  }, [selectedRecipeDef, extraOptions]);
+
+  const structureDirty = React.useMemo(() => {
+    if (!selectedRecipeDef) return false;
+    const templateChanged = templateDraft !== (selectedRecipeDef.promptTemplate ?? selectedRecipeDef.prompt ?? "");
+    const optionsChanged = Object.values(extraOptions).some((v) => v.length > 0);
+    const defaultsChanged =
+      selectedRecipeDef.user &&
+      JSON.stringify(recipeFields) !== JSON.stringify(defaultFields(selectedRecipeDef));
+    return templateChanged || optionsChanged || defaultsChanged;
+  }, [selectedRecipeDef, templateDraft, extraOptions, recipeFields]);
+
+  const saveRecipe = (asNew: boolean) =>
     void (async () => {
-      const label = presetName.trim();
-      const prompt = effectivePrompt.trim();
-      if (!label || !prompt) return;
-      setPresetSaving(true);
+      const label = asNew ? newRecipeName.trim() : selectedRecipeDef?.label ?? "";
+      if (!label || !templateDraft.trim()) return;
+      setRecipeSaving(true);
       onBusy(true);
       try {
-        const data = await bridge({ op: "save-recipe", project: projectId, label, prompt });
+        const payload: Record<string, unknown> = {
+          op: "save-recipe",
+          project: projectId,
+          label,
+          promptTemplate: templateDraft.trim(),
+          fields: fieldsForSave,
+          defaults: recipeFields,
+        };
+        if (!asNew && selectedRecipeDef?.user) payload.id = selectedRecipe;
+        const data = await bridge(payload);
         const r = await refreshRecipes();
         const id = String(data.id);
-        if (r[id]) {
-          setSelectedRecipe(id);
-          setRecipeFields({});
-        }
-        setPresetName("");
-        onStatus(`✓ Đã lưu preset "${label}" — chọn lại được bất cứ lúc nào`);
+        if (r[id]) selectRecipe(id, r);
+        if (asNew) setNewRecipeName("");
+        onStatus(
+          asNew
+            ? `✓ Đã lưu recipe "${label}" (template + options — chỉnh riêng từng option được)`
+            : `✓ Đã cập nhật recipe "${label}"`,
+        );
       } catch (e) {
         onStatus(`❌ ${String((e as Error).message || e)}`);
       } finally {
-        setPresetSaving(false);
+        setRecipeSaving(false);
         onBusy(false);
       }
     })();
@@ -132,15 +185,15 @@ export const ImportPanel: React.FC<{
     void (async () => {
       const r = recipes[selectedRecipe];
       if (!r?.user) return;
-      if (!window.confirm(`Xoá preset "${r.label}"?`)) return;
+      if (!window.confirm(`Xoá recipe "${r.label}"?`)) return;
       onBusy(true);
       try {
         await bridge({ op: "delete-recipe", project: projectId, id: selectedRecipe });
         const next = await refreshRecipes();
         const first = Object.keys(next)[0] || "__custom__";
-        setSelectedRecipe(first);
-        if (next[first]) setRecipeFields(defaultFields(next[first]));
-        onStatus("✓ Đã xoá preset");
+        if (next[first]) selectRecipe(first, next);
+        else setSelectedRecipe("__custom__");
+        onStatus("✓ Đã xoá recipe");
       } catch (e) {
         onStatus(`❌ ${String((e as Error).message || e)}`);
       } finally {
@@ -148,19 +201,28 @@ export const ImportPanel: React.FC<{
       }
     })();
 
+  const addOptionToField = (fieldName: string) => {
+    const v = addOptionText.trim();
+    if (!v) return;
+    if (!effectiveOptions(fieldName).includes(v)) {
+      setExtraOptions((prev) => ({ ...prev, [fieldName]: [...(prev[fieldName] ?? []), v] }));
+      setRecipeFields((prev) => ({ ...prev, [fieldName]: v }));
+    }
+    setAddOptionText("");
+    setAddingField(null);
+  };
+
   React.useEffect(() => {
     void refreshPoses();
     void refreshInbox();
     refreshRecipes().then((r) => {
       const first = Object.keys(r)[0];
-      if (first) {
-        setSelectedRecipe(first);
-        setRecipeFields(defaultFields(r[first]));
-      }
+      if (first) selectRecipe(first, r);
     });
     const onRefresh = () => void refreshPoses();
     window.addEventListener("asset-studio:refresh-poses", onRefresh);
     return () => window.removeEventListener("asset-studio:refresh-poses", onRefresh);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshPoses]);
 
   const run = async (label: string, fn: () => Promise<void>) => {
@@ -282,11 +344,7 @@ export const ImportPanel: React.FC<{
           <select
             className="as4-select"
             value={selectedRecipe}
-            onChange={(e) => {
-              setSelectedRecipe(e.target.value);
-              const r = recipes[e.target.value];
-              setRecipeFields(r ? defaultFields(r) : {});
-            }}
+            onChange={(e) => selectRecipe(e.target.value)}
           >
             {Object.entries(recipes).map(([key, r]) => (
               <option key={key} value={key}>
@@ -302,66 +360,81 @@ export const ImportPanel: React.FC<{
               <textarea
                 className="as4-prompt-box"
                 rows={6}
-                value={overrides.__custom__ ?? ""}
-                onChange={(e) => setOverrides((prev) => ({ ...prev, __custom__: e.target.value }))}
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
                 placeholder="Mô tả ảnh muốn generate (English) — ví dụ: A comic ink style character head of a young woman, confident expression, wearing headphones, pure white background, only the head..."
               />
               <p className="as4-hint">Prompt custom được ghi nhớ cho lần sau.</p>
             </>
           ) : (
             (() => {
-              const r = recipes[selectedRecipe];
-              const isUser = Boolean(r?.user);
-              const resolved = isUser
-                ? r?.prompt ?? ""
-                : r?.promptTemplate
-                  ? resolvePrompt(r.promptTemplate, recipeFields)
-                  : "";
-              const effective = overrides[selectedRecipe] ?? resolved;
-              const dirty = selectedRecipe in overrides && overrides[selectedRecipe] !== resolved;
+              const r = selectedRecipeDef;
+              if (!r) return null;
+              const isUser = Boolean(r.user);
               return (
                 <>
-                  {!isUser &&
-                    r?.fields.map((f) => (
-                      <label key={f.name} className="as4-field">
-                        <span>{f.label}</span>
+                  {r.fields.map((f) => (
+                    <div key={f.name} className="as4-field">
+                      <span>{f.label}</span>
+                      <div className="as4-field-row">
                         <select
                           value={recipeFields[f.name] || f.options[0]}
-                          onChange={(e) => {
-                            setRecipeFields((prev) => ({ ...prev, [f.name]: e.target.value }));
-                            // đổi option → reset override về auto (muốn giữ prompt cố định thì lưu preset)
-                            setOverrides((prev) => {
-                              const next = { ...prev };
-                              delete next[selectedRecipe];
-                              return next;
-                            });
-                          }}
+                          onChange={(e) => setRecipeFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
                         >
-                          {f.options.map((o) => (
+                          {effectiveOptions(f.name).map((o) => (
                             <option key={o} value={o}>
                               {o}
+                              {extraOptions[f.name]?.includes(o) ? " (mới)" : ""}
                             </option>
                           ))}
                         </select>
-                      </label>
-                    ))}
+                        <button
+                          type="button"
+                          className="as4-icon-btn"
+                          title={`Thêm option mới cho ${f.label}`}
+                          onClick={() => {
+                            setAddingField(addingField === f.name ? null : f.name);
+                            setAddOptionText("");
+                          }}
+                        >
+                          ＋
+                        </button>
+                      </div>
+                      {addingField === f.name && (
+                        <div className="as4-field-row">
+                          <input
+                            autoFocus
+                            value={addOptionText}
+                            onChange={(e) => setAddOptionText(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") addOptionToField(f.name);
+                              if (e.key === "Escape") setAddingField(null);
+                            }}
+                            placeholder={`Option mới cho ${f.label} (vd: watercolor)`}
+                          />
+                          <button type="button" className="as4-btn ghost" onClick={() => addOptionToField(f.name)}>
+                            Thêm
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
                   <div className="as4-prompt-wrap">
                     <div className="as4-filter-header">
                       <span>
-                        Prompt {dirty ? "(đã sửa — ghi nhớ)" : ""}
-                        {isUser ? " (preset)" : ""}
+                        Prompt template {structureDirty ? "(chưa lưu)" : ""}
+                        {!isUser && " — built-in, chỉnh xong nhớ Lưu thành recipe mới"}
                       </span>
                       <button
                         type="button"
                         className="as4-icon-btn"
-                        title="Reset về prompt tự động từ các option"
-                        onClick={() =>
-                          setOverrides((prev) => {
-                            const next = { ...prev };
-                            delete next[selectedRecipe];
-                            return next;
-                          })
-                        }
+                        title="Reset template về bản gốc của recipe"
+                        onClick={() => {
+                          setTemplateDraft(r.promptTemplate ?? r.prompt ?? "");
+                          setExtraOptions({});
+                          setRecipeFields(defaultFields(r));
+                        }}
                       >
                         ↺
                       </button>
@@ -369,13 +442,53 @@ export const ImportPanel: React.FC<{
                     <textarea
                       className="as4-prompt-box"
                       rows={5}
-                      value={effective}
-                      onChange={(e) => setOverrides((prev) => ({ ...prev, [selectedRecipe]: e.target.value }))}
+                      value={templateDraft}
+                      onChange={(e) => setTemplateDraft(e.target.value)}
                     />
+                    <p className="as4-hint">
+                      Dùng <code>{"{{style}}"}</code> v.v. làm chỗ thay thế — đổi option ở trên vẫn chạy.
+                    </p>
                   </div>
+
+                  <div className="as4-prompt-resolved" title="Prompt thực tế gửi đi sau khi thay option">
+                    <b>Prompt gửi đi:</b> {resolvedPrompt || "(trống)"}
+                  </div>
+
+                  {isUser && (
+                    <button
+                      type="button"
+                      className="as4-btn primary wide"
+                      onClick={() => saveRecipe(false)}
+                      disabled={recipeSaving || !structureDirty || !templateDraft.trim()}
+                    >
+                      💾 Cập nhật recipe này
+                    </button>
+                  )}
+
+                  <div className="as4-preset-save">
+                    <input
+                      value={newRecipeName}
+                      onChange={(e) => setNewRecipeName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveRecipe(true);
+                      }}
+                      placeholder="Tên recipe mới…"
+                      disabled={recipeSaving}
+                    />
+                    <button
+                      type="button"
+                      className="as4-btn ghost"
+                      onClick={() => saveRecipe(true)}
+                      disabled={recipeSaving || !newRecipeName.trim() || !templateDraft.trim()}
+                      title="Lưu template + options + lựa chọn hiện tại thành recipe mới — giữ nguyên cấu trúc, chỉnh riêng từng option được"
+                    >
+                      💾 Lưu thành recipe mới
+                    </button>
+                  </div>
+
                   {isUser && (
                     <button type="button" className="as4-btn ghost wide danger" onClick={deletePreset}>
-                      🗑 Xoá preset này
+                      🗑 Xoá recipe này
                     </button>
                   )}
                 </>
@@ -387,23 +500,6 @@ export const ImportPanel: React.FC<{
             disabled={!effectivePrompt.trim()}>
             ✨ Generate
           </button>
-
-          <div className="as4-preset-save">
-            <input
-              value={presetName}
-              onChange={(e) => setPresetName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") savePreset();
-              }}
-              placeholder="Tên preset mới…"
-              disabled={presetSaving}
-            />
-            <button type="button" className="as4-btn ghost" onClick={savePreset}
-              disabled={presetSaving || !presetName.trim() || !effectivePrompt.trim()}
-              title="Lưu prompt hiện tại thành preset — xuất hiện trong dropdown, dùng lại mãi">
-              💾 Lưu preset
-            </button>
-          </div>
 
           <div className="as4-gen-grid">
             {genResults.map((item, i) => (

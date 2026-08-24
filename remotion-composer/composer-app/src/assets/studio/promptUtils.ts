@@ -18,9 +18,11 @@ export interface Recipe {
   enabled?: boolean;
   fields: RecipeField[];
   promptTemplate?: string;
-  /** User preset: fixed prompt, no fields. */
+  /** Legacy flat user preset (prompt without placeholders) — treated as a template with no fields. */
   prompt?: string;
   user?: boolean;
+  /** Saved field selections (user recipes). */
+  defaults?: Record<string, string>;
 }
 
 /** Resolve {{field}} substitutions + {{#field}}...{{/field}} optional blocks. */
@@ -42,9 +44,11 @@ export function resolvePrompt(template: string, fields: Record<string, string>):
     .trim();
 }
 
-/** Default field values (first option) for a recipe. */
+/** Default field values: saved defaults ?? first option. */
 export function defaultFields(recipe: Recipe): Record<string, string> {
   const defaults: Record<string, string> = {};
-  for (const f of recipe.fields) defaults[f.name] = f.options[0];
+  for (const f of recipe.fields) {
+    defaults[f.name] = recipe.defaults?.[f.name] ?? f.options[0];
+  }
   return defaults;
 }
