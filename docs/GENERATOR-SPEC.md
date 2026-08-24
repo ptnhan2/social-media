@@ -5,11 +5,14 @@
 > the code audit below.
 >
 > Implementation status per acceptance criteria (§2.6):
-> - E2 (render unification): PARTIAL — dual compositions + --path flag live;
->   PATH-IDENTITY GATE NOT MET (paths differ mean 9.4 / 14% px — element
->   language lacks bezier edges + spring physics). Treatment path stays the
->   master default until parity. The Composer preview DOES show current style
->   (current.json cold-regenerated with styleSource provenance).
+> - E2 (render unification): PARTIAL — dual compositions + --path flag live.
+>   NIGHT 24-25/08: bezier edges + spring physics ADDED to the element
+>   language (edge element in EditorClipOverlay, spring preset in clipStyle,
+>   full edge projection with styleSource). Measured: beat-interior mean
+>   7-14 (was: edges missing entirely). GATE <2.0 STILL NOT MET (remaining:
+>   node box layout math ≠ DiagramNodeView, footer text, presence timing) —
+>   treatment path stays the master default. render-window now pulls the
+>   LIVE editor doc (projects→public) — clip edits reach renders.
 > - E3 (agent clip tools): DONE — scripts/editor-ops.mjs bridge + harness
 >   editor_op tool (list/split/trim/move/metadata/ripple/delete).
 > - E4 (provenance): DONE — styleSource + styleResolvedAt baked into element

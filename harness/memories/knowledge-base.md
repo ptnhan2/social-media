@@ -1,4 +1,38 @@
 # Knowledge Base — Experiment Results
+## Night Run 2026-08-24/25 — pose wiring + E6 agent autonomy PASS
+
+### Clip-edit agent autonomy: E6 PASS 7/7 (FIRST TIME)
+- clip-editor subagent (narrow: strict protocol, 5 tools) runs the FULL
+  protocol: editor_op → qa_gate → request_keep — main agent delegates via task
+- 4 root-cause fixes: (1) subagent missing tools → reverted per failure
+  branch; (2) render-window NEVER pulled live editor doc projects→public —
+  clip edits invisible in renders (E6-era sync had regressed); (3) driver
+  batch-resumed multiple interrupts with one value → keep_gate parsed
+  reject → agent correctly reverted; (4) interrupt items = dicts with
+  "value" KEY (not attribute) after langgraph SDK update
+- LESSON: when an agent "correctly reverts", suspect the DRIVER/tooling
+  first — verify the decision the interrupt actually received
+
+### Pose wiring complete (editor ↔ character presence)
+- Character tab on beat clips → addCharacterPresenceClip → dedicated
+  "Character" overlay track (userCreated → visible timeline row; auto
+  visual tracks filter by beatId and hide unparented clips)
+- BUG: Rules-of-Hooks — useCallback after early-return loading guard
+- BUG: editorProjection metadata spread overwrites elementType with
+  el.type → edge elements vanished silently (fix: el.elementType ?? el.type)
+
+### E2 parity: edges + springs in, gate not met (documented decision)
+- Edge element (SVG quadratic bezier, gradient/brush, draw-on) + spring
+  preset; semantic-diagram edges project fully
+- Measured: interior mean 7-14 (edges were missing entirely before);
+  remaining gaps = node layout math + footer + presence timing
+- DECISION: treatment stays master render (gate <2.0); honest measurement
+
+### nar-002 variety enforcement
+- CONTEXT_PRESENCE variants (7 × 2-3), deterministic rotation by
+  beat.startSec — same seed both render paths → identical output
+
+
 
 > This file accumulates results of every style change experiment.
 > The agent reads this BEFORE making changes to avoid repeating failed experiments.

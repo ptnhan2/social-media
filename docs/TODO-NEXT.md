@@ -1,74 +1,76 @@
-# TODO NEXT — NIGHT RUN 2026-08-24 23:50 → sáng 25/08
+# TODO NEXT — NIGHT RUN 2026-08-24/25 — HOÀN TẤT 6/7 PHASE
 
-> User ngủ, blanket approval "tự quyết định mọi thứ, không gián đoạn đến khi
-> hoàn thành TẤT CẢ". Mọi quyết định thiết kế ghi rationale trong commit/docs.
-> Trạng thái real-time: tool todolist. Ghi chú sau mỗi task: evidence.
+> Kết quả night run (user ngủ, autonomous mode — quyết định ghi trong commits).
+> Chi tiết evidence: HARNESS-RECOVERY.md + git log `bc12fe3..HEAD` đêm 24-25/08.
 
-## Phase A — Pose wiring + production poses (~2h)
-- [ ] A1. `addCharacterPresenceClip` op (geometry từ presence grammar →
-       x/y/w/h fractions; metadata src+isCharacterPresence+z30+animIn;
-       userEdited) + unit test
-- [ ] A2. PropertiesPanel "Character" section cho beat clip: pose dropdown
-       (dynamic từ bridge list-poses), position/size/motion, add → timeline
-- [ ] A3. E2E: preview hiện pose clip, kéo được, keyframe được
-- [ ] A4. Re-bake 4 production poses bằng bake_poses với head sạch
-       (head-front.png isnet cutout) — thay poses cũ chất lượng thấp
-- [ ] A5. Cleanup pose library junk (stock-*, e2e-*, test leftovers) sau
-       khi check không còn reference trong EditDoc/store
-- [ ] A6. render-window --path editor verify pose clip xuất hiện trong
-       video render thật
+## Trạng thái các phase
 
-## Phase B — E2 parity: bezier edges + springs (~2.5h) — GAP LỚN NHẤT
-Mục tiêu: pixel-diff 2 path mean < 2.0 (hiện 9.4) → đủ điều kiện flip
-default render path sang editor (GENERATOR-SPEC).
-- [ ] B1. Audit projection: SemanticDiagram edges project sang element
-       clip như thế nào hôm nay (thiếu gì so với treatment path)
-- [ ] B2. Element language: edge element (SVG quadratic bezier + gradient
-       stroke + curvature) trong EditorClipOverlay
-- [ ] B3. Spring anim preset trong clipStyle (spring curve cho animIn)
-- [ ] B4. Project edges đầy đủ từ treatmentElements (geometry + styleSource)
-- [ ] B5. Đo pixel-diff 2 path (render-window dual + PIL diff) → iterate
-       đến < 2.0 hoặc best-effort + document
-- [ ] B6. Nếu đạt gate: flip default render path + QA gates 4 window +
-       full test suite. Nếu không đạt: giữ nguyên + docs rõ remaining gap.
+### Phase A — Pose wiring + production poses ✅ (commit cd03818, 44349e4)
+- addCharacterPresenceClip op (grammar geometry → overlay clip, userEdited
+  ledger) + 2 unit tests — renders qua md.src path sẵn có
+- PropertiesPanel tab "Character" cho beat clip: pose dropdown động từ
+  bridge list-poses + position/size/motion → clip spanning beat range
+- Track "Character" riêng (userCreated → top-level timeline row)
+- E2E: preview render + kéo được + render-window editor path (VLM confirm
+  character trong frame)
+- 4 production poses bake lại với head-front.png (VLM 4/4 PASS) + dọn
+  junk poses (check references trước)
+- BUG bắt được: Rules-of-Hooks violation (useCallback sau early-return)
 
-## Phase C — nar-001 story-framing (~1h)
-- [ ] C1. Đọc U4 decision (taste-standard nar-001 + PATTERN-LEARNING spec)
-- [ ] C2. Implement đúng hướng đã duyệt (host presence + story-framing)
-- [ ] C3. QA gates + render verify + principle_compliance không tụt
+### Phase B — E2 parity: bezier edges + springs ✅ (commit 6d22403)
+- Edge element (elementType=edge): SVG quadratic bezier + curvature +
+  gradient/brush stroke + draw-on reveal trong EditorClipOverlay
+- "spring" anim preset trong clipStyle (underdamped overshoot-settle)
+- Projection: semantic-diagram edges project đầy đủ (styleSource provenance)
+- BUG: editorProjection ghi đè elementType bằng el.type trong metadata
+  spread (edges biến mất âm thầm)
+- Đo lường (B5): beat interior mean 7-14 (trước: edges hoàn toàn thiếu),
+  frame 0 = 40 (cross-beat boundary artifact)
+- **B6 DECISION: gate <2.0 CHƯA đạt → KHÔNG flip default render path**
+  (remaining gaps: node box layout math khác, footer, presence timing —
+  VLM side-by-side đã list). Treatment path stays master.
 
-## Phase D — Asset Studio round 3 (~1h)
-- [ ] D1. Zoom-to-selection (tool options + shortcut)
-- [ ] D2. History panel thumbnails (dataURL nhỏ ghi vào entry khi commit)
-- [ ] D3. Wand marching-ants (pulse animation overlay)
-- [ ] D4. (skip multi-doc — rủi ro kiến trúc ban đêm; ghi needs-design)
+### Phase C — nar-001/nar-002 presence variety ✅ (commit ae69cc7)
+- CONTEXT_PRESENCE: 7 context entries × 2-3 variants (pose/position/motion/
+  size) — rotation deterministic theo beat.startSec (nar-002 "never same
+  framing twice"), cùng kết quả 2 render paths
+- 6 unit tests (consecutive-same-context differ, determinism, override
+  wins, variant table shape)
+- Part B scope: kicker narrative framing giữ trên 2 treatment diagram
+  (asset/cinematic treatments sẽ clutter nếu thêm label — documented)
+- VLM render verify: character hiển thị (variant theo seed)
 
-## Phase E — Harness & agent (~1h)
-- [ ] E1. Narrow clip-edit subagent cho Ox Alpha (prompt hẹp + editor_op
-       only) + chạy e6_e2e.py verify autonomy
-- [ ] E2. LangSmith render-review queue check + pull scores
-- [ ] E3. design_quality eval subset (guardrail sau thay đổi đêm nay)
+### Phase D — Asset Studio round 3 ✅ (commit ae33c04)
+- Zoom-to-selection (🔍→ Selection button) + fix stale ui.selectedIds
+  closure trong actionsRef deps
+- History panel thumbnails (56px JPEG dataURL khi commit, persisted)
+- Wand selection pulse (node-level rAF, zero re-renders)
 
-## Phase F — E2E test suite cho Asset Studio (~45m, time-boxed)
-- [ ] F1. Playwright spec file cho studio core flows (import stock →
-       bg-remove → lasso → save pose) — chạy lại được, không phải ad-hoc
-- [ ] F2. Nếu setup friction cao → ghi clearly trong docs + bỏ (time-box)
+### Phase E — Harness & agent ✅ (commits a29da0d, 80688ac)
+- **E1: clip-editor subagent — E6 PASS 7/7** (agent autonomy loop đầu tiên
+  chạy trọn vẹn: delegate → editor_op → qa_gate → request_keep → persist)
+- 4 bug fix: subagent thiếu tools (tự revert), render-window không kéo
+  LIVE editor doc (clip edits invisible trong renders — regression từ
+  E6-era), driver resume 1 giá trị cho nhiều interrupts (keep bị parse
+  nhầm reject → agent revert đúng protocol), interrupt serialization
+  (dict value key, không phải attribute)
+- E2: render-review queue 4 items cũ (artifacts 22/08) — lành mạnh
+- E3: guardrail PASS — principle_compliance 14/14, code_quality 14/14
 
-## Phase G — Close-out (~30m)
-- [ ] G1. Docs sync: TODO-NEXT (statuses), HARNESS-RECOVERY, ASSET-STUDIO,
-       GENERATOR-SPEC (kết quả đo E2), CHARACTER-PRESENCE (wiring done)
-- [ ] G2. Docs hygiene: archive docs stale (EVOLUTION build-progress cũ,
-       html files không dùng), giữ docs/ chỉ còn active
-- [ ] G3. Memory save (quyết định đêm)
-- [ ] G4. Final push + CI xanh toàn bộ commits đêm
+### Phase F — Playwright E2E suite ⏭️ SKIPPED (time-box)
+- Lý do: 3h sáng, cần infra decisions (test runner config, fixture
+  strategy cho Konva canvas) đáng có session riêng. Ad-hoc browser E2E
+  đã cover mọi feature đêm nay. **Defer to next session.**
 
-## Sau đêm (cần user/design session — KHÔNG làm đêm nay)
-- Multi-doc studio, anchor editor kéo thả (CHARACTER-PRESENCE-SPEC mục 2)
-- `repurpose` pipeline (transcript → X/blog/shorts) — feature lớn, cần duyệt
-- Agent product UI (useStream) / self-host deploy
-- E2 flip nếu B không đạt gate
+### Phase G — Close-out ✅ (commit này)
+- Docs sync toàn bộ + archive html stale + memory + final push
 
----
+## Còn lại sau đêm (next session)
 
-> Lịch sử batches A-F + spec A1-D3: XONG (2026-08-21→23) — chi tiết
-> HARNESS-RECOVERY.md + git log. File này giờ chỉ track việc CHƯA xong.
+1. **E2 parity tiếp** (nếu muốn flip): node box layout math trong
+   projection (DiagramNodeView layout ≠ 270×100), footer text, presence
+   timing — cần đo lại sau mỗi mục
+2. **Playwright E2E suite** cho Asset Studio (infra decisions)
+3. Multi-doc studio + anchor editor kéo thả (CHARACTER-PRESENCE-SPEC)
+4. `repurpose` pipeline (transcript → X/blog/shorts) — cần duyệt user
+5. Poses production: user tự bake thêm poses bằng studio (công cụ đủ)
