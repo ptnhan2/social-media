@@ -1756,3 +1756,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .as4-modal code { background: #21262d; border-radius: 3px; padding: 0 3px; font-size: 10px; color: #f0883e; }
 .ve-studio-btn { border-color: #f0883e66; color: #f0883e; }
 .ve-studio-btn:hover { background: #f0883e22; }
+
+.as4-preset-save { display: flex; gap: 4px; margin-top: 2px; }
+.as4-preset-save input { flex: 1; min-width: 0; background: #0d1117; border: 1px solid #30363d; border-radius: 5px; color: #e8edf2; font-size: 11px; padding: 4px 8px; }
+.as4-preset-save input:focus { border-color: #f0883e; outline: none; }

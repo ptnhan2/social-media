@@ -441,14 +441,64 @@ def op_list_inbox(cmd: dict) -> dict:
 
 
 def op_list_recipes(cmd: dict) -> dict:
-    """List available Gen AI recipes."""
+    """List available Gen AI recipes: built-ins + project user presets."""
     recipes_file = ROOT / "libraries" / "asset-studio" / "recipes.json"
     if not recipes_file.exists():
         return {"ok": True, "recipes": {}}
     recipes = json.loads(recipes_file.read_text(encoding="utf-8-sig"))
     # filter out disabled
     active = {k: v for k, v in recipes.items() if v.get("enabled", True)}
+    # merge project user presets (fixed-prompt recipes saved from the UI)
+    project = cmd.get("project", "isaacverse-final")
+    user_file = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
+    if user_file.exists():
+        try:
+            user = json.loads(user_file.read_text(encoding="utf-8-sig"))
+            for k, v in user.items():
+                active[k] = v
+        except Exception:
+            pass
     return {"ok": True, "recipes": active}
+
+
+def op_save_recipe(cmd: dict) -> dict:
+    """Save a user prompt preset for this project (appears in the recipe dropdown)."""
+    import re as _re
+    project = cmd.get("project", "isaacverse-final")
+    label = str(cmd.get("label", "")).strip()
+    prompt = str(cmd.get("prompt", "")).strip()
+    if not label or not prompt:
+        return {"ok": False, "error": "label and prompt required"}
+    slug = _re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")[:40] or "preset"
+    path = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
+    data = {}
+    if path.exists():
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+    rid, n = slug, 2
+    while rid in data:
+        rid = f"{slug}-{n}"
+        n += 1
+    data[rid] = {"label": label, "description": "User preset", "prompt": prompt, "user": True, "fields": []}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"ok": True, "id": rid}
+
+
+def op_delete_recipe(cmd: dict) -> dict:
+    """Delete a user preset (built-in recipes cannot be deleted)."""
+    project = cmd.get("project", "isaacverse-final")
+    rid = cmd.get("id", "")
+    path = ROOT / "projects" / project / "assets" / "character" / "recipes.json"
+    if not path.exists():
+        return {"ok": False, "error": "preset not found"}
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
+    if rid not in data:
+        return {"ok": False, "error": "preset not found"}
+    if not data[rid].get("user"):
+        return {"ok": False, "error": "only user presets can be deleted"}
+    del data[rid]
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"ok": True}
 
 
 OPS = {
@@ -464,6 +514,8 @@ OPS = {
     "generate": op_generate,
     "list-recipes": op_list_recipes,
     "list-inbox": op_list_inbox,
+    "save-recipe": op_save_recipe,
+    "delete-recipe": op_delete_recipe,
 }
 
 

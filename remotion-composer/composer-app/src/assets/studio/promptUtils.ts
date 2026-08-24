@@ -18,6 +18,9 @@ export interface Recipe {
   enabled?: boolean;
   fields: RecipeField[];
   promptTemplate?: string;
+  /** User preset: fixed prompt, no fields. */
+  prompt?: string;
+  user?: boolean;
 }
 
 /** Resolve {{field}} substitutions + {{#field}}...{{/field}} optional blocks. */
