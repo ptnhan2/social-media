@@ -34,7 +34,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
 from harness_tools import render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate, editor_op
-from subagents import CRITIC_SUBAGENT
+from subagents import CLIP_EDITOR_SUBAGENT, CRITIC_SUBAGENT
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HARNESS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -198,7 +198,7 @@ _COMMON = dict(
     tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate, editor_op],
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md", "/memories/self-check.md"],
     skills=["/skills/"],
-    subagents=[CRITIC_SUBAGENT],
+    subagents=[CRITIC_SUBAGENT, CLIP_EDITOR_SUBAGENT],
     permissions=[
         FilesystemPermission(operations=["write"], paths=["/workspace/libraries/04-visual/**"], mode="interrupt"),
         FilesystemPermission(operations=["write"], paths=["/memories/**"], mode="interrupt"),

@@ -689,7 +689,7 @@
             "text": "the smallest useful unit",
             "z": 15,
             "opacity": 1,
-            "fontSize": 18,
+            "fontSize": 30,
             "fontWeight": 900,
             "fontFamily": "Arial, sans-serif",
             "textTransform": "uppercase",
@@ -5352,7 +5352,7 @@
   ],
   "revision": {
     "baseEditVersion": "v021",
-    "revision": 12,
-    "updatedAt": "2026-08-24T17:37:09.455Z"
+    "revision": 37,
+    "updatedAt": "2026-08-24T19:21:08.556Z"
   }
 }

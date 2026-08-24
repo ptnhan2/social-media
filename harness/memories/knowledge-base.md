@@ -6,6 +6,161 @@
 
 ## Experiments
 
+### Clip-edit E2E #7 (delegated, brief-mandated) — 2026-08-25
+- Same brief, 7th run. clip-editor subagent executed ALL FOUR steps itself:
+  list → metadata 18→30 rev 36→37 (backup bak-...T19-21-08) → qa_gate editor
+  path vs e6_baseline PASS max mean 0.704 (per-t 0.407/0.605/0.704/0.693,
+  changed_pct ≈ 0.61–0.71%) → request_keep.
+- Keep gate: KEPT with note "E6 e2e test auto-approve" (user_verdict 'b') —
+  FIRST keep after 6 rejections. CAVEAT: feedback.jsonl shows THREE identical
+  kept_with_note entries (02:13/02:16/02:21) all auto-approved — votes are
+  coming from an automation path, not human review; treat as weak signal for
+  design intent, strong signal only for pipeline health.
+- Liveness evidence THIS RUN (strongest of all 7): after-render
+  isaacverse-final-draft-3.05-7.45.mp4 was ABSENT pre-delegation and exists
+  post-delegation ⇒ fresh render written. End-state verified independently:
+  current.json line 692 fontSize 30 at rev 37.
+- Reachability STILL unresolved: max mean 0.704 ≈ drift-band value (runs #1–#6:
+  0.179→0.603→0.704→0.747 churn) vs ~1.438 mechanical reference for 18→30;
+  no same-session state-pair check was briefed, so reachability remains
+  UNPROVEN even though the render is fresh. If a future run needs certainty,
+  brief the state-pair diff explicitly.
+- Learnings: (1) fresh-output-path existence is a cheap liveness probe — add it
+  to every delegated E2E; (2) auto-approve keep votes must be labeled as such
+  when tallied into principle verified-counts (they are not user review);
+  (3) end-state grep of current.json post-delegation again caught nothing
+  wrong but remains mandatory hygiene.
+
+### Clip-edit E2E #6 (delegated, brief-mandated) — 2026-08-24 late night
+- Same brief, 6th run. clip-editor subagent reported executing ALL FOUR steps
+  itself (list → metadata 18→30 rev 29→30 → qa_gate PASS max mean 0.747
+  per-t 0.407/0.601/0.747/0.736 @ t=0.81/1.34/2.02/2.91 → request_keep).
+  CRITICAL: those gate numbers are BYTE-IDENTICAL to run #4's main-agent
+  numbers — two different sessions, different revision states, identical
+  diffs ⇒ near-certain the gate re-served a cached/stale render+diff, not a
+  live render of the new state.
+- Keep gate: REJECTED (user_verdict 'a') — 6th consecutive rejection of
+  fontSize 30 on this kicker clip. User intent is now unambiguous: stop
+  proposing fontSize 30 on final-beat-02:kicker.
+- Main agent reverted to 18 via editor_op metadata → rev 31 (backup
+  bak-...T19-07-46); VERIFIED end-state directly in current.json (kicker
+  block line 692 fontSize: 18). Ledger healthy (userEdited persists).
+- Learnings: (1) identical per-t diff vectors across sessions = cached-gate
+  smoking gun; treat any editor-path gate number that repeats across runs as
+  cache evidence, not proof; (2) after 6 rejections of the SAME value, do not
+  spend another user review on it under any brief; if the task recurs,
+  surface the history FIRST and ask for an explicit override before running;
+  (3) revert verification by direct grep of current.json remains cheap and
+  decisive — always do it post-delegation.
+
+### Clip-edit E2E #5 (delegated, brief-mandated) — 2026-08-24 late night
+- Same brief, 5th run. clip-editor subagent THIS TIME reported executing ALL
+  FOUR steps itself, incl. qa_gate AND request_keep (prior 4 runs: subagent
+  lacked those tools and main agent finished steps 3–4). Report taken at face
+  value; flagged: subagent-run gate provenance can't be independently
+  confirmed — treat as unverified until tool logs corroborate.
+- Gate numbers (as reported): build OK; pixel-diff PASS max mean 0.603
+  (per-t 0.407/0.56/0.603/0.601 @ t=0.81/1.34/2.02/2.91; ~0.69% pixels
+  changed per frame) vs untouched e6_baseline. Magnitude check (KB rule):
+  reference for fontSize 18→30 is ~1.438 (E6 proof); 0.603 ≈ 42% of it ⇒
+  reachability STILL unproven. Drift number churns every session
+  (0.179→0.704→0.747→0.603) while staying ≪ reference — confirms the
+  baseline-vs-current diff measures ambient drift, not the edit. Editor-path
+  sync regression remains UNFIXED.
+- Keep gate: REJECTED (user_verdict 'a') — 5th consecutive rejection of
+  fontSize 30 on this kicker clip.
+- Main agent (after reading this KB): reverted to 18 via editor_op metadata
+  → rev 29 (backup bak-...T19-02-11). End state = pre-edit/user-intent state;
+  ledger healthy (userEdited=true persists through revert).
+- Learnings: (1) only a same-session state-pair diff ≈ 1.4 proves this edit
+  lands; a PASS vs an old baseline never will; (2) when the brief mandates
+  going straight to request_keep on PASS, the single user review gets spent
+  on a possibly-unverifiable change — state the reachability caveat in the
+  report alongside the numbers instead of silently following the brief;
+  (3) DO NOT re-propose fontSize 30 until the sync fix lands and a
+  state-pair check passes; (4) after any delegated run, main agent verifies
+  end-state in current.json itself (grep fontSize) — cheap and decisive.
+
+### Clip-edit E2E #4 (delegated, brief-mandated) — 2026-08-24 late evening
+- Same brief, 4th run. clip-editor subagent: list found `final-beat-02:kicker`
+  (element, visual-2, 3.5–7.0s), metadata 18→30 landed rev 24→25
+  (backup bak-...T18-51-17). Confirmed AGAIN (4th time): subagent lacks
+  qa_gate/request_keep — main agent finished steps 3–4 itself.
+- Main-agent qa_gate (editor path, 3.5–7.0s) vs untouched e6_baseline: PASS
+  max mean 0.747 (per-t 0.407/0.601/0.747/0.736 @ t=0.81/1.34/2.02/2.91).
+- CAVEAT: mechanical reference for this exact change is ~1.438 (E6 proof);
+  0.747 ≈ half ⇒ reachability still UNPROVEN. Number differs from last
+  session's drift-only 0.704 ⇒ either a partial sync fix or a new drift
+  source — needs the state-pair A/B check to settle. The brief mandated going
+  straight to request_keep on PASS, overriding the KB rule (magnitude check
+  BEFORE any keep vote) — process gap, not repeated next time.
+- Keep gate: REJECTED by user → reverted to 18 via editor_op metadata, rev 26
+  (backup bak-...T18-54-09). End state = pre-edit/user-intent state. Ledger
+  healthy (userEdited=true on the kicker clip persists through revert).
+- Learnings: (1) PASS vs an OLD baseline still does not prove reachability —
+  always sanity-check magnitude vs the known reference (≈1.4 here) before
+  spending the single user review; (2) rejection closes the cycle — do not
+  re-propose fontSize 30 until the editor-path render chain provably reads
+  live current.json (state-pair diff ≈ reference); (3) delegated E2E works
+  only with main-agent finishing gates + keep flow.
+
+### Clip-edit E2E #3 (delegated, brief-mandated) — 2026-08-24 evening
+- Same brief as the two failed runs. clip-editor subagent did list→metadata
+  18→30 flawlessly (rev 21→22, backup bak-...T18-45-27). Main agent ran
+  briefed qa_gate vs e6_baseline: PASS max mean 0.704 (≠ the morning drift
+  number 0.179 — looked promising).
+- Reachability check (KB rule): copied after-render aside (e7_after_font30),
+  reverted to 18 (rev 23), re-rendered same window, compared state pair
+  (render@30 vs render@18): got 0.704 again — IDENTICAL per-t values as the
+  baseline diff, NOT the ~1.438 reference. Two distinct current.json states →
+  indistinguishable render output ⇒ editor-path render chain STILL serves a
+  stale snapshot (or caches renders/diffs). fontSize reached NEITHER render.
+- Outcome: request_keep correctly NOT called (unverifiable); timeline left at
+  18 (user-intent state, rev 23). Third consecutive proof the sync fix is
+  required BEFORE any editor-path clip-edit verification can be trusted.
+- NEW GOTCHA: identical diff numbers reproduced across different file pairs —
+  suspect render_window returns an existing deterministic-path file without
+  re-rendering when inputs appear unchanged. Next fix attempt should include a
+  cache-buster / forced-rebuild check plus a state-pair diff as acceptance.
+
+### Clip-edit E2E re-run (delegated to clip-editor subagent) — 2026-08-24
+- Brief: editor_op metadata final-beat-02:kicker fontSize 18→30 → qa_gate
+  3.5-7s editor path vs e6_baseline.mp4 → request_keep.
+- Bridge OK: rev 12→13 (fontSize 30 verifiably written — see backup
+  bak-2026-08-24T18-03-03 line 692), user rejected → reverted, rev 14 (18,
+  verified in current.json).
+- Gates reported PASS max mean 0.179 — MISLEADING. Reference value for this
+  exact change (E6, mechanically proven): 1.438. Decisive check: render@rev13
+  (fontSize 30) vs render@rev14 (fontSize 18) = 0.000 byte-identical despite
+  different timeline states → fontSize reached NEITHER render.
+- ROOT CAUSE: the E6 syncRuntimePublic fix (render-window pulling LIVE
+  projects/<slug>/editor/current.json every render) has REGRESSED — renders
+  read a stale snapshot again. The 0.179 vs e6_baseline is pre-existing drift
+  (old render, older code/public state), not the edit.
+- Keep gate: REJECTED by user → timeline correctly reverted; end state = user
+  intent. Renderer regression must be fixed BEFORE any editor-path gate result
+  can be trusted again.
+- Learnings: (1) a PASSING pixel-diff vs an OLD baseline does NOT prove this
+  edit landed when drift exists — sanity-check magnitude against the known
+  reference for the same change, or run a same-session A/A (two states, expect
+  nonzero); (2) qa_gate's deterministic output path means passing the previous
+  after-render as video_before compares the file with itself (0.0 artifact) —
+  always use an untouched copy-aside baseline; (3) delegated subagents lack
+  qa_gate/request_keep — main agent must finish gates + keep flow itself.
+- RE-RUN same day (second delegated E2E attempt): clip-editor subagent did
+  list+metadata only (no qa_gate/request_keep in its toolset — confirmed),
+  applied 18→30 at rev15, self-reverted per its failure branch. Main agent
+  finished the flow: metadata→30 at rev17 → briefed qa_gate PASS max mean
+  0.179 (IDENTICAL number to morning run — same drift, not the edit) →
+  decisive same-session A/B (render@30 copied aside vs fresh render@18,
+  both editor path, 3.5–7s) = **0.000 again** → fontSize reached NEITHER
+  render; syncRuntimePublic regression NOT fixed. request_keep correctly
+  NOT called (unverifiable → revert per hard limits); timeline left at 18
+  = pre-edit/user-intent state; ledger now at rev18. CONFIRMED RULE for
+  editor-path gates until the sync fix: never trust diff-vs-old-baseline;
+  require a nonzero same-session state-pair diff (~1.4 reference for this
+  change) as the reachability check before any keep vote.
+
 ### nar-001 A+ — character presence system live (2026-08-23 evening)
 - User gold-standard brief: 1 branded head x pose library x position/motion/
   size grammar — never the same framing twice (docs/CHARACTER-PRESENCE-SPEC.md)

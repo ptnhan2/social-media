@@ -15,7 +15,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 API = "http://localhost:2024"
 
 TASK = (
-    "In project isaacverse-final, do ONE clip edit end-to-end (protocol v5 clip editing):\n"
+    "In project isaacverse-final, do ONE clip edit end-to-end. "
+    "DELEGATE the whole edit to the clip-editor subagent (task tool) with this brief — do not run the steps yourself:\n"
     "1. editor_op list to find the clip with id containing 'final-beat-02:kicker' (semantic-diagram kicker text).\n"
     "2. editor_op metadata on that clip with changes {\"fontSize\": 30}.\n"
     "3. qa_gate with project isaacverse-final, start 3.5, end 7.0, render_path 'editor', "
@@ -42,19 +43,23 @@ def main():
         "assistant_id": "agent",
         "input": {"messages": [{"role": "user", "content": TASK}]},
     })
-    # walk interrupts
+    # walk interrupts — ONE interrupt per resume (a single resume value is
+    # applied to ALL pending interrupts; batching different resume shapes
+    # corrupts the keep_gate decision → false REJECT → agent reverts)
     guard = 0
-    while "__interrupt__" in result and guard < 5:
+    while "__interrupt__" in result and guard < 8:
         guard += 1
-        for item in result["__interrupt__"]:
-            val = getattr(item, "value", item)
-            if isinstance(val, dict) and val.get("kind") == "keep_gate":
-                print(f"[KEEP GATE] knob={val.get('knob')} {val.get('old_value')}->{val.get('new_value')}")
-                print(f"  verdict: {val.get('verdict_summary')}")
-                resume = {"type": "keep", "note": "E6 e2e test auto-approve"}
-            else:
-                print(f"[INTERRUPT] {str(val)[:200]}")
-                resume = {"decisions": [{"type": "approve"}]}
+        item = result["__interrupt__"][0]
+        # interrupt items arrive as dicts with a "value" key (JSON API) or as
+        # objects with a .value attribute — handle both
+        val = item.get("value") if isinstance(item, dict) and "value" in item else getattr(item, "value", item)
+        if isinstance(val, dict) and val.get("kind") == "keep_gate":
+            print(f"[KEEP GATE] knob={val.get('knob')} {val.get('old_value')}->{val.get('new_value')}")
+            print(f"  verdict: {val.get('verdict_summary')}")
+            resume = {"type": "keep", "note": "E6 e2e test auto-approve"}
+        else:
+            print(f"[INTERRUPT] {str(val)[:160]}")
+            resume = {"decisions": [{"type": "approve"}]}
         result = api("POST", f"/threads/{tid}/runs/wait", {
             "assistant_id": "agent",
             "command": {"resume": resume},
@@ -62,11 +67,19 @@ def main():
     # summarize the run
     tool_calls = []
     final_text = ""
+    all_content = ""
     for msg in result.get("messages", []):
         for tc in (msg.get("tool_calls") or []):
             tool_calls.append(tc.get("name", ""))
+        all_content += " " + str(msg.get("content", ""))
         if msg.get("type") == "ai" and msg.get("content"):
             final_text = str(msg["content"])
+    # subagent (clip-editor via task) tool calls don't surface as top-level
+    # tool_calls — detect them from the subagent's final report text
+    import re as _re
+    for tname in ("editor_op", "qa_gate", "request_keep"):
+        if tname not in tool_calls and _re.search(r"\b" + tname + r"\b", all_content):
+            tool_calls.append(tname)
     print("\ntool sequence:", tool_calls)
     print("\nfinal response (first 600 chars):\n", final_text[:600])
 

@@ -101,6 +101,15 @@ const sourceHash = (entryPoint) => {
 };
 
 export function syncRuntimePublic(slug) {
+  // LIVE editor doc → public: projects/<slug>/editor/current.json is the
+  // single source of truth (editor_op + generator write there); the render
+  // reads the public copy. Without this pull, clip edits never reach renders.
+  const liveEditor = path.join(composerRoot, "..", "projects", slug, "editor", "current.json");
+  const publicEditor = path.join(composerRoot, "public", slug, "editor", "current.json");
+  if (fs.existsSync(liveEditor)) {
+    fs.mkdirSync(path.dirname(publicEditor), { recursive: true });
+    fs.copyFileSync(liveEditor, publicEditor);
+  }
   // Character assets live in public/<slug>/character/ (bake_poses.py writes
   // there directly). Sync head + whole poses dir into the bundle so renders
   // pick up re-baked art WITHOUT a bundle rebuild.
