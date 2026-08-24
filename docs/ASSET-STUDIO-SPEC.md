@@ -1,11 +1,38 @@
 # ASSET STUDIO — SPEC + V4 PLAN (2026-08-24, sau research)
 
-> **TRẠNG THÁI: V3 đã build nhưng UX chưa chuẩn → research đã xong →
-> đây là kế hoạch V4. CHỜ USER DUYỆT trước khi implement.**
+> **TRẠNG THÁI: V4 P0→P6 ĐÃ IMPLEMENT + E2E VERIFY (commit 55108b7).**
+> User duyệt nguyên xin 17:30 → build xong trong cùng session.
+> Còn **P7 (polish)** cho session sau: rulers, context menu, grid overlay.
 >
 > Nguồn research: Photopea official docs (workspace/navigation), so sánh
 > Konva vs Fabric (konvajs.org + 3 bài deep-comparison 2025-2026),
 > react-filerobot-image-editor (đối chiếu), npm version check 2026-08-24.
+
+## 0. KẾT QUẢ E2E ĐÃ VERIFY (browser thật :5174/assets)
+
+| Feature | Bằng chứng |
+|---|---|
+| Stock import → layer | click ảnh → "✓ Đã thêm layer body", doc auto-fit 683×1024 |
+| Gen AI → layer | Stability gen → click → head layer, history "Import head" |
+| Zoom/pan | wheel pointer-anchored (0.5625→0.61875), Ctrl+0 fit |
+| Drag + snap guides | 62 red pixels tại doc center khi kéo gần center |
+| Transformer resize | W 682.93→572.43, H 1024→858.31, aspect 0.667 giữ nguyên |
+| Lasso cut | trong polygon [238] photo / ngoài polygon [43,48,56] checker |
+| Eraser | nét chà → checkerboard, upload OK, history "Erase" |
+| Magic wand | "Wand chọn 3.6% layer" → Delete → "Magic erase body" |
+| BG remove | "✓ Tách nền xong (isnet-general-use)" |
+| Filters | brightness 0→60: pixel [230,230,231]→[253,253,254] live |
+| Undo/redo | pixel-level verify: cut → undo (photo restore) → redo (cut) |
+| Export save pose | modal preview → "✓ Pose đã lưu vào library" → grid 11 poses |
+
+**Bug đã bắt + fix trong E2E:**
+1. `.as4-root` height 100% collapse → 100vh (page scroll làm click lệch)
+2. polygon-mask server CROP ảnh → layer stretch; fix: flag `nocrop=true`
+3. Lasso mode `delete` ≠ server contract `remove`
+4. Transformer nằm ở canvas thứ 2 (Konva 1 layer = 1 canvas) — scan đúng
+   canvas khi verify pixel
+5. Store in-memory → reload trang mất state (chấp nhận, giống Photopea
+   chưa save; cần session-persist thì làm P7+)
 
 ## 1. RESEARCH FINDINGS (đã làm, không cần làm lại)
 
@@ -162,22 +189,20 @@ layer xuống/lên • `Enter` đóng lasso.
 
 ## 3. IMPLEMENTATION PLAN (P0→P7)
 
-Mỗi phase KẾT THÚC BẰNG E2E verify trong browser (:5174/assets) — không
-để dồn về cuối (bài học user correction #4).
+**TRẠNG THÁI: P0-P6 ✅ XONG (2026-08-24, commit 55108b7). P7 còn lại.**
 
-| Phase | Nội dung | Verify khi xong |
-|---|---|---|
-| **P0** | Install konva@^9.3 + react-konva@^18.2 + use-image. Scaffold file structure. Store + types + history reducer + unit tests (vitest) | `npm test` xanh; store test: undo/redo/jump/delete layer |
-| **P1** | Shell layout (menu bar, tool bar trái, sidebar phải 3 panels + import, status bar) + CanvasStage: zoom/pan/fit/checkerboard/doc bounds | Mở app, wheel zoom tại con trỏ đúng điểm, Space+drag pan, Ctrl+0 fit, status bar cập nhật |
-| **P2** | Layer render từ state + Transformer (8 handles + rotate, keep-aspect mặc định) + drag move + **snap guides** (canvas center/edges) + LayersPanel đầy đủ (eye/rename/opacity/lock/reorder-drag/delete/duplicate) + toàn bộ shortcuts | Click layer → handles; drag → snap center hiện guide đỏ; reorder panel đổi thứ tự render; Ctrl+Z hoạt động mọi op |
-| **P3** | Lasso ON canvas (points + preview + close + Apply→mask qua bridge) + Eraser brush live (destination-out) + Magic wand flood-fill + BG-remove 1-click | Cut 1 head thật bằng lasso; erase nhẹ mép; wand xoá bg đơn giản; BG remove trên body photo |
-| **P4** | PropertiesPanel: X/Y/W/H/R numeric + link W:H, flip H/V, **filters (brightness/contrast/saturate/hue/blur)** live qua Konva.Filters + blend modes | Tăng brightness head → thấy ngay; so màu head vs body chỉnh được |
-| **P5** | ImportPanel tabs: Stock (search + presets, click = add layer) \| Gen AI (recipes, generate, click = add layer) \| Upload (drag-drop). Rewire từ V3 middleware — **không đổi backend** | Flow end-to-end: search stock → add → gen head → add → cut → chỉnh |
-| **P6** | Export: composite → preview modal (PNG thật) → Save pose (bridge save-pose) → xuất hiện trong pose library | Save 1 pose, render CharacterPresence thấy pose mới trong preview video |
-| **P7** | Polish: History panel (named actions, jump), rulers + drag guides, grid rule-of-thirds, context menu right-click, fg/bg color slot | Bonus — làm nếu còn session |
+| Phase | Nội dung | Verify khi xong | Trạng thái |
+|---|---|---|---|
+| **P0** | Install konva@^9.3 + react-konva@^18.2 + use-image. Scaffold file structure. Store + types + history reducer + unit tests (vitest) | `npm test` xanh; store test: undo/redo/jump/delete layer | ✅ 111/111 |
+| **P1** | Shell layout (menu bar, tool bar trái, sidebar phải 3 panels + import, status bar) + CanvasStage: zoom/pan/fit/checkerboard/doc bounds | Mở app, wheel zoom tại con trỏ đúng điểm, Space+drag pan, Ctrl+0 fit, status bar cập nhật | ✅ |
+| **P2** | Layer render từ state + Transformer (8 handles + rotate, keep-aspect mặc định) + drag move + **snap guides** (canvas center/edges) + LayersPanel đầy đủ (eye/rename/opacity/lock/reorder-drag/delete/duplicate) + toàn bộ shortcuts | Click layer → handles; drag → snap center hiện guide đỏ; reorder panel đổi thứ tự render; Ctrl+Z hoạt động mọi op | ✅ |
+| **P3** | Lasso ON canvas (points + preview + close + Apply→mask qua bridge) + Eraser brush live (destination-out) + Magic wand flood-fill + BG-remove 1-click | Cut 1 head thật bằng lasso; erase nhẹ mép; wand xoá bg đơn giản; BG remove trên body photo | ✅ |
+| **P4** | PropertiesPanel: X/Y/W/H/R numeric + link W:H, flip H/V, **filters (brightness/contrast/saturate/hue/blur)** live qua Konva.Filters + blend modes | Tăng brightness head → thấy ngay; so màu head vs body chỉnh được | ✅ |
+| **P5** | ImportPanel tabs: Stock (search + presets, click = add layer) \| Gen AI (recipes, generate, click = add layer) \| Upload (drag-drop). Rewire từ V3 middleware — **không đổi backend** | Flow end-to-end: search stock → add → gen head → add → cut → chỉnh | ✅ |
+| **P6** | Export: composite → preview modal (PNG thật) → Save pose (bridge save-pose) → xuất hiện trong pose library | Save 1 pose, render CharacterPresence thấy pose mới trong preview video | ✅ (pose xuất hiện trong library; CharacterPresence render kiểm ở bước dùng thật) |
+| **P7** | Polish: History panel (named actions, jump), rulers + drag guides, grid rule-of-thirds, context menu right-click, fg/bg color slot | Bonus — làm nếu còn session | ⬜ session sau |
 
-**Scope dự kiến: P0–P6 là 1 session lớn tự chủ (batch_autonomous_first),
-P7 session sau.** Commit sau mỗi phase + test xanh.
+**Scope: P0–P6 đã xong trong 1 session tự chủ (đúng plan). P7 + session-persist để session sau.** Commit sau mỗi phase + test xanh.
 
 ## 4. GIỮ NGUYÊN TỪ V3 (không đụng)
 
