@@ -1,23 +1,19 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-24 16:35. Previous: 2026-08-23 16:00.
-> **TRẠNG THÁI: Asset Studio V3 đã build nhưng CHƯA CHUẨN UX.**
-> Session sau phải RESEARCH trước rồi BUILD. Xem `docs/ASSET-STUDIO-SPEC.md`.
+> Updated 2026-08-24 17:25. Previous: 16:35.
+> **TRẠNG THÁI: Asset Studio V4 plan đã research xong + viết spec
+> (`docs/ASSET-STUDIO-SPEC.md` §1-§5). ĐANG CHỜ USER DUYỆT plan trước khi
+> implement.** Library đã chốt trong plan: konva@^9.3 + react-konva@^18.2.
 
 ---
 
 ## 🌅 VIỆC TIẾP THEO (session sau)
 
-1. **Đọc `docs/ASSET-STUDIO-SPEC.md`** — có full danh sách features cần
-   research và implement
-2. **Research Photopea / Canva / Figma** — mở thử, dùng thử, ghi chú UX
-   patterns cho: zoom/pan, transform handles, layer panel, selection tools,
-   keyboard shortcuts, snap guides
-3. **Chọn canvas library** — Fabric.js hoặc Konva.js (có sẵn selection,
-   transform, zoom)
-4. **Rebuild Asset Studio V4** với UX đúng chuẩn editor
-5. **Không ngại thêm features** user chưa đề cập — nếu editor chuẩn có
-   mà đáng có thì cứ thêm
+1. **User duyệt `docs/ASSET-STUDIO-SPEC.md`** (đặc biệt §3 phases P0-P7
+   và §5 câu hỏi mở: doc size mặc định)
+2. User duyệt xong → **implement P0→P6 theo đúng thứ tự**, mỗi phase
+   E2E verify trong browser + commit. Chi tiết từng phase nằm trong spec §3.
+3. P7 (History panel/rulers/context menu) để session sau nếu hết giờ.
 
 1. **Mở Composer :5174** → preview giờ render theo editor path với style v73
    (bold 900+, gradient titles, màu rực) — confirm lần nữa trong editor thật.
