@@ -492,16 +492,25 @@ def op_save_recipe(cmd: dict) -> dict:
         return {"ok": False, "error": "label and promptTemplate required"}
     if not isinstance(fields, list):
         return {"ok": False, "error": "fields must be a list"}
-    # validate field shape (name/label/options)
+    # validate field shape (name/label/options) — options may be plain strings
+    # or {label, prompt} objects; normalize to {label, prompt}
     clean_fields = []
     for f in fields:
         if not isinstance(f, dict) or not f.get("name") or not isinstance(f.get("options"), list):
             return {"ok": False, "error": "each field needs name + options"}
+        opts = []
+        for o in f["options"]:
+            if isinstance(o, str):
+                opts.append({"label": o, "prompt": o})
+            elif isinstance(o, dict) and o.get("label"):
+                opts.append({"label": str(o["label"]), "prompt": str(o.get("prompt") or o["label"])})
+            else:
+                return {"ok": False, "error": "invalid option shape"}
         clean_fields.append({
             "name": str(f["name"]),
             "label": str(f.get("label", f["name"])),
             "type": "choice",
-            "options": [str(o) for o in f["options"]],
+            "options": opts,
             "optional": bool(f.get("optional", False)),
         })
     data = _load_user_recipes(project)

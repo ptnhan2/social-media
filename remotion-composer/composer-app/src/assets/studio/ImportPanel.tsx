@@ -1,6 +1,6 @@
 import React from "react";
 import { bridge, fileUrl } from "./imageOps";
-import { defaultFields, resolvePrompt, Recipe } from "./promptUtils";
+import { buildSubstitutions, defaultFields, normalizeOptions, optionLabel, optionPrompt, Recipe, RecipeField, resolvePrompt } from "./promptUtils";
 
 type StockResult = { id: string; source: string; thumb: string; large: string; alt: string; photographer: string };
 type PoseEntry = { name: string; anchor: Record<string, unknown> };
@@ -39,8 +39,9 @@ export const ImportPanel: React.FC<{
   const [recipeFields, setRecipeFields] = React.useState<Record<string, string>>({});
   // editable template draft for the selected recipe (placeholders stay live)
   const [templateDraft, setTemplateDraft] = React.useState("");
-  // options added per field this session: fieldName → added options
-  const [extraOptions, setExtraOptions] = React.useState<Record<string, string[]>>({});
+  // working copy of the recipe fields: options normalized to {label, prompt}
+  // — added options AND per-option prompt edits live here until saved
+  const [fieldsDraft, setFieldsDraft] = React.useState<RecipeField[]>([]);
   const [addingField, setAddingField] = React.useState<string | null>(null);
   const [addOptionText, setAddOptionText] = React.useState("");
   // custom-mode prompt — persisted per project
@@ -93,7 +94,7 @@ export const ImportPanel: React.FC<{
     setSelectedRecipe(id);
     setRecipeFields(r ? defaultFields(r) : {});
     setTemplateDraft(r ? r.promptTemplate ?? r.prompt ?? "" : "");
-    setExtraOptions({});
+    setFieldsDraft(r ? r.fields.map((f) => ({ ...f, options: normalizeOptions(f.options) })) : []);
     setAddingField(null);
     setAddOptionText("");
   }, [recipes]);
@@ -112,40 +113,49 @@ export const ImportPanel: React.FC<{
 
   const selectedRecipeDef = selectedRecipe === "__custom__" ? null : recipes[selectedRecipe];
 
-  const effectiveOptions = React.useCallback(
-    (fieldName: string): string[] => {
-      const f = selectedRecipeDef?.fields.find((x) => x.name === fieldName);
-      return [...(f?.options ?? []), ...(extraOptions[fieldName] ?? [])];
-    },
-    [selectedRecipeDef, extraOptions],
-  );
+  const fieldDraft = (fieldName: string): RecipeField | undefined =>
+    fieldsDraft.find((f) => f.name === fieldName);
+
+  const selectedOptionPrompt = (fieldName: string): string => {
+    const f = fieldDraft(fieldName);
+    const selected = recipeFields[fieldName];
+    const opt = f?.options.find((o) => optionLabel(o) === selected);
+    return opt ? optionPrompt(opt) : "";
+  };
+
+  const setSelectedOptionPrompt = (fieldName: string, prompt: string) => {
+    const selected = recipeFields[fieldName];
+    setFieldsDraft((prev) =>
+      prev.map((f) =>
+        f.name === fieldName
+          ? {
+              ...f,
+              options: f.options.map((o) => (optionLabel(o) === selected ? { ...normalizeOptions([o])[0], prompt } : o)),
+            }
+          : f,
+      ),
+    );
+  };
 
   const resolvedPrompt = React.useMemo(() => {
     if (selectedRecipe === "__custom__") return customPrompt.trim();
     if (!selectedRecipeDef) return "";
-    return resolvePrompt(templateDraft, recipeFields);
-  }, [selectedRecipe, selectedRecipeDef, templateDraft, recipeFields, customPrompt]);
+    return resolvePrompt(templateDraft, buildSubstitutions(recipeFields, fieldsDraft));
+  }, [selectedRecipe, selectedRecipeDef, templateDraft, recipeFields, fieldsDraft, customPrompt]);
 
   const effectivePrompt = resolvedPrompt;
-
-  /** Fields with session-added options merged — what gets saved. */
-  const fieldsForSave = React.useMemo(() => {
-    if (!selectedRecipeDef) return [];
-    return selectedRecipeDef.fields.map((f) => ({
-      ...f,
-      options: [...f.options, ...(extraOptions[f.name] ?? [])],
-    }));
-  }, [selectedRecipeDef, extraOptions]);
 
   const structureDirty = React.useMemo(() => {
     if (!selectedRecipeDef) return false;
     const templateChanged = templateDraft !== (selectedRecipeDef.promptTemplate ?? selectedRecipeDef.prompt ?? "");
-    const optionsChanged = Object.values(extraOptions).some((v) => v.length > 0);
+    const fieldsChanged =
+      JSON.stringify(fieldsDraft) !==
+      JSON.stringify(selectedRecipeDef.fields.map((f) => ({ ...f, options: normalizeOptions(f.options) })));
     const defaultsChanged =
       selectedRecipeDef.user &&
       JSON.stringify(recipeFields) !== JSON.stringify(defaultFields(selectedRecipeDef));
-    return templateChanged || optionsChanged || defaultsChanged;
-  }, [selectedRecipeDef, templateDraft, extraOptions, recipeFields]);
+    return templateChanged || fieldsChanged || defaultsChanged;
+  }, [selectedRecipeDef, templateDraft, fieldsDraft, recipeFields]);
 
   const saveRecipe = (asNew: boolean) =>
     void (async () => {
@@ -159,7 +169,7 @@ export const ImportPanel: React.FC<{
           project: projectId,
           label,
           promptTemplate: templateDraft.trim(),
-          fields: fieldsForSave,
+          fields: fieldsDraft,
           defaults: recipeFields,
         };
         if (!asNew && selectedRecipeDef?.user) payload.id = selectedRecipe;
@@ -204,10 +214,14 @@ export const ImportPanel: React.FC<{
   const addOptionToField = (fieldName: string) => {
     const v = addOptionText.trim();
     if (!v) return;
-    if (!effectiveOptions(fieldName).includes(v)) {
-      setExtraOptions((prev) => ({ ...prev, [fieldName]: [...(prev[fieldName] ?? []), v] }));
-      setRecipeFields((prev) => ({ ...prev, [fieldName]: v }));
-    }
+    setFieldsDraft((prev) =>
+      prev.map((f) =>
+        f.name === fieldName && !f.options.some((o) => optionLabel(o) === v)
+          ? { ...f, options: [...f.options, { label: v, prompt: v }] }
+          : f,
+      ),
+    );
+    setRecipeFields((prev) => ({ ...prev, [fieldName]: v }));
     setAddOptionText("");
     setAddingField(null);
   };
@@ -378,13 +392,12 @@ export const ImportPanel: React.FC<{
                       <span>{f.label}</span>
                       <div className="as4-field-row">
                         <select
-                          value={recipeFields[f.name] || f.options[0]}
+                          value={recipeFields[f.name] || optionLabel(f.options[0])}
                           onChange={(e) => setRecipeFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
                         >
-                          {effectiveOptions(f.name).map((o) => (
-                            <option key={o} value={o}>
-                              {o}
-                              {extraOptions[f.name]?.includes(o) ? " (mới)" : ""}
+                          {fieldDraft(f.name)?.options.map((o) => (
+                            <option key={optionLabel(o)} value={optionLabel(o)}>
+                              {optionLabel(o)}
                             </option>
                           ))}
                         </select>
@@ -417,6 +430,16 @@ export const ImportPanel: React.FC<{
                           </button>
                         </div>
                       )}
+                      {/* prompt text của option đang chọn — xem + sửa trực tiếp */}
+                      {recipeFields[f.name] && recipeFields[f.name] !== "none" && (
+                        <textarea
+                          className="as4-option-prompt"
+                          rows={2}
+                          value={selectedOptionPrompt(f.name)}
+                          onChange={(e) => setSelectedOptionPrompt(f.name, e.target.value)}
+                          title={`Prompt của "${recipeFields[f.name]}" — sửa rồi Lưu recipe để giữ lại`}
+                        />
+                      )}
                     </div>
                   ))}
 
@@ -429,10 +452,10 @@ export const ImportPanel: React.FC<{
                       <button
                         type="button"
                         className="as4-icon-btn"
-                        title="Reset template về bản gốc của recipe"
+                        title="Reset template + options về bản gốc của recipe"
                         onClick={() => {
                           setTemplateDraft(r.promptTemplate ?? r.prompt ?? "");
-                          setExtraOptions({});
+                          setFieldsDraft(r.fields.map((f2) => ({ ...f2, options: normalizeOptions(f2.options) })));
                           setRecipeFields(defaultFields(r));
                         }}
                       >

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { defaultFields, resolvePrompt } from "./promptUtils";
-import type { Recipe } from "./promptUtils";
+import { buildSubstitutions, defaultFields, normalizeOptions, optionLabel, optionPrompt, resolvePrompt } from "./promptUtils";
+import type { Recipe, RecipeField } from "./promptUtils";
 
 const recipe: Recipe = {
   label: "Character Head",
@@ -50,5 +50,44 @@ describe("defaultFields", () => {
   it("picks first option per field", () => {
     const d = defaultFields(recipe);
     expect(d).toEqual({ style: "comic ink", expression: "friendly", accessory: "none", angle: "front facing" });
+  });
+});
+
+describe("option prompts", () => {
+  const field: RecipeField = {
+    name: "style",
+    label: "Art Style",
+    type: "choice",
+    options: [
+      { label: "comic ink", prompt: "bold black ink outlines, cel shading" },
+      { label: "flat vector", prompt: "flat vector illustration, solid colors" },
+    ],
+  };
+
+  it("optionLabel/optionPrompt read both shapes", () => {
+    expect(optionLabel("watercolor")).toBe("watercolor");
+    expect(optionPrompt("watercolor")).toBe("watercolor");
+    expect(optionLabel(field.options[0])).toBe("comic ink");
+    expect(optionPrompt(field.options[0])).toBe("bold black ink outlines, cel shading");
+  });
+
+  it("normalizeOptions converts plain strings", () => {
+    expect(normalizeOptions(["a", { label: "b", prompt: "bp" }])).toEqual([
+      { label: "a", prompt: "a" },
+      { label: "b", prompt: "bp" },
+    ]);
+  });
+
+  it("buildSubstitutions maps selected label → option prompt", () => {
+    const subs = buildSubstitutions({ style: "comic ink" }, [field]);
+    expect(subs.style).toBe("bold black ink outlines, cel shading");
+    // unknown selection falls back to raw value
+    const subs2 = buildSubstitutions({ style: "watercolor" }, [field]);
+    expect(subs2.style).toBe("watercolor");
+  });
+
+  it("resolved prompt uses the option's prompt text", () => {
+    const resolved = resolvePrompt("A {{style}} head.", buildSubstitutions({ style: "comic ink" }, [field]));
+    expect(resolved).toBe("A bold black ink outlines, cel shading head.");
   });
 });

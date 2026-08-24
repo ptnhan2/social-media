@@ -7,29 +7,80 @@
         "name": "style",
         "label": "Art Style",
         "type": "choice",
-        "options": ["comic ink", "semi-real cartoon", "flat vector", "3D render", "minimal mascot"]
+        "options": [
+          {
+            "label": "comic ink",
+            "prompt": "bold black ink outlines, cel shading, high contrast comic book art, clean white highlights"
+          },
+          {
+            "label": "semi-real cartoon",
+            "prompt": "semi-realistic cartoon style, soft gradients, painterly shading, appealing proportions"
+          },
+          {
+            "label": "flat vector",
+            "prompt": "flat vector illustration, solid colors, clean geometric shapes, minimal shading"
+          },
+          {
+            "label": "3D render",
+            "prompt": "stylized 3D render, soft studio lighting, smooth materials, Pixar-like polish"
+          },
+          {
+            "label": "minimal mascot",
+            "prompt": "minimalist mascot design, simple shapes, thick outlines, limited color palette"
+          }
+        ]
       },
       {
         "name": "expression",
         "label": "Expression",
         "type": "choice",
-        "options": ["friendly", "confident", "focused", "energetic", "surprised"]
+        "options": [
+          {
+            "label": "friendly",
+            "prompt": "warm friendly smile, approachable open expression"
+          },
+          {
+            "label": "confident",
+            "prompt": "confident smirk, chin slightly raised, self-assured look"
+          },
+          {
+            "label": "focused",
+            "prompt": "focused determined look, slightly furrowed brows"
+          },
+          {
+            "label": "energetic",
+            "prompt": "energetic excited expression, wide eyes, big open smile"
+          },
+          {
+            "label": "surprised",
+            "prompt": "surprised expression, raised eyebrows, wide open eyes"
+          }
+        ]
       },
       {
         "name": "accessory",
         "label": "Accessory",
         "type": "choice",
-        "options": ["none", "glasses", "headphones", "cap"],
+        "options": [
+          { "label": "none", "prompt": "none" },
+          { "label": "glasses", "prompt": "round glasses" },
+          { "label": "headphones", "prompt": "over-ear headphones" },
+          { "label": "cap", "prompt": "a backwards cap" }
+        ],
         "optional": true
       },
       {
         "name": "angle",
         "label": "View Angle",
         "type": "choice",
-        "options": ["front facing", "three-quarter view", "side profile"]
+        "options": [
+          { "label": "front facing", "prompt": "front facing, symmetrical head-on view" },
+          { "label": "three-quarter view", "prompt": "three-quarter view, slight head turn" },
+          { "label": "side profile", "prompt": "side profile view" }
+        ]
       }
     ],
-    "promptTemplate": "A {{style}} cartoon character head of a young man, {{expression}} expression, {{angle}}. {{#accessory}}Wearing {{accessory}}. {{/accessory}}Short dark hair, big expressive eyes. Bold outlines, cel shading, warm orange and amber color palette. Floating on pure white background. ONLY the head — nothing below the jawline. Like an emoji or avatar icon."
+    "promptTemplate": "A {{style}} cartoon character head of a young man. {{expression}}. {{angle}}. {{#accessory}}Wearing {{accessory}}. {{/accessory}}Short dark hair, big expressive eyes. Warm orange and amber color palette. Floating on pure white background. ONLY the head — nothing below the jawline. Like an emoji or avatar icon."
   },
   "pose-body": {
     "label": "Pose Body",
