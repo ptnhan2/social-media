@@ -95,7 +95,7 @@ const characterPresenceElement = (treatmentId: string, beat: SemanticBeat, resol
   // store gate through the same resolver the other knobs use
   const gate = resolve<(CharacterPresenceConfig & { enabled?: boolean }) | null>(`treatments.${treatmentId}.characterPresence`, null);
   const lookup = (tid: string) => (tid === treatmentId ? gate : null);
-  const config = resolveCharacterPresence(treatmentId, p, beat.narrativeFunction, lookup);
+  const config = resolveCharacterPresence(treatmentId, p, beat.narrativeFunction, lookup, beat.startSec);
   if (!config) return null;
   const merged = { ...DEFAULT_PRESENCE, ...config };
   const anchor = PRESENCE_ANCHOR[merged.position ?? "thirds-br"];

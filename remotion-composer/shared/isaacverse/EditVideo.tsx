@@ -78,7 +78,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           accent={asString(params.accent) || undefined}
           secondaryAccent={asString(params.secondaryAccent) || undefined}
           narrativeLabel={beat.narrativeFunction}
-          presence={resolveCharacterPresence("semantic-diagram", params, beat.narrativeFunction)}
+          presence={resolveCharacterPresence("semantic-diagram", params, beat.narrativeFunction, undefined, beat.startSec)}
         />
       );
     case "chapter-card":
@@ -140,7 +140,7 @@ export const BeatTreatment: React.FC<{ beat: SemanticBeat }> = ({ beat }) => {
           activeStep={asNumber(params.activeStep, 0)}
           accent={asString(params.accent) || undefined}
           narrativeLabel={beat.narrativeFunction}
-          presence={resolveCharacterPresence("process-timeline", params, beat.narrativeFunction)}
+          presence={resolveCharacterPresence("process-timeline", params, beat.narrativeFunction, undefined, beat.startSec)}
         />
       );
     default:

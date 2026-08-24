@@ -38,15 +38,66 @@ export const PRESENCE_ANCHOR: Record<PresencePosition, { left: number; top: numb
   "lower-third": { left: 50, top: 82 },
 };
 
-/** Context mapping (spec §3): narrative keyword → presence config. */
-export const CONTEXT_PRESENCE: { match: RegExp; config: CharacterPresenceConfig }[] = [
-  { match: /problem|false|wrong|fail/i, config: { pose: "think", position: "thirds-tr", motion: "slide-u", size: "small", timing: "after-title" } },
-  { match: /reframe|concept|unit|idea|refocus/i, config: { pose: "present", position: "beside-content", motion: "pop", size: "medium", timing: "after-title" } },
-  { match: /process|how|workflow|step|repeatable/i, config: { pose: "point-right", position: "edge-l-in", motion: "slide-r", size: "medium", timing: "after-title" } },
-  { match: /compare|choice|versus|or\b/i, config: { pose: "point-right", position: "thirds-bl", motion: "peek", size: "small", timing: "after-title" } },
-  { match: /failure|mistake|wrong way|avoid/i, config: { pose: "think", position: "thirds-br", motion: "drop-in", size: "small", timing: "on-emphasis" } },
-  { match: /rule|deliver|conclusion|resolve|win|usable/i, config: { pose: "celebrate", position: "center", motion: "jump-in", size: "half", timing: "on-emphasis" } },
-  { match: /reflect|evidence|context|show/i, config: { pose: "think", position: "lower-third", motion: "fade-scale", size: "medium", timing: "after-title" } },
+/** Context mapping (spec §3): narrative keyword → presence config.
+ *  Each entry carries context-appropriate VARIANTS (nar-002: never the same
+ *  framing twice — deterministic rotation by beatSeed, both render paths). */
+export const CONTEXT_PRESENCE: { match: RegExp; variants: CharacterPresenceConfig[] }[] = [
+  {
+    match: /problem|false|wrong|fail/i,
+    variants: [
+      { pose: "think", position: "thirds-tr", motion: "slide-u", size: "small", timing: "after-title" },
+      { pose: "think", position: "thirds-tl", motion: "peek", size: "small", timing: "after-title" },
+      { pose: "think", position: "lower-third", motion: "fade-scale", size: "medium", timing: "after-title" },
+    ],
+  },
+  {
+    match: /reframe|concept|unit|idea|refocus/i,
+    variants: [
+      { pose: "present", position: "beside-content", motion: "pop", size: "medium", timing: "after-title" },
+      { pose: "present", position: "thirds-tr", motion: "slide-u", size: "medium", timing: "after-title" },
+      { pose: "present", position: "below-title", motion: "fade-scale", size: "medium", timing: "after-title" },
+    ],
+  },
+  {
+    match: /process|how|workflow|step|repeatable/i,
+    variants: [
+      { pose: "point-right", position: "edge-l-in", motion: "slide-r", size: "medium", timing: "after-title" },
+      { pose: "point-right", position: "thirds-bl", motion: "peek", size: "small", timing: "after-title" },
+      { pose: "point-right", position: "lower-third", motion: "slide-r", size: "medium", timing: "after-title" },
+    ],
+  },
+  {
+    match: /compare|choice|versus|or\b/i,
+    variants: [
+      { pose: "point-right", position: "thirds-bl", motion: "peek", size: "small", timing: "after-title" },
+      { pose: "point-right", position: "thirds-tl", motion: "slide-d", size: "small", timing: "after-title" },
+      { pose: "point-right", position: "edge-r-in", motion: "slide-l", size: "medium", timing: "after-title" },
+    ],
+  },
+  {
+    match: /failure|mistake|wrong way|avoid/i,
+    variants: [
+      { pose: "think", position: "thirds-br", motion: "drop-in", size: "small", timing: "on-emphasis" },
+      { pose: "think", position: "thirds-bl", motion: "drop-in", size: "medium", timing: "on-emphasis" },
+      { pose: "think", position: "edge-l-in", motion: "slide-r", size: "small", timing: "after-title" },
+    ],
+  },
+  {
+    match: /rule|deliver|conclusion|resolve|win|usable/i,
+    variants: [
+      { pose: "celebrate", position: "center", motion: "jump-in", size: "half", timing: "on-emphasis" },
+      { pose: "celebrate", position: "below-title", motion: "pop", size: "medium", timing: "on-emphasis" },
+      { pose: "celebrate", position: "thirds-br", motion: "jump-in", size: "small", timing: "on-emphasis" },
+    ],
+  },
+  {
+    match: /reflect|evidence|context|show/i,
+    variants: [
+      { pose: "think", position: "lower-third", motion: "fade-scale", size: "medium", timing: "after-title" },
+      { pose: "think", position: "edge-r-in", motion: "slide-l", size: "medium", timing: "after-title" },
+      { pose: "present", position: "thirds-tl", motion: "peek", size: "small", timing: "after-title" },
+    ],
+  },
 ];
 
 export const DEFAULT_PRESENCE: Required<Omit<CharacterPresenceConfig, "enabled">> = {
@@ -72,23 +123,33 @@ export type PresenceStyleLookup = (treatmentId: string) => (CharacterPresenceCon
 
 /**
  * Resolve presence config for a beat:
- * params.characterPresence override > context mapping (narrativeFunction) >
+ * params.characterPresence override > context mapping (narrativeFunction,
+ * variant rotated by beatSeed — nar-002 never-same-framing-twice) >
  * defaults. The store gate (treatments.<id>.characterPresence.enabled)
  * comes through the styleLookup (render path: getStyle; projection: plain
  * store object) — pass null lookup to always enable.
+ * beatSeed: deterministic per-beat value (e.g. startSec) — consecutive
+ * beats with the SAME context still get DIFFERENT framing. Same seed on
+ * both render paths → identical output.
  */
 export const resolveCharacterPresence = (
   treatmentId: string,
   params: Record<string, unknown>,
   narrativeFunction: string,
   styleLookup?: PresenceStyleLookup,
+  beatSeed?: number,
 ): CharacterPresenceConfig | null => {
   if (styleLookup) {
     const storeCfg = styleLookup(treatmentId);
     if (storeCfg && storeCfg.enabled === false) return null;
   }
   const override = params.characterPresence;
-  const context = CONTEXT_PRESENCE.find((entry) => entry.match.test(narrativeFunction))?.config ?? {};
+  const entry = CONTEXT_PRESENCE.find((e) => e.match.test(narrativeFunction));
+  let context: CharacterPresenceConfig = {};
+  if (entry) {
+    const idx = typeof beatSeed === "number" && Number.isFinite(beatSeed) ? Math.abs(Math.floor(beatSeed)) % entry.variants.length : 0;
+    context = entry.variants[idx];
+  }
   const merged: CharacterPresenceConfig = { ...DEFAULT_PRESENCE, ...context, ...(typeof override === "object" && override ? override as CharacterPresenceConfig : {}) };
   if (merged.enabled === false) return null;
   if (merged.timing === "persistent") merged.startSec = 0;
