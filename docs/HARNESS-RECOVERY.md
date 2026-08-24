@@ -1,21 +1,21 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-24 18:10. Previous: 17:25.
-> **TRẠNG THÁI: Asset Studio V4 P0-P6 XONG + E2E VERIFY (commit 55108b7).**
-> User duyệt plan nguyên xin → research → build toàn bộ trong 1 session.
-> Full E2E evidence trong `docs/ASSET-STUDIO-SPEC.md` §0.
+> Updated 2026-08-24 19:45. Previous: 18:10.
+> **TRẠNG THÁI: Asset Studio V4 HOÀN TẤT P0-P7 (commits 55108b7 + 5327783).**
+> 119/119 tests. Full E2E evidence trong `docs/ASSET-STUDIO-SPEC.md` §0.
+> BG remove user xác nhận hoạt động (19:15).
 
 ---
 
 ## 🌅 VIỆC TIẾP THEO (session sau)
 
-1. **Asset Studio P7 polish** (spec §3): rulers + drag guides, grid
-   rule-of-thirds, context menu right-click, session-persist (reload mất
-   state — store in-memory)
-2. **Dùng studio thật để tạo poses production**: hiện poses trong library
-   là file test/cũ — cần bake lại body+head chuẩn bằng studio mới
-3. Việc cũ còn chờ: nar-001 implement (hướng A+B đã chốt), LangSmith
+1. **Dùng studio tạo poses production**: poses trong library hiện là
+   file test/cũ — user dùng studio (`:5174/assets`) bake lại body+head
+   chuẩn, save poses mới
+2. Việc cũ còn chờ: nar-001 implement (hướng A+B đã chốt), LangSmith
    render-review queue
+3. Gợi ý nhỏ (không chặn): thêm "Save doc as pose template" nếu user
+   muốn reuse layout body+head giữa các poses
 
 1. **Mở Composer :5174** → preview giờ render theo editor path với style v73
    (bold 900+, gradient titles, màu rực) — confirm lần nữa trong editor thật.

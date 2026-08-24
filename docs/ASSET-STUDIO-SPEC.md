@@ -1,8 +1,8 @@
 # ASSET STUDIO — SPEC + V4 PLAN (2026-08-24, sau research)
 
-> **TRẠNG THÁI: V4 P0→P6 ĐÃ IMPLEMENT + E2E VERIFY (commit 55108b7).**
-> User duyệt nguyên xin 17:30 → build xong trong cùng session.
-> Còn **P7 (polish)** cho session sau: rulers, context menu, grid overlay.
+> **TRẠNG THÁI: V4 P0→P7 ĐÃ XONG (P0-P6 commit 55108b7, P7 commit 5327783).**
+> User duyệt nguyên xin 17:30 → research + build P0-P6 + P7 polish cùng ngày.
+> 119/119 tests. Studio sẵn sàng dùng tạo poses production.
 >
 > Nguồn research: Photopea official docs (workspace/navigation), so sánh
 > Konva vs Fabric (konvajs.org + 3 bài deep-comparison 2025-2026),
@@ -20,10 +20,15 @@
 | Lasso cut | trong polygon [238] photo / ngoài polygon [43,48,56] checker |
 | Eraser | nét chà → checkerboard, upload OK, history "Erase" |
 | Magic wand | "Wand chọn 3.6% layer" → Delete → "Magic erase body" |
-| BG remove | "✓ Tách nền xong (isnet-general-use)" |
+| BG remove | pixel nền [219] → checkerboard [50,56,65], "isnet-general-use" |
 | Filters | brightness 0→60: pixel [230,230,231]→[253,253,254] live |
 | Undo/redo | pixel-level verify: cut → undo (photo restore) → redo (cut) |
 | Export save pose | modal preview → "✓ Pose đã lưu vào library" → grid 11 poses |
+| Session persist (P7) | reload → layer còn, rulers còn, undo tiếp tục được |
+| Rulers + guides (P7) | kéo từ ruler → "1 guide", double-click xoá |
+| Grid (P7) | toggle → thirds lines render |
+| Context menu (P7) | right-click → 6 items, Duplicate → 2 layers + history |
+| New/reset (P7) | confirm → 0 layers, history ["Open"], localStorage reset |
 
 **Bug đã bắt + fix trong E2E:**
 1. `.as4-root` height 100% collapse → 100vh (page scroll làm click lệch)
@@ -31,8 +36,10 @@
 3. Lasso mode `delete` ≠ server contract `remove`
 4. Transformer nằm ở canvas thứ 2 (Konva 1 layer = 1 canvas) — scan đúng
    canvas khi verify pixel
-5. Store in-memory → reload trang mất state (chấp nhận, giống Photopea
-   chưa save; cần session-persist thì làm P7+)
+5. Konva KHÔNG có event `contextmenu` trên node → bind DOM-level trên
+   stage container + getIntersection (custom attr `layerId`)
+6. Menu context đóng ngay khi mở: window close-listener bắt lại chính
+   event mở menu → `stopPropagation()` ở container listener
 
 ## 1. RESEARCH FINDINGS (đã làm, không cần làm lại)
 
@@ -200,9 +207,9 @@ layer xuống/lên • `Enter` đóng lasso.
 | **P4** | PropertiesPanel: X/Y/W/H/R numeric + link W:H, flip H/V, **filters (brightness/contrast/saturate/hue/blur)** live qua Konva.Filters + blend modes | Tăng brightness head → thấy ngay; so màu head vs body chỉnh được | ✅ |
 | **P5** | ImportPanel tabs: Stock (search + presets, click = add layer) \| Gen AI (recipes, generate, click = add layer) \| Upload (drag-drop). Rewire từ V3 middleware — **không đổi backend** | Flow end-to-end: search stock → add → gen head → add → cut → chỉnh | ✅ |
 | **P6** | Export: composite → preview modal (PNG thật) → Save pose (bridge save-pose) → xuất hiện trong pose library | Save 1 pose, render CharacterPresence thấy pose mới trong preview video | ✅ (pose xuất hiện trong library; CharacterPresence render kiểm ở bước dùng thật) |
-| **P7** | Polish: History panel (named actions, jump), rulers + drag guides, grid rule-of-thirds, context menu right-click, fg/bg color slot | Bonus — làm nếu còn session | ⬜ session sau |
+| **P7** | Polish: History panel (named actions, jump) ✅ (đã xong từ P2), session-persist, rulers + drag guides + snap-to-guide, grid rule-of-thirds, context menu right-click, New/reset | E2E bảng §0 | ✅ commit 5327783 |
 
-**Scope: P0–P6 đã xong trong 1 session tự chủ (đúng plan). P7 + session-persist để session sau.** Commit sau mỗi phase + test xanh.
+**V4 HOÀN TẤT (P0-P7).** Bỏ qua fg/bg color slot (không có brush tool nào dùng — thêm khi có painting).
 
 ## 4. GIỮ NGUYÊN TỪ V3 (không đụng)
 
