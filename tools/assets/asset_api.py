@@ -251,6 +251,54 @@ def op_save_head(cmd: dict) -> dict:
     return {"ok": True, "out": str(head_dir / "head.png")}
 
 
+def op_polygon_mask(cmd: dict) -> dict:
+    """Apply a polygon mask to an image — keep or remove inside the polygon.
+    This is the MANUAL cut tool: user draws the polygon in the web UI.
+    """
+    from PIL import Image, ImageDraw, ImageOps
+    img = Image.open(cmd["in"]).convert("RGBA")
+    w, h = img.size
+    polygon = [(int(p["x"]), int(p["y"])) for p in cmd["polygon"]]
+    mode = cmd.get("mode", "keep")  # "keep" = keep inside, "remove" = remove inside
+
+    if len(polygon) < 3:
+        return {"ok": False, "error": "polygon needs at least 3 points"}
+
+    # Create mask
+    mask = Image.new("L", (w, h), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.polygon(polygon, fill=255)
+
+    if mode == "remove":
+        mask = ImageOps.invert(mask)
+
+    # Apply mask to alpha channel (intersect with existing alpha)
+    alpha = np.asarray(img.getchannel("A"))
+    new_alpha = np.minimum(alpha, np.asarray(mask))
+    img.putalpha(Image.fromarray(new_alpha))
+
+    # Crop to content
+    ys, xs = np.where(new_alpha > 10)
+    if len(ys) > 0:
+        img = img.crop((int(xs.min()), int(ys.min()), int(xs.max())+1, int(ys.max())+1))
+
+    # Normalize if requested
+    if cmd.get("normalize"):
+        box_size = 512
+        box = int(box_size * 0.90)
+        scale = min(box / img.width, box / img.height)
+        ns = (int(img.width * scale), int(img.height * scale))
+        img = img.resize(ns, Image.LANCZOS)
+        canvas = Image.new("RGBA", (box_size, box_size), (0, 0, 0, 0))
+        canvas.paste(img, ((box_size-ns[0])//2, (box_size-ns[1])//2), img)
+        img = canvas
+
+    out = Path(cmd["out"])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out)
+    return {"ok": True, "out": str(out), "size": f"{img.width}x{img.height}"}
+
+
 OPS = {
     "remove-bg": op_remove_bg,
     "detect-neck": op_detect_neck,
@@ -260,6 +308,7 @@ OPS = {
     "list-poses": op_list_poses,
     "save-pose": op_save_pose,
     "save-head": op_save_head,
+    "polygon-mask": op_polygon_mask,
 }
 
 
