@@ -80,11 +80,45 @@ def ImageEnhance_enhance(img):
     return ImageEnhance.Color(img).enhance(1.04)
 
 
+def bake_from_bodies(head_path: str, bodies_dir: str, out_dir: str) -> int:
+    """Composite an existing head asset onto prepared body cutouts.
+
+    Only processes {name}.png files that have a sibling {name}.json anchor
+    manifest (produced by process_body.py) — i.e. vetted bodies, not working
+    sheets or stock junk. This is the production re-bake path (uses the
+    committed composite() math: head = sub_h × 0.42, 15% neck overlap).
+    """
+    head = Image.open(head_path).convert("RGBA")
+    bodies = Path(bodies_dir)
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    baked = []
+    for body_file in sorted(bodies.glob("*.png")):
+        anchor = body_file.with_suffix(".json")
+        if not anchor.exists():
+            continue
+        body = Image.open(body_file).convert("RGBA")
+        merged = composite(body, head)
+        target = out / body_file.name
+        merged.save(target)
+        baked.append(body_file.stem)
+        print(f"baked {target.name}")
+    print(f"done: {len(baked)} poses -> {out_dir}")
+    return 0
+
+
 def main():
     args = sys.argv[1:]
 
     def arg(name, default=""):
         return args[args.index(name) + 1] if name in args and args.index(name) + 1 < len(args) else default
+
+    if "--from-bodies" in args:
+        head_path, bodies_dir, out_dir = arg("--head"), arg("--bodies"), arg("--out")
+        if not (head_path and bodies_dir and out_dir):
+            print("usage: bake_poses.py --from-bodies --head <head.png> --bodies <dir> --out <dir>")
+            return 1
+        return bake_from_bodies(head_path, bodies_dir, out_dir)
 
     head_path, bodies_dir, out_dir = arg("--head"), arg("--bodies"), arg("--out")
     if not (head_path and bodies_dir and out_dir):
