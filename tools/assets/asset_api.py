@@ -346,15 +346,23 @@ def op_generate(cmd: dict) -> dict:
     if not key:
         return {"ok": False, "error": "STABILITY_API_KEY not set"}
 
+    aspect = str(cmd.get("aspect_ratio", "1:1"))
+    if aspect not in ("21:9", "16:9", "3:2", "5:4", "1:1", "4:5", "2:3", "9:16", "9:21"):
+        aspect = "1:1"
+    negative = str(cmd.get("negative_prompt", "") or "")
+    seed = cmd.get("seed")
+    seed_val = str(int(seed)) if seed not in (None, "", "random") else ""
+
     boundary = _uuid.uuid4().hex
-    form = _up.urlencode({
-        "prompt": prompt,
-        "output_format": "png",
-        "aspect_ratio": "1:1",
-    }).encode()
+    form_parts = [("prompt", prompt), ("output_format", "png"), ("aspect_ratio", aspect)]
+    if negative:
+        form_parts.append(("negative_prompt", negative))
+    if seed_val:
+        form_parts.append(("seed", seed_val))
+    form = _up.urlencode(dict(form_parts)).encode()
     # Use multipart form
     body = b""
-    for name, value in [("prompt", prompt), ("output_format", "png"), ("aspect_ratio", "1:1")]:
+    for name, value in form_parts:
         body += (f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n').encode()
     body += f'--{boundary}--\r\n'.encode()
 
@@ -394,12 +402,18 @@ def op_generate(cmd: dict) -> dict:
     else:
         subject = cutout
 
-    box = int(512 * 0.90)
+    # canvas size follows the requested aspect ratio (long side 512)
+    aw, ah = (int(x) for x in aspect.split(":"))
+    if aw >= ah:
+        cw, ch = 512, max(1, round(512 * ah / aw))
+    else:
+        cw, ch = max(1, round(512 * aw / ah)), 512
+    box = int(min(cw, ch) * 0.90)
     scale = min(box / subject.width, box / subject.height)
     ns_ = (int(subject.width * scale), int(subject.height * scale))
     subject = subject.resize(ns_, _Img.LANCZOS)
-    canvas = _Img.new("RGBA", (512, 512), (0, 0, 0, 0))
-    canvas.paste(subject, ((512-ns_[0])//2, (512-ns_[1])//2), subject)
+    canvas = _Img.new("RGBA", (cw, ch), (0, 0, 0, 0))
+    canvas.paste(subject, ((cw - ns_[0]) // 2, (ch - ns_[1]) // 2), subject)
 
     # save to project assets
     project = cmd.get("project", "isaacverse-final")

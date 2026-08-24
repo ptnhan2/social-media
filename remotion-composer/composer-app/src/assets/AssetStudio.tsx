@@ -39,6 +39,26 @@ const TOOL_KEYS: Record<string, ToolId> = {
   z: "zoom",
 };
 
+const SHORTCUTS: { keys: string; label: string }[] = [
+  { keys: "V L W E B H Z", label: "Chọn tool: Move / Lasso / Wand / Eraser / BG-remove / Hand / Zoom" },
+  { keys: "Space (giữ)", label: "Pan viewport với tool bất kỳ" },
+  { keys: "Wheel", label: "Zoom tại con trỏ" },
+  { keys: "Ctrl+0", label: "Fit doc vào màn hình" },
+  { keys: "Ctrl+Z / Ctrl+Shift+Z", label: "Undo / Redo" },
+  { keys: "Ctrl+J", label: "Duplicate layer đang chọn" },
+  { keys: "Ctrl+D", label: "Bỏ chọn (deselect + clear lasso/wand)" },
+  { keys: "Delete / Backspace", label: "Xoá layer đang chọn (Backspace với lasso: bỏ điểm cuối)" },
+  { keys: "←↑↓→", label: "Nudge layer 1px (Shift = 10px)" },
+  { keys: "[ / ]", label: "Đưa layer xuống / lên trong stack" },
+  { keys: "Enter", label: "Lasso: khép polygon (Enter lần 2 = Apply)" },
+  { keys: "Escape", label: "Huỷ lasso / wand / bỏ chọn" },
+  { keys: "Shift+click", label: "Chọn thêm layer / wand: cộng dồn vùng chọn" },
+  { keys: "Kéo nền trống", label: "Marquee chọn nhiều layer" },
+  { keys: "Right-click", label: "Menu layer: Duplicate / Front / Back / Lock / Hide / Delete" },
+  { keys: "Kéo từ ruler", label: "Tạo guide; double-click guide để xoá" },
+  { keys: "?", label: "Bảng phím tắt này" },
+];
+
 const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({ projectId, onBack }) => {
   const { state, dispatch } = useStore();
   const stageRef = React.useRef<Konva.Stage | null>(null);
@@ -67,6 +87,7 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
 
   // --- context menu ---
   const [ctxMenu, setCtxMenu] = React.useState<{ layerId: string; x: number; y: number } | null>(null);
+  const [showShortcuts, setShowShortcuts] = React.useState(false);
   React.useEffect(() => {
     if (!ctxMenu) return;
     const close = () => setCtxMenu(null);
@@ -291,6 +312,12 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
         }
       }
 
+      if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
+        e.preventDefault();
+        setShowShortcuts((s) => !s);
+        return;
+      }
+
       if (TOOL_KEYS[key]) {
         dispatch({ type: "SET_TOOL", tool: TOOL_KEYS[key] });
         return;
@@ -321,7 +348,8 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
       }
 
       if (e.key === "Escape") {
-        if (state.ui.lasso.points.length) dispatch({ type: "LASSO_CLEAR" });
+        if (showShortcuts) setShowShortcuts(false);
+        else if (state.ui.lasso.points.length) dispatch({ type: "LASSO_CLEAR" });
         else if (state.ui.wand) dispatch({ type: "SET_WAND", wand: null });
         else dispatch({ type: "SELECT", ids: [] });
         return;
@@ -387,6 +415,9 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
         <h1>Asset Studio</h1>
         <small>{projectId}</small>
         <div className="as4-header-spacer" />
+        <button type="button" className="as4-btn ghost" onClick={() => setShowShortcuts(true)} title="Bảng phím tắt (?)">
+          ?
+        </button>
         <button type="button" className="as4-btn ghost danger" onClick={resetDoc} title="Doc mới — xoá layer + lịch sử + session lưu">
           ✚ New
         </button>
@@ -456,6 +487,28 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
               </button>
               <button type="button" className="as4-btn primary" onClick={savePose} disabled={!exportState.name.trim() || state.ui.busy}>
                 💾 Lưu pose
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* shortcuts cheat sheet */}
+      {showShortcuts && (
+        <div className="as4-modal-backdrop" onClick={() => setShowShortcuts(false)}>
+          <div className="as4-modal as4-shortcuts-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Phím tắt</h3>
+            <div className="as4-shortcuts-list">
+              {SHORTCUTS.map((s) => (
+                <div key={s.keys} className="as4-shortcut-row">
+                  <kbd>{s.keys}</kbd>
+                  <span>{s.label}</span>
+                </div>
+              ))}
+            </div>
+            <div className="as4-modal-actions">
+              <button type="button" className="as4-btn ghost" onClick={() => setShowShortcuts(false)}>
+                Đóng (Esc)
               </button>
             </div>
           </div>

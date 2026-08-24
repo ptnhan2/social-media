@@ -63,6 +63,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
   const [panning, setPanning] = React.useState(false);
   const eraserState = React.useRef<{ layerId: string; last: Pt } | null>(null);
   const rulerDragRef = React.useRef<{ id: string; axis: "v" | "h" } | null>(null);
+  const [marquee, setMarquee] = React.useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
 
   const userGuides = React.useMemo(
     () => ({
@@ -153,8 +154,8 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     };
   }, []);
 
-  // auto-fit when the first layer arrives
-  const hadLayersRef = React.useRef(doc.layers.length > 0);
+  // auto-fit when layers appear (including restored-from-persist on mount)
+  const hadLayersRef = React.useRef(false);
   React.useEffect(() => {
     if (!hadLayersRef.current && doc.layers.length > 0 && size.w > 100) {
       actionsRef.current?.fit();
@@ -208,6 +209,8 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     if (tool === "lasso") {
       e.evt.preventDefault();
       if (ui.lasso.closed) return;
+      // dragging an existing point must not add a new one
+      if (e.target.name() === "lasso-point") return;
       const pts = ui.lasso.points;
       if (pts.length >= 3) {
         const first = pts[0];
@@ -230,7 +233,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
         dispatch({ type: "SET_STATUS", status: `Layer "${hit.name}" đang khoá` });
         return;
       }
-      void runWand(hit, pt);
+      void runWand(hit, pt, e.evt.shiftKey);
       return;
     }
 
@@ -260,7 +263,8 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     }
 
     if (tool === "move" && targetIsBackground && !targetIsTransformer) {
-      dispatch({ type: "SELECT", ids: [] });
+      // click-only → deselect; drag → marquee select (handled in move/up)
+      setMarquee({ x1: pt.x, y1: pt.y, x2: pt.x, y2: pt.y });
     }
   };
 
@@ -268,6 +272,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     const pt = docPointer();
     setMouseDoc(pt);
     setCursor(pt);
+    if (marquee && pt) setMarquee((m) => (m ? { ...m, x2: pt.x, y2: pt.y } : m));
     if (tool === "eraser" && eraserState.current) {
       const target = doc.layers.find((l) => l.id === eraserState.current!.layerId);
       if (target && pt) {
@@ -283,6 +288,28 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
       const layerId = eraserState.current.layerId;
       eraserState.current = null;
       void finishEraserStroke(layerId);
+    }
+    if (marquee) {
+      const wasDrag = Math.hypot(marquee.x2 - marquee.x1, marquee.y2 - marquee.y1) * viewport.scale > 4;
+      if (wasDrag) {
+        const r = {
+          x: Math.min(marquee.x1, marquee.x2),
+          y: Math.min(marquee.y1, marquee.y2),
+          w: Math.abs(marquee.x2 - marquee.x1),
+          h: Math.abs(marquee.y2 - marquee.y1),
+        };
+        const hitIds = doc.layers
+          .filter((l) => {
+            if (!l.visible) return false;
+            const b = layerAABB(l);
+            return b.x < r.x + r.w && b.x + b.width > r.x && b.y < r.y + r.h && b.y + b.height > r.y;
+          })
+          .map((l) => l.id);
+        dispatch({ type: "SELECT", ids: hitIds });
+      } else {
+        dispatch({ type: "SELECT", ids: [] });
+      }
+      setMarquee(null);
     }
   };
 
@@ -315,7 +342,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
   };
 
   // --- wand implementation ---
-  const runWand = async (layer: Layer, pt: Pt) => {
+  const runWand = async (layer: Layer, pt: Pt, additive = false) => {
     const canvas = await getLayerCanvas(layer);
     const ctx = canvas.getContext("2d")!;
     const imgPt = docToImage(layer, pt);
@@ -331,8 +358,21 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
       ui.toolOptions.wand.tolerance,
       ui.toolOptions.wand.contiguous,
     );
+    // shift+click: OR into the existing selection on the same layer
+    const prev = additive && ui.wand?.layerId === layer.id ? ui.wand.alphaMask : null;
+    let finalMask = mask;
+    if (prev && prev.length === mask.length) {
+      finalMask = new Uint8ClampedArray(mask.length);
+      let any = false;
+      for (let i = 0; i < mask.length; i++) {
+        const v = mask[i] || prev[i] ? 255 : 0;
+        finalMask[i] = v;
+        if (v) any = true;
+      }
+      if (!any) finalMask = mask;
+    }
     let count = 0;
-    for (let i = 0; i < mask.length; i++) if (mask[i]) count++;
+    for (let i = 0; i < finalMask.length; i++) if (finalMask[i]) count++;
     if (count === 0) {
       dispatch({ type: "SET_STATUS", status: "Không chọn được pixel — thử tăng tolerance" });
       return;
@@ -342,8 +382,8 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
       type: "SET_WAND",
       wand: {
         layerId: layer.id,
-        maskCanvas: maskToPreviewCanvas(mask, canvas.width, canvas.height),
-        alphaMask: mask,
+        maskCanvas: maskToPreviewCanvas(finalMask, canvas.width, canvas.height),
+        alphaMask: finalMask,
         width: canvas.width,
         height: canvas.height,
       },
@@ -550,6 +590,21 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
             <Line key={`h-${gy}`} points={[-100000, gy, 100000, gy]} stroke="#ff3366" strokeWidth={1 / viewport.scale} listening={false} />
           ))}
 
+          {/* marquee selection rect */}
+          {marquee && (
+            <Rect
+              x={Math.min(marquee.x1, marquee.x2)}
+              y={Math.min(marquee.y1, marquee.y2)}
+              width={Math.abs(marquee.x2 - marquee.x1)}
+              height={Math.abs(marquee.y2 - marquee.y1)}
+              fill="rgba(41,163,255,0.08)"
+              stroke="#29a3ff"
+              strokeWidth={1 / viewport.scale}
+              dash={[4 / viewport.scale, 3 / viewport.scale]}
+              listening={false}
+            />
+          )}
+
           {/* eraser brush preview */}
           {tool === "eraser" && mouseDoc && (
             <Circle
@@ -564,7 +619,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
           )}
 
           {/* lasso overlay */}
-          {tool === "lasso" && ui.lasso.points.length > 0 && (            <Group listening={false}>
+          {tool === "lasso" && ui.lasso.points.length > 0 && (            <Group>
               <Line
                 points={ui.lasso.points.flatMap((p) => [p.x, p.y])}
                 closed={ui.lasso.closed}
@@ -588,12 +643,24 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
               {ui.lasso.points.map((p, i) => (
                 <Circle
                   key={i}
+                  name="lasso-point"
                   x={p.x}
                   y={p.y}
                   radius={5 / viewport.scale}
                   fill={i === 0 ? "#ff6600" : "#00ff64"}
                   stroke="#ffffff"
                   strokeWidth={1 / viewport.scale}
+                  draggable
+                  onDragEnd={(e) => {
+                    const np = ui.lasso.points.map((q, j) => (j === i ? { x: e.target.x(), y: e.target.y() } : q));
+                    dispatch({ type: "LASSO_SET", lasso: { points: np, closed: ui.lasso.closed } });
+                  }}
+                  onClick={() => {
+                    // click điểm đầu (cam) = khép polygon
+                    if (i === 0 && ui.lasso.points.length >= 3 && !ui.lasso.closed) {
+                      dispatch({ type: "LASSO_CLOSE" });
+                    }
+                  }}
                 />
               ))}
             </Group>

@@ -244,23 +244,24 @@ export default defineConfig({
         server.middlewares.use("/api/assets/search-stock", async (req, res) => {
           const url = new URL(req.url || "/", "http://composer.local");
           const q = url.searchParams.get("q") || "";
+          const page = Math.max(1, Number(url.searchParams.get("page") || "1"));
           if (!q) { sendJson(res, 400, { error: "q required" }); return; }
           const results: unknown[] = [];
           try {
-            const px = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=12&orientation=portrait`, { headers: { Authorization: PEXELS_API_KEY, "User-Agent": STUDIO_UA } });
+            const px = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=12&page=${page}&orientation=portrait`, { headers: { Authorization: PEXELS_API_KEY, "User-Agent": STUDIO_UA } });
             if (px.ok) {
               const data = await px.json() as any;
               for (const p of data.photos || []) results.push({ id: `pexels-${p.id}`, source: "pexels", thumb: p.src?.medium, large: p.src?.large2x || p.src?.large, alt: p.alt || "", photographer: p.photographer });
             }
           } catch { /* pexels down -> unsplash still returns */ }
           try {
-            const us = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=12&orientation=portrait`, { headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` } });
+            const us = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=12&page=${page}&orientation=portrait`, { headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` } });
             if (us.ok) {
               const data = await us.json() as any;
               for (const p of data.results || []) results.push({ id: `unsplash-${p.id}`, source: "unsplash", thumb: p.urls?.small, large: p.urls?.regular, alt: p.alt_description || "", photographer: p.user?.name });
             }
           } catch { /* ignore */ }
-          sendJson(res, 200, { results });
+          sendJson(res, 200, { results, page });
         });
 
         // Import a body photo: {projectId, url} (stock) or {projectId, data} (base64 upload)

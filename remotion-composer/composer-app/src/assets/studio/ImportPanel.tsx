@@ -33,6 +33,8 @@ export const ImportPanel: React.FC<{
   const [stockQuery, setStockQuery] = React.useState("");
   const [stockResults, setStockResults] = React.useState<StockResult[]>([]);
   const [stockBusy, setStockBusy] = React.useState(false);
+  const [stockPage, setStockPage] = React.useState(1);
+  const [stockQueryActive, setStockQueryActive] = React.useState("");
 
   const [recipes, setRecipes] = React.useState<Record<string, Recipe>>({});
   const [selectedRecipe, setSelectedRecipe] = React.useState("");
@@ -55,6 +57,10 @@ export const ImportPanel: React.FC<{
   });
   const [newRecipeName, setNewRecipeName] = React.useState("");
   const [recipeSaving, setRecipeSaving] = React.useState(false);
+  // gen call options (áp cho mọi chế độ generate)
+  const [genAspect, setGenAspect] = React.useState("1:1");
+  const [genSeed, setGenSeed] = React.useState("");
+  const [genNegative, setGenNegative] = React.useState("");
   const [genResults, setGenResults] = React.useState<{ url: string; path: string }[]>([]);
 
   const [poses, setPoses] = React.useState<PoseEntry[]>([]);
@@ -251,11 +257,18 @@ export const ImportPanel: React.FC<{
     }
   };
 
-  const searchStock = (q: string) =>
+  const searchStock = (q: string, page = 1) =>
     run("Đang tìm ảnh…", async () => {
-      const r = await fetch(`/api/assets/search-stock?q=${encodeURIComponent(q)}`);
-      const data = await r.json();
-      setStockResults(data.results || []);
+      setStockBusy(true);
+      try {
+        const r = await fetch(`/api/assets/search-stock?q=${encodeURIComponent(q)}&page=${page}`);
+        const data = await r.json();
+        setStockResults((prev) => (page === 1 ? data.results || [] : [...prev, ...(data.results || [])]));
+        setStockPage(page);
+        setStockQueryActive(q);
+      } finally {
+        setStockBusy(false);
+      }
     });
 
   const importStock = (item: StockResult) =>
@@ -289,7 +302,14 @@ export const ImportPanel: React.FC<{
     run("Đang generate…", async () => {
       const prompt = effectivePrompt.trim();
       if (!prompt) throw new Error("Prompt trống");
-      const data = await bridge({ op: "generate", prompt, project: projectId });
+      const data = await bridge({
+        op: "generate",
+        prompt,
+        project: projectId,
+        aspect_ratio: genAspect,
+        seed: genSeed.trim() || undefined,
+        negative_prompt: genNegative.trim() || undefined,
+      });
       setGenResults((prev) => [{ url: String(data.out), path: String(data.out) }, ...prev].slice(0, 6));
       onStatus("✓ Generated — click ảnh để thêm vào canvas");
     });
@@ -348,7 +368,14 @@ export const ImportPanel: React.FC<{
             <p className="as4-hint">Click preset hoặc gõ từ khoá → Enter. Click kết quả = thêm layer ngay.</p>
           )}
           {!stockBusy && stockResults.length > 0 && (
-            <p className="as4-hint">Ảnh: {stockResults.length} kết quả — tên photographer hiện khi hover (credit Pexels/Unsplash).</p>
+            <button
+              type="button"
+              className="as4-btn ghost wide"
+              onClick={() => void searchStock(stockQueryActive || stockQuery, stockPage + 1)}
+              disabled={stockBusy}
+            >
+              ⬇ Load thêm (trang {stockPage + 1})
+            </button>
           )}
         </div>
       )}
@@ -523,6 +550,35 @@ export const ImportPanel: React.FC<{
             disabled={!effectivePrompt.trim()}>
             ✨ Generate
           </button>
+
+          <div className="as4-gen-options">
+            <label className="as4-field">
+              <span>Tỉ lệ</span>
+              <select value={genAspect} onChange={(e) => setGenAspect(e.target.value)} title="Aspect ratio của ảnh generate">
+                {["1:1", "4:5", "2:3", "9:16", "3:2", "5:4", "16:9", "21:9", "9:21"].map((a) => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
+            </label>
+            <label className="as4-field">
+              <span>Seed</span>
+              <input
+                value={genSeed}
+                onChange={(e) => setGenSeed(e.target.value.replace(/[^0-9]/g, ""))}
+                placeholder="random"
+                title="Cố định seed để tái tạo ảnh giống nhau"
+              />
+            </label>
+            <label className="as4-field">
+              <span>Negative</span>
+              <input
+                value={genNegative}
+                onChange={(e) => setGenNegative(e.target.value)}
+                placeholder="things to avoid (optional)"
+                title="Negative prompt — những gì KHÔNG muốn xuất hiện"
+              />
+            </label>
+          </div>
 
           <div className="as4-gen-grid">
             {genResults.map((item, i) => (
