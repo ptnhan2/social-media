@@ -43,6 +43,19 @@ Phiên bản flat-prompt preset cũ SAI thiết kế (gộp hết options vào 1
 - Server: `save-recipe` nhận {id?, label, promptTemplate, fields,
   defaults}; recipes.json write atomic + tolerate file hỏng
 
+**Prompt CỦA TỪNG OPTION (hỏi 22:36 — commit 7ddf7d1, đây mới đúng ý gốc)**
+Option giờ là `{label, prompt}` — KHÔNG còn là chữ thay thẳng vào template:
+- Chọn "comic ink" → thấy ngay prompt của nó trong ô ngay dưới dropdown
+  Art Style: "bold black ink outlines, cel shading, high contrast comic
+  book art, clean white highlights" — **sửa trực tiếp**, resolved preview
+  cập nhật live
+- `{{style}}` được thay bằng PROMPT của option đang chọn (buildSubstitutions)
+- Built-in recipe đã enrich prompt cho mọi option (5 styles, 5 expressions,
+  3 angles, 3 accessories); option tự thêm qua ＋ cũng có prompt riêng
+  (mặc định = label, sửa được)
+- Sửa option prompt của built-in → "Lưu thành recipe mới" để giữ; user
+  recipe → 💾 Cập nhật trực tiếp
+
 **Bug nền tìm thấy khi làm**: python Windows pipe stdin = cp1252 +
 surrogateescape → prompt có ký tự unicode (—, emoji) round-trip 2 lần sinh
 lone surrogate → crash ghi file → 500 "asset bridge failed" ẩn lỗi thật.
