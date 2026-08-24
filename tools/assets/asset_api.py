@@ -416,6 +416,30 @@ def op_generate(cmd: dict) -> dict:
     }
 
 
+def op_list_inbox(cmd: dict) -> dict:
+    """List recent files in the project inbox (+ gen-results) so previously
+    imported/generated assets stay reachable after a doc reset."""
+    project = cmd.get("project", "isaacverse-final")
+    out = []
+    for sub in ("bodies/inbox", "gen-results"):
+        d = ROOT / "projects" / project / "assets" / "character" / sub
+        if not d.exists():
+            continue
+        for f in d.iterdir():
+            if not f.is_file() or f.suffix.lower() not in (".png", ".jpg", ".jpeg", ".webp"):
+                continue
+            st = f.stat()
+            out.append({
+                "name": f.name,
+                "path": str(f),
+                "mtime": int(st.st_mtime),
+                "size": st.st_size,
+            })
+    out.sort(key=lambda x: x["mtime"], reverse=True)
+    limit = int(cmd.get("limit", 24))
+    return {"ok": True, "files": out[:limit]}
+
+
 def op_list_recipes(cmd: dict) -> dict:
     """List available Gen AI recipes."""
     recipes_file = ROOT / "libraries" / "asset-studio" / "recipes.json"
@@ -439,6 +463,7 @@ OPS = {
     "polygon-mask": op_polygon_mask,
     "generate": op_generate,
     "list-recipes": op_list_recipes,
+    "list-inbox": op_list_inbox,
 }
 
 

@@ -298,6 +298,11 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
 
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
+        // lasso active with points: Backspace removes the last point (Photopea behavior)
+        if (e.key === "Backspace" && state.ui.activeTool === "lasso" && state.ui.lasso.points.length > 0) {
+          dispatch({ type: "LASSO_POP_POINT" });
+          return;
+        }
         if (state.ui.wand?.alphaMask) {
           applyWandDelete();
         } else if (state.ui.selectedIds.length) {
@@ -319,11 +324,6 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
         if (state.ui.lasso.points.length) dispatch({ type: "LASSO_CLEAR" });
         else if (state.ui.wand) dispatch({ type: "SET_WAND", wand: null });
         else dispatch({ type: "SELECT", ids: [] });
-        return;
-      }
-
-      if (e.key === "Backspace" && state.ui.activeTool === "lasso") {
-        dispatch({ type: "LASSO_POP_POINT" });
         return;
       }
 
@@ -432,6 +432,10 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
           <div className="as4-modal" onClick={(e) => e.stopPropagation()}>
             <h3>Lưu pose vào library</h3>
             {exportState.url && <img className="as4-export-preview" src={exportState.url} alt="preview" />}
+            <p className="as4-hint">
+              Pose lưu vào <code>character/poses/&lt;tên&gt;.png</code> — CharacterPresence dùng pose này khi render
+              video (chọn pose name trong cấu hình scene). Muốn chỉ tải file về máy: dùng nút Download PNG.
+            </p>
             <input
               autoFocus
               value={exportState.name}
@@ -442,6 +446,11 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
               placeholder="tên-pose (vd: point-right-2)"
             />
             <div className="as4-modal-actions">
+              {exportState.url && (
+                <a className="as4-btn ghost" href={exportState.url} download="asset-studio-export.png">
+                  ⬇ Download PNG
+                </a>
+              )}
               <button type="button" className="as4-btn ghost" onClick={() => setExportState({ open: false, url: null, name: "" })}>
                 Huỷ
               </button>

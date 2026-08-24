@@ -1,4 +1,5 @@
 import React from "react";
+import { useCursor } from "./cursorStore";
 import { useStore } from "./store";
 import { TOOL_BY_ID } from "./tools";
 
@@ -7,6 +8,7 @@ const ZOOM_STEPS = [0.25, 0.5, 1, 2, 4];
 export const StatusBar: React.FC<{ onFit: () => void }> = ({ onFit }) => {
   const { state, dispatch } = useStore();
   const { viewport, doc, ui } = state;
+  const cursor = useCursor();
   const toolDef = TOOL_BY_ID[ui.activeTool];
 
   return (
@@ -35,6 +37,9 @@ export const StatusBar: React.FC<{ onFit: () => void }> = ({ onFit }) => {
       </span>
       <span className="as4-status-item">
         Doc {doc.docWidth}×{doc.docHeight}
+      </span>
+      <span className="as4-status-item">
+        {cursor ? `X:${Math.round(cursor.x)} Y:${Math.round(cursor.y)}` : "X:– Y:–"}
       </span>
       <span className="as4-status-item">
         {doc.layers.length} layer{doc.layers.length === 1 ? "" : "s"}

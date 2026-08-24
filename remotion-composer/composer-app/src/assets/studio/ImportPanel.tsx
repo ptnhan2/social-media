@@ -1,14 +1,10 @@
 import React from "react";
 import { bridge, fileUrl } from "./imageOps";
+import { defaultFields, resolvePrompt, Recipe } from "./promptUtils";
 
-type StockResult = { id: string; source: string; thumb: string; large: string; alt: string };
-type Recipe = {
-  label: string;
-  description: string;
-  enabled?: boolean;
-  fields: { name: string; label: string; type: string; options: string[]; optional?: boolean }[];
-};
+type StockResult = { id: string; source: string; thumb: string; large: string; alt: string; photographer: string };
 type PoseEntry = { name: string; anchor: Record<string, unknown> };
+type InboxFile = { name: string; path: string; mtime: number; size: number };
 
 const SEARCH_PRESETS = [
   { label: "👉", title: "Chỉ tay", query: "man pointing hand gesture isolated white background" },
@@ -37,9 +33,20 @@ export const ImportPanel: React.FC<{
   const [recipes, setRecipes] = React.useState<Record<string, Recipe>>({});
   const [selectedRecipe, setSelectedRecipe] = React.useState("");
   const [recipeFields, setRecipeFields] = React.useState<Record<string, string>>({});
+  const [promptOverride, setPromptOverride] = React.useState<string | null>(null); // null = auto-resolve
   const [genResults, setGenResults] = React.useState<{ url: string; path: string }[]>([]);
 
   const [poses, setPoses] = React.useState<PoseEntry[]>([]);
+  const [inboxFiles, setInboxFiles] = React.useState<InboxFile[]>([]);
+
+  const refreshInbox = React.useCallback(async () => {
+    try {
+      const data = await bridge({ op: "list-inbox", project: projectId });
+      setInboxFiles((data.files as InboxFile[]) || []);
+    } catch {
+      /* ignore */
+    }
+  }, [projectId]);
 
   const refreshPoses = React.useCallback(async () => {
     try {
@@ -52,6 +59,7 @@ export const ImportPanel: React.FC<{
 
   React.useEffect(() => {
     void refreshPoses();
+    void refreshInbox();
     bridge({ op: "list-recipes" })
       .then((data) => {
         const r = (data.recipes as Record<string, Recipe>) || {};
@@ -118,7 +126,17 @@ export const ImportPanel: React.FC<{
 
   const doGenerate = () =>
     run("Đang generate…", async () => {
-      const data = await bridge({ op: "generate", recipe: selectedRecipe, fields: recipeFields, project: projectId });
+      // Send the exact prompt text the user sees (resolved/edited/custom).
+      let prompt = "";
+      if (selectedRecipe === "__custom__") {
+        prompt = (promptOverride ?? "").trim();
+      } else {
+        const r = recipes[selectedRecipe];
+        const resolved = r?.promptTemplate ? resolvePrompt(r.promptTemplate, recipeFields) : "";
+        prompt = (promptOverride ?? resolved).trim();
+      }
+      if (!prompt) throw new Error("Prompt trống");
+      const data = await bridge({ op: "generate", prompt, project: projectId });
       setGenResults((prev) => [{ url: String(data.out), path: String(data.out) }, ...prev].slice(0, 6));
       onStatus("✓ Generated — click ảnh để thêm vào canvas");
     });
@@ -158,17 +176,26 @@ export const ImportPanel: React.FC<{
             }}
             placeholder="Tìm ảnh stock (Pexels + Unsplash)…"
           />
-          {stockBusy ? <p className="as4-hint">Đang tìm…</p> : null}
+          {stockBusy && <p className="as4-hint">Đang tìm ảnh…</p>}
           <div className="as4-stock-grid">
             {stockResults.map((item) => (
-              <button key={item.id} type="button" className="as4-stock-item" title={`${item.alt} — click để thêm layer`}
-                onClick={() => void importStock(item)}>
+              <button
+                key={item.id}
+                type="button"
+                className="as4-stock-item"
+                title={`${item.alt} — ${item.photographer} (${item.source}) — click để thêm layer`}
+                onClick={() => void importStock(item)}
+              >
                 <img src={item.thumb} alt={item.alt} loading="lazy" />
+                <small className="as4-stock-credit">{item.photographer}</small>
               </button>
             ))}
           </div>
-          {stockResults.length === 0 && (
+          {!stockBusy && stockResults.length === 0 && (
             <p className="as4-hint">Click preset hoặc gõ từ khoá → Enter. Click kết quả = thêm layer ngay.</p>
+          )}
+          {!stockBusy && stockResults.length > 0 && (
+            <p className="as4-hint">Ảnh: {stockResults.length} kết quả — tên photographer hiện khi hover (credit Pexels/Unsplash).</p>
           )}
         </div>
       )}
@@ -181,9 +208,8 @@ export const ImportPanel: React.FC<{
             onChange={(e) => {
               setSelectedRecipe(e.target.value);
               const r = recipes[e.target.value];
-              const defaults: Record<string, string> = {};
-              if (r) for (const f of r.fields) defaults[f.name] = f.options[0];
-              setRecipeFields(defaults);
+              setRecipeFields(r ? defaultFields(r) : {});
+              setPromptOverride(null);
             }}
           >
             {Object.entries(recipes).map(([key, r]) => (
@@ -191,24 +217,70 @@ export const ImportPanel: React.FC<{
                 {r.label}
               </option>
             ))}
+            <option value="__custom__">✏️ Custom prompt</option>
           </select>
-          {selectedRecipe &&
-            recipes[selectedRecipe]?.fields.map((f) => (
-              <label key={f.name} className="as4-field">
-                <span>{f.label}</span>
-                <select
-                  value={recipeFields[f.name] || f.options[0]}
-                  onChange={(e) => setRecipeFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
-                >
-                  {f.options.map((o) => (
-                    <option key={o} value={o}>
-                      {o}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-          <button type="button" className="as4-btn primary wide" onClick={() => void doGenerate()}>
+
+          {selectedRecipe === "__custom__" ? (
+            <textarea
+              className="as4-prompt-box"
+              rows={6}
+              value={promptOverride ?? ""}
+              onChange={(e) => setPromptOverride(e.target.value)}
+              placeholder="Mô tả ảnh muốn generate (English) — ví dụ: A comic ink style character head of a young woman, confident expression, wearing headphones, pure white background, only the head..."
+            />
+          ) : (
+            <>
+              {selectedRecipe &&
+                recipes[selectedRecipe]?.fields.map((f) => (
+                  <label key={f.name} className="as4-field">
+                    <span>{f.label}</span>
+                    <select
+                      value={recipeFields[f.name] || f.options[0]}
+                      onChange={(e) => {
+                        setRecipeFields((prev) => ({ ...prev, [f.name]: e.target.value }));
+                        setPromptOverride(null); // back to auto-resolve when fields change
+                      }}
+                    >
+                      {f.options.map((o) => (
+                        <option key={o} value={o}>
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+              {(() => {
+                const r = recipes[selectedRecipe];
+                const resolved = r?.promptTemplate ? resolvePrompt(r.promptTemplate, recipeFields) : "";
+                const effective = promptOverride ?? resolved;
+                const dirty = promptOverride !== null && promptOverride !== resolved;
+                return (
+                  <div className="as4-prompt-wrap">
+                    <div className="as4-filter-header">
+                      <span>Prompt {dirty ? "(đã sửa tay)" : ""}</span>
+                      <button
+                        type="button"
+                        className="as4-icon-btn"
+                        title="Reset về prompt tự động từ các option"
+                        onClick={() => setPromptOverride(null)}
+                      >
+                        ↺
+                      </button>
+                    </div>
+                    <textarea
+                      className="as4-prompt-box"
+                      rows={5}
+                      value={effective}
+                      onChange={(e) => setPromptOverride(e.target.value)}
+                    />
+                  </div>
+                );
+              })()}
+            </>
+          )}
+
+          <button type="button" className="as4-btn primary wide" onClick={() => void doGenerate()}
+            disabled={selectedRecipe === "__custom__" && !(promptOverride ?? "").trim()}>
             ✨ Generate
           </button>
           <div className="as4-gen-grid">
@@ -234,11 +306,36 @@ export const ImportPanel: React.FC<{
                 const f = e.target.files?.[0];
                 if (f) void onFileUpload(f);
                 e.target.value = "";
+                window.setTimeout(() => void refreshInbox(), 800);
               }}
             />
             📁 Chọn file…
           </label>
           <p className="as4-hint">Hoặc kéo-thả ảnh thẳng vào canvas bất cứ lúc nào.</p>
+          {inboxFiles.length > 0 && (
+            <div className="as4-inbox">
+              <div className="as4-filter-header">
+                <span>File gần đây ({inboxFiles.length})</span>
+                <button type="button" className="as4-icon-btn" title="Làm mới" onClick={() => void refreshInbox()}>
+                  ↻
+                </button>
+              </div>
+              <div className="as4-stock-grid as4-inbox-grid">
+                {inboxFiles.map((f) => (
+                  <button
+                    key={f.path}
+                    type="button"
+                    className="as4-stock-item"
+                    title={`${f.name} — click để thêm layer`}
+                    onClick={() => onAddLayer(f.path, f.name.replace(/\.[^.]+$/, "").slice(0, 15))}
+                  >
+                    <img src={fileUrl(f.path)} alt={f.name} loading="lazy" />
+                  </button>
+                ))}
+              </div>
+              <p className="as4-hint">Mọi ảnh đã import/generate vẫn nằm đây — không mất khi reset doc.</p>
+            </div>
+          )}
         </div>
       )}
 

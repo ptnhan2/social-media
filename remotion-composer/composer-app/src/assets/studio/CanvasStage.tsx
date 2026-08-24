@@ -1,6 +1,7 @@
 import Konva from "konva";
 import React from "react";
 import { Circle, Group, Image as KonvaImage, Layer as KonvaLayer, Line, Rect, Stage, Transformer } from "react-konva";
+import { setCursor } from "./cursorStore";
 import { useStore } from "./store";
 import { docToImage, snapLayer } from "./geometry";
 import {
@@ -266,6 +267,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
   const onStageMouseMove = () => {
     const pt = docPointer();
     setMouseDoc(pt);
+    setCursor(pt);
     if (tool === "eraser" && eraserState.current) {
       const target = doc.layers.find((l) => l.id === eraserState.current!.layerId);
       if (target && pt) {
@@ -548,9 +550,21 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
             <Line key={`h-${gy}`} points={[-100000, gy, 100000, gy]} stroke="#ff3366" strokeWidth={1 / viewport.scale} listening={false} />
           ))}
 
+          {/* eraser brush preview */}
+          {tool === "eraser" && mouseDoc && (
+            <Circle
+              x={mouseDoc.x}
+              y={mouseDoc.y}
+              radius={ui.toolOptions.eraser.size / 2}
+              stroke="#f0883e"
+              strokeWidth={1 / viewport.scale}
+              fill="rgba(240,136,62,0.08)"
+              listening={false}
+            />
+          )}
+
           {/* lasso overlay */}
-          {tool === "lasso" && ui.lasso.points.length > 0 && (
-            <Group listening={false}>
+          {tool === "lasso" && ui.lasso.points.length > 0 && (            <Group listening={false}>
               <Line
                 points={ui.lasso.points.flatMap((p) => [p.x, p.y])}
                 closed={ui.lasso.closed}
@@ -600,6 +614,15 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
         </KonvaLayer>
       </Stage>
       </div>
+
+      {/* empty-state hint (doc has no layers) */}
+      {doc.layers.length === 0 && (
+        <div className="as4-canvas-empty">
+          <div className="as4-canvas-empty-icon">🎨</div>
+          <div>Import body (Stock / Upload) hoặc Generate head để bắt đầu</div>
+          <small>Kéo-thả ảnh vào đây cũng được</small>
+        </div>
+      )}
 
       {/* rulers (HTML overlay, positions relative to stage origin = holder top-left) */}
       {ui.showRulers && (
