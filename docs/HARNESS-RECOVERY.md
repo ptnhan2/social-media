@@ -1,21 +1,19 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-24 19:45. Previous: 18:10.
-> **TRẠNG THÁI: Asset Studio V4 HOÀN TẤT P0-P7 (commits 55108b7 + 5327783).**
-> 119/119 tests. Full E2E evidence trong `docs/ASSET-STUDIO-SPEC.md` §0.
-> BG remove user xác nhận hoạt động (19:15).
+> Updated 2026-08-24 21:20. Previous: 19:45.
+> **TRẠNG THÁI: Asset Studio V4 hoàn tất + UX audit round 1 (commit b5dcbe4).**
+> 124/124 tests. Audit round 2 list trong `docs/ASSET-STUDIO-SPEC.md` §7.
 
 ---
 
 ## 🌅 VIỆC TIẾP THEO (session sau)
 
-1. **Dùng studio tạo poses production**: poses trong library hiện là
-   file test/cũ — user dùng studio (`:5174/assets`) bake lại body+head
-   chuẩn, save poses mới
-2. Việc cũ còn chờ: nar-001 implement (hướng A+B đã chốt), LangSmith
-   render-review queue
-3. Gợi ý nhỏ (không chặn): thêm "Save doc as pose template" nếu user
-   muốn reuse layout body+head giữa các poses
+1. **UX audit round 2** (spec §7): marquee select, wand add-vùng, gen
+   aspect-ratio/seed, history thumbnails… — theo priority trong list
+2. **Pose wiring vào video** (việc lớn nhất còn lại): UI trong editor gắn
+   pose vào scene qua characterPresence — cần design session riêng
+3. **Dùng studio tạo poses production** — user tự làm trong `:5174/assets`
+4. Việc cũ: nar-001 implement (hướng A+B đã chốt), LangSmith queue
 
 1. **Mở Composer :5174** → preview giờ render theo editor path với style v73
    (bold 900+, gradient titles, màu rực) — confirm lần nữa trong editor thật.

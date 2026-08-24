@@ -1,12 +1,32 @@
 # ASSET STUDIO — SPEC + V4 PLAN (2026-08-24, sau research)
 
-> **TRẠNG THÁI: V4 P0→P7 ĐÃ XONG (P0-P6 commit 55108b7, P7 commit 5327783).**
-> User duyệt nguyên xin 17:30 → research + build P0-P6 + P7 polish cùng ngày.
-> 119/119 tests. Studio sẵn sàng dùng tạo poses production.
+> **TRẠNG THÁI: V4 hoàn tất P0-P7 + UX audit round 1 (commit b5dcbe4).**
+> 124/124 tests. Studio dùng production được. Còn audit list §7 (round 2+).
 >
 > Nguồn research: Photopea official docs (workspace/navigation), so sánh
 > Konva vs Fabric (konvajs.org + 3 bài deep-comparison 2025-2026),
 > react-filerobot-image-editor (đối chiếu), npm version check 2026-08-24.
+
+## 0.5. TRẢ LỜI CÂU HỎI USER (2026-08-24 tối)
+
+**Export ra dự án kiểu gì?**
+Save pose → flatten toàn doc (đúng như thấy trên canvas, kể filters/blend)
+→ upload PNG → `save-pose` → viết vào `public/<project>/character/poses/
+<tên>.png` + anchor JSON. CharacterPresence render pose này trong video
+khi scene config chọn pose name đó. Download PNG = chỉ tải file về máy.
+**GAP còn lại**: chưa có UI trong editor để KÉO pose vào scene — pose
+được tham chiếu qua characterPresence config trong EditDoc (cần làm khi
+gắn character vào timeline).
+
+**Từ dự án nhảy vào studio bằng nút nào?**
+Nút **🎨 Asset Studio** trên header của VideoEditor (bên trái nút Export).
+Từ 21:08 đã làm nổi bật màu cam để dễ thấy. Nút ← trên studio để quay lại.
+
+**Gen AI prompt?**
+Từ commit b5dcbe4: prompt resolved hiển thị trong textarea chỉnh sửa được
+(WYSIWYG — text bạn thấy = text gửi đi), nút ↺ reset về auto, và option
+"✏️ Custom prompt" nhập prompt hoàn toàn mới. Backend hỗ trợ sẵn
+`op_generate {prompt}` — trước đó frontend chỉ không expose.
 
 ## 0. KẾT QUẢ E2E ĐÃ VERIFY (browser thật :5174/assets)
 
@@ -210,6 +230,41 @@ layer xuống/lên • `Enter` đóng lasso.
 | **P7** | Polish: History panel (named actions, jump) ✅ (đã xong từ P2), session-persist, rulers + drag guides + snap-to-guide, grid rule-of-thirds, context menu right-click, New/reset | E2E bảng §0 | ✅ commit 5327783 |
 
 **V4 HOÀN TẤT (P0-P7).** Bỏ qua fg/bg color slot (không có brush tool nào dùng — thêm khi có painting).
+
+## 7. UX AUDIT (trả lời "còn bao nhiêu vấn đề bỏ sót?")
+
+### Round 1 — ĐÃ FIX (commit b5dcbe4, 2026-08-24 tối)
+| # | Vấn đề | Fix |
+|---|---|---|
+| 1 | Gen AI ẩn prompt, không sửa được | Textarea WYSIWYG (resolved prompt hiển thị + edit + reset auto) |
+| 2 | Không nhập prompt hoàn toàn mới | Option "✏️ Custom prompt" (backend hỗ trợ sẵn) |
+| 3 | Lasso Backspace pop-point là dead code (branch không tới được) | Gộp vào handler Delete/Backspace đúng thứ tự |
+| 4 | Status bar thiếu cursor X/Y (spec §P1 đòi nhưng bị sót) | cursorStore (useSyncExternalStore, rAF throttle) |
+| 5 | Eraser không có brush preview | Circle outline theo mouse, đúng kích thước doc px |
+| 6 | Canvas trống không có hint | Empty-state overlay |
+| 7 | Ảnh đã import/gen MẤT sau khi reset doc | `list-inbox` op + "File gần đây" grid trong Upload tab |
+| 8 | Save pose không nói rõ pose đi đâu | Info line trong modal + nút Download PNG (tải về máy) |
+| 9 | Stock không credit photographer (licensing) | Credit hiện trên ảnh + title đầy đủ |
+| 10 | Nút vào studio từ editor dễ miss | 🎨 Asset Studio nổi màu cam |
+
+### Round 2+ — CÒN LẠI (theo priority, chưa làm)
+1. **Pose wiring vào video** — chưa có UI trong editor gắn pose vào scene/
+   timeline; hiện chỉ qua characterPresence config trong EditDoc (việc lớn,
+   dính đến CharacterPresence integration — cần design session riêng)
+2. **Marquee select** — kéo ô chọn nhiều layer (giờ chỉ shift+click)
+3. **Wand shift+click add-vùng** + marching ants animation
+4. **Lasso edit points** sau khi đặt (kéo point chỉnh vị trí)
+5. **Zoom-to-selection**, pan bounds (giờ pan vô hạn)
+6. **Gen options**: aspect ratio (hardcoded 1:1), seed, negative prompt
+7. **History panel thumbnails** (giờ text-only)
+8. **Stock pagination** (load more — giờ 12 kết quả cố định)
+9. **Shortcuts cheat sheet** (nhấn ? để hiện)
+10. **Multi-doc** — 1 doc/project; muốn nhiều pose song song phải New + save liên tục
+
+Nguyên nhân bỏ sót: build theo feature-list của plan, không có pass
+"walk the whole flow như user lần đầu". Bài học: sau mỗi phase E2E phải
+check cả DISCOVERABILITY (tìm được tính năng không?) chứ chỉ check
+FUNCTION (chạy được không?).
 
 ## 4. GIỮ NGUYÊN TỪ V3 (không đụng)
 
