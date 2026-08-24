@@ -1,0 +1,48 @@
+{
+  "character-head": {
+    "label": "Character Head",
+    "description": "Generate a channel mascot head — chỉ đầu, không cổ/vai",
+    "fields": [
+      {
+        "name": "style",
+        "label": "Art Style",
+        "type": "choice",
+        "options": ["comic ink", "semi-real cartoon", "flat vector", "3D render", "minimal mascot"]
+      },
+      {
+        "name": "expression",
+        "label": "Expression",
+        "type": "choice",
+        "options": ["friendly", "confident", "focused", "energetic", "surprised"]
+      },
+      {
+        "name": "accessory",
+        "label": "Accessory",
+        "type": "choice",
+        "options": ["none", "glasses", "headphones", "cap"],
+        "optional": true
+      },
+      {
+        "name": "angle",
+        "label": "View Angle",
+        "type": "choice",
+        "options": ["front facing", "three-quarter view", "side profile"]
+      }
+    ],
+    "promptTemplate": "A {{style}} cartoon character head of a young man, {{expression}} expression, {{angle}}. {{#accessory}}Wearing {{accessory}}. {{/accessory}}Short dark hair, big expressive eyes. Bold outlines, cel shading, warm orange and amber color palette. Floating on pure white background. ONLY the head — nothing below the jawline. Like an emoji or avatar icon."
+  },
+  "pose-body": {
+    "label": "Pose Body",
+    "description": "Generate a body in a specific pose (chưa active — dùng stock photo)",
+    "fields": [
+      {
+        "name": "pose",
+        "label": "Pose",
+        "type": "choice",
+        "options": ["standing pointing", "arms crossed", "sitting thinking", "arms raised celebrating"]
+      }
+    ],
+    "promptTemplate": "Full body stock photo of a person {{pose}}, plain studio background, professional photography. Headless — cropped at neck.",
+    "enabled": false
+  }
+}

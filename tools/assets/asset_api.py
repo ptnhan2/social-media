@@ -299,6 +299,130 @@ def op_polygon_mask(cmd: dict) -> dict:
     return {"ok": True, "out": str(out), "size": f"{img.width}x{img.height}"}
 
 
+def op_generate(cmd: dict) -> dict:
+    """Generate image via Stability AI using a recipe or direct prompt.
+    Auto post-process: bg removal + normalize 512×512.
+    """
+    import uuid as _uuid
+    import urllib.request as _ur
+    import urllib.parse as _up
+
+    _load_env()
+    recipes_file = ROOT / "libraries" / "asset-studio" / "recipes.json"
+    recipes = json.loads(recipes_file.read_text(encoding="utf-8-sig")) if recipes_file.exists() else {}
+
+    recipe_name = cmd.get("recipe", "")
+    fields = cmd.get("fields", {})
+
+    if recipe_name and recipe_name in recipes:
+        recipe = recipes[recipe_name]
+        template = recipe["promptTemplate"]
+        # simple template substitution
+        prompt = template
+        for key, value in fields.items():
+            prompt = prompt.replace("{{" + key + "}}", str(value))
+        # handle optional blocks {{#accessory}}...{{/accessory}}
+        import re as _re
+        def _optional_block(match):
+            inner = match.group(1)
+            field_name = inner.split("Wearing ")[-1].split(".")[0].strip() if "Wearing" in inner else ""
+            if fields.get(field_name, "none") != "none" and fields.get("accessory", "none") != "none":
+                return inner
+            return ""
+        prompt = _re.sub(r"\{\{#(\w+)\}\}(.*?)\{\{/\1\}\}", _optional_block, prompt)
+        # clean up none values
+        prompt = prompt.replace("Wearing none.", "").replace("  ", " ")
+    elif cmd.get("prompt"):
+        prompt = cmd["prompt"]
+    else:
+        return {"ok": False, "error": "recipe or prompt required"}
+
+    # Generate via Stability AI
+    key = os.environ.get("STABILITY_API_KEY", "")
+    if not key:
+        return {"ok": False, "error": "STABILITY_API_KEY not set"}
+
+    boundary = _uuid.uuid4().hex
+    form = _up.urlencode({
+        "prompt": prompt,
+        "output_format": "png",
+        "aspect_ratio": "1:1",
+    }).encode()
+    # Use multipart form
+    body = b""
+    for name, value in [("prompt", prompt), ("output_format", "png"), ("aspect_ratio", "1:1")]:
+        body += (f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n').encode()
+    body += f'--{boundary}--\r\n'.encode()
+
+    req = _ur.Request(
+        "https://api.stability.ai/v2beta/stable-image/generate/core",
+        data=body,
+        headers={
+            "Authorization": f"Bearer {key}",
+            "Accept": "image/*",
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "User-Agent": "Mozilla/5.0 IsaacVerseComposer/1.0",
+        },
+        method="POST",
+    )
+
+    import tempfile
+    tmp_dir = Path(tempfile.mkdtemp())
+    raw_path = tmp_dir / "gen-raw.png"
+
+    with _ur.urlopen(req, timeout=180) as resp:
+        raw_path.write_bytes(resp.read())
+
+    # Auto post-process: bg removal + normalize
+    from PIL import Image as _Img, ImageOps as _IOps
+    img = _Img.open(raw_path).convert("RGB")
+
+    # bg removal (isnet if cached, else threshold)
+    from rembg import remove as _rm, new_session as _ns
+    session = _ns("isnet-general-use")
+    cutout = _rm(img, session=session)
+
+    # normalize to 512×512
+    alpha = np.asarray(cutout.getchannel("A"))
+    ys, xs = np.where(alpha > 10)
+    if len(ys) > 0:
+        subject = cutout.crop((int(xs.min()), int(ys.min()), int(xs.max())+1, int(ys.max())+1))
+    else:
+        subject = cutout
+
+    box = int(512 * 0.90)
+    scale = min(box / subject.width, box / subject.height)
+    ns_ = (int(subject.width * scale), int(subject.height * scale))
+    subject = subject.resize(ns_, _Img.LANCZOS)
+    canvas = _Img.new("RGBA", (512, 512), (0, 0, 0, 0))
+    canvas.paste(subject, ((512-ns_[0])//2, (512-ns_[1])//2), subject)
+
+    # save to project assets
+    project = cmd.get("project", "isaacverse-final")
+    out_dir = ROOT / "projects" / project / "assets" / "character" / "gen-results"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"gen-{int(__import__('time').time())}.png"
+    canvas.save(out)
+
+    return {
+        "ok": True,
+        "out": str(out),
+        "prompt": prompt,
+        "size": f"{canvas.width}x{canvas.height}",
+    }
+
+
+def op_list_recipes(cmd: dict) -> dict:
+    """List available Gen AI recipes."""
+    recipes_file = ROOT / "libraries" / "asset-studio" / "recipes.json"
+    if not recipes_file.exists():
+        return {"ok": True, "recipes": {}}
+    recipes = json.loads(recipes_file.read_text(encoding="utf-8-sig"))
+    # filter out disabled
+    active = {k: v for k, v in recipes.items() if v.get("enabled", True)}
+    return {"ok": True, "recipes": active}
+
+
 OPS = {
     "remove-bg": op_remove_bg,
     "detect-neck": op_detect_neck,
@@ -309,6 +433,8 @@ OPS = {
     "save-pose": op_save_pose,
     "save-head": op_save_head,
     "polygon-mask": op_polygon_mask,
+    "generate": op_generate,
+    "list-recipes": op_list_recipes,
 }
 
 

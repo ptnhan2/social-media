@@ -57,6 +57,58 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
   const [status, setStatus] = React.useState("Sẵn sàng — tìm ảnh stock hoặc upload.");
   const [busy, setBusy] = React.useState(false);
 
+  // --- Gen AI state ---
+  type Recipe = {
+    label: string; description: string; enabled?: boolean;
+    fields: { name: string; label: string; type: string; options: string[]; optional?: boolean }[];
+    promptTemplate: string;
+  };
+  const [recipes, setRecipes] = React.useState<Record<string, Recipe>>({});
+  const [selectedRecipe, setSelectedRecipe] = React.useState("");
+  const [recipeFields, setRecipeFields] = React.useState<Record<string, string>>({});
+  const [genResults, setGenResults] = React.useState<{ url: string; path: string }[]>([]);
+
+  const loadRecipes = React.useCallback(async () => {
+    try {
+      const data = await bridge({ op: "list-recipes" });
+      const r = (data.recipes as Record<string, Recipe>) || {};
+      setRecipes(r);
+      const first = Object.keys(r)[0];
+      if (first) {
+        setSelectedRecipe(first);
+        const defaults: Record<string, string> = {};
+        for (const f of r[first].fields) {
+          defaults[f.name] = f.options[0];
+        }
+        setRecipeFields(defaults);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  React.useEffect(() => { void loadRecipes(); }, [loadRecipes]);
+
+  const doGenerate = () => run("Đang generate (AI)…", async () => {
+    const data = await bridge({
+      op: "generate",
+      recipe: selectedRecipe,
+      fields: recipeFields,
+      project: projectId,
+    });
+    // add to results
+    setGenResults((prev) => [{ url: fileUrl(String(data.out)), path: String(data.out) }, ...prev].slice(0, 6));
+    setStatus(`✓ Generated — click kết quả để dùng làm head.`);
+  });
+
+  const selectGenResult = (item: { url: string; path: string }) => {
+    setCutImagePath(item.path);
+    setCutDisplayUrl(item.url);
+    setHeadPath(item.path);
+    setHeadUrl(item.url);
+    setMode("cut");
+    setPolygon([]); setPolygonClosed(false);
+    setStatus("Head từ AI — dùng polygon tool để cắt chính xác, hoặc bấm 'Bỏ qua cắt' nếu đã sạch.");
+  };
+
   const canvasRef = React.useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = React.useState(false);
   const [dragStart, setDragStart] = React.useState<{ mx: number; my: number; hx: number; hy: number } | null>(null);
@@ -249,6 +301,68 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
                 </button>
               ))}
             </div>
+          </section>
+
+          <section className="as-panel">
+            <h3>🤖 Gen AI</h3>
+            {Object.keys(recipes).length > 0 ? (
+              <>
+                <select
+                  value={selectedRecipe}
+                  onChange={(e) => {
+                    setSelectedRecipe(e.target.value);
+                    const r = recipes[e.target.value];
+                    const defaults: Record<string, string> = {};
+                    if (r) for (const f of r.fields) defaults[f.name] = f.options[0];
+                    setRecipeFields(defaults);
+                  }}
+                  style={{ width: "100%", marginBottom: 8, background: "#0d1117", border: "1px solid #30363d", borderRadius: 6, color: "#e8edf2", padding: "6px 8px", fontSize: 12 }}
+                >
+                  {Object.entries(recipes).map(([key, r]) => (
+                    <option key={key} value={key}>{r.label}</option>
+                  ))}
+                </select>
+
+                {selectedRecipe && recipes[selectedRecipe]?.fields.map((field) => (
+                  <div key={field.name} style={{ marginBottom: 6 }}>
+                    <label style={{ fontSize: 10, color: "#8b949e", display: "block", marginBottom: 2 }}>
+                      {field.label}{field.optional ? " (tùy chọn)" : ""}
+                    </label>
+                    <select
+                      value={recipeFields[field.name] || field.options[0]}
+                      onChange={(e) => setRecipeFields((prev) => ({ ...prev, [field.name]: e.target.value }))}
+                      style={{ width: "100%", background: "#0d1117", border: "1px solid #30363d", borderRadius: 4, color: "#e8edf2", padding: "4px 6px", fontSize: 11 }}
+                    >
+                      {field.options.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+
+                <button type="button" className="as-btn primary" onClick={doGenerate}
+                  disabled={busy || !selectedRecipe} style={{ textAlign: "center", marginTop: 4 }}>
+                  ✨ Generate
+                </button>
+
+                {genResults.length > 0 && (
+                  <div style={{ marginTop: 8 }}>
+                    <div style={{ fontSize: 10, color: "#8b949e", marginBottom: 4 }}>Kết quả (click để dùng):</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 6 }}>
+                      {genResults.map((item, i) => (
+                        <button key={i} type="button"
+                          onClick={() => selectGenResult(item)}
+                          style={{ padding: 0, border: "1px solid #30363d", borderRadius: 6, overflow: "hidden", background: "none", cursor: "pointer" }}>
+                          <img src={item.url} alt={`gen-${i}`} style={{ width: "100%", aspectRatio: "1", objectFit: "contain", display: "block" }} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="as-hint">Không có recipe nào. Thêm vào libraries/asset-studio/recipes.json</p>
+            )}
           </section>
 
           <section className="as-panel">
