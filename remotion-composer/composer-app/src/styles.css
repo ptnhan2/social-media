@@ -1555,3 +1555,15 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
   background-color: #10141a; background-size: 24px 24px; touch-action: none; }
 .as-stage-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .as-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #484f58; font-size: 13px; }
+
+
+/* Asset Studio V2 — presets + stepper + horizontal line */
+.as-presets { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.as-preset-btn { background: #1c2128; color: #e8edf2; border: 1px solid #30363d; border-radius: 12px; padding: 4px 10px; font-size: 11px; cursor: pointer; }
+.as-preset-btn:hover { background: #2d333b; border-color: #8b949e; }
+.as-steps { display: flex; gap: 8px; align-items: center; }
+.as-step { font-size: 11px; color: #484f58; padding: 2px 8px; border-radius: 10px; }
+.as-step.active { color: #f0883e; background: rgba(240,136,62,0.1); border: 1px solid rgba(240,136,62,0.3); }
+.as-step.done { color: #3fb950; }
+.as-hline { position: absolute; left: 0; right: 0; height: 0; border-top: 3px dashed #ffaa00; cursor: ns-resize; z-index: 15; }
+.as-hline span { position: absolute; right: 8px; top: 4px; font-size: 10px; color: #ffaa00; background: rgba(13,17,23,0.85); padding: 2px 6px; border-radius: 4px; }
