@@ -40,6 +40,7 @@ import {
   ungroupClipsByMember,
   splitEditorClip,
   trimEditorClip,
+  addCharacterPresenceClip,
 } from "../editor/editorOperations";
 
 const formatTime = (seconds: number) => {
@@ -176,6 +177,21 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
   const [statusMessage, setStatusMessage] = React.useState("Loading project…");
   const [activeTool, setActiveTool] = React.useState<"select" | "trim" | "split" | "ripple">("select");
   const [selectedClipIds, setSelectedClipIds] = React.useState<string[]>([]);
+  const [poseList, setPoseList] = React.useState<string[]>(["present", "think", "point-right", "celebrate"]);
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/api/assets/bridge", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "list-poses", project: projectId }) })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled && Array.isArray(data?.poses)) {
+          const names = data.poses.map((p: { name: string }) => p.name).filter((n: string) => typeof n === "string");
+          if (names.length) setPoseList(names);
+        }
+      })
+      .catch(() => undefined);
+    return () => { cancelled = true; };
+  }, [projectId]);
+
   const [leftTab, setLeftTab] = React.useState<LeftTab>("media");
   const [propTab, setPropTab] = React.useState<PropTab>("transform");
   const [canvasZoom, setCanvasZoom] = React.useState(1);
@@ -331,6 +347,20 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
     setTimeout(() => { setSaveState("idle"); localSaveGuard.current = false; }, 1500);
     return saved;
   };
+  const handleAddPresence = React.useCallback((options: { pose: string; position: string; size: string; motion: string }) => {
+    if (!editorDoc) return;
+    const clip = selectedClipIds.length === 1 ? editorDoc.tracks.flatMap((track) => track.clips).find((c) => c.id === selectedClipIds[0]) : undefined;
+    if (!clip || clip.kind !== "beat") return;
+    const next = addCharacterPresenceClip(editorDoc, {
+      pose: options.pose,
+      position: options.position as never,
+      size: options.size as never,
+      motion: options.motion as never,
+      startSec: clip.range.startSec,
+      durationSec: clip.range.endSec - clip.range.startSec,
+    });
+    void saveRevision(next, `Added character presence (${options.pose})`);
+  }, [selectedClipIds, editorDoc, saveRevision]);
 
   const selectedKeyframesAt = (clipId: string, timeSec: number) => {
     const clip = editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
@@ -906,6 +936,8 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
               onZOrder={(action) => void handleZOrder(selectedClip.id, action)}
               onFlip={(axis) => void handleFlip(selectedClip.id, axis)}
               onSetSpeed={(speed) => void handleSetSpeed(speed)}
+              poseList={poseList}
+              onAddPresence={handleAddPresence}
             />
           ) : (
             <div className="ve-project-panel">

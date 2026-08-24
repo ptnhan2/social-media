@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EditorDoc } from "../../../shared/isaacverse/editor";
-import { addAssetTrack, addEditorTrack, deleteEditorTrack, reorderEditorTrack, rippleEditorDoc, setEditorClipAudioState, setEditorTrackState, setEditorTransitionState, splitEditorClip, trimEditorClip } from "./editorOperations";
+import { addAssetTrack, addCharacterPresenceClip, addEditorTrack, deleteEditorTrack, reorderEditorTrack, rippleEditorDoc, setEditorClipAudioState, setEditorTrackState, setEditorTransitionState, splitEditorClip, trimEditorClip } from "./editorOperations";
 
 const editor: EditorDoc = {
   id: "editor:video-01",
@@ -136,5 +136,46 @@ describe("editor track lifecycle", () => {
   it("requires an explicit move target before deleting a populated track", () => {
     expect(() => deleteEditorTrack(editor, "video-main", "delete-clips")).toThrow("main video");
     expect(() => deleteEditorTrack(editor, "video-main", "move-clips")).toThrow("main video");
+  });
+});
+
+describe("addCharacterPresenceClip", () => {
+  it("creates an overlay presence clip with grammar-derived geometry and ledger protection", () => {
+    const next = addCharacterPresenceClip(editor, { pose: "point-right", position: "edge-l-in", size: "medium", motion: "slide-r", startSec: 1, durationSec: 2.5 });
+    const clip = next.tracks.flatMap((track) => track.clips).find((c) => c.kind === "element" && c.metadata.isCharacterPresence);
+
+    expect(clip).toBeDefined();
+    expect(clip?.metadata.src).toBe("/isaacverse-final/character/poses/point-right.png");
+    expect(clip?.metadata.userEdited).toBe(true);
+    expect(clip?.metadata.z).toBe(30);
+    expect(clip?.metadata.animIn).toBe("slide-up"); // PRESENCE_TO_CLIP_ANIM["slide-r"]
+    expect(clip?.range).toEqual({ startSec: 1, endSec: 3.5 });
+    // geometry derived from the grammar: edge-l-in anchor {13,55}, medium height 378
+    const md = clip?.metadata as Record<string, number>;
+    expect(md.h).toBeCloseTo(378 / 1080, 5);
+    expect(md.w).toBeCloseTo((378 * 0.75) / 1920, 5);
+    expect(md.x).toBeCloseTo(0.13 - md.w / 2, 5);
+    expect(md.y).toBeCloseTo(0.55 - md.h / 2, 5);
+    // original doc untouched (immutable)
+    expect(editor.tracks.flatMap((t) => t.clips)).toHaveLength(3);
+    expect(next.revision.revision).toBe(editor.revision.revision + 1);
+  });
+
+  it("reuses an existing overlay track and clamps geometry inside the frame", () => {
+    const withOverlay: EditorDoc = {
+      ...editor,
+      tracks: [...editor.tracks, { id: "overlay-9", kind: "overlay", name: "Overlay 9", order: 2, locked: false, muted: false, solo: false, hidden: false, source: { kind: "project" }, accepts: ["image"], capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false }, clips: [] }],
+    };
+    const next = addCharacterPresenceClip(withOverlay, { pose: "celebrate", position: "center", size: "full", motion: "jump-in", startSec: 0, durationSec: 4 });
+    const overlay = next.tracks.find((track) => track.id === "overlay-9");
+
+    expect(overlay?.clips).toHaveLength(1);
+    expect(next.tracks).toHaveLength(withOverlay.tracks.length); // no new track
+    const md = overlay?.clips[0].metadata as Record<string, number>;
+    // full = 972px tall → clamped to 0.95 of frame height
+    expect(md.h).toBeLessThanOrEqual(0.95);
+    expect(md.y).toBeGreaterThanOrEqual(0);
+    expect(md.x).toBeGreaterThanOrEqual(0);
+    expect(md.animIn).toBe("bounce"); // PRESENCE_TO_CLIP_ANIM["jump-in"]
   });
 });

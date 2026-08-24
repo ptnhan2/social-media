@@ -1,4 +1,5 @@
 import type { ClipKeyframe, EditorClip, EditorDoc, EditorGroup } from "../../../shared/isaacverse/editor";
+import { PRESENCE_ANCHOR, PRESENCE_HEIGHT, PRESENCE_TO_CLIP_ANIM, type PresenceMotion, type PresencePosition, type PresenceSize } from "../../../shared/isaacverse/characterPresence";
 import { splitClipRange, trimClipRange } from "./time";
 
 const updateRevision = (editor: EditorDoc): EditorDoc["revision"] => ({
@@ -246,8 +247,104 @@ export const deleteEditorClip = (editor: EditorDoc, clipId: string): EditorDoc =
   return { ...editor, tracks: cleanedTracks, userDeletedClipIds: withDeleted(editor, clipId), revision: updateRevision(editor) };
 };
 
-export const addTextClip = (editor: EditorDoc, text: string, startSec: number, durationSec = 3, preset: "heading" | "body" | "caption" | "lower-third" = "heading"): EditorDoc => {
+export type CharacterPresenceClipOptions = {
+  /** Pose name — must exist as public/<project>/character/poses/<name>.png (dynamic list from list-poses). */
+  pose: string;
+  position?: PresencePosition;
+  size?: PresenceSize;
+  motion?: PresenceMotion;
+  /** Rendered asset base, e.g. "isaacverse-final" (public-relative). */
+  project?: string;
+  startSec: number;
+  durationSec?: number;
+};
+
+/**
+ * Character presence as an editable overlay clip (pose wiring — spec
+ * CHARACTER-PRESENCE-SPEC.md mục editor wiring):
+ * - geometry derived from the presence grammar (anchor % + height px on a
+ *   1920×1080 frame → x/y/w/h fractions), so the clip lands exactly where
+ *   the treatment-path CharacterPresence would put it;
+ * - renders through the EXISTING overlay md.src image path (zero new render
+ *   code) — draggable, resizable, keyframe-able on the interactive canvas;
+ * - entrance motion maps via PRESENCE_TO_CLIP_ANIM (element vocabulary);
+ * - userEdited:true so the generator ledger never drops it.
+ */
+export const addCharacterPresenceClip = (editor: EditorDoc, options: CharacterPresenceClipOptions): EditorDoc => {
+  const position: PresencePosition = options.position ?? "thirds-br";
+  const size: PresenceSize = options.size ?? "small";
+  const motion: PresenceMotion = options.motion ?? "fade-scale";
+  const project = options.project ?? "isaacverse-final";
   const fps = editor.fps;
+  const minDuration = 1 / fps;
+  const endSec = Math.min(editor.durationSec, options.startSec + Math.max(minDuration, options.durationSec ?? 3));
+  const clipId = `clip:presence:${Date.now()}`;
+  const anchor = PRESENCE_ANCHOR[position];
+  const height = PRESENCE_HEIGHT[size];
+  // pose assets are ~3:4 (body+head); width follows aspect, then convert to
+  // frame fractions (1920×1080) and clamp inside the frame.
+  const aspect = 3 / 4;
+  const wFrac = Math.min(0.95, (height * aspect) / 1920);
+  const hFrac = Math.min(0.95, height / 1080);
+  const xFrac = Math.max(0, Math.min(1 - wFrac, anchor.left / 100 - wFrac / 2));
+  const yFrac = Math.max(0, Math.min(1 - hFrac, anchor.top / 100 - hFrac / 2));
+  const overlayTrack = editor.tracks.find((track) => track.kind === "overlay" && !track.hidden && track.source.kind === "project");
+  const newClip: EditorClip = {
+    id: clipId,
+    kind: "element",
+    trackId: overlayTrack?.id ?? "overlay-1",
+    range: { startSec: options.startSec, endSec },
+    label: `Character: ${options.pose}`,
+    source: {},
+    linkedClipIds: [],
+    locked: false,
+    muted: false,
+    hidden: false,
+    metadata: {
+      src: `/${project}/character/poses/${options.pose}.png`,
+      isCharacterPresence: true,
+      pose: options.pose,
+      position,
+      size,
+      motion,
+      fit: "contain",
+      x: xFrac,
+      y: yFrac,
+      w: wFrac,
+      h: hFrac,
+      opacity: 0.95,
+      z: 30,
+      animIn: PRESENCE_TO_CLIP_ANIM[motion] ?? "fade",
+      animDurationSec: 0.6,
+      userEdited: true,
+    },
+  };
+  if (overlayTrack) {
+    return {
+      ...editor,
+      tracks: editor.tracks.map((track) => (track.id !== overlayTrack.id ? track : { ...track, clips: [...track.clips, newClip] })),
+      revision: updateRevision(editor),
+    };
+  }
+  const newTrack: EditorDoc["tracks"][number] = {
+    id: "overlay-1",
+    kind: "overlay",
+    name: "Overlay 1",
+    order: editor.tracks.length,
+    locked: false,
+    muted: false,
+    solo: false,
+    hidden: false,
+    source: { kind: "project" },
+    accepts: ["image"],
+    capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false },
+    clips: [newClip],
+    metadata: { userCreated: true },
+  };
+  return { ...editor, tracks: [...editor.tracks, newTrack], revision: updateRevision(editor) };
+};
+
+export const addTextClip = (editor: EditorDoc, text: string, startSec: number, durationSec = 3, preset: "heading" | "body" | "caption" | "lower-third" = "heading"): EditorDoc => {  const fps = editor.fps;
   const minDuration = 1 / fps;
   const endSec = Math.min(editor.durationSec, startSec + Math.max(minDuration, durationSec));
   const clipId = `clip:text:${Date.now()}`;
@@ -303,8 +400,7 @@ export const addTextClip = (editor: EditorDoc, text: string, startSec: number, d
   return { ...editor, tracks: [...editor.tracks, newTrack], revision: updateRevision(editor) };
 };
 
-export const renameEditorTrack = (editor: EditorDoc, trackId: string, name: string): EditorDoc => {
-  if (!editor.tracks.some((track) => track.id === trackId)) throw new Error(`Unknown editor track: ${trackId}`);
+export const renameEditorTrack = (editor: EditorDoc, trackId: string, name: string): EditorDoc => {  if (!editor.tracks.some((track) => track.id === trackId)) throw new Error(`Unknown editor track: ${trackId}`);
   if (!name.trim()) throw new Error("track name cannot be empty");
   return {
     ...editor,

@@ -2,7 +2,14 @@ import React from "react";
 import type { EditorClip } from "../../../shared/isaacverse/editor";
 import { ANIM_PRESETS, EFFECT_PRESETS, FILTER_PRESETS, SPEED_PRESETS, TRANSITION_PRESETS } from "../../../shared/isaacverse/clipStyle";
 
-export type PropTab = "transform" | "text" | "audio" | "animation" | "speed" | "color" | "transition" | "info";
+export type PropTab = "transform" | "text" | "audio" | "animation" | "speed" | "color" | "transition" | "character" | "info";
+
+export type CharacterPresenceOptions = {
+  pose: string;
+  position: string;
+  size: string;
+  motion: string;
+};
 
 export type KeyframeTarget = { clipId: string; property: string; t: number };
 
@@ -24,6 +31,9 @@ export type PropertiesPanelProps = {
   onZOrder: (action: "forward" | "backward" | "front" | "back") => void;
   onFlip: (axis: "h" | "v") => void;
   onSetSpeed: (speed: number) => void;
+  /** Pose wiring: available pose names (dynamic from the pose library). */
+  poseList?: string[];
+  onAddPresence?: (options: CharacterPresenceOptions) => void;
 };
 
 const num = (value: unknown, fallback: number) => (typeof value === "number" && Number.isFinite(value) ? value : fallback);
@@ -41,7 +51,7 @@ const ColorField: React.FC<{ label: string; value: string; onChange: (color: str
 );
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
-  clip, tab, onTabChange, autoFocusText, onAutoFocusTextDone, armedProps, onToggleArm, selectedKeyframe, onSetEasing, onCommit, onCommitRange, onDelete, onDuplicate, canDelete, onZOrder, onFlip, onSetSpeed,
+  clip, tab, onTabChange, autoFocusText, onAutoFocusTextDone, armedProps, onToggleArm, selectedKeyframe, onSetEasing, onCommit, onCommitRange, onDelete, onDuplicate, canDelete, onZOrder, onFlip, onSetSpeed, poseList, onAddPresence,
 }) => {
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
   React.useEffect(() => {
@@ -65,6 +75,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     { id: "speed", label: "Speed", show: isAudio || isOverlay },
     { id: "color", label: "Color", show: isOverlay },
     { id: "transition", label: "Transition", show: isTransition },
+    { id: "character", label: "Character", show: clip.kind === "beat" },
     { id: "info", label: "Info", show: !isOverlay && !isAudio && !isTransition },
   ];
   const activeTab = tabs.some((t) => t.id === tab && t.show) ? tab : (tabs.find((t) => t.show)?.id ?? "info");
@@ -331,6 +342,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         </div>
       ) : null}
 
+      {activeTab === "character" ? <CharacterPresenceTab clip={clip} poseList={poseList ?? []} onAddPresence={onAddPresence} /> : null}
+
       {activeTab === "info" ? (
         <div className="ve-prop-section">
           <span className="ve-prop-label-row"><span>Timing</span></span>
@@ -339,6 +352,64 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <span>{clip.source.beatId || clip.source.elementId || clip.source.audioCueId || clip.source.transitionId || "project"}</span>
         </div>
       ) : null}
+    </div>
+  );
+};
+
+const PRESENCE_POSITIONS = ["thirds-tl", "thirds-tr", "thirds-bl", "thirds-br", "edge-l-in", "edge-r-in", "center", "below-title", "beside-content", "lower-third"];
+const PRESENCE_SIZES = ["chip", "small", "medium", "half", "full"];
+const PRESENCE_MOTIONS = ["slide-l", "slide-r", "slide-u", "slide-d", "pop", "jump-in", "drop-in", "fade-scale", "peek"];
+
+const CharacterPresenceTab: React.FC<{
+  clip: EditorClip;
+  poseList: string[];
+  onAddPresence?: (options: CharacterPresenceOptions) => void;
+}> = ({ clip, poseList, onAddPresence }) => {
+  const [pose, setPose] = React.useState(poseList[0] ?? "present");
+  const [position, setPosition] = React.useState("thirds-br");
+  const [size, setSize] = React.useState("small");
+  const [motion, setMotion] = React.useState("fade-scale");
+  React.useEffect(() => {
+    if (poseList.length && !poseList.includes(pose)) setPose(poseList[0]);
+  }, [poseList, pose]);
+  const dur = Math.max(0.5, clip.range.endSec - clip.range.startSec);
+  return (
+    <div className="ve-prop-section">
+      <span className="ve-prop-label-row"><span>Character presence — ghép pose vào beat này</span></span>
+      <label className="ve-prop-field">
+        <span>Pose</span>
+        <select value={pose} onChange={(e) => setPose(e.target.value)}>
+          {poseList.map((p) => <option key={p} value={p}>{p}</option>)}
+        </select>
+      </label>
+      <label className="ve-prop-field">
+        <span>Position</span>
+        <select value={position} onChange={(e) => setPosition(e.target.value)}>
+          {PRESENCE_POSITIONS.map((p) => <option key={p} value={p}>{p}</option>)}
+        </select>
+      </label>
+      <label className="ve-prop-field">
+        <span>Size</span>
+        <select value={size} onChange={(e) => setSize(e.target.value)}>
+          {PRESENCE_SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </label>
+      <label className="ve-prop-field">
+        <span>Motion</span>
+        <select value={motion} onChange={(e) => setMotion(e.target.value)}>
+          {PRESENCE_MOTIONS.map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+      </label>
+      <button
+        type="button"
+        className="ve-presence-add"
+        disabled={!onAddPresence || !pose}
+        title={`Thêm character overlay clip spanning ${dur.toFixed(1)}s của beat`}
+        onClick={() => onAddPresence?.({ pose, position, size, motion })}
+      >
+        ＋ Thêm character ({dur.toFixed(1)}s)
+      </button>
+      <small className="ve-prop-hint">Pose tạo trong Asset Studio (🎨 nút header) sẽ xuất hiện trong danh sách sau khi lưu.</small>
     </div>
   );
 };
