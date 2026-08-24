@@ -1,23 +1,32 @@
 import React from "react";
 
 /**
- * ASSET STUDIO V2 — full workflow: search presets → body → cut head → composite → save.
- *
- * Smart features:
- * - Stock search: preset pose keywords matching our pose library
- * - Cut tool: polygon lasso + horizontal line + auto-suggest head position
- * - Composite: drag head, snap guides, auto-detect body top
- * - Stepper UI: always shows current step + what's next
+ * ASSET STUDIO V3 — layer-based canvas editor (Photoshop-style).
+ * Canvas-first: large editing surface, tool palette, layers, contextual properties.
+ * No step wizard — all tools always available, select layer + tool and work.
  */
 
 type StockResult = { id: string; source: string; thumb: string; large: string; alt: string; photographer: string };
 type PoseEntry = { name: string; anchor: Record<string, unknown> };
 type Pt = { x: number; y: number };
-type Mode = "idle" | "body" | "cut" | "composite";
-type CutTool = "polygon" | "horizontal";
+type Tool = "move" | "lasso" | "line";
 
-const DISPLAY_W = 560;
-const DISPLAY_H = 720;
+type Layer = {
+  id: string;
+  name: string;
+  src: string;         // display URL
+  path: string;        // server path
+  x: number;           // position on canvas
+  y: number;
+  scale: number;
+  rotation: number;
+  visible: boolean;
+  width: number;       // natural width after scale
+  height: number;
+};
+
+const CANVAS_W = 800;
+const CANVAS_H = 600;
 
 const bridge = (cmd: Record<string, unknown>) =>
   fetch("/api/assets/bridge", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cmd) })
@@ -33,65 +42,79 @@ const fileUrl = (p: string) => {
   return `/api/assets/file?p=${encodeURIComponent(rel)}`;
 };
 
-// Preset search queries matching our pose library needs
 const SEARCH_PRESETS = [
-  { label: "👉 Chỉ tay", query: "man pointing hand gesture isolated white background" },
-  { label: "🤔 Suy nghĩ", query: "man thinking hand on chin isolated white background" },
-  { label: "🎉 Ăn mừng", query: "man celebrating arms raised isolated white background" },
-  { label: "🤷 Xõe tay", query: "man shrugging shoulders isolated white background" },
-  { label: "🎤 Trình bày", query: "man presenting gesture isolated white background" },
-  { label: "😌 Thư giãn", query: "person leaning casual pose isolated studio" },
-  { label: "😱 Ngạc nhiên", query: "man surprised shocked expression isolated" },
-  { label: "😤 Tự tin", query: "confident man arms crossed isolated white background" },
+  { label: "👉", title: "Chỉ tay", query: "man pointing hand gesture isolated white background" },
+  { label: "🤔", title: "Suy nghĩ", query: "man thinking hand on chin isolated white background" },
+  { label: "🎉", title: "Ăn mừng", query: "man celebrating arms raised isolated white background" },
+  { label: "🤷", title: "Xõe tay", query: "man shrugging shoulders isolated white background" },
+  { label: "🎤", title: "Trình bày", query: "man presenting gesture isolated white background" },
+  { label: "😤", title: "Tự tin", query: "confident man arms crossed isolated white background" },
+  { label: "😱", title: "Ngạc nhiên", query: "man surprised shocked expression isolated" },
+  { label: "😌", title: "Thư giãn", query: "person leaning casual pose isolated studio" },
 ];
 
+type Recipe = {
+  label: string; description: string; enabled?: boolean;
+  fields: { name: string; label: string; type: string; options: string[]; optional?: boolean }[];
+};
+
 export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = ({ projectId, onBack }) => {
-  // --- state ---
-  const [stockQuery, setStockQuery] = React.useState("");
-  const [stockResults, setStockResults] = React.useState<StockResult[]>([]);
-  const [searching, setSearching] = React.useState(false);
+  // --- core editor state ---
+  const [layers, setLayers] = React.useState<Layer[]>([]);
+  const [activeLayerId, setActiveLayerId] = React.useState<string | null>(null);
+  const [tool, setTool] = React.useState<Tool>("move");
+  const [status, setStatus] = React.useState("Import body → tách nền → thêm head → ghép");
+  const [busy, setBusy] = React.useState(false);
 
-  const [mode, setMode] = React.useState<Mode>("idle");
-  const [bodyPath, setBodyPath] = React.useState<string | null>(null);
-  const [bodyDisplayUrl, setBodyDisplayUrl] = React.useState<string | null>(null);
-
-  const [cutImagePath, setCutImagePath] = React.useState<string | null>(null);
-  const [cutDisplayUrl, setCutDisplayUrl] = React.useState<string | null>(null);
-
+  // lasso state
   const [polygon, setPolygon] = React.useState<Pt[]>([]);
   const [polygonClosed, setPolygonClosed] = React.useState(false);
   const [mousePos, setMousePos] = React.useState<Pt | null>(null);
-  const [cutModeKeep, setCutModeKeep] = React.useState(true);
-  const [cutTool, setCutTool] = React.useState<CutTool>("polygon");
-  const [hLineY, setHLineY] = React.useState(200);
 
-  const [headPath, setHeadPath] = React.useState<string | null>(null);
-  const [headUrl, setHeadUrl] = React.useState<string | null>(null);
+  // drag state
+  const [dragging, setDragging] = React.useState(false);
+  const [dragStart, setDragStart] = React.useState<{ mx: number; my: number; lx: number; ly: number } | null>(null);
 
-  const [headX, setHeadX] = React.useState(140);
-  const [headY, setHeadY] = React.useState(20);
-  const [headScale, setHeadScale] = React.useState(1.0);
-  const [headRotation, setHeadRotation] = React.useState(0);
+  // history
+  const [undoStack, setUndoStack] = React.useState<Layer[][]>([]);
+  const [redoStack, setRedoStack] = React.useState<Layer[][]>([]);
 
+  // panels
+  const [showImport, setShowImport] = React.useState(true);
+  const [showGen, setShowGen] = React.useState(false);
+  const [stockQuery, setStockQuery] = React.useState("");
+  const [stockResults, setStockResults] = React.useState<StockResult[]>([]);
   const [poses, setPoses] = React.useState<PoseEntry[]>([]);
   const [poseName, setPoseName] = React.useState("");
-  const [status, setStatus] = React.useState("Bắt đầu: tìm ảnh stock hoặc generate head");
-  const [busy, setBusy] = React.useState(false);
 
-  // Gen AI state
-  type Recipe = {
-    label: string; description: string; enabled?: boolean;
-    fields: { name: string; label: string; type: string; options: string[]; optional?: boolean }[];
-  };
+  // gen AI
   const [recipes, setRecipes] = React.useState<Record<string, Recipe>>({});
   const [selectedRecipe, setSelectedRecipe] = React.useState("");
   const [recipeFields, setRecipeFields] = React.useState<Record<string, string>>({});
   const [genResults, setGenResults] = React.useState<{ url: string; path: string }[]>([]);
 
   const canvasRef = React.useRef<HTMLDivElement>(null);
-  const [dragging, setDragging] = React.useState(false);
-  const [dragStart, setDragStart] = React.useState<{ mx: number; my: number; hx: number; hy: number } | null>(null);
-  const [draggingLine, setDraggingLine] = React.useState(false);
+  const activeLayer = layers.find((l) => l.id === activeLayerId) || null;
+
+  // --- history ---
+  const pushHistory = (newLayers: Layer[]) => {
+    setUndoStack((prev) => [...prev, layers]);
+    setRedoStack([]);
+  };
+  const undo = () => {
+    if (undoStack.length === 0) return;
+    const prev = undoStack[undoStack.length - 1];
+    setUndoStack((prevStack) => prevStack.slice(0, -1));
+    setRedoStack((prev) => [layers, ...prev]);
+    setLayers(prev);
+  };
+  const redo = () => {
+    if (redoStack.length === 0) return;
+    const next = redoStack[0];
+    setRedoStack((prev) => prev.slice(1));
+    setUndoStack((prev) => [...prev, layers]);
+    setLayers(next);
+  };
 
   // --- helpers ---
   const run = async (label: string, fn: () => Promise<void>) => {
@@ -100,16 +123,43 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
     finally { setBusy(false); }
   };
 
+  const addLayer = (name: string, path: string, src: string, img?: HTMLImageElement) => {
+    pushHistory(layers);
+    const w = img?.naturalWidth || 300;
+    const h = img?.naturalHeight || 300;
+    const scale = Math.min(CANVAS_W / w, CANVAS_H / h, 1);
+    const layer: Layer = {
+      id: `layer-${Date.now()}`,
+      name,
+      path, src,
+      x: (CANVAS_W - w * scale) / 2,
+      y: name === "body" ? CANVAS_H - h * scale : 20,
+      scale,
+      rotation: 0,
+      visible: true,
+      width: w * scale,
+      height: h * scale,
+    };
+    setLayers((prev) => [...prev, layer]);
+    setActiveLayerId(layer.id);
+    return layer;
+  };
+
+  const updateLayer = (id: string, updates: Partial<Layer>) => {
+    setLayers((prev) => prev.map((l) => l.id === id ? { ...l, ...updates } : l));
+  };
+
+  // --- load data ---
   const refreshPoses = React.useCallback(async () => {
     try {
       const data = await bridge({ op: "list-poses", project: projectId });
       setPoses((data.poses as PoseEntry[]) || []);
-    } catch { /* ignore */ }
+    } catch { /* */ }
   }, [projectId]);
 
-  const loadRecipes = React.useCallback(async () => {
-    try {
-      const data = await bridge({ op: "list-recipes" });
+  React.useEffect(() => {
+    void refreshPoses();
+    bridge({ op: "list-recipes" }).then((data) => {
       const r = (data.recipes as Record<string, Recipe>) || {};
       setRecipes(r);
       const first = Object.keys(r)[0];
@@ -119,37 +169,29 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
         for (const f of r[first].fields) defaults[f.name] = f.options[0];
         setRecipeFields(defaults);
       }
-    } catch { /* ignore */ }
-  }, []);
+    }).catch(() => {});
+  }, [refreshPoses]);
 
-  React.useEffect(() => { void refreshPoses(); void loadRecipes(); }, [refreshPoses, loadRecipes]);
-
-  // --- stock search ---
-  const doSearch = (q?: string) => {
-    const query = q || stockQuery;
-    if (q) setStockQuery(q);
-    return run("Đang tìm ảnh…", async () => {
-      const r = await fetch(`/api/assets/search-stock?q=${encodeURIComponent(query)}`);
-      const data = await r.json();
-      setStockResults(data.results || []);
-      setStatus(`${(data.results || []).length} kết quả — click ảnh để import.`);
-    });
+  // --- import body ---
+  const importImage = (path: string, name: string) => {
+    const src = fileUrl(path);
+    const img = new Image();
+    img.onload = () => addLayer(name, path, src, img);
+    img.src = src;
+    setStatus(`${name} layer added — select tool và edit`);
   };
 
-  const importStock = (item: StockResult) => run("Đang tải ảnh…", async () => {
+  const importStock = (item: StockResult) => run("Đang tải…", async () => {
     const r = await fetch("/api/assets/body", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ projectId, url: item.large }),
     });
     const data = await r.json();
-    if (!r.ok) throw new Error(data.error || "import failed");
-    setBodyPath(data.path);
-    setBodyDisplayUrl(fileUrl(data.path));
-    setMode("body");
-    setStatus("Body đã import → bấm 'Tách nền (AI)'");
+    importImage(data.path, "body");
+    setShowImport(false);
   });
 
-  const onUploadBody = (file: File) => run("Đang upload…", async () => {
+  const onFileUpload = (file: File) => run("Đang upload…", async () => {
     const dataUrl = await new Promise<string>((res) => {
       const reader = new FileReader();
       reader.onload = () => res(String(reader.result));
@@ -160,109 +202,47 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
       body: JSON.stringify({ projectId, data: dataUrl }),
     });
     const data = await r.json();
-    setBodyPath(data.path);
-    setBodyDisplayUrl(fileUrl(data.path));
-    setMode("body");
-    setStatus("Body đã upload → bấm 'Tách nền (AI)'");
-  });
-
-  // --- Gen AI ---
-  const doGenerate = () => run("Đang generate (AI ~30s)…", async () => {
-    const data = await bridge({ op: "generate", recipe: selectedRecipe, fields: recipeFields, project: projectId });
-    setGenResults((prev) => [{ url: fileUrl(String(data.out)), path: String(data.out) }, ...prev].slice(0, 6));
-    setStatus("✓ Generated — click ảnh để dùng làm head");
-  });
-
-  const selectGenResult = (item: { url: string; path: string }) => {
-    setCutImagePath(item.path);
-    setCutDisplayUrl(item.url);
-    setHeadPath(item.path);
-    setHeadUrl(item.url);
-    setPolygon([]); setPolygonClosed(false);
-    setMode("cut");
-    setStatus("Head từ AI — cắt bằng polygon tool hoặc bấm 'Bỏ qua cắt' nếu đã sạch");
-  };
-
-  const uploadHead = (file: File) => run("Đang upload head…", async () => {
-    const dataUrl = await new Promise<string>((res) => {
-      const reader = new FileReader();
-      reader.onload = () => res(String(reader.result));
-      reader.readAsDataURL(file);
-    });
-    const r = await fetch("/api/assets/body", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ projectId, data: dataUrl }),
-    });
-    const data = await r.json();
-    setCutImagePath(data.path);
-    setCutDisplayUrl(fileUrl(data.path));
-    setPolygon([]); setPolygonClosed(false);
-    setMode("cut");
-    setStatus("Click quanh viền đầu để vẽ polygon → 'Áp dụng cắt'");
+    importImage(data.path, file.name.split(".")[0].slice(0, 15));
   });
 
   // --- bg removal ---
-  const removeBg = () => run("Đang tách nền (AI)…", async () => {
-    if (!bodyPath) return;
-    const out = bodyPath.replace(/\.[^.]+$/, "-cutout.png");
-    const data = await bridge({ op: "remove-bg", in: bodyPath, out, algo: "auto" });
-    setBodyPath(String(data.out));
-    setBodyDisplayUrl(fileUrl(String(data.out)));
-    setStatus(`✓ Tách nền xong (${data.algoUsed}) → chuẩn bị head (upload hoặc Gen AI)`);
+  const removeBg = () => run("Đang tách nền…", async () => {
+    if (!activeLayer) return;
+    const out = activeLayer.path.replace(/\.[^.]+$/, "-cutout.png");
+    const data = await bridge({ op: "remove-bg", in: activeLayer.path, out, algo: "auto" });
+    updateLayer(activeLayer.id, { path: String(data.out), src: fileUrl(String(data.out)) });
+    setStatus(`✓ Tách nền xong (${data.algoUsed})`);
   });
 
-  // --- polygon cut ---
-  const applyCut = () => run("Đang áp dụng cắt…", async () => {
-    if (!cutImagePath) return;
-    const out = cutImagePath.replace(/\.[^.]+$/, "-cut.png");
+  // --- gen AI ---
+  const doGenerate = () => run("Đang generate…", async () => {
+    const data = await bridge({ op: "generate", recipe: selectedRecipe, fields: recipeFields, project: projectId });
+    setGenResults((prev) => [{ url: fileUrl(String(data.out)), path: String(data.out) }, ...prev].slice(0, 6));
+    setStatus("✓ Generated — click ảnh để thêm vào canvas");
+  });
+
+  const selectGenResult = (item: { url: string; path: string }) => {
+    importImage(item.path, "head");
+    setShowGen(false);
+  };
+
+  // --- lasso cut ---
+  const applyLassoCut = () => run("Đang cắt…", async () => {
+    if (!activeLayer || polygon.length < 3) return;
+    const out = activeLayer.path.replace(/\.[^.]+$/, "-cut.png");
+    // convert canvas coords to image coords
+    const imgPolygon = polygon.map((p) => ({
+      x: (p.x - activeLayer.x) / activeLayer.scale,
+      y: (p.y - activeLayer.y) / activeLayer.scale,
+    }));
     const data = await bridge({
-      op: "polygon-mask",
-      in: cutImagePath,
-      polygon: cutTool === "polygon" ? polygon : [{ x: 0, y: hLineY }, { x: DISPLAY_W, y: hLineY }, { x: DISPLAY_W, y: 0 }, { x: 0, y: 0 }],
-      mode: cutModeKeep ? "keep" : "remove",
-      out,
-      normalize: true,
+      op: "polygon-mask", in: activeLayer.path,
+      polygon: imgPolygon, mode: "keep", out,
     });
-    setHeadPath(String(data.out));
-    setHeadUrl(fileUrl(String(data.out)));
-    setMode("composite");
-    setStatus("✓ Head đã cắt! Kéo vào vị trí trên body → 'Lưu pose'");
-  });
-
-  const skipCut = () => {
-    if (!cutImagePath) return;
-    setHeadPath(cutImagePath);
-    setHeadUrl(cutDisplayUrl);
-    setMode("composite");
-    setStatus("Bỏ qua cắt — kéo head vào vị trí → 'Lưu pose'");
-  };
-
-  // --- auto-position head ---
-  const autoPosition = () => {
-    // Place head at top-center of canvas (where a head would naturally go)
-    setHeadX(DISPLAY_W / 2 - 150);
-    setHeadY(-30);
-    setHeadScale(1.2);
-    setStatus("Đã tự động đặt head ở vị trí gợi ý — kéo để tinh chỉnh");
-  };
-
-  // --- save pose ---
-  const savePose = () => run("Đang lưu pose…", async () => {
-    if (!bodyPath || !headPath || !poseName.trim()) {
-      setStatus("Cần: body + head + tên pose");
-      return;
-    }
-    const out = bodyPath.replace(/-cutout\.png$/, `-pose-${poseName}.png`).replace(/\.[^.]+$/, `-pose-${poseName}.png`);
-    const comp = await bridge({
-      op: "composite",
-      body: bodyPath,
-      head: headPath,
-      anchor: { neckX: headX + 150 * headScale, neckY: headY, neckWidth: 100, headWidthRatio: headScale },
-      out,
-    });
-    await bridge({ op: "save-pose", project: projectId, name: poseName, from: String(comp.out), anchor: {} });
-    await refreshPoses();
-    setStatus(`✓ Đã lưu pose "${poseName}"`);
+    updateLayer(activeLayer.id, { path: String(data.out), src: fileUrl(String(data.out)) });
+    setPolygon([]); setPolygonClosed(false);
+    setTool("move");
+    setStatus("✓ Đã cắt layer");
   });
 
   // --- canvas mouse ---
@@ -272,101 +252,171 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   };
 
-  const onCanvasClick = (e: React.MouseEvent) => {
-    if (mode !== "cut" || polygonClosed) return;
-    if (cutTool !== "polygon") return;
-    const pt = getCoords(e);
-    setPolygon((prev) => [...prev, pt]);
+  const hitTest = (pt: Pt): Layer | null => {
+    // topmost layer that contains the point
+    for (let i = layers.length - 1; i >= 0; i--) {
+      const l = layers[i];
+      if (!l.visible) continue;
+      if (pt.x >= l.x && pt.x <= l.x + l.width && pt.y >= l.y && pt.y <= l.y + l.height) return l;
+    }
+    return null;
   };
 
-  const onCanvasMove = (e: React.MouseEvent) => {
+  const onCanvasClick = (e: React.MouseEvent) => {
     const pt = getCoords(e);
-    if (mode === "cut") {
-      setMousePos(pt);
-      if (cutTool === "horizontal" && draggingLine) {
-        setHLineY(pt.y);
-      }
-    } else if (mode === "composite" && dragging && dragStart) {
-      setHeadX(dragStart.hx + (pt.x - dragStart.mx));
-      setHeadY(dragStart.hy + (pt.y - dragStart.my));
+    if (tool === "lasso") {
+      if (!activeLayer) { setStatus("Chọn layer trước khi cắt"); return; }
+      setPolygon((prev) => [...prev, pt]);
+    } else if (tool === "move") {
+      const hit = hitTest(pt);
+      if (hit) setActiveLayerId(hit.id);
+      else setActiveLayerId(null);
     }
   };
 
   const onCanvasDown = (e: React.MouseEvent) => {
     const pt = getCoords(e);
-    if (mode === "composite") {
-      setDragging(true);
-      setDragStart({ mx: pt.x, my: pt.y, hx: headX, hy: headY });
-    } else if (mode === "cut" && cutTool === "horizontal") {
-      setDraggingLine(true);
-      setHLineY(pt.y);
+    if (tool === "move") {
+      const hit = hitTest(pt);
+      if (hit) {
+        setActiveLayerId(hit.id);
+        setDragging(true);
+        setDragStart({ mx: pt.x, my: pt.y, lx: hit.x, ly: hit.y });
+      }
     }
   };
 
-  const onCanvasUp = () => { setDragging(false); setDragStart(null); setDraggingLine(false); };
+  const onCanvasMove = (e: React.MouseEvent) => {
+    const pt = getCoords(e);
+    setMousePos(pt);
+    if (tool === "move" && dragging && dragStart && activeLayer) {
+      updateLayer(activeLayer.id, {
+        x: dragStart.lx + (pt.x - dragStart.mx),
+        y: dragStart.ly + (pt.y - dragStart.my),
+      });
+    }
+  };
 
-  // --- render helpers ---
-  const displayImage = mode === "cut" ? cutDisplayUrl : bodyDisplayUrl;
-  const stepNum = mode === "idle" ? 0 : mode === "body" ? 1 : mode === "cut" ? 2 : 3;
+  const onCanvasUp = () => { setDragging(false); setDragStart(null); };
 
+  // --- save pose ---
+  const savePose = () => run("Đang lưu…", async () => {
+    const body = layers.find((l) => l.name === "body");
+    const head = layers.find((l) => l.name === "head" || l.name.includes("head") || l.name.includes("gen"));
+    if (!body || !head || !poseName.trim()) {
+      setStatus("Cần layer body + layer head + tên pose");
+      return;
+    }
+    // flatten: composite head onto body
+    const out = body.path.replace(/\.[^.]+$/, `-pose-${poseName}.png`);
+    const comp = await bridge({
+      op: "composite", body: body.path, head: head.path,
+      anchor: { neckX: head.x + head.width / 2, neckY: head.y, neckWidth: 100, headWidthRatio: head.scale },
+      out,
+    });
+    await bridge({ op: "save-pose", project: projectId, name: poseName, from: String(comp.out), anchor: {} });
+    await refreshPoses();
+    setStatus(`✓ Pose "${poseName}" đã lưu`);
+  });
+
+  // --- render ---
   return (
     <div className="asset-studio">
+      {/* Top bar */}
       <header className="as-header">
         <button type="button" className="ve-back-btn" onClick={onBack}>←</button>
         <h1>Asset Studio</h1>
         <small>{projectId}</small>
         <div style={{ flex: 1 }} />
-        <div className="as-steps">
-          {[ "Body", "Tách nền", "Cắt head", "Ghép" ].map((label, i) => (
-            <span key={i} className={`as-step ${i < stepNum ? "done" : i === stepNum ? "active" : ""}`}>
-              {i + 1}. {label}
-            </span>
-          ))}
-        </div>
+        <button type="button" className="as-btn ghost" onClick={undo} disabled={undoStack.length === 0}>↶</button>
+        <button type="button" className="as-btn ghost" onClick={redo} disabled={redoStack.length === 0}>↷</button>
         {busy ? <span className="as-busy">●</span> : null}
       </header>
 
       <div className="as-body">
-        {/* LEFT PANEL */}
-        <aside className="as-left">
-          {/* Stock search with presets */}
-          <section className="as-panel">
-            <h3>📸 Tìm ảnh stock</h3>
-            <div className="as-presets">
-              {SEARCH_PRESETS.map((preset) => (
-                <button key={preset.label} type="button" className="as-preset-btn"
-                  onClick={() => doSearch(preset.query)} disabled={busy}
-                  title={preset.query}>
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-            <div className="as-search-row">
-              <input value={stockQuery} onChange={(e) => setStockQuery(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && doSearch()}
-                placeholder="hoặc gõ từ khoá riêng…" />
-              <button type="button" onClick={() => doSearch()} disabled={busy || !stockQuery.trim()}>Tìm</button>
-            </div>
-            <label className="as-upload">📁 Upload body
-              <input type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && onUploadBody(e.target.files[0])} />
-            </label>
-            {stockResults.length > 0 && (
-              <div className="as-stock-grid">
-                {stockResults.map((item) => (
-                  <button key={item.id} type="button" className="as-stock-item" onClick={() => importStock(item)}
-                    title={`${item.alt} — ${item.photographer} (${item.source})`}>
-                    <img src={item.thumb} alt={item.alt} />
-                  </button>
-                ))}
+        {/* LEFT: tool palette + layers + import */}
+        <aside className="as-tools">
+          {/* Tools */}
+          <div className="as-tool-palette">
+            <button type="button" className={`as-tool-btn ${tool === "move" ? "active" : ""}`}
+              onClick={() => setTool("move")} title="Move (V)">
+              🖱
+            </button>
+            <button type="button" className={`as-tool-btn ${tool === "lasso" ? "active" : ""}`}
+              onClick={() => { setTool("lasso"); setPolygon([]); setPolygonClosed(false); }} title="Lasso cut (L)">
+              ✂️
+            </button>
+            <button type="button" className="as-tool-btn" onClick={removeBg}
+              disabled={!activeLayer || busy} title="Remove background">
+              🪄
+            </button>
+          </div>
+
+          {/* Layers */}
+          <div className="as-layers-panel">
+            <h4>Layers</h4>
+            {layers.map((layer) => (
+              <div key={layer.id}
+                className={`as-layer-item ${layer.id === activeLayerId ? "active" : ""}`}
+                onClick={() => setActiveLayerId(layer.id)}>
+                <input type="checkbox" checked={layer.visible}
+                  onChange={(e) => updateLayer(layer.id, { visible: e.target.checked })} />
+                <span>{layer.name}</span>
+              </div>
+            ))}
+            {layers.length === 0 && <p className="as-hint">No layers yet</p>}
+          </div>
+
+          {/* Import buttons */}
+          <div className="as-import-panel">
+            <button type="button" className="as-btn ghost" onClick={() => { setShowImport(!showImport); setShowGen(false); }}>
+              📁 Import Body
+            </button>
+            <button type="button" className="as-btn ghost" onClick={() => { setShowGen(!showGen); setShowImport(false); }}>
+              🤖 Gen Head
+            </button>
+
+            {showImport && (
+              <div className="as-panel" style={{ marginTop: 8 }}>
+                <div className="as-presets">
+                  {SEARCH_PRESETS.map((p) => (
+                    <button key={p.label} type="button" className="as-preset-btn"
+                      onClick={() => run("Đang tìm…", async () => {
+                        const r = await fetch(`/api/assets/search-stock?q=${encodeURIComponent(p.query)}`);
+                        const data = await r.json();
+                        setStockResults(data.results || []);
+                      })} title={p.title}>
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="as-search-row">
+                  <input value={stockQuery} onChange={(e) => setStockQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && stockQuery.trim()) {
+                        run("Đang tìm…", async () => {
+                          const r = await fetch(`/api/assets/search-stock?q=${encodeURIComponent(stockQuery)}`);
+                          const data = await r.json();
+                          setStockResults(data.results || []);
+                        });
+                      }
+                    }} placeholder="từ khoá…" />
+                </div>
+                <label className="as-upload">📁 Upload
+                  <input type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && onFileUpload(e.target.files[0])} />
+                </label>
+                <div className="as-stock-grid" style={{ maxHeight: 200, overflowY: "auto" }}>
+                  {stockResults.map((item) => (
+                    <button key={item.id} type="button" className="as-stock-item" onClick={() => importStock(item)}>
+                      <img src={item.thumb} alt={item.alt} />
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
-          </section>
 
-          {/* Gen AI */}
-          <section className="as-panel">
-            <h3>🤖 Gen AI Head</h3>
-            {Object.keys(recipes).length > 0 ? (
-              <>
+            {showGen && (
+              <div className="as-panel" style={{ marginTop: 8 }}>
                 <select value={selectedRecipe}
                   onChange={(e) => {
                     setSelectedRecipe(e.target.value);
@@ -375,56 +425,163 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
                     if (r) for (const f of r.fields) defaults[f.name] = f.options[0];
                     setRecipeFields(defaults);
                   }}
-                  style={{ width: "100%", marginBottom: 8, background: "#0d1117", border: "1px solid #30363d", borderRadius: 6, color: "#e8edf2", padding: "6px 8px", fontSize: 12 }}>
-                  {Object.entries(recipes).map(([key, r]) => (
-                    <option key={key} value={key}>{r.label}</option>
-                  ))}
+                  style={{ width: "100%", marginBottom: 6, background: "#0d1117", border: "1px solid #30363d", borderRadius: 6, color: "#e8edf2", padding: "4px 6px", fontSize: 11 }}>
+                  {Object.entries(recipes).map(([key, r]) => <option key={key} value={key}>{r.label}</option>)}
                 </select>
-                {selectedRecipe && recipes[selectedRecipe]?.fields.map((field) => (
-                  <div key={field.name} style={{ marginBottom: 6 }}>
-                    <label style={{ fontSize: 10, color: "#8b949e", display: "block", marginBottom: 2 }}>{field.label}</label>
-                    <select value={recipeFields[field.name] || field.options[0]}
-                      onChange={(e) => setRecipeFields((prev) => ({ ...prev, [field.name]: e.target.value }))}
-                      style={{ width: "100%", background: "#0d1117", border: "1px solid #30363d", borderRadius: 4, color: "#e8edf2", padding: "4px 6px", fontSize: 11 }}>
-                      {field.options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+                {selectedRecipe && recipes[selectedRecipe]?.fields.map((f) => (
+                  <div key={f.name} style={{ marginBottom: 4 }}>
+                    <label style={{ fontSize: 9, color: "#8b949e" }}>{f.label}</label>
+                    <select value={recipeFields[f.name] || f.options[0]}
+                      onChange={(e) => setRecipeFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
+                      style={{ width: "100%", background: "#0d1117", border: "1px solid #30363d", borderRadius: 4, color: "#e8edf2", padding: "3px 4px", fontSize: 10 }}>
+                      {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
                     </select>
                   </div>
                 ))}
-                <button type="button" className="as-btn primary" onClick={doGenerate}
-                  disabled={busy || !selectedRecipe} style={{ textAlign: "center", marginTop: 4 }}>
-                  ✨ Generate
-                </button>
-                {genResults.length > 0 && (
-                  <div style={{ marginTop: 8 }}>
-                    <div style={{ fontSize: 10, color: "#8b949e", marginBottom: 4 }}>Kết quả (click để cắt):</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 6 }}>
-                      {genResults.map((item, i) => (
-                        <button key={i} type="button" onClick={() => selectGenResult(item)}
-                          style={{ padding: 0, border: "1px solid #30363d", borderRadius: 6, overflow: "hidden", background: "none", cursor: "pointer" }}>
-                          <img src={item.url} alt={`gen-${i}`} style={{ width: "100%", aspectRatio: "1", objectFit: "contain", display: "block" }} />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p className="as-hint">Loading recipes…</p>
+                <button type="button" className="as-btn primary" onClick={doGenerate} disabled={busy}
+                  style={{ width: "100%", textAlign: "center" }}>✨ Generate</button>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, marginTop: 6 }}>
+                  {genResults.map((item, i) => (
+                    <button key={i} type="button" onClick={() => selectGenResult(item)}
+                      style={{ padding: 0, border: "1px solid #30363d", borderRadius: 4, overflow: "hidden", background: "none", cursor: "pointer" }}>
+                      <img src={item.url} style={{ width: "100%", display: "block" }} />
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
+          </div>
+        </aside>
+
+        {/* CENTER: canvas */}
+        <main className="as-canvas-wrap">
+          <div ref={canvasRef} className="as-canvas"
+            style={{
+              width: CANVAS_W, height: CANVAS_H,
+              cursor: tool === "lasso" ? "crosshair" : "default",
+            }}
+            onClick={onCanvasClick}
+            onMouseDown={onCanvasDown}
+            onMouseMove={onCanvasMove}
+            onMouseUp={onCanvasUp}
+            onMouseLeave={onCanvasUp}
+          >
+            {layers.length === 0 && (
+              <div className="as-empty">
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 56, marginBottom: 16 }}>🎨</div>
+                  <div style={{ fontSize: 14, color: "#8b949e" }}>Import body hoặc Generate head để bắt đầu</div>
+                </div>
+              </div>
+            )}
+
+            {/* render layers bottom-to-top */}
+            {layers.filter((l) => l.visible).map((layer) => (
+              <img key={layer.id} src={layer.src} alt={layer.name} draggable={false}
+                style={{
+                  position: "absolute",
+                  left: layer.x, top: layer.y,
+                  width: layer.width, height: layer.height,
+                  transform: `rotate(${layer.rotation}deg)`,
+                  opacity: 1,
+                  outline: layer.id === activeLayerId ? "2px dashed #f0883e" : "none",
+                  outlineOffset: 2,
+                  pointerEvents: "none",
+                }} />
+            ))}
+
+            {/* lasso polygon overlay */}
+            {tool === "lasso" && polygon.length > 0 && (
+              <svg className="as-polygon-overlay" width={CANVAS_W} height={CANVAS_H}>
+                {polygonClosed && polygon.length >= 3 && (
+                  <polygon points={polygon.map((p) => `${p.x},${p.y}`).join(" ")}
+                    fill="rgba(0,255,100,0.12)" stroke="#00ff64" strokeWidth={2} />
+                )}
+                {!polygonClosed && (
+                  <polyline points={polygon.map((p) => `${p.x},${p.y}`).join(" ")}
+                    fill="none" stroke="#00ff64" strokeWidth={2} />
+                )}
+                {!polygonClosed && mousePos && polygon.length > 0 && (
+                  <line x1={polygon[polygon.length - 1].x} y1={polygon[polygon.length - 1].y}
+                    x2={mousePos.x} y2={mousePos.y} stroke="#00ff64" strokeWidth={1} strokeDasharray="6,4" />
+                )}
+                {polygon.map((p, i) => (
+                  <circle key={i} cx={p.x} cy={p.y} r={4}
+                    fill={i === 0 ? "#ff6600" : "#00ff64"} stroke="white" strokeWidth={1} />
+                ))}
+              </svg>
+            )}
+          </div>
+          <div className="as-status">{status}</div>
+
+          {/* lasso controls below canvas */}
+          {tool === "lasso" && activeLayer && (
+            <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+              <span style={{ fontSize: 11, color: "#8b949e", alignSelf: "center" }}>
+                Lasso trên "{activeLayer.name}" — {polygon.length} điểm
+              </span>
+              <button type="button" className="as-btn ghost" onClick={() => setPolygon((p) => p.slice(0, -1))}
+                disabled={polygon.length === 0}>↶</button>
+              <button type="button" className="as-btn ghost" onClick={() => { setPolygon([]); setPolygonClosed(false); }}
+                disabled={polygon.length === 0}>🗑</button>
+              <button type="button" className="as-btn ghost" onClick={() => setPolygonClosed(!polygonClosed)}
+                disabled={polygon.length < 3}>{polygonClosed ? "Mở" : "Khép"}</button>
+              <button type="button" className="as-btn primary" onClick={applyLassoCut}
+                disabled={polygon.length < 3 || busy}>✂️ Cut</button>
+              <button type="button" className="as-btn ghost" onClick={() => { setTool("move"); setPolygon([]); }}>Done</button>
+            </div>
+          )}
+        </main>
+
+        {/* RIGHT: properties */}
+        <aside className="as-right">
+          {activeLayer ? (
+            <section className="as-panel">
+              <h3>{activeLayer.name}</h3>
+              <label className="as-slider">X: {Math.round(activeLayer.x)}
+                <input type="range" min={-200} max={CANVAS_W} value={activeLayer.x}
+                  onChange={(e) => updateLayer(activeLayer.id, { x: Number(e.target.value) })} />
+              </label>
+              <label className="as-slider">Y: {Math.round(activeLayer.y)}
+                <input type="range" min={-200} max={CANVAS_H} value={activeLayer.y}
+                  onChange={(e) => updateLayer(activeLayer.id, { y: Number(e.target.value) })} />
+              </label>
+              <label className="as-slider">Scale: {activeLayer.scale.toFixed(2)}
+                <input type="range" min={0.1} max={3} step={0.05} value={activeLayer.scale}
+                  onChange={(e) => {
+                    const s = Number(e.target.value);
+                    updateLayer(activeLayer.id, { scale: s });
+                  }} />
+              </label>
+              <label className="as-slider">Rotate: {activeLayer.rotation}°
+                <input type="range" min={-45} max={45} value={activeLayer.rotation}
+                  onChange={(e) => updateLayer(activeLayer.id, { rotation: Number(e.target.value) })} />
+              </label>
+              <button type="button" className="as-btn ghost" onClick={removeBg} disabled={busy}
+                style={{ width: "100%", textAlign: "center", marginTop: 8 }}>
+                🪄 Tách nền layer này
+              </button>
+            </section>
+          ) : (
+            <section className="as-panel">
+              <h3>Properties</h3>
+              <p className="as-hint">Click vào layer trên canvas để chọn và chỉnh</p>
+            </section>
+          )}
+
+          {/* Save */}
+          <section className="as-panel" style={{ marginTop: 8 }}>
+            <h3>Export</h3>
+            <input value={poseName} onChange={(e) => setPoseName(e.target.value)} placeholder="tên-pose" />
+            <button type="button" className="as-btn primary" onClick={savePose}
+              disabled={busy || !poseName.trim()} style={{ textAlign: "center" }}>
+              💾 Lưu pose
+            </button>
           </section>
 
-          {/* Upload head */}
-          <section className="as-panel">
-            <h3>✂️ Head của bạn</h3>
-            <label className="as-upload">📁 Upload head image
-              <input type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && uploadHead(e.target.files[0])} />
-            </label>
-            {headUrl && <div className="as-head-preview"><img src={headUrl} alt="head" /></div>}
-          </section>
-
-          {/* Pose library */}
-          <section className="as-panel">
-            <h3>📚 Pose Library</h3>
+          {/* Library */}
+          <section className="as-panel" style={{ marginTop: 8 }}>
+            <h3>Library</h3>
             <div className="as-pose-grid">
               {poses.map((pose) => (
                 <div key={pose.name} className="as-pose-item" title={pose.name}>
@@ -434,193 +591,6 @@ export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = 
               ))}
             </div>
           </section>
-        </aside>
-
-        {/* CENTER: canvas */}
-        <main className="as-canvas-wrap">
-          <div
-            ref={canvasRef}
-            className="as-canvas"
-            style={{
-              width: DISPLAY_W, height: DISPLAY_H,
-              cursor: mode === "cut" ? (cutTool === "polygon" ? "crosshair" : "ns-resize") : mode === "composite" ? "grab" : "default",
-            }}
-            onClick={onCanvasClick}
-            onMouseMove={onCanvasMove}
-            onMouseDown={onCanvasDown}
-            onMouseUp={onCanvasUp}
-            onMouseLeave={onCanvasUp}
-          >
-            {displayImage ? (
-              <img className="as-stage-img" src={displayImage} alt="" draggable={false} />
-            ) : (
-              <div className="as-empty">
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 48, marginBottom: 12 }}>📸</div>
-                  <div>Tìm ảnh stock (preset bên trái)</div>
-                  <div style={{ fontSize: 11, color: "#484f58", marginTop: 4 }}>hoặc Gen AI head / Upload</div>
-                </div>
-              </div>
-            )}
-
-            {/* polygon overlay */}
-            {mode === "cut" && cutTool === "polygon" && polygon.length > 0 && (
-              <svg className="as-polygon-overlay" width={DISPLAY_W} height={DISPLAY_H}>
-                {polygonClosed && polygon.length >= 3 && (
-                  <polygon points={polygon.map((p) => `${p.x},${p.y}`).join(" ")}
-                    fill={cutModeKeep ? "rgba(0,255,100,0.15)" : "rgba(255,0,100,0.15)"}
-                    stroke={cutModeKeep ? "#00ff64" : "#ff0064"} strokeWidth={2} />
-                )}
-                {!polygonClosed && (
-                  <polyline points={polygon.map((p) => `${p.x},${p.y}`).join(" ")}
-                    fill="none" stroke="#00ff64" strokeWidth={2} />
-                )}
-                {!polygonClosed && mousePos && polygon.length > 0 && (
-                  <>
-                    <line x1={polygon[polygon.length - 1].x} y1={polygon[polygon.length - 1].y}
-                      x2={mousePos.x} y2={mousePos.y} stroke="#00ff64" strokeWidth={1} strokeDasharray="6,4" />
-                    <line x1={mousePos.x} y1={mousePos.y}
-                      x2={polygon[0].x} y2={polygon[0].y} stroke="#ffaa00" strokeWidth={1} strokeDasharray="4,4" />
-                  </>
-                )}
-                {polygon.map((p, i) => (
-                  <circle key={i} cx={p.x} cy={p.y} r={5}
-                    fill={i === 0 ? "#ff6600" : "#00ff64"} stroke="white" strokeWidth={1.5} />
-                ))}
-              </svg>
-            )}
-
-            {/* horizontal line overlay */}
-            {mode === "cut" && cutTool === "horizontal" && (
-              <div className="as-hline" style={{ top: hLineY }}>
-                <span>CUT at y={hLineY}px — drag to adjust</span>
-              </div>
-            )}
-
-            {/* head overlay (composite) */}
-            {mode === "composite" && headUrl && (
-              <img src={headUrl} alt="head" draggable={false}
-                style={{
-                  position: "absolute", left: headX, top: headY,
-                  width: 300 * headScale,
-                  transform: `rotate(${headRotation}deg)`,
-                  cursor: dragging ? "grabbing" : "grab",
-                  pointerEvents: "none",
-                  filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
-                }} />
-            )}
-          </div>
-          <div className="as-status">{status}</div>
-        </main>
-
-        {/* RIGHT: inspector */}
-        <aside className="as-right">
-          {mode === "body" && (
-            <section className="as-panel">
-              <h3>Step 1: Body</h3>
-              <button type="button" className="as-btn primary" disabled={busy} onClick={removeBg}>
-                🪄 Tách nền (AI)
-              </button>
-              <p className="as-hint">Tách nền xong → upload head hoặc Gen AI → sẽ vào cutting mode</p>
-            </section>
-          )}
-
-          {mode === "cut" && (
-            <section className="as-panel">
-              <h3>Step 2: Cắt head</h3>
-              <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
-                <button type="button" className={`as-btn ${cutTool === "polygon" ? "primary" : "ghost"}`}
-                  onClick={() => setCutTool("polygon")} style={{ flex: 1, textAlign: "center" }}>Polygon</button>
-                <button type="button" className={`as-btn ${cutTool === "horizontal" ? "primary" : "ghost"}`}
-                  onClick={() => setCutTool("horizontal")} style={{ flex: 1, textAlign: "center" }}>Đường thẳng</button>
-              </div>
-
-              {cutTool === "polygon" ? (
-                <>
-                  <p className="as-hint">Click từng điểm quanh viền phần muốn giữ. Điểm cam = điểm đầu.</p>
-                  <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
-                    <button type="button" className="as-btn ghost" onClick={() => setPolygon((p) => p.slice(0, -1))}
-                      disabled={polygon.length === 0} style={{ flex: 1, textAlign: "center" }}>↶ Undo</button>
-                    <button type="button" className="as-btn ghost" onClick={() => { setPolygon([]); setPolygonClosed(false); }}
-                      disabled={polygon.length === 0} style={{ flex: 1, textAlign: "center" }}>🗑 Xoá</button>
-                  </div>
-                  <button type="button" className="as-btn ghost" onClick={() => setPolygonClosed(!polygonClosed)}
-                    disabled={polygon.length < 3} style={{ width: "100%", textAlign: "center", marginBottom: 6 }}>
-                    {polygonClosed ? "Mở lại" : "Khép polygon"}
-                  </button>
-                </>
-              ) : (
-                <p className="as-hint">Kéo đường vàng lên/xuống đến vị trí muốn cắt. Mọi thứ bên TRÊN đường được giữ.</p>
-              )}
-
-              <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
-                <button type="button" className={`as-btn ${cutModeKeep ? "primary" : "ghost"}`}
-                  onClick={() => setCutModeKeep(true)} style={{ flex: 1, textAlign: "center" }}>Giữ trong</button>
-                <button type="button" className={`as-btn ${!cutModeKeep ? "primary" : "ghost"}`}
-                  onClick={() => setCutModeKeep(false)} style={{ flex: 1, textAlign: "center" }}>Xoá trong</button>
-              </div>
-
-              <button type="button" className="as-btn primary" onClick={applyCut}
-                disabled={busy || (cutTool === "polygon" && polygon.length < 3)}
-                style={{ width: "100%", textAlign: "center" }}>
-                ✂️ Áp dụng cắt
-              </button>
-              <button type="button" className="as-btn ghost" onClick={skipCut}
-                style={{ width: "100%", textAlign: "center" }}>
-                Bỏ qua cắt (dùng nguyên)
-              </button>
-            </section>
-          )}
-
-          {mode === "composite" && (
-            <section className="as-panel">
-              <h3>Step 3: Ghép & Lưu</h3>
-              <button type="button" className="as-btn ghost" onClick={autoPosition}
-                style={{ width: "100%", textAlign: "center", marginBottom: 8 }}>
-                🎯 Tự động đặt vị trí
-              </button>
-              <label className="as-slider">Scale ×{headScale.toFixed(2)}
-                <input type="range" min={0.2} max={3.0} step={0.05} value={headScale}
-                  onChange={(e) => setHeadScale(Number(e.target.value))} />
-              </label>
-              <label className="as-slider">Rotate {headRotation}°
-                <input type="range" min={-45} max={45} step={1} value={headRotation}
-                  onChange={(e) => setHeadRotation(Number(e.target.value))} />
-              </label>
-              <label className="as-slider">X: {headX}px
-                <input type="range" min={-200} max={DISPLAY_W} step={5} value={headX}
-                  onChange={(e) => setHeadX(Number(e.target.value))} />
-              </label>
-              <label className="as-slider">Y: {headY}px
-                <input type="range" min={-200} max={DISPLAY_H} step={5} value={headY}
-                  onChange={(e) => setHeadY(Number(e.target.value))} />
-              </label>
-              <div style={{ height: 12 }} />
-              <input value={poseName} onChange={(e) => setPoseName(e.target.value)}
-                placeholder="tên-pose (vd: shrug)" />
-              <button type="button" className="as-btn primary" onClick={savePose}
-                disabled={busy || !poseName.trim()} style={{ textAlign: "center" }}>
-                💾 Lưu pose
-              </button>
-              <button type="button" className="as-btn ghost" onClick={() => { setMode("cut"); setPolygon([]); setPolygonClosed(false); }}
-                style={{ textAlign: "center" }}>
-                ← Cắt lại head
-              </button>
-            </section>
-          )}
-
-          {mode === "idle" && (
-            <section className="as-panel">
-              <h3>Hướng dẫn</h3>
-              <div style={{ fontSize: 12, color: "#8b949e", lineHeight: 1.8 }}>
-                <div><strong>1.</strong> Tìm ảnh stock (preset hoặc gõ từ khoá)</div>
-                <div><strong>2.</strong> Tách nền bằng AI</div>
-                <div><strong>3.</strong> Gen AI head hoặc upload head</div>
-                <div><strong>4.</strong> Cắt head (polygon hoặc đường thẳng)</div>
-                <div><strong>5.</strong> Kéo head lên body → chỉnh → Lưu pose</div>
-              </div>
-            </section>
-          )}
         </aside>
       </div>
     </div>

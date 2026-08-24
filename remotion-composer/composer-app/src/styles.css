@@ -1567,3 +1567,19 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .as-step.done { color: #3fb950; }
 .as-hline { position: absolute; left: 0; right: 0; height: 0; border-top: 3px dashed #ffaa00; cursor: ns-resize; z-index: 15; }
 .as-hline span { position: absolute; right: 8px; top: 4px; font-size: 10px; color: #ffaa00; background: rgba(13,17,23,0.85); padding: 2px 6px; border-radius: 4px; }
+
+
+/* Asset Studio V3 — layer-based editor */
+.as-tools { width: 220px; border-right: 1px solid #21262d; display: flex; flex-direction: column; padding: 8px; gap: 8px; overflow-y: auto; }
+.as-tool-palette { display: flex; gap: 4px; padding: 4px; background: #161b22; border-radius: 8px; border: 1px solid #21262d; }
+.as-tool-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+.as-tool-btn:hover { background: #21262d; }
+.as-tool-btn.active { background: #f0883e33; outline: 1px solid #f0883e66; }
+.as-layers-panel { background: #161b22; border-radius: 8px; border: 1px solid #21262d; padding: 8px; }
+.as-layers-panel h4 { margin: 0 0 6px; font-size: 10px; text-transform: uppercase; color: #8b949e; letter-spacing: 0.05em; }
+.as-layer-item { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; color: #e8edf2; }
+.as-layer-item:hover { background: #21262d; }
+.as-layer-item.active { background: #f0883e22; outline: 1px solid #f0883e44; }
+.as-layer-item input[type="checkbox"] { accent-color: #f0883e; }
+.as-import-panel { display: flex; flex-direction: column; gap: 4px; }
+.as-import-panel .as-panel { padding: 8px; }
