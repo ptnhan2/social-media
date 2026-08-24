@@ -1,14 +1,23 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-23 16:00 (afternoon: U1-U4 user decisions + E2-E6 generator
-> session on top of the overnight pattern-learning session). Previous: 05:30.
-> **TRẠNG THÁI: Pattern Learning + Eval CHẠY (đêm) → user duyệt U1-U4 (sáng)
-> → Generator E2-E6 IMPLEMENT (chiều). Preview trong Composer giờ hiển thị
-> style hiện tại (lần đầu tiên).**
+> Updated 2026-08-24 16:35. Previous: 2026-08-23 16:00.
+> **TRẠNG THÁI: Asset Studio V3 đã build nhưng CHƯA CHUẨN UX.**
+> Session sau phải RESEARCH trước rồi BUILD. Xem `docs/ASSET-STUDIO-SPEC.md`.
 
 ---
 
-## 🌅 VIỆC TIẾP THEO CHO USER
+## 🌅 VIỆC TIẾP THEO (session sau)
+
+1. **Đọc `docs/ASSET-STUDIO-SPEC.md`** — có full danh sách features cần
+   research và implement
+2. **Research Photopea / Canva / Figma** — mở thử, dùng thử, ghi chú UX
+   patterns cho: zoom/pan, transform handles, layer panel, selection tools,
+   keyboard shortcuts, snap guides
+3. **Chọn canvas library** — Fabric.js hoặc Konva.js (có sẵn selection,
+   transform, zoom)
+4. **Rebuild Asset Studio V4** với UX đúng chuẩn editor
+5. **Không ngại thêm features** user chưa đề cập — nếu editor chuẩn có
+   mà đáng có thì cứ thêm
 
 1. **Mở Composer :5174** → preview giờ render theo editor path với style v73
    (bold 900+, gradient titles, màu rực) — confirm lần nữa trong editor thật.
