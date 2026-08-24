@@ -28,6 +28,17 @@ Từ commit b5dcbe4: prompt resolved hiển thị trong textarea chỉnh sửa �
 "✏️ Custom prompt" nhập prompt hoàn toàn mới. Backend hỗ trợ sẵn
 `op_generate {prompt}` — trước đó frontend chỉ không expose.
 
+**Chỉnh prompt có lâu dài không? (hỏi thêm 21:53)**
+Từ commit fc5bcab — CÓ:
+- Chỉnh prompt bất kỳ recipe nào → **ghi nhớ theo project** (localStorage),
+  reload/Thoát vào lại vẫn còn. Label hiện "(đã sửa — ghi nhớ)", ↺ reset.
+- Custom prompt cũng được ghi nhớ.
+- Lưu ý: đổi OPTION (vd Expression) sẽ reset override về auto — muốn
+  prompt cố định thì dùng preset.
+- **💾 Lưu preset**: lưu prompt hiện tại thành preset có tên → xuất hiện
+  trong dropdown với ★, lưu SERVER-side (`projects/<slug>/assets/
+  character/recipes.json`) nên sống qua browser/máy khác. 🗑 Xoá được.
+
 ## 0. KẾT QUẢ E2E ĐÃ VERIFY (browser thật :5174/assets)
 
 | Feature | Bằng chứng |
