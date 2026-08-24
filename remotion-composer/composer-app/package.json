@@ -13,12 +13,15 @@
     "@langchain/react": "^1.0.30",
     "@remotion/media": "^4.0.484",
     "@remotion/player": "^4.0.484",
+    "konva": "^9.3.22",
     "react": "^18",
     "react-dom": "^18",
+    "react-konva": "^18.2.16",
     "react-moveable": "^0.56.0",
     "react-router-dom": "^7.18.2",
     "react-selecto": "^1.26.3",
-    "remotion": "^4.0.484"
+    "remotion": "^4.0.484",
+    "use-image": "^1.1.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4",
