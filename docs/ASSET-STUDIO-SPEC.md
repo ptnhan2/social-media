@@ -28,16 +28,28 @@ Từ commit b5dcbe4: prompt resolved hiển thị trong textarea chỉnh sửa �
 "✏️ Custom prompt" nhập prompt hoàn toàn mới. Backend hỗ trợ sẵn
 `op_generate {prompt}` — trước đó frontend chỉ không expose.
 
-**Chỉnh prompt có lâu dài không? (hỏi thêm 21:53)**
-Từ commit fc5bcab — CÓ:
-- Chỉnh prompt bất kỳ recipe nào → **ghi nhớ theo project** (localStorage),
-  reload/Thoát vào lại vẫn còn. Label hiện "(đã sửa — ghi nhớ)", ↺ reset.
-- Custom prompt cũng được ghi nhớ.
-- Lưu ý: đổi OPTION (vd Expression) sẽ reset override về auto — muốn
-  prompt cố định thì dùng preset.
-- **💾 Lưu preset**: lưu prompt hiện tại thành preset có tên → xuất hiện
-  trong dropdown với ★, lưu SERVER-side (`projects/<slug>/assets/
-  character/recipes.json`) nên sống qua browser/máy khác. 🗑 Xoá được.
+**Chỉnh prompt có lâu dài không? + cơ chế preset (hỏi thêm 22:12 — ĐÃ LÀM LẠI ĐÚNG)**
+Phiên bản flat-prompt preset cũ SAI thiết kế (gộp hết options vào 1 prompt
+→ mất cấu trúc domain). Từ commit 1ba79b2, recipe = **cấu trúc**:
+- Lưu recipe mới = template (giữ `{{style}}`, `{{expression}}`…) + danh
+  sách options từng field (kể cả option tự thêm) + lựa chọn hiện tại làm
+  default → sau này vẫn đổi riêng Art Style / Expression được
+- **＋ thêm option** cho từng field (vd "watercolor" vào Art Style) —
+  lưu kèm recipe
+- Textarea chỉnh **template** (thấy placeholder), "Prompt gửi đi" xem
+  preview resolved read-only; sửa prompt phẳng chỉ còn ở ✏️ Custom
+- User recipe: 💾 Cập nhật trực tiếp; built-in: chỉnh rồi "Lưu thành
+  recipe mới" (built-in không ghi đè)
+- Server: `save-recipe` nhận {id?, label, promptTemplate, fields,
+  defaults}; recipes.json write atomic + tolerate file hỏng
+
+**Bug nền tìm thấy khi làm**: python Windows pipe stdin = cp1252 +
+surrogateescape → prompt có ký tự unicode (—, emoji) round-trip 2 lần sinh
+lone surrogate → crash ghi file → 500 "asset bridge failed" ẩn lỗi thật.
+Fix: reconfigure stdio utf-8+replace trong asset_api + middleware trả
+JSON error thay vì generic. Áp cho TOÀN bộ bridge ops (lasso cut, bg
+remove, save-pose… đều đi qua đường này — prompt/guide path có unicode
+cũng an toàn giờ).
 
 ## 0. KẾT QUẢ E2E ĐÃ VERIFY (browser thật :5174/assets)
 
