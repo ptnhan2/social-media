@@ -67,7 +67,7 @@ const elementClipFromTreatment = (el: TreatmentElement, beat: SemanticBeat, beat
       opacity: el.opacity ?? 1,
       z: el.z ?? 10,
       isTextClip: isText,
-      elementType: el.type,
+      elementType: el.elementType ?? el.type,
       text: el.text,
       color: el.color,
       fontSize: el.fontSize,

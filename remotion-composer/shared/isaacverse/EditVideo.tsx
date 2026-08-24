@@ -311,6 +311,55 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
       </div>
     );
   }
+  if (md.elementType === "edge") {
+    // Bezier edge element (E2 parity — mirrors treatments.tsx SemanticDiagram.Edge):
+    // quadratic bezier with perpendicular curvature offset, gradient/brush stroke
+    // modes, draw-on reveal via strokeDashoffset. Coordinates are px in the
+    // 1920×1080 frame; the clip bbox spans the full frame.
+    const x1 = typeof md.x1 === "number" ? md.x1 : 0;
+    const y1 = typeof md.y1 === "number" ? md.y1 : 0;
+    const x2 = typeof md.x2 === "number" ? md.x2 : 100;
+    const y2 = typeof md.y2 === "number" ? md.y2 : 100;
+    const curvature = typeof md.curvature === "number" ? md.curvature : 0.12;
+    const cx = (x1 + x2) / 2 - (y2 - y1) * curvature;
+    const cy = (y1 + y2) / 2 + (x2 - x1) * curvature;
+    const pathD = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+    const gradId = `edgeGrad-${Math.round(x1)}-${Math.round(y1)}-${Math.round(x2)}-${Math.round(y2)}`;
+    const mode = md.strokeMode === "gradient" || md.strokeMode === "brush" ? md.strokeMode : "solid";
+    const stops = Array.isArray(md.gradientStops) && md.gradientStops.length >= 2 ? (md.gradientStops as string[]) : ["#7fd8e8", "#f2d58a"];
+    const strokeWidth = typeof md.strokeWidth === "number" ? md.strokeWidth : 2;
+    const baseColor = typeof md.strokeColor === "string" ? md.strokeColor : "rgba(242,184,75,0.58)";
+    const brushDash = Array.isArray(md.brushDasharray) ? (md.brushDasharray as number[]).join(" ") : "14 5 8 4 18 6";
+    const revealDur = typeof md.revealDurationSec === "number" ? md.revealDurationSec : 0.65;
+    const revealStart = typeof md.startSec === "number" ? md.startSec : 0;
+    const raw = Math.max(0, Math.min(1, (localSec - revealStart) / Math.max(0.001, revealDur)));
+    const progress = 1 - Math.pow(1 - raw, 3); // cubic-out, matches Easing.out(Easing.cubic)
+    const stroke = mode === "gradient" ? `url(#${gradId})` : baseColor;
+    return (
+      <div style={{ ...baseStyle, overflow: "visible" }}>
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", overflow: "visible" }}>
+          {mode === "gradient" && (
+            <defs>
+              <linearGradient id={gradId} x1={`${(x1 / 1920) * 100}%`} y1={`${(y1 / 1080) * 100}%`} x2={`${(x2 / 1920) * 100}%`} y2={`${(y2 / 1080) * 100}%`}>
+                <stop offset="0%" stopColor={stops[0]} />
+                <stop offset="100%" stopColor={stops[1]} />
+              </linearGradient>
+            </defs>
+          )}
+          <path
+            d={pathD}
+            pathLength={100}
+            fill="none"
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+            strokeDasharray={mode === "brush" ? brushDash : "100"}
+            strokeDashoffset={mode === "brush" ? 0 : 100 * (1 - progress)}
+            strokeLinecap={typeof md.linecap === "string" ? (md.linecap as React.SVGProps<SVGPathElement>["strokeLinecap"]) : "round"}
+          />
+        </svg>
+      </div>
+    );
+  }
   if (md.elementType === "shape" || (!md.src && !md.isTextClip && typeof md.background === "string")) {
     return (
       <div style={{

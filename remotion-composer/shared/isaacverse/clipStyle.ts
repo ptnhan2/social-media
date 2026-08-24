@@ -10,7 +10,7 @@ export type OverlayStyle = {
   scale: number;
 };
 
-export type AnimPresetId = "none" | "fade" | "slide-left" | "slide-right" | "slide-up" | "slide-down" | "scale" | "bounce" | "pop";
+export type AnimPresetId = "none" | "fade" | "slide-left" | "slide-right" | "slide-up" | "slide-down" | "scale" | "bounce" | "pop" | "spring";
 
 const easingFns: Record<NonNullable<ClipKeyframe["easing"]>, (p: number) => number> = {
   "linear": (p) => p,
@@ -92,6 +92,14 @@ export const overlayStyleAt = (clip: EditorClip, timeSec: number): OverlayStyle 
         animOpacity = Math.min(animOpacity, Math.max(0, Math.min(1, p * 1.5)));
         break;
       }
+      case "spring": {
+        // underdamped spring: overshoots once then settles (Remotion
+        // damping 18 / stiffness 120 equivalent over the anim duration)
+        const v = 1 - Math.exp(-5 * p) * Math.cos(7.5 * p);
+        scale *= Math.max(0.01, v);
+        animOpacity = Math.min(animOpacity, Math.max(0, Math.min(1, p * 2)));
+        break;
+      }
       default: break;
     }
   };
@@ -119,6 +127,7 @@ export const clipFilterCss = (filter: unknown): string | undefined => {
 export const SPEED_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4];
 
 export const ANIM_PRESETS: { id: AnimPresetId; label: string }[] = [
+  { id: "spring", label: "Spring (overshoot)" },
   { id: "none", label: "None" },
   { id: "fade", label: "Fade" },
   { id: "slide-left", label: "Slide left" },

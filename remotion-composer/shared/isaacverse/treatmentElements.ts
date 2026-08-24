@@ -44,6 +44,21 @@ export type TreatmentElement = {
   startSec?: number;
   endSec?: number;
   role?: string;
+  /** Edge element (type "shape" + elementType "edge"): quadratic bezier
+   *  draw-on — mirrors SemanticDiagram.Edge in the editor render path. */
+  elementType?: string;
+  x1?: number;
+  y1?: number;
+  x2?: number;
+  y2?: number;
+  curvature?: number;
+  strokeMode?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
+  gradientStops?: string[];
+  brushDasharray?: number[];
+  linecap?: string;
+  revealDurationSec?: number;
   /** prop -> style knob path that fed it (generator provenance, spec §2.2).
    *  Props absent here are fixed by treatment code (styleSource: null). */
   styleSource?: Record<string, string>;
@@ -176,18 +191,55 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         const nodeStart = 0.3 + i * 0.25;
         els.push(shape(`${id}:node-${i}-box`, nx - 135, ny - 50, 270, 100, {
           borderWidth: 2, borderColor: asStr(node.color, a), background: "rgba(7,9,13,0.84)", borderRadius: 10,
-          boxShadow: `0 0 18px ${asStr(node.color, a)}38`, animIn: "scale", animDurationSec: 0.75, z: 10, startSec: nodeStart,
+          boxShadow: `0 0 18px ${asStr(node.color, a)}38`, animIn: "spring", animDurationSec: 0.75, z: 10, startSec: nodeStart,
         }));
         els.push(text(`${id}:node-${i}-label`, nx - 120, ny - 42, 240, 30, asStr(node.label), {
           fontSize: nodeFontSize, fontWeight: nodeFontWeight, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 0.8,
-          color: asStr(node.color, a), animIn: "scale", animDurationSec: 0.75, z: 11, startSec: nodeStart, textShadow: "0 2px 6px rgba(0,0,0,0.7)",
+          color: asStr(node.color, a), animIn: "spring", animDurationSec: 0.75, z: 11, startSec: nodeStart, textShadow: "0 2px 6px rgba(0,0,0,0.7)",
           styleSource: { fontSize: "treatments.semantic-diagram.node.fontSize", fontWeight: "treatments.semantic-diagram.node.fontWeight" },
         }));
         if (asStr(node.detail)) els.push(text(`${id}:node-${i}-detail`, nx - 120, ny - 10, 240, 50, asStr(node.detail), {
-          fontSize: detailFontSize, fontFamily: "Arial, sans-serif", color: "#f4e8cf", opacity: 0.78, lineHeight: 1.35, animIn: "scale", animDurationSec: 0.75, z: 11, startSec: nodeStart, fontWeight: 900,
+          fontSize: detailFontSize, fontFamily: "Arial, sans-serif", color: "#f4e8cf", opacity: 0.78, lineHeight: 1.35, animIn: "spring", animDurationSec: 0.75, z: 11, startSec: nodeStart, fontWeight: 900,
           styleSource: { fontSize: "treatments.semantic-diagram.node.detailFontSize" },
         }));
       });
+      // Edges (E2 parity — bezier draw-on, mirrors SemanticDiagram.Edge):
+      // node % coords → px, quadratic ctrl point from the curvature knob,
+      // stroke style + reveal timing read from the style store.
+      {
+        const edges = asArr<Record<string, unknown>>(p.edges);
+        const nodeById = new Map(nodes.map((n) => [asStr(n.id), n]));
+        const strokeStyle = s<Record<string, unknown>>("treatments.semantic-diagram.edge.stroke", {} as Record<string, unknown>);
+        const strokeMode = asStr(strokeStyle.mode, "gradient");
+        const strokeColor = asStr(strokeStyle.color, "rgba(242,184,75,0.58)");
+        const strokeWidth = asNum(strokeStyle.width, 2);
+        const gradientStops = Array.isArray(strokeStyle.gradientStops) ? (strokeStyle.gradientStops as string[]) : ["#7fd8e8", "#f2d58a"];
+        const brushDasharray = Array.isArray(strokeStyle.brushDasharray) ? (strokeStyle.brushDasharray as number[]) : [14, 5, 8, 4, 18, 6];
+        const linecap = asStr(strokeStyle.linecap, "round");
+        const curvature = s<number>("treatments.semantic-diagram.edge.curvature", 0.12);
+        const revealDur = s<number>("treatments.semantic-diagram.edge.revealDurationSec", 0.65);
+        edges.forEach((edge, i) => {
+          const from = nodeById.get(asStr(edge.from));
+          const to = nodeById.get(asStr(edge.to));
+          if (!from || !to) return;
+          const x1 = asNum(from.x, 50) / 100 * W;
+          const y1 = asNum(from.y, 50) / 100 * H;
+          const x2 = asNum(to.x, 50) / 100 * W;
+          const y2 = asNum(to.y, 50) / 100 * H;
+          els.push(shape(`${id}:edge-${i}`, 0, 0, W, H, {
+            elementType: "edge", x1, y1, x2, y2, curvature,
+            strokeMode, strokeColor, strokeWidth, gradientStops, brushDasharray, linecap,
+            revealDurationSec: revealDur,
+            startSec: asNum(edge.revealAt, 0.3),
+            z: 4, opacity: 1,
+            styleSource: {
+              curvature: "treatments.semantic-diagram.edge.curvature",
+              stroke: "treatments.semantic-diagram.edge.stroke",
+              revealDurationSec: "treatments.semantic-diagram.edge.revealDurationSec",
+            },
+          }));
+        });
+      };
       const sdPresence = characterPresenceElement("semantic-diagram", beat, s);
       if (sdPresence) els.push(sdPresence);
       els.push(text(`${id}:footer`, 1340, 990, 500, 30, "follow the thread", {
