@@ -21,13 +21,14 @@ from __future__ import annotations
 
 import base64
 import json
+import os
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(ROOT / "tools" / "assets"))
 
-from process_body import CANVAS_W, CANVAS_H, flood_fill_background, detect_neck, _row_runs  # noqa: E402
+from process_body import CANVAS_W, CANVAS_H, flood_fill_background, detect_head_zone  # noqa: E402
 
 import numpy as np  # noqa: E402
 from PIL import Image  # noqa: E402

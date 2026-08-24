@@ -22,7 +22,13 @@ const bridge = (cmd: Record<string, unknown>) =>
       return data as Record<string, unknown>;
     });
 
-const fileUrl = (p: string) => `/api/assets/file?p=${encodeURIComponent(p.replace(/\\/g, "/").replace(/^C:\/?/i, ""))}`;
+const fileUrl = (p: string) => {
+  // Normalize: strip C:/ prefix, then strip workspace root if present
+  let rel = p.replace(/\\/g, "/").replace(/^C:\/?/i, "");
+  // Remove "DevWork/social-media/" if present (workspace root)
+  rel = rel.replace(/^DevWork\/social-media\//i, "");
+  return `/api/assets/file?p=${encodeURIComponent(rel)}`;
+};
 
 export const AssetStudio: React.FC<{ projectId: string; onBack: () => void }> = ({ projectId, onBack }) => {
   // --- state ---
