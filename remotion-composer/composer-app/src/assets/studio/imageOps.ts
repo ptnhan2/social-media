@@ -46,14 +46,25 @@ export async function getLayerCanvas(layer: Layer): Promise<HTMLCanvasElement> {
   const existing = imageCache.get(layer.src);
   if (existing instanceof HTMLCanvasElement) return existing;
   let source: CanvasImageSource;
-  if (existing) {
+  let sw: number;
+  let sh: number;
+  if (existing instanceof HTMLImageElement) {
     source = existing;
+    sw = existing.naturalWidth;
+    sh = existing.naturalHeight;
+  } else if (existing) {
+    source = existing;
+    sw = (existing as unknown as HTMLCanvasElement).width;
+    sh = (existing as unknown as HTMLCanvasElement).height;
   } else {
-    source = await loadImage(layer.src);
+    const img = await loadImage(layer.src);
+    source = img;
+    sw = img.naturalWidth;
+    sh = img.naturalHeight;
   }
   const canvas = document.createElement("canvas");
-  canvas.width = source instanceof HTMLImageElement ? source.naturalWidth : (source as HTMLCanvasElement).width;
-  canvas.height = source instanceof HTMLImageElement ? source.naturalHeight : (source as HTMLCanvasElement).height;
+  canvas.width = sw;
+  canvas.height = sh;
   const ctx = canvas.getContext("2d")!;
   ctx.drawImage(source, 0, 0);
   imageCache.set(layer.src, canvas);

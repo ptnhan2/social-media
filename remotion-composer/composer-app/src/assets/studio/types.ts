@@ -87,7 +87,7 @@ export interface WandSelection {
 export interface ToolOptions {
   eraser: { size: number; hardness: number };
   wand: { tolerance: number; contiguous: boolean };
-  lasso: { mode: "keep" | "delete" };
+  lasso: { mode: "keep" | "remove" };
 }
 
 export interface Viewport {

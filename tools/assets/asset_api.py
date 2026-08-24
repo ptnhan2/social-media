@@ -278,10 +278,13 @@ def op_polygon_mask(cmd: dict) -> dict:
     new_alpha = np.minimum(alpha, np.asarray(mask))
     img.putalpha(Image.fromarray(new_alpha))
 
-    # Crop to content
-    ys, xs = np.where(new_alpha > 10)
-    if len(ys) > 0:
-        img = img.crop((int(xs.min()), int(ys.min()), int(xs.max())+1, int(ys.max())+1))
+    # Crop to content — callers that render the result at the SAME doc
+    # position (Asset Studio layer editor) pass nocrop=true to keep the
+    # full canvas so width/height stay stable.
+    if not cmd.get("nocrop"):
+        ys, xs = np.where(new_alpha > 10)
+        if len(ys) > 0:
+            img = img.crop((int(xs.min()), int(ys.min()), int(xs.max())+1, int(ys.max())+1))
 
     # Normalize if requested
     if cmd.get("normalize"):
