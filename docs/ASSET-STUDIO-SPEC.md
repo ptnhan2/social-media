@@ -283,19 +283,25 @@ layer xuống/lên • `Enter` đóng lasso.
 | 9 | Stock không credit photographer (licensing) | Credit hiện trên ảnh + title đầy đủ |
 | 10 | Nút vào studio từ editor dễ miss | 🎨 Asset Studio nổi màu cam |
 
-### Round 2+ — CÒN LẠI (theo priority, chưa làm)
+### Round 2 — ĐÃ FIX (commit aaa1dae, 2026-08-24 khuya)
+| # | Vấn đề | Fix |
+|---|---|---|
+| 1 | Marquee select | Kéo trên nền trống (move tool) → rubber-band chọn layer theo AABB; click thường vẫn deselect |
+| 2 | Wand không cộng dồn vùng | Shift+click OR-merge mask (E2E: 64% → 67.9%) |
+| 3 | Lasso không kéo được điểm | Point circles draggable + guard chống add điểm khi drag; click điểm đầu vẫn khép |
+| 4 | Không biết phím tắt nào có sẵn | Cheat sheet: phím `?` + nút header, 17 dòng |
+| 5 | Stock chỉ 12 kết quả | Pagination: page param Pexels/Unsplash + nút "Load thêm" |
+| 6 | Gen không đổi tỉ lệ / seed / negative | Gen options UI + server (aspect/seed/negative prompt, normalize giữ tỉ lệ — E2E 2:3 → 341×512) |
+| 7 | (bug) Reload với layers persisted không auto-fit → doc tràn màn hình, click hụt | Fit chạy cả khi restore |
+| 8 | (bug) Aspect 3:4/4:3 Stability không hỗ trợ → 400 | Chỉ nhận enum của API: 21:9…9:21 |
+
+### Round 3+ — CÒN LẠI
 1. **Pose wiring vào video** — chưa có UI trong editor gắn pose vào scene/
-   timeline; hiện chỉ qua characterPresence config trong EditDoc (việc lớn,
-   dính đến CharacterPresence integration — cần design session riêng)
-2. **Marquee select** — kéo ô chọn nhiều layer (giờ chỉ shift+click)
-3. **Wand shift+click add-vùng** + marching ants animation
-4. **Lasso edit points** sau khi đặt (kéo point chỉnh vị trí)
-5. **Zoom-to-selection**, pan bounds (giờ pan vô hạn)
-6. **Gen options**: aspect ratio (hardcoded 1:1), seed, negative prompt
-7. **History panel thumbnails** (giờ text-only)
-8. **Stock pagination** (load more — giờ 12 kết quả cố định)
-9. **Shortcuts cheat sheet** (nhấn ? để hiện)
-10. **Multi-doc** — 1 doc/project; muốn nhiều pose song song phải New + save liên tục
+   timeline (việc lớn nhất — cần design session riêng)
+2. **History panel thumbnails** (giờ text-only)
+3. **Multi-doc** — 1 doc/project
+4. Wand marching-ants animation (hiện overlay tĩnh)
+5. Zoom-to-selection
 
 Nguyên nhân bỏ sót: build theo feature-list của plan, không có pass
 "walk the whole flow như user lần đầu". Bài học: sau mỗi phase E2E phải

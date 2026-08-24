@@ -1,17 +1,18 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-24 21:20. Previous: 19:45.
-> **TRẠNG THÁI: Asset Studio V4 hoàn tất + UX audit round 1 (commit b5dcbe4).**
-> 124/124 tests. Audit round 2 list trong `docs/ASSET-STUDIO-SPEC.md` §7.
+> Updated 2026-08-24 23:40. Previous: 21:20.
+> **TRẠNG THÁI: Asset Studio V4 + UX round 1+2 xong (commits tới aaa1dae).**
+> 128/128 tests. Gen AI: per-option prompt + structured recipes + gen options
+> (aspect/seed/negative). Editor: marquee, lasso drag, cheat sheet, pagination.
 
 ---
 
 ## 🌅 VIỆC TIẾP THEO (session sau)
 
-1. **UX audit round 2** (spec §7): marquee select, wand add-vùng, gen
-   aspect-ratio/seed, history thumbnails… — theo priority trong list
-2. **Pose wiring vào video** (việc lớn nhất còn lại): UI trong editor gắn
+1. **Pose wiring vào video** (việc lớn nhất còn lại): UI trong editor gắn
    pose vào scene qua characterPresence — cần design session riêng
+2. Audit round 3 nhỏ: history thumbnails, multi-doc, wand marching ants,
+   zoom-to-selection (spec §7)
 3. **Dùng studio tạo poses production** — user tự làm trong `:5174/assets`
 4. Việc cũ: nar-001 implement (hướng A+B đã chốt), LangSmith queue
 
