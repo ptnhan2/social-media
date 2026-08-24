@@ -288,11 +288,11 @@ export const addCharacterPresenceClip = (editor: EditorDoc, options: CharacterPr
   const hFrac = Math.min(0.95, height / 1080);
   const xFrac = Math.max(0, Math.min(1 - wFrac, anchor.left / 100 - wFrac / 2));
   const yFrac = Math.max(0, Math.min(1 - hFrac, anchor.top / 100 - hFrac / 2));
-  const overlayTrack = editor.tracks.find((track) => track.kind === "overlay" && !track.hidden && track.source.kind === "project");
+  const overlayTrack = editor.tracks.find((track) => track.kind === "overlay" && track.metadata?.characterTrack === true);
   const newClip: EditorClip = {
     id: clipId,
     kind: "element",
-    trackId: overlayTrack?.id ?? "overlay-1",
+    trackId: overlayTrack?.id ?? "character-overlay",
     range: { startSec: options.startSec, endSec },
     label: `Character: ${options.pose}`,
     source: {},
@@ -326,10 +326,12 @@ export const addCharacterPresenceClip = (editor: EditorDoc, options: CharacterPr
       revision: updateRevision(editor),
     };
   }
+  // dedicated visible "Character" track (userCreated → top-level timeline row,
+  // distinct from the auto visual tracks that only appear in expanded beats)
   const newTrack: EditorDoc["tracks"][number] = {
-    id: "overlay-1",
+    id: "character-overlay",
     kind: "overlay",
-    name: "Overlay 1",
+    name: "Character",
     order: editor.tracks.length,
     locked: false,
     muted: false,
@@ -339,7 +341,7 @@ export const addCharacterPresenceClip = (editor: EditorDoc, options: CharacterPr
     accepts: ["image"],
     capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false },
     clips: [newClip],
-    metadata: { userCreated: true },
+    metadata: { userCreated: true, characterTrack: true },
   };
   return { ...editor, tracks: [...editor.tracks, newTrack], revision: updateRevision(editor) };
 };

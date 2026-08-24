@@ -4811,6 +4811,72 @@
           "hidden": false
         }
       ]
+    },
+    {
+      "id": "character-overlay",
+      "kind": "overlay",
+      "name": "Character",
+      "order": 25,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project"
+      },
+      "accepts": [
+        "image"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "clip:presence:1787592084015",
+          "kind": "element",
+          "trackId": "character-overlay",
+          "range": {
+            "startSec": 0,
+            "endSec": 3.5
+          },
+          "label": "Character: celebrate",
+          "source": {},
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false,
+          "metadata": {
+            "src": "/isaacverse-final/character/poses/celebrate.png",
+            "isCharacterPresence": true,
+            "pose": "celebrate",
+            "position": "thirds-br",
+            "size": "small",
+            "motion": "fade-scale",
+            "fit": "contain",
+            "x": 0.6878124999999999,
+            "y": 0.64,
+            "w": 0.084375,
+            "h": 0.2,
+            "opacity": 0.95,
+            "z": 30,
+            "animIn": "fade",
+            "animDurationSec": 0.6,
+            "userEdited": true
+          }
+        }
+      ],
+      "metadata": {
+        "userCreated": true,
+        "characterTrack": true
+      }
     }
   ],
   "markers": [
@@ -5222,7 +5288,7 @@
   ],
   "revision": {
     "baseEditVersion": "v021",
-    "revision": 6,
-    "updatedAt": "2026-08-23T12:41:50.400Z"
+    "revision": 9,
+    "updatedAt": "2026-08-24T17:21:24.023Z"
   }
 }

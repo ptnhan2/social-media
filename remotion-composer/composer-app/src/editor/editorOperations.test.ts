@@ -161,13 +161,13 @@ describe("addCharacterPresenceClip", () => {
     expect(next.revision.revision).toBe(editor.revision.revision + 1);
   });
 
-  it("reuses an existing overlay track and clamps geometry inside the frame", () => {
+  it("reuses the dedicated Character track and clamps geometry inside the frame", () => {
     const withOverlay: EditorDoc = {
       ...editor,
-      tracks: [...editor.tracks, { id: "overlay-9", kind: "overlay", name: "Overlay 9", order: 2, locked: false, muted: false, solo: false, hidden: false, source: { kind: "project" }, accepts: ["image"], capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false }, clips: [] }],
+      tracks: [...editor.tracks, { id: "character-overlay", kind: "overlay", name: "Character", order: 2, locked: false, muted: false, solo: false, hidden: false, source: { kind: "project" }, accepts: ["image"], capabilities: { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false }, clips: [], metadata: { userCreated: true, characterTrack: true } }],
     };
     const next = addCharacterPresenceClip(withOverlay, { pose: "celebrate", position: "center", size: "full", motion: "jump-in", startSec: 0, durationSec: 4 });
-    const overlay = next.tracks.find((track) => track.id === "overlay-9");
+    const overlay = next.tracks.find((track) => track.id === "character-overlay");
 
     expect(overlay?.clips).toHaveLength(1);
     expect(next.tracks).toHaveLength(withOverlay.tracks.length); // no new track
@@ -177,5 +177,14 @@ describe("addCharacterPresenceClip", () => {
     expect(md.y).toBeGreaterThanOrEqual(0);
     expect(md.x).toBeGreaterThanOrEqual(0);
     expect(md.animIn).toBe("bounce"); // PRESENCE_TO_CLIP_ANIM["jump-in"]
+  });
+
+  it("creates a dedicated Character track when none exists (not the auto visual tracks)", () => {
+    const next = addCharacterPresenceClip(editor, { pose: "present", startSec: 0.5 });
+    const track = next.tracks.find((t) => t.id === "character-overlay");
+    expect(track?.name).toBe("Character");
+    expect(track?.metadata?.characterTrack).toBe(true);
+    expect(track?.metadata?.userCreated).toBe(true);
+    expect(track?.clips).toHaveLength(1);
   });
 });

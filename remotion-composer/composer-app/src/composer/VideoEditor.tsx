@@ -347,7 +347,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
     setTimeout(() => { setSaveState("idle"); localSaveGuard.current = false; }, 1500);
     return saved;
   };
-  const handleAddPresence = React.useCallback((options: { pose: string; position: string; size: string; motion: string }) => {
+  const handleAddPresence = (options: { pose: string; position: string; size: string; motion: string }) => {
     if (!editorDoc) return;
     const clip = selectedClipIds.length === 1 ? editorDoc.tracks.flatMap((track) => track.clips).find((c) => c.id === selectedClipIds[0]) : undefined;
     if (!clip || clip.kind !== "beat") return;
@@ -360,7 +360,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
       durationSec: clip.range.endSec - clip.range.startSec,
     });
     void saveRevision(next, `Added character presence (${options.pose})`);
-  }, [selectedClipIds, editorDoc, saveRevision]);
+  };
 
   const selectedKeyframesAt = (clipId: string, timeSec: number) => {
     const clip = editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
