@@ -1,124 +1,145 @@
-"""Bake character poses v6 — angle-matched direct head replacement.
+"""Bake character poses v7 — SIMPLEST CORRECT APPROACH.
 
-Per user feedback 2026-08-23:
-- Head asset is HEAD ONLY (no neck, no shoulders) — generated per angle
-- Angle variant matched to body orientation (front body → front head)
-- Head bottom aligns with the neck cut line on the body
-- Isaac proportion: head = ~40% of visible body height
+NO face detection needed. The cartoon head goes at the TOP of the body
+cutout (where the original head always is in a portrait photo).
+Size = big enough to cover the entire original head area.
 """
 from __future__ import annotations
 
-import json
-import sys
+import json, os, sys
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.path.insert(0, 'tools/assets')
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
+from PIL import Image, ImageDraw, ImageFilter
+from process_body import _load_env
+_load_env()
 
 CANVAS_W, CANVAS_H = 800, 1300
 
 
-def _color_grade(head: Image.Image, warmth: float = 0.08) -> Image.Image:
-    """Subtle warm tint so cartoon head sits in warm-lit scenes."""
-    result = head.copy()
-    r, g, b, a = result.split()
-    r = r.point(lambda v: min(255, int(v * (1 + warmth))))
-    b = b.point(lambda v: int(v * (1 - warmth * 0.5)))
-    result = Image.merge("RGBA", [r, g, b, a])
-    return ImageEnhance.Color(result).enhance(1.06)
+def composite(body: Image.Image, head: Image.Image) -> Image.Image:
+    """Place cartoon head at the TOP of the body cutout."""
+    # body is the rembg cutout (transparent bg, person visible)
+    # find where the subject starts (topmost opaque pixel)
+    arr = np.asarray(body.getchannel("A"))
+    ys, xs = np.where(arr > 10)
+    if len(ys) == 0:
+        return body.copy()
 
+    sub_top = int(ys.min())
+    sub_left = int(xs.min())
+    sub_right = int(xs.max())
+    sub_center_x = (sub_left + sub_right) // 2
+    sub_h = int(ys.max()) - sub_top
 
-def composite(body: Image.Image, heads: dict, anchor: dict) -> Image.Image:
-    """heads: {"front": img, "3q": img} — angle matched to pose orientation."""
-    canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
+    # cartoon head size: ~45% of subject height (Isaac proportion)
+    head_size = max(300, int(sub_h * 0.42))
 
-    # --- body: fit width, anchored at bottom ---
-    scale = CANVAS_W / body.width if body.width > CANVAS_W else min(CANVAS_W / body.width, CANVAS_H / body.height)
-    bw, bh = int(body.width * scale), int(body.height * scale)
-    body_scaled = body.resize((bw, bh), Image.LANCZOS)
-    body_top = CANVAS_H - bh
-    canvas.alpha_composite(body_scaled, ((CANVAS_W - bw) // 2, body_top))
+    # position: centered horizontally on the head area,
+    # bottom of head overlaps the body by ~15% of head height
+    hx = sub_center_x - head_size // 2
+    hy = sub_top - int(head_size * 0.85)  # mostly above the neck line
 
-    # --- head: pick angle variant ---
-    angle = anchor.get("angle", "front")
-    head_img = heads.get(angle) or heads.get("front") or next(iter(heads.values()), None)
-    if head_img is None:
-        print(f"WARNING: no head asset available")
+    # clamp within canvas
+    hx = max(-head_size // 4, min(CANVAS_W - head_size * 3 // 4, hx))
+    hy = max(-head_size // 4, min(CANVAS_H - head_size, hy))
 
-    # Isaac proportion: head = ~40% of visible body height (bh)
-    head_h = int(bh * 0.42)
-    head_w = int(head_img.width * (head_h / head_img.height))
+    # --- build final canvas ---
+    canvas = body.convert("RGBA").copy()
 
-    # position: centered on detected head-x; bottom of head overlaps collar slightly
-    neck_x = int(anchor.get("neckX", CANVAS_W // 2))
-    hx = max(head_w // 2 + 4, min(CANVAS_W - head_w // 2 - 4, neck_x))
-    hy = body_top - head_h + int(head_h * 0.14)  # chin dips 14% into collar zone
-
-    # --- drop shadow for depth ---
-    shadow = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
-    sh_draw = ImageDraw.Draw(shadow)
-    sh_draw.ellipse([hx - head_w // 2 + 8, hy + 10,
-                     hx + head_w // 2 + 8, hy + head_h + 10], fill=(0, 0, 0, 50))
+    # subtle drop shadow behind head
+    shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    sd = ImageDraw.Draw(shadow)
+    sd.ellipse([hx + 8, hy + 12, hx + head_size + 8, hy + head_size + 12], fill=(0, 0, 0, 50))
     shadow = shadow.filter(ImageFilter.GaussianBlur(radius=12))
     canvas.alpha_composite(shadow)
 
-    # --- color grade + feathered edges ---
-    head_scaled = _color_grade(head_img.resize((head_w, head_h), Image.LANCZOS))
-    h_alpha = np.asarray(head_scaled.getchannel("A")).copy()
-    from scipy import ndimage as ndi
-    dilated = ndi.binary_dilation(h_alpha > 10, iterations=3)
-    h_alpha[dilated & (h_alpha < 200)] = np.maximum(h_alpha[dilated & (h_alpha < 200)], 180)
-    head_alpha_img = Image.fromarray(h_alpha).filter(ImageFilter.GaussianBlur(radius=1.5))
-    head_scaled.putalpha(head_alpha_img)
+    # color grade head (warm tint to blend with scene)
+    head_copy = head.copy()
+    r, g, b, a = head_copy.split()
+    r = r.point(lambda v: min(255, int(v * 1.06)))
+    b = b.point(lambda v: int(v * 0.96))
+    head_copy = Image.merge("RGBA", [r, g, b, a])
+    head_copy = ImageEnhance_enhance(head_copy)
 
-    canvas.alpha_composite(head_scaled, (hx - head_w // 2, hy))
+    canvas.alpha_composite(head_copy.resize((head_size, head_size), Image.LANCZOS), (hx, hy))
+
+    # crop to content
+    fa = np.asarray(canvas.getchannel("A"))
+    cys, cxs = np.where(fa > 10)
+    if len(cys):
+        canvas = canvas.crop((int(cxs.min()), int(cys.min()), int(cxs.max())+1, int(cys.max())+1))
+
     return canvas
 
 
-def main() -> int:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+def ImageEnhance_enhance(img):
+    from PIL import ImageEnhance
+    return ImageEnhance.Color(img).enhance(1.04)
+
+
+def main():
     args = sys.argv[1:]
 
-    def arg(name: str, default: str = "") -> str:
+    def arg(name, default=""):
         return args[args.index(name) + 1] if name in args and args.index(name) + 1 < len(args) else default
 
-    heads_dir, bodies_dir, out_dir = arg("--heads"), arg("--bodies"), arg("--out")
-    if not (heads_dir and bodies_dir and out_dir):
-        print(__doc__)
-        return 1
+    head_path, bodies_dir, out_dir = arg("--head"), arg("--bodies"), arg("--out")
+    if not (head_path and bodies_dir and out_dir):
+        print(__doc__); return 1
 
-    heads_dir_path = Path(heads_dir)
-    heads = {}
-    for f in sorted(heads_dir_path.glob("*.png")):
-        if "head-front" in f.stem:
-            heads["front"] = Image.open(f).convert("RGBA")
-        elif "head-3q" in f.stem:
-            heads["3q"] = Image.open(f).convert("RGBA")
-        elif f.stem == "head":
-            heads["default"] = Image.open(f).convert("RGBA")
-    print(f"loaded {len(heads)} head variants: {list(heads.keys())}")
+    head = Image.open(head_path).convert("RGBA")
+    out = Path(out_dir); out.mkdir(parents=True, exist_ok=True)
 
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+    # process raw stock photos from inbox
+    inbox = Path(bodies_dir) / "inbox"
+    raw_files = sorted(inbox.glob("*.jpg")) + sorted(inbox.glob("*.png"))
+    raw_files = [f for f in raw_files if "cutout" not in f.stem and "test" not in f.stem and "cmp" not in f.stem]
 
-    for body_file in sorted(Path(bodies_dir).glob("*.png")):
-        if any(kw in body_file.stem for kw in ("sheet", "proof", "composite", "cutout", "test")):
-            continue
-        anchor_file = body_file.with_suffix(".json")
-        anchor = json.loads(anchor_file.read_text(encoding="utf-8")) if anchor_file.exists() else {}
-
-        # angle matching: front-facing bodies get front head, turned bodies get 3q
-        pose_name = body_file.stem
-        if "celebrate" in pose_name or "energetic" in pose_name:
-            angle = "front"
-        elif "point" in pose_name or "side" in pose_name or "turn" in pose_name:
-            angle = "3q"
+    pose_map = {}
+    for f in raw_files:
+        stem = f.stem.lower()
+        if "point-up" in stem or "pointing" in stem or "confident" in stem:
+            pose_map[f] = "present"
+        elif "think" in stem or "chin" in stem or "pensive" in stem or "asian" in stem:
+            pose_map[f] = "think"
+        elif "celebrat" in stem or "cheer" in stem or "smiling" in stem:
+            pose_map[f] = "celebrate"
+        elif "point-side" in stem or "side" in stem or "gesture" in stem:
+            pose_map[f] = "point-right"
         else:
-            angle = "front"
+            pose_map[f] = stem.replace("-raw", "").replace(".jpg", "")
 
-        merged = composite(Image.open(body_file).convert("RGBA"), heads, {**anchor, "angle": angle})
-        merged.save(out / f"{body_file.stem}.png")
-        print(f"baked {body_file.stem}: angle={angle}")
+    session = None
+    for raw_file in sorted(raw_files):
+        pose_name = pose_map[raw_file]
+        print(f"\n--- {pose_name} ({raw_file.name}) ---")
+
+        # 1. rembg tách nền
+        from rembg import remove, new_session as _ns
+        if session is None:
+            session = _ns("isnet-general-use")
+        img = Image.open(raw_file).convert("RGB")
+        cutout = remove(img, session=session)
+
+        # normalize to 800×1100
+        canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
+        scale = min(CANVAS_W / cutout.width, CANVAS_H / cutout.height)
+        new_size = (int(cutout.width * scale), int(cutout.height * scale))
+        resized = cutout.resize(new_size, Image.LANCZOS)
+        canvas.paste(resized, ((CANVAS_W-new_size[0])//2, (CANVAS_H-new_size[1])//2), resized)
+
+        # save intermediate body-only
+        tmp_body = Path(bodies_dir) / f"{pose_name}.png"
+        canvas.save(tmp_body)
+
+        # 2. bake cartoon head on top
+        merged = composite(canvas, head)
+        merged.save(out / f"{pose_name}.png")
+        print(f"  saved {pose_name}.png")
+
     return 0
 
 

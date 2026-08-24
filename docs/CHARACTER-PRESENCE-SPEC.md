@@ -1,5 +1,8 @@
 # CHARACTER PRESENCE SPEC — narrative character system (nar-001 A+)
 
+> **⚠️ AUTO-CUT HEAD: DEFERRED** — 9+ cách thử, không cách nào đạt. Chi tiết:
+> `docs/AUTO-CUT-ATTEMPT-LOG.md`. Chuyển sang manual studio (Asset Studio).
+>
 > Written 2026-08-23 after user direction (the "gold standard" brief):
 > một character head thương hiệu gắn vào vô số body/tư thế khác nhau để minh
 > hoạ nội dung (cách Isaac làm), vị trí/motion/kích thước đa dạng mỗi lần
