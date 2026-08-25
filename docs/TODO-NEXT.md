@@ -68,6 +68,40 @@ Root causes (theo mức độ đóng góp):
   (imageCache bounded 64), parity-measure cleanup, vitest exclude e2e
 - Re-verify sau fix: parity PASS 1.222, E2E 13/13, vitest 157/157, CI xanh
 
+## BONUS ROUND — Parity 4 treatment còn lại (commit 9cc187f)
+
+Sau khi 5 phase chính xong, tiếp tục parity các treatment chưa đo:
+
+| Window | Treatment | Trước | Sau | Trạng thái |
+|---|---|---|---|---|
+| 0-3.5 | chapter-card | 39.24 | **2.28** | −94%, residual sub-pixel gradient |
+| 14-18.5 | candidate-comparison | 15.70 | **3.45** | −78%, residual sub-pixel scale/noise-svg |
+| 22.5-26 | host-reflection (beat 7) | 29.95 | **5.92** | −80%, mixBlendMode screen + push keyframes |
+| 7-10.5 | host-reflection (beat 3) | 5.88 | 6.25* | maxMean 11.0→7.4; mean hơi tăng — xem note |
+| 18.5-22.5 | cinematic-metaphor | 3.24 | 3.24 | chưa đụng (shared fixes không ảnh hưởng) |
+
+*host-reflection beat 3: các fix (blend/push/fade) đóng góp không đều —
+maxMean giảm mạnh nhưng mean tăng nhẹ; cần session riêng truy residual
+(svg screen asset + light blend).
+
+**Phát hiện quan trọng round 2**:
+- **ChapterCard title LUÔN wrap 2 dòng**: title div width 86% của parent
+  shrink-to-fit → wrap tại 0.86 × max-width CHÍNH NÓ (xác minh cả 2 title
+  render 2 dòng). `wrapChapterTitle` bake greedy wrap + `\n` (overlay text
+  mới hỗ trợ pre-line)
+- **Gradient stop**: overlay hardcode 55%, ChapterCard treatment 45% →
+  textGradient.stop metadata
+- **mixBlendMode "screen"** trên light overlay host-reflection — thiếu nó cả
+  ảnh sai look (beat 7: 29.9 → 5.9)
+- **Push-in keyframes**: scale 1.06→1 trong 4s qua md.keyframes
+- **wipeX preset**: accent line ChapterCard animate WIDTH (scaleX) riêng
+  timing với block entrance
+- **Group scale quanh card center** cho candidate 0.96 (per-element scale
+  làm lệch nội dung bên trong)
+
+Gate windows KHÔNG đổi: semantic-diagram 1.222, process-timeline 1.266
+(re-verify sau round 2 ✓ PASS).
+
 ## Morning review (cần user)
 
 1. **Flip blessing**: E2 gate đạt — master render production có chuyển hẳn
@@ -80,10 +114,11 @@ Root causes (theo mức độ đóng góp):
 
 ## Next-session backlog
 
-1. **E2 parity cho các treatment còn lại** (host-reflection, chapter-card,
-   cinematic-metaphor, candidate-comparison) — cùng method: parity-measure →
-   fix → đo lại. Camera + colors + presence fixes đã cover phần chung
-2. **Latent risks từ review** (docs/GENERATOR-SPEC): estimator glyph-width
+1. **Parity residuals 4 treatment** (xem bảng BONUS ROUND): chapter-card 2.28,
+   cinematic 3.24, candidate 3.45, host-reflection 5.9-6.3 — residuals là
+   sub-pixel/gradient/blend nuances; method: region-block mean analysis +
+   browser DOM replication (đã có pattern từ đêm nay)
+2. **Latent risks từ review** (GENERATOR-SPEC): estimator glyph-width
    fragility với content mới (W/M vs i/l chars), e_phase baseline tautology
    (không guard cross-path), R1 test: overlay spanning qua split
 3. Playwright batch 3: marquee select, guides/rulers, gen panel (mock),
