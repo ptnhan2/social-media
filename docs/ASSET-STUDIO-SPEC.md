@@ -307,6 +307,40 @@ layer xuống/lên • `Enter` đóng lasso.
 2. Anchor editor kéo thả (CHARACTER-PRESENCE-SPEC mục 2)
 3. `repurpose` pipeline (transcript → X/blog/shorts) — cần duyệt user
 
+## 3.5 E2E SUITE (Playwright — 2026-08-25/26 đêm)
+
+13/13 PASS local + CI job `studio-e2e` GREEN (ubuntu, ~2 phút).
+
+**Infra (quyết định tự chủ)**:
+- `composer-app/playwright.config.ts`: webServer = vite port 5199 riêng
+  (không đụng dev server :5174), chromium only, 2 workers, trace on failure
+- **Mock toàn bộ** `/api/assets/*` qua `page.route` — không cần python
+  bridge, không network, không API key. Fixture `e2e/fixtures/regions.png`
+  (đỏ/xanh/lat) cho wand flood-fill
+- **Chiến lược Konva**: mouse events THẬT tại tọa độ doc→page (toán viewport
+  qua hook `window.__studio` — DEV-only, bị strip ở production build) + assert
+  qua DOM data-testid + store state. KHÔNG pixel-sample canvas
+- `vite.config.ts` portable paths (trước giờ hardcode `C:/DevWork` — CI không
+  boot được) + python bridge path cross-platform
+- vitest include pinned `src/**` (e2e specs không bị collect nhầm)
+
+**3 production bug suite bắt được (đã fix)**:
+1. `uploadDataUrl` trả src KHÔNG cache-bust → upload cùng path bị
+   `docsEqual` dedupe nuốt mất history entry + rủi ro stale-cache
+2. `docsEqual` không so `name`/`locked` → rename/lock không bao giờ vào
+   history (bị dedupe im lặng)
+3. Stale closure: `showShortcuts` thiếu trong deps của keydown effect →
+   Escape không đóng được cheat sheet
+
+**Test coverage**: boot + 7 tools, shortcuts cheat sheet, drop-import +
+history thumbnail, rename, session persist qua reload, undo/redo, tool
+switching, zoom-to-selection, lasso (click điểm → Khép → Apply cut qua mocked
+bridge), wand (select vùng đỏ → Delete erase), eraser drag, poses list,
+inbox grid (upload tab).
+
+Sau review: `imageCache` bounded 64 entries (mỗi pixel edit tạo src mới —
+không bounded thì leak 1 ảnh decoded/edit trong session dài).
+
 Nguyên nhân bỏ sót: build theo feature-list của plan, không có pass
 "walk the whole flow như user lần đầu". Bài học: sau mỗi phase E2E phải
 check cả DISCOVERABILITY (tìm được tính năng không?) chứ chỉ check

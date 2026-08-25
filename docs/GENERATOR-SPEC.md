@@ -5,14 +5,22 @@
 > the code audit below.
 >
 > Implementation status per acceptance criteria (§2.6):
-> - E2 (render unification): PARTIAL — dual compositions + --path flag live.
->   NIGHT 24-25/08: bezier edges + spring physics ADDED to the element
->   language (edge element in EditorClipOverlay, spring preset in clipStyle,
->   full edge projection with styleSource). Measured: beat-interior mean
->   7-14 (was: edges missing entirely). GATE <2.0 STILL NOT MET (remaining:
->   node box layout math ≠ DiagramNodeView, footer text, presence timing) —
->   treatment path stays the master default. render-window now pulls the
->   LIVE editor doc (projects→public) — clip edits reach renders.
+> - E2 (render unification): **DONE — GATE MET + DEFAULT FLIPPED (2026-08-25/26
+>   night)**. Both measurement windows passed mean abs diff < 2.0 on COLD
+>   projections: semantic-diagram 3.5-7 = 1.223 mean / 1.621 max;
+>   process-timeline 10.5-14 = 1.266 / 1.576 (evidence:
+>   `projects/isaacverse-final/qa/parity/*.json`, rerunnable via
+>   `node remotion-composer/scripts/parity-measure.mjs --project isaacverse-final
+>   --start 3.5 --end 7`). The editor flow is now the DEFAULT render path
+>   (render-window.mjs + harness render_window/qa_gate); the treatment flow
+>   stays as the generator preview (`--path treatment`). Master renders move
+>   to the editor flow pending the user's morning blessing (spec §2.6 last
+>   clause). Journey to the gate (9.316 → 1.222): BeatCamera nesting,
+>   store-color resolution, node DOM-height estimator + group scale + pulse,
+>   exact Remotion spring port in clipStyle, edge viewBox units, presence
+>   PRESENCE_ASPECT exact-fit, text padding removal, process-timeline layout.
+>   Post-review hardening: overlays spanning past a split/trimmed beat clip
+>   render at the ROOT level (Remotion clips children to the parent Sequence).
 > - E3 (agent clip tools): DONE — scripts/editor-ops.mjs bridge + harness
 >   editor_op tool (list/split/trim/move/metadata/ripple/delete).
 > - E4 (provenance): DONE — styleSource + styleResolvedAt baked into element
@@ -22,11 +30,9 @@
 >   tests. NOTE: the pre-ledger golden doc could not be merged safely (no
 >   userEdited data existed) — it was cold-regenerated instead (backed up at
 >   editor/current.json.bak-golden). Future syncs are safe.
-> - E6 (agent clip-edit E2E): MECHANICALLY PROVEN — editor_op → editor-path
->   render → pixel-diff 1.438 PASS. Full agent-driven autonomy through Ox
->   Alpha is NOT reliable yet (turn-ending quirks, exploration sprawl);
->   harness/e6_e2e.py is the re-runnable E2E driver. Follow-up: narrow
->   clip-edit subagent.
+> - E6 (agent clip-edit E2E): DONE — E6 PASS 7/7 (2026-08-25 night): the
+>   clip-editor subagent runs the full protocol editor_op → qa_gate →
+>   request_keep → persist. Driver: harness/e6_e2e.py.
 
 ## 0. Problem
 

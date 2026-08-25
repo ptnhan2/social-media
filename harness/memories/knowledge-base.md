@@ -1,4 +1,44 @@
 # Knowledge Base — Experiment Results
+## Night Run 2026-08-25/26 — E2 parity GATE PASS + editor path flip + Playwright E2E
+
+### E2 parity gate MET (both windows < 2.0, cold projection)
+- semantic-diagram 9.316 -> 1.223; process-timeline 6.871 -> 1.266
+- Default render path flipped to EDITOR (render-window + harness render_window/qa_gate);
+  treatment flow = generator preview (--path treatment). Master render awaits user blessing.
+- 8 root causes, ranked by impact: (1) BeatCamera — overlays rendered OUTSIDE the
+  beat camera while treatment visuals scale 1->1.12 + drift inside it; (2) projection
+  hardcoded old palette (#f2b84b) while store v73 uses #ff6b35 — everything was the
+  wrong color; (3) node box DOM auto-height (83.35px actual vs 100 hardcoded) + missing
+  dot/pulse/inset-shadow/activeFrom timing + per-element scale instead of group scale;
+  (4) edge viewBox-units (treatment draws in a 100x100 non-uniform stretch: curvature
+  off ~3.4x, stroke ~10x thinner in px math); (5) pose aspect 0.52-0.56 NOT 3:4 —
+  presence box 43px off-center; (6) text overlay padding "0 2%" shifting text 2%;
+  (7) Remotion spring ported EXACTLY (advance/springCalculation/measureSpring +
+  durationInFrames stretch) so both paths share physics; (8) process-timeline layout.
+
+### Method that worked (repeat for remaining treatments)
+parity-measure.mjs (cold doc -> render both paths -> pixel diff) THEN region-block
+diff analysis (PIL, changed-pct per 32px block) to locate hotspots, THEN browser
+measureText for exact DOM metrics (line-height Arial-900 = 1.44em, ~0.75em/char
+uppercase), THEN VLM only for local crops. VLM global-diff descriptions stayed noisy.
+
+### Playwright E2E suite (13/13 + CI green) — caught 3 real bugs
+- Fully mocked bridge (page.route), fixture PNG with color regions, real mouse events
+  at doc-derived coordinates via a DEV-only window.__studio hook
+- Bugs: uploadDataUrl non-busted src (same-path uploads vanished from history via
+  docsEqual dedupe + stale-cache risk); docsEqual ignored name/locked (rename/lock
+  never created history entries); stale showShortcuts closure (Escape never closed
+  the cheat sheet)
+- Infra lessons: postData() is SYNC; vitest collects e2e/*.spec.ts by default (pin
+  include); repo-wide *.png gitignore ate the fixture (ENOENT on CI at module load)
+
+### reviewer-agent cold-read caught a MAJOR the gate could not
+- B1: overlays nested in a beat Sequence are clipped to the (possibly split/trimmed)
+  host clip range — parity on COLD projection never sees splits. Fixed: only overlays
+  fully inside one beat clip nest; spanning overlays render at root.
+- Pattern: parity gates prove the HAPPY projection; cold-read review + edited-doc
+  scenarios catch the interaction bugs.
+
 ## Night Run 2026-08-24/25 — pose wiring + E6 agent autonomy PASS
 
 ### Clip-edit agent autonomy: E6 PASS 7/7 (FIRST TIME)
