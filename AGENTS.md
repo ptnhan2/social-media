@@ -76,8 +76,24 @@ Enforced habits so progress stays durable across sessions:
 5. **Verify before claiming done**: run lint/typecheck/tests/renders and confirm output before asserting success. Evidence before claims.
 6. **Preserve session decisions**: when a direction is locked, record it in a doc + project memory before the session can lose context.
 7. **Push**: commit and push to GitHub so work is never only local.
+8. **Lean discipline + RCA when fail** (chốt 2026-08-25): do NOT over-process — full SDD / 12-gate manager+worker flows kill shipping (a past project died this way: "made forever, went nowhere"). Ship small, measurable increments; keep the feedback loop short. Three lean gates only:
+   - **Before push**: `verification-before-completion` — typecheck + tests with evidence before claiming done (stops blind edits / silent-CI-red).
+   - **When diff is large** (>~200 lines, or touching treatment/editor core): load `requesting-code-review` + dispatch a `task` reviewer-agent subagent to read the diff cold (not framed by me). Skip for small diffs — lean.
+   - **When test/CI fails**: NO blind revert. RCA → reproduce → isolate (exact line/step) → trace **root cause** (the last strange event is rarely the root cause — per AgentRx / causal-debugging) → fix the cause not the symptom → verify → record in `corrections.md` with root-cause + category so the bug class does not recur.
 
-Relevant skills to load: `doc-sync`, `verification-before-completion`, `caveman-commit`, `writing-plans`.
+Relevant skills to load: `doc-sync`, `verification-before-completion`, `requesting-code-review`, `caveman-commit`, `writing-plans`.
+
+## Low-overhead hygiene (passive guardrails, not process gates)
+
+Adopted 2026-08-25. Prefer **passive automation** (lint / drift-check / static analysis / structure-map) that runs with zero per-task mental overhead — not new process gates that add rườm rà. Four rules:
+
+1. **Output format matches audience**: human-facing summary / report / plan → HTML (readable, dense; use the `html-artifact` skill pattern); agent-facing → md / JSON; when both need it → write both (don't skimp tokens, HTML is ~2–3× tokens but negligible at low volume). Mermaid-in-MD for diagrams.
+2. **Docstrings = inline intent**: write TSDoc/jsdoc (TS) / docstring (py) on functions/classes — describe intent (why/future), not just what. **Stale doc is worse than none (−22.6pp LLM task success)**. Keep accurate via freshness check (git diff/blame catches code-changed-but-doc-didn't). CI drift gate deferred until baseline stable (lean).
+3. **Architecture-overview doc**: `docs/ARCHITECTURE-MAP.md` = folder→purpose + start-here path. Read it before hunting through 10 files.
+4. **Dead-code static analysis**: `knip` (TS) + `vulture` (py), periodic cleanup pass — remove *provably* unreachable code, don't guess from the context window (reduces context garbage).
+5. **Secret-scan in CI** (passive, zero local install): the repo is private (no GitHub free secret scanning) and the `github_run_secret_scanning` MCP tool needs GHAS (paid). Use the gitleaks GitHub Action (`.github/workflows/secret-scan.yml`) — runs on push/PR, free Actions minutes, catches leaked secrets at push automatically. Do not commit real keys (`.env` is gitignored). `no-explicit-any` / `import-sort` guardrails deferred (need eslint scaffold for composer-app — separate lean increment to avoid config sprawl).
+
+Generalize the pattern: bounded blast radius (git worktree + command-guard) → grant more autonomy, not less.
 
 ## Canonical Commands
 
