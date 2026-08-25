@@ -75,7 +75,7 @@ def _resolve_workspace_path(video_path: str) -> str:
 
 
 @tool
-def render_window(project_slug: str, start_sec: float, end_sec: float, quality: str = "draft", render_path: str = "treatment") -> str:
+def render_window(project_slug: str, start_sec: float, end_sec: float, quality: str = "draft", render_path: str = "editor") -> str:
     """Render a video segment. Returns the video path for read_file.
 
     Args:
@@ -83,9 +83,11 @@ def render_window(project_slug: str, start_sec: float, end_sec: float, quality: 
         start_sec: Start time in seconds.
         end_sec: End time in seconds.
         quality: 'draft' (360p) or 'master' (1080p).
-        render_path: 'treatment' (style-store live flow, default) or 'editor'
-            (clip-first flow driven by editor/current.json — use after editor_op
-            clip edits so the render reflects timeline changes).
+        render_path: 'editor' (clip-first flow driven by editor/current.json —
+            DEFAULT since the E2 parity gate PASSED 2026-08-25: both measurement
+            windows < 2.0 mean abs diff vs the treatment flow, so renders now
+            reflect the editable timeline) or 'treatment' (style-store live
+            generator preview — use for cheap knob A/B without an EditorDoc).
     """
     import shutil
     cmd = [
@@ -499,7 +501,7 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
 
 
 @tool
-def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: str, render_path: str = "treatment") -> str:
+def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: str, render_path: str = "editor") -> str:
     """QA gate for treatment-code edits (protocol v5 step 5) — build+render+diff in one call.
 
     Runs the FULL pipeline: remotion bundle build (catches TSX syntax/import

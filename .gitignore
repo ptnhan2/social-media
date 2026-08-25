@@ -66,3 +66,5 @@ harness/test_vlm_qwen.log
 harness/last_cycle.log
 
 projects/isaacverse-final/editor/*.bak-*
+
+projects/*/editor/parity-cold.json

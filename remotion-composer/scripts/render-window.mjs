@@ -196,11 +196,12 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToP
     process.exit(0);
   }
   if (args.start === undefined || args.end === undefined) throw new Error("--start and --end are required");
-  // --path editor renders the clip-first flow (composition <slug>-30s-editor);
-  // default treatment keeps the v009-master flow (BeatTreatment + style store).
-  // --editor-doc overrides the synced editor doc (parity measurement uses the
-  // cold projection so user edits in current.json never pollute the diff).
-  const pathMode = args.path === "editor" ? "editor" : "treatment";
+  // --path selects the render flow. DEFAULT: editor (E2 gate PASSED 2026-08-25
+  // — both measurement windows < 2.0 mean abs diff, cold projection; see
+  // projects/<slug>/qa/parity/*.json + GENERATOR-SPEC). The treatment flow
+  // stays available as the GENERATOR PREVIEW (--path treatment) for cheap
+  // knob A/B without an EditorDoc dependency.
+  const pathMode = args.path === "treatment" ? "treatment" : "editor";
   const result = buildWindowRender({
     slug: args.project || "isaacverse-final",
     composition: args.composition || (pathMode === "editor" ? `${args.project || "isaacverse-final"}-30s-editor` : undefined),
