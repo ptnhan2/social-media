@@ -24,6 +24,18 @@ export type CharacterPresenceConfig = {
 
 export const PRESENCE_HEIGHT: Record<PresenceSize, number> = { chip: 130, small: 216, medium: 378, half: 594, full: 972 };
 
+/** Rendered aspect (w/h) of each baked pose asset. The treatment path uses
+ * width:auto (true aspect); the editor path needs an exact-fit box, so the
+ * aspect is baked here. UPDATE when poses are re-baked at new dimensions
+ * (last calibrated 2026-08-25 from public/<slug>/character/poses/*.png). */
+export const PRESENCE_ASPECT: Record<PresencePose, number> = {
+  none: 1, // head.png 512×512
+  present: 654 / 1249,
+  think: 521 / 1249,
+  "point-right": 650 / 1249,
+  celebrate: 702 / 1249,
+};
+
 /** anchor = center of the character box, % of frame (1920x1080). */
 export const PRESENCE_ANCHOR: Record<PresencePosition, { left: number; top: number }> = {
   "thirds-tl": { left: 27, top: 24 },
@@ -105,18 +117,20 @@ export const DEFAULT_PRESENCE: Required<Omit<CharacterPresenceConfig, "enabled">
   timing: "after-title", startSec: 0.7, opacity: 0.95,
 };
 
-/** Element-language motion mapping: presence motion → clip animIn preset
- *  (approximation — the editor path has a coarser animation vocabulary). */
+/** Element-language motion mapping: presence motion → clip animIn preset.
+ *  E2 parity (2026-08-25): the "p-*" presets replicate presenceEntrance()
+ *  math exactly (spring config, px offsets, opacity ramps) in clipStyle —
+ *  no longer approximations. */
 export const PRESENCE_TO_CLIP_ANIM: Record<PresenceMotion, string> = {
-  "slide-l": "slide-up",
-  "slide-r": "slide-up",
-  "slide-u": "slide-up",
-  "slide-d": "scale",
-  pop: "scale",
-  "jump-in": "bounce",
-  "drop-in": "bounce",
-  "fade-scale": "fade",
-  peek: "slide-up",
+  "slide-l": "p-slide-l",
+  "slide-r": "p-slide-r",
+  "slide-u": "p-slide-u",
+  "slide-d": "p-slide-d",
+  pop: "p-pop",
+  "jump-in": "p-jump-in",
+  "drop-in": "p-drop-in",
+  "fade-scale": "p-fade-scale",
+  peek: "p-peek",
 };
 
 export type PresenceStyleLookup = (treatmentId: string) => (CharacterPresenceConfig & { enabled?: boolean }) | null;

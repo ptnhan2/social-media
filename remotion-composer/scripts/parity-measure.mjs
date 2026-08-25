@@ -84,7 +84,9 @@ const duration = endSec - startSec;
 const times = [];
 for (let t = 0.1; t <= duration - 0.1 + 1e-9; t += step) times.push(Number(t.toFixed(2)));
 const diff = spawnSync(pythonBin(), [path.join(workspaceRoot, "tools", "quality", "parity_diff.py"), "--a", treatmentOut, "--b", editorOut, "--times", times.join(","), "--json"], { encoding: "utf8", windowsHide: true });
-if (diff.status !== 0) {
+// parity_diff exits 1 when the gate FAILS (a valid measurement, not a tool
+// error) — only treat crashes/output-parse failures as errors here.
+if (diff.status !== null && diff.status > 1) {
   console.error(diff.stdout || diff.stderr || "parity_diff failed");
   process.exit(1);
 }

@@ -148,12 +148,13 @@ describe("addCharacterPresenceClip", () => {
     expect(clip?.metadata.src).toBe("/isaacverse-final/character/poses/point-right.png");
     expect(clip?.metadata.userEdited).toBe(true);
     expect(clip?.metadata.z).toBe(30);
-    expect(clip?.metadata.animIn).toBe("slide-up"); // PRESENCE_TO_CLIP_ANIM["slide-r"]
+    expect(clip?.metadata.animIn).toBe("p-slide-r"); // PRESENCE_TO_CLIP_ANIM["slide-r"]
     expect(clip?.range).toEqual({ startSec: 1, endSec: 3.5 });
-    // geometry derived from the grammar: edge-l-in anchor {13,55}, medium height 378
+    // geometry derived from the grammar: edge-l-in anchor {13,55}, medium height 378,
+    // point-right aspect 650/1249 (PRESENCE_ASPECT — exact-fit box)
     const md = clip?.metadata as Record<string, number>;
     expect(md.h).toBeCloseTo(378 / 1080, 5);
-    expect(md.w).toBeCloseTo((378 * 0.75) / 1920, 5);
+    expect(md.w).toBeCloseTo((378 * (650 / 1249)) / 1920, 5);
     expect(md.x).toBeCloseTo(0.13 - md.w / 2, 5);
     expect(md.y).toBeCloseTo(0.55 - md.h / 2, 5);
     // original doc untouched (immutable)
@@ -176,7 +177,7 @@ describe("addCharacterPresenceClip", () => {
     expect(md.h).toBeLessThanOrEqual(0.95);
     expect(md.y).toBeGreaterThanOrEqual(0);
     expect(md.x).toBeGreaterThanOrEqual(0);
-    expect(md.animIn).toBe("bounce"); // PRESENCE_TO_CLIP_ANIM["jump-in"]
+    expect(md.animIn).toBe("p-jump-in"); // PRESENCE_TO_CLIP_ANIM["jump-in"]
   });
 
   it("creates a dedicated Character track when none exists (not the auto visual tracks)", () => {

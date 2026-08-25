@@ -211,6 +211,26 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
   const timelineBeats = editor && videoTrack ? videoClips.map((clip) => ({ clip, beat: doc.beats.find((candidate) => candidate.id === clip.source.beatId) })).filter((entry): entry is { clip: typeof videoClips[number]; beat: SemanticBeat } => Boolean(entry.beat)) : doc.beats.map((beat) => ({ clip: undefined, beat }));
   const transitionClips = editor?.tracks.find((track) => track.id === "transitions")?.clips.filter((clip) => Boolean(clip.source.transitionId));
   const overlayClips = (editor?.tracks.filter((track) => (track.kind === "text" || track.kind === "overlay" || track.kind === "video") && !track.hidden).flatMap((track) => track.clips.filter((clip) => !clip.hidden && clip.kind === "element")) ?? []).slice().sort((a, b) => (typeof a.metadata.z === "number" ? a.metadata.z : 10) - (typeof b.metadata.z === "number" ? b.metadata.z : 10));
+  // E2 parity: overlays that belong to a beat render INSIDE that beat's
+  // BeatCamera (the treatment path scales/drifts its visuals with the camera —
+  // overlays outside the camera produced a systematic scale/drift diff).
+  // Overlays without a beat (or spanning past it) stay at the root level.
+  const overlaysByBeat = new Map<string, { clip: typeof overlayClips[number]; seqStartSec: number }[]>();
+  const rootOverlays: typeof overlayClips = [];
+  if (editor) {
+    for (const overlay of overlayClips) {
+      const beatId = typeof overlay.source.beatId === "string" ? overlay.source.beatId : null;
+      const candidates = beatId ? videoClips.filter((c) => c.source.beatId === beatId) : [];
+      const host = candidates.find((c) => overlay.range.startSec >= c.range.startSec - 0.001 && overlay.range.startSec < c.range.endSec) ?? candidates[0];
+      if (host) {
+        const list = overlaysByBeat.get(String(beatId)) ?? [];
+        list.push({ clip: overlay, seqStartSec: host.range.startSec });
+        overlaysByBeat.set(String(beatId), list);
+      } else {
+        rootOverlays.push(overlay);
+      }
+    }
+  }
   return (
     <AbsoluteFill style={{ background: "#07090d" }}>
       {doc.audioPlan ? <AudioMixer plan={doc.audioPlan} editor={editor} /> : null}
@@ -224,10 +244,17 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
                   the style store (getStyle) affects the output.
                 - WITH an editor doc (Composer preview, clip-first contract):
                   beats render their background only; visuals come from the
-                  editor overlay clips below. */}
+                  editor overlay clips (nested here so the camera applies). */}
             <BeatCamera beat={beat}>
               {editor ? (
-                <BeatContent beat={beat} />
+                <>
+                  <BeatContent beat={beat} />
+                  {(overlaysByBeat.get(beat.id) ?? []).map(({ clip: overlayClip, seqStartSec }) => (
+                    <Sequence key={overlayClip.id} from={Math.max(0, Math.round((overlayClip.range.startSec - seqStartSec) * fps))} durationInFrames={Math.max(1, Math.round((overlayClip.range.endSec - overlayClip.range.startSec) * fps))}>
+                      <EditorClipOverlay clip={overlayClip} fps={fps} />
+                    </Sequence>
+                  ))}
+                </>
               ) : (
                 <>
                   <BeatTreatment beat={beat} />
@@ -242,7 +269,7 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
             <SceneTransition type={clip && (clip.metadata.transitionType === "flash" || clip.metadata.transitionType === "fade" || clip.metadata.transitionType === "blur" || clip.metadata.transitionType === "light-leak") ? clip.metadata.transitionType : transition.type} accent={transition.accent} />
           </Sequence>
         ))}
-        {overlayClips.map((clip) => (
+        {rootOverlays.map((clip) => (
           <Sequence key={clip.id} from={Math.round(clip.range.startSec * fps)} durationInFrames={Math.max(1, Math.round((clip.range.endSec - clip.range.startSec) * fps))}>
             <EditorClipOverlay clip={clip} fps={fps} />
           </Sequence>
@@ -254,11 +281,17 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
 
 const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][number]; fps: number }> = ({ clip }) => {
   const frame = useCurrentFrame();
+  const { fps, width: videoWidth, height: videoHeight } = useVideoConfig();
   const md = clip.metadata;
-  const localSec = frame / useVideoConfig().fps;
-  const style = overlayStyleAt(clip, clip.range.startSec + localSec);
+  const localSec = frame / fps;
+  const style = overlayStyleAt(clip, clip.range.startSec + localSec, fps);
   const filter = clipFilterCss(md.filter);
   const flipTransform = `${md.flipH ? "scaleX(-1) " : ""}${md.flipV ? "scaleY(-1) " : ""}`;
+  // E2 parity: elements carrying groupOrigin scale AROUND that frame point
+  // (mirrors a treatment DOM group transform, e.g. diagram node entrance).
+  const groupOrigin = typeof md.groupOriginX === "number" && typeof md.groupOriginY === "number"
+    ? `${md.groupOriginX - style.x * videoWidth}px ${md.groupOriginY - style.y * videoHeight}px`
+    : undefined;
   const baseStyle: React.CSSProperties = {
     position: "absolute",
     left: `${style.x * 100}%`,
@@ -267,7 +300,7 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
     height: `${style.h * 100}%`,
     opacity: style.opacity,
     transform: `${flipTransform}rotate(${style.rotation}deg) scale(${style.scale})`,
-    transformOrigin: "center center",
+    transformOrigin: groupOrigin ?? "center center",
     pointerEvents: "none",
     overflow: "hidden",
     zIndex: typeof md.z === "number" ? Math.round(md.z) : 10,
@@ -303,8 +336,10 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
           WebkitBackgroundClip: gradientStyle.WebkitBackgroundClip,
           WebkitTextFillColor: gradientStyle.WebkitTextFillColor,
           textShadow: gradient ? undefined : (typeof md.shadowBlur === "number" ? `0 0 ${md.shadowBlur}px ${typeof md.shadowColor === "string" ? md.shadowColor : "rgba(0,0,0,.7)"}` : (typeof md.textShadow === "string" ? md.textShadow : "0 2px 8px rgba(0,0,0,.55)")),
-          filter: typeof md.glowBlur === "number" ? `drop-shadow(0 0 ${md.glowBlur}px ${typeof md.glowColor === "string" ? md.glowColor : "#fff"})` : gradientStyle.filter,
-          padding: "0 2%", boxSizing: "border-box", overflow: "hidden",
+          filter: typeof md.glowBlur === "number" ? `drop-shadow(0 0 ${md.glowBlur}px ${typeof md.glowColor === "string" ? md.glowColor : "#fff"})` : (filter ?? gradientStyle.filter),
+          // no horizontal padding: "0 2%" shifted left/right-aligned text by
+          // 2% of the box width vs the treatment path (E2 parity regression)
+          padding: 0, boxSizing: "border-box", overflow: "hidden",
         }}>
           {String(md.text ?? "")}
         </div>
@@ -313,34 +348,39 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
   }
   if (md.elementType === "edge") {
     // Bezier edge element (E2 parity — mirrors treatments.tsx SemanticDiagram.Edge):
-    // quadratic bezier with perpendicular curvature offset, gradient/brush stroke
-    // modes, draw-on reveal via strokeDashoffset. Coordinates are px in the
-    // 1920×1080 frame; the clip bbox spans the full frame.
+    // the treatment draws in an <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+    // so coordinates are in VIEWBOX units and the non-uniform stretch produces
+    // the exact stroke width + curvature scaling. revealStart is 0 because the
+    // clip Sequence already starts at the reveal time. viewBoxW/H allow other
+    // aspect boxes (ProcessTimeline progress bar: viewBox 100x12); revealTo caps
+    // the draw-on fraction (progress bar draws to (active+1)/steps).
+    const vbW = typeof md.viewBoxW === "number" ? md.viewBoxW : 100;
+    const vbH = typeof md.viewBoxH === "number" ? md.viewBoxH : 100;
     const x1 = typeof md.x1 === "number" ? md.x1 : 0;
     const y1 = typeof md.y1 === "number" ? md.y1 : 0;
     const x2 = typeof md.x2 === "number" ? md.x2 : 100;
-    const y2 = typeof md.y2 === "number" ? md.y2 : 100;
+    const y2 = typeof md.y2 === "number" ? md.y2 : vbH / 2;
     const curvature = typeof md.curvature === "number" ? md.curvature : 0.12;
     const cx = (x1 + x2) / 2 - (y2 - y1) * curvature;
     const cy = (y1 + y2) / 2 + (x2 - x1) * curvature;
-    const pathD = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
-    const gradId = `edgeGrad-${Math.round(x1)}-${Math.round(y1)}-${Math.round(x2)}-${Math.round(y2)}`;
+    const pathD = md.pathD && typeof md.pathD === "string" ? md.pathD : `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+    const gradId = `edgeGrad-${clip.id}`;
     const mode = md.strokeMode === "gradient" || md.strokeMode === "brush" ? md.strokeMode : "solid";
     const stops = Array.isArray(md.gradientStops) && md.gradientStops.length >= 2 ? (md.gradientStops as string[]) : ["#7fd8e8", "#f2d58a"];
     const strokeWidth = typeof md.strokeWidth === "number" ? md.strokeWidth : 2;
     const baseColor = typeof md.strokeColor === "string" ? md.strokeColor : "rgba(242,184,75,0.58)";
-    const brushDash = Array.isArray(md.brushDasharray) ? (md.brushDasharray as number[]).join(" ") : "14 5 8 4 18 6";
+    const brushDash = Array.isArray(md.brushDasharray) ? (md.brushDasharray as number[]).join(" ") : "3 1 5 2";
     const revealDur = typeof md.revealDurationSec === "number" ? md.revealDurationSec : 0.65;
-    const revealStart = typeof md.startSec === "number" ? md.startSec : 0;
-    const raw = Math.max(0, Math.min(1, (localSec - revealStart) / Math.max(0.001, revealDur)));
+    const revealTo = typeof md.revealTo === "number" ? Math.max(0, Math.min(1, md.revealTo)) : 1;
+    const raw = Math.max(0, Math.min(1, localSec / Math.max(0.001, revealDur)));
     const progress = 1 - Math.pow(1 - raw, 3); // cubic-out, matches Easing.out(Easing.cubic)
     const stroke = mode === "gradient" ? `url(#${gradId})` : baseColor;
     return (
       <div style={{ ...baseStyle, overflow: "visible" }}>
-        <svg viewBox="0 0 1920 1080" preserveAspectRatio="none" style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", overflow: "visible" }}>
+        <svg viewBox={`0 0 ${vbW} ${vbH}`} preserveAspectRatio="none" style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", overflow: "visible" }}>
           {mode === "gradient" && (
             <defs>
-              <linearGradient id={gradId} x1={`${(x1 / 1920) * 100}%`} y1={`${(y1 / 1080) * 100}%`} x2={`${(x2 / 1920) * 100}%`} y2={`${(y2 / 1080) * 100}%`}>
+              <linearGradient id={gradId} x1={`${x1}%`} y1={`${y1}%`} x2={`${x2}%`} y2={`${y2}%`}>
                 <stop offset="0%" stopColor={stops[0]} />
                 <stop offset="100%" stopColor={stops[1]} />
               </linearGradient>
@@ -353,8 +393,9 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
             stroke={stroke}
             strokeWidth={strokeWidth}
             strokeDasharray={mode === "brush" ? brushDash : "100"}
-            strokeDashoffset={mode === "brush" ? 0 : 100 * (1 - progress)}
+            strokeDashoffset={mode === "brush" ? 0 : 100 * (1 - progress * revealTo)}
             strokeLinecap={typeof md.linecap === "string" ? (md.linecap as React.SVGProps<SVGPathElement>["strokeLinecap"]) : "round"}
+            style={typeof filter === "string" ? { filter } : undefined}
           />
         </svg>
       </div>

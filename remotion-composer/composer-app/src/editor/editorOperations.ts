@@ -1,5 +1,5 @@
 import type { ClipKeyframe, EditorClip, EditorDoc, EditorGroup } from "../../../shared/isaacverse/editor";
-import { PRESENCE_ANCHOR, PRESENCE_HEIGHT, PRESENCE_TO_CLIP_ANIM, type PresenceMotion, type PresencePosition, type PresenceSize } from "../../../shared/isaacverse/characterPresence";
+import { PRESENCE_ANCHOR, PRESENCE_ASPECT, PRESENCE_HEIGHT, PRESENCE_TO_CLIP_ANIM, type PresenceMotion, type PresencePose, type PresencePosition, type PresenceSize } from "../../../shared/isaacverse/characterPresence";
 import { splitClipRange, trimClipRange } from "./time";
 
 const updateRevision = (editor: EditorDoc): EditorDoc["revision"] => ({
@@ -281,9 +281,11 @@ export const addCharacterPresenceClip = (editor: EditorDoc, options: CharacterPr
   const clipId = `clip:presence:${Date.now()}`;
   const anchor = PRESENCE_ANCHOR[position];
   const height = PRESENCE_HEIGHT[size];
-  // pose assets are ~3:4 (body+head); width follows aspect, then convert to
-  // frame fractions (1920×1080) and clamp inside the frame.
-  const aspect = 3 / 4;
+  // exact-fit box: true baked-pose aspect (PRESENCE_ASPECT, calibrated from
+  // the actual pose PNGs — 0.52-0.56, NOT 3:4) so the editor image lands on
+  // the same pixels as the treatment path's width:auto rendering. Unknown
+  // poses (user-baked via the studio) fall back to the present aspect.
+  const aspect = PRESENCE_ASPECT[options.pose as PresencePose] ?? 654 / 1249;
   const wFrac = Math.min(0.95, (height * aspect) / 1920);
   const hFrac = Math.min(0.95, height / 1080);
   const xFrac = Math.max(0, Math.min(1 - wFrac, anchor.left / 100 - wFrac / 2));
