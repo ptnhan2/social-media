@@ -1,7 +1,20 @@
 import { Layer, Pt } from "./types";
 
-/** Module-level image cache keyed by layer.src (URL or dataURL). */
+/** Module-level image cache keyed by layer.src (URL or dataURL).
+ *  Bounded: pixel edits create a NEW busted src per edit (uploadDataUrl),
+ *  so an unbounded map would grow one full decoded image per edit in a
+ *  long session (reviewer-caught leak). Oldest entries evicted past the cap. */
+const IMAGE_CACHE_MAX = 64;
 const imageCache = new Map<string, CanvasImageSource>();
+
+const boundedCacheSet = (src: string, image: CanvasImageSource) => {
+  imageCache.set(src, image);
+  while (imageCache.size > IMAGE_CACHE_MAX) {
+    const oldest = imageCache.keys().next().value as string | undefined;
+    if (oldest === undefined) break;
+    imageCache.delete(oldest);
+  }
+};
 
 export const bridge = (cmd: Record<string, unknown>) =>
   fetch("/api/assets/bridge", {
@@ -61,7 +74,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
-      imageCache.set(src, img);
+      boundedCacheSet(src, img);
       resolve(img);
     };
     img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
@@ -70,7 +83,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 export function cacheImage(src: string, el: CanvasImageSource): void {
-  imageCache.set(src, el);
+  boundedCacheSet(src, el);
 }
 
 export function cachedImage(src: string): CanvasImageSource | undefined {
@@ -103,7 +116,7 @@ export async function getLayerCanvas(layer: Layer): Promise<HTMLCanvasElement> {
   canvas.height = sh;
   const ctx = canvas.getContext("2d")!;
   ctx.drawImage(source, 0, 0);
-  imageCache.set(layer.src, canvas);
+  boundedCacheSet(layer.src, canvas);
   return canvas;
 }
 

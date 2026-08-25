@@ -166,7 +166,8 @@ const characterPresenceElement = (treatmentId: string, beat: SemanticBeat, resol
   const merged = { ...DEFAULT_PRESENCE, ...config };
   const anchor = PRESENCE_ANCHOR[merged.position ?? "thirds-br"];
   const height = PRESENCE_HEIGHT[merged.size ?? "small"];
-  const width = Math.round(height * PRESENCE_ASPECT[merged.pose ?? "present"]);
+  // unknown poses (user-baked via the studio) fall back to the present aspect
+  const width = Math.round(height * (PRESENCE_ASPECT[merged.pose ?? "present"] ?? 654 / 1249));
   const cx = anchor.left / 100 * W;
   const cy = anchor.top / 100 * H;
   const a = accent(beat, resolve);

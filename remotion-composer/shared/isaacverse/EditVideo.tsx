@@ -214,15 +214,19 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
   // E2 parity: overlays that belong to a beat render INSIDE that beat's
   // BeatCamera (the treatment path scales/drifts its visuals with the camera —
   // overlays outside the camera produced a systematic scale/drift diff).
-  // Overlays without a beat (or spanning past it) stay at the root level.
+  // ONLY overlays fully inside one beat clip nest there: Remotion clips
+  // children to the parent Sequence window, so an overlay spanning past a
+  // (possibly trimmed/split) host clip must stay at the ROOT level or it
+  // would be cut off at the host clip's end.
   const overlaysByBeat = new Map<string, { clip: typeof overlayClips[number]; seqStartSec: number }[]>();
   const rootOverlays: typeof overlayClips = [];
   if (editor) {
     for (const overlay of overlayClips) {
       const beatId = typeof overlay.source.beatId === "string" ? overlay.source.beatId : null;
       const candidates = beatId ? videoClips.filter((c) => c.source.beatId === beatId) : [];
-      const host = candidates.find((c) => overlay.range.startSec >= c.range.startSec - 0.001 && overlay.range.startSec < c.range.endSec) ?? candidates[0];
-      if (host) {
+      const host = candidates.find((c) => overlay.range.startSec >= c.range.startSec - 0.001 && overlay.range.startSec < c.range.endSec);
+      const insideHost = host && overlay.range.endSec <= host.range.endSec + 0.001;
+      if (host && insideHost) {
         const list = overlaysByBeat.get(String(beatId)) ?? [];
         list.push({ clip: overlay, seqStartSec: host.range.startSec });
         overlaysByBeat.set(String(beatId), list);
@@ -359,7 +363,7 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
     const x1 = typeof md.x1 === "number" ? md.x1 : 0;
     const y1 = typeof md.y1 === "number" ? md.y1 : 0;
     const x2 = typeof md.x2 === "number" ? md.x2 : 100;
-    const y2 = typeof md.y2 === "number" ? md.y2 : vbH / 2;
+    const y2 = typeof md.y2 === "number" ? md.y2 : vbH;
     const curvature = typeof md.curvature === "number" ? md.curvature : 0.12;
     const cx = (x1 + x2) / 2 - (y2 - y1) * curvature;
     const cy = (y1 + y2) / 2 + (x2 - x1) * curvature;

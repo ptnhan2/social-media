@@ -84,6 +84,11 @@ const readBody = (req: any, res: any, done: (body: any) => void) => {
 };
 
 export default defineConfig({
+  // vitest: unit tests live in src/**/*.test.ts; e2e/ holds the Playwright
+  // suite (its *.spec.ts files must NOT be collected by vitest)
+  test: {
+    include: ["src/**/*.test.{ts,tsx}"],
+  },
   // Shared IsaacVerse components live one directory above this app. Force all
   // Remotion imports through the app copy so Player and Audio share one context.
   resolve: { dedupe: ["react", "react-dom", "remotion", "@remotion/media"] },

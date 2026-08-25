@@ -17,7 +17,6 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { buildWindowRender } from "./render-window.mjs";
 
 const composerRoot = path.resolve(import.meta.dirname, "..");
@@ -38,9 +37,11 @@ const parseArgs = (argv) => {
 
 const slug = args => args.project || "isaacverse-final";
 const pythonBin = () => {
-  const candidate = path.join(workspaceRoot, "harness", ".venv", "Scripts", "python.exe");
-  if (fs.existsSync(candidate)) return candidate;
-  return "python";
+  const candidates = [
+    path.join(workspaceRoot, "harness", ".venv", "Scripts", "python.exe"), // Windows
+    path.join(workspaceRoot, "harness", ".venv", "bin", "python"), // linux/macos
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate)) ?? "python";
 };
 
 const run = (cmd, cmdArgs, opts = {}) => {
@@ -98,6 +99,4 @@ fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), "utf8");
 console.log(`\n[parity] ${label}: gate=${report.gate} meanOfMeans=${report.meanOfMeans} maxMean=${report.maxMean} (threshold ${report.gateThreshold})`);
 console.log(`[parity] frames: ${report.frames.map((f) => `t=${f.t}: ${f.mean ?? f.error}`).join(" | ")}`);
 console.log(`[parity] report -> ${path.relative(workspaceRoot, reportPath)}`);
-if (import.meta.url === pathToFileURLStr()) process.exit(0);
-function pathToFileURLStr() { return fileURLToPath(import.meta.url); }
 process.exit(report.gate === "PASS" ? 0 : 2);
