@@ -1,4 +1,18 @@
 # Knowledge Base — Experiment Results
+### Parity round 2 (bonus, same night): 4 more treatments
+- chapter-card 39.2 -> 2.28: the title ALWAYS wraps 2 lines — its div is width:86%
+  of a SHRINK-TO-FIT parent, so it wraps at 0.86 × its own single-line width.
+  Baked greedy wrap + \n through new pre-line support in the overlay text.
+  Also: gradient stop is 45% (overlay hardcoded 55%), wipeX preset animates the
+  accent line WIDTH independent of the block entrance.
+- candidate-comparison 15.7 -> 3.45: CSS grid math (7% margins), spring stagger
+  0.22s, constant 0.96 group scale AROUND THE CARD CENTER (per-element scale
+  shifts contents inside the card — same lesson as diagram nodes).
+- host-reflection beat-7 window 29.9 -> 5.92: mixBlendMode:"screen" on the light
+  overlay changes the WHOLE image look; slow push-in = md.keyframes scale.
+- Pattern refined: region-block MEAN analysis (not just >threshold counts) +
+  browser DOM replication of the overlay rendering + VLM only for local crops.
+
 ## Night Run 2026-08-25/26 — E2 parity GATE PASS + editor path flip + Playwright E2E
 
 ### E2 parity gate MET (both windows < 2.0, cold projection)
