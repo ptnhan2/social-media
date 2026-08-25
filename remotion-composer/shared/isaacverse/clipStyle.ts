@@ -8,6 +8,8 @@ export type OverlayStyle = {
   rotation: number;
   opacity: number;
   scale: number;
+  /** Extra horizontal scale factor (width wipe animations). */
+  scaleX: number;
 };
 
 export type AnimPresetId = "none" | "fade" | "slide-left" | "slide-right" | "slide-up" | "slide-down" | "scale" | "bounce" | "pop" | "spring" | "fade-slide-up" | "spring-slide-up" | "p-slide-l" | "p-slide-r" | "p-slide-u" | "p-slide-d" | "p-pop" | "p-jump-in" | "p-drop-in" | "p-peek" | "p-fade-scale";
@@ -307,7 +309,19 @@ export const overlayStyleAt = (clip: EditorClip, timeSec: number, fps = 30): Ove
     scale *= 1 + pulse.amp * Math.sin(localTime * fps * pulse.radPerFrame);
   }
 
-  return { x: x + offsetX, y: y + offsetY, w, h, rotation, opacity: Math.max(0, Math.min(1, opacity * animOpacity)), scale };
+  // Width wipe (ChapterCard accent line): independent of animIn — the line
+  // wipes 0 -> 1 over its own window while the block entrance (animIn)
+  // fades+scales the whole element.
+  let scaleX = 1;
+  const wipe = md.wipeX as { startSec?: number; durationSec?: number } | undefined;
+  if (wipe && typeof wipe === "object") {
+    const wStart = typeof wipe.startSec === "number" ? wipe.startSec : 0;
+    const wDur = typeof wipe.durationSec === "number" ? Math.max(0.001, wipe.durationSec) : 0.5;
+    const wp = Math.max(0, Math.min(1, (localTime - wStart) / wDur));
+    scaleX = easeCubicOut(wp);
+  }
+
+  return { x: x + offsetX, y: y + offsetY, w, h, rotation, opacity: Math.max(0, Math.min(1, opacity * animOpacity)), scale, scaleX };
 };
 
 export const clipFilterCss = (filter: unknown): string | undefined => {

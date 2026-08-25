@@ -1,0 +1,109 @@
+{
+  "label": "candidate-comparison-1",
+  "project": "isaacverse-final",
+  "window": {
+    "startSec": 14,
+    "endSec": 18.5,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-candidate-comparison-1-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-candidate-comparison-1-editor.mp4",
+  "durationSec": 4.544,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 4.324,
+      "changedPct": 2.965
+    },
+    {
+      "t": 0.35,
+      "mean": 20.28,
+      "changedPct": 26.789
+    },
+    {
+      "t": 0.6,
+      "mean": 39.866,
+      "changedPct": 33.492
+    },
+    {
+      "t": 0.85,
+      "mean": 22.507,
+      "changedPct": 23.852
+    },
+    {
+      "t": 1.1,
+      "mean": 13.126,
+      "changedPct": 17.126
+    },
+    {
+      "t": 1.35,
+      "mean": 12.928,
+      "changedPct": 16.732
+    },
+    {
+      "t": 1.6,
+      "mean": 13.337,
+      "changedPct": 17.026
+    },
+    {
+      "t": 1.85,
+      "mean": 13.612,
+      "changedPct": 17.98
+    },
+    {
+      "t": 2.1,
+      "mean": 13.657,
+      "changedPct": 17.762
+    },
+    {
+      "t": 2.35,
+      "mean": 13.798,
+      "changedPct": 17.54
+    },
+    {
+      "t": 2.6,
+      "mean": 14.135,
+      "changedPct": 18.298
+    },
+    {
+      "t": 2.85,
+      "mean": 14.552,
+      "changedPct": 19.131
+    },
+    {
+      "t": 3.1,
+      "mean": 14.422,
+      "changedPct": 18.619
+    },
+    {
+      "t": 3.35,
+      "mean": 14.589,
+      "changedPct": 18.915
+    },
+    {
+      "t": 3.6,
+      "mean": 14.343,
+      "changedPct": 18.918
+    },
+    {
+      "t": 3.85,
+      "mean": 14.343,
+      "changedPct": 18.92
+    },
+    {
+      "t": 4.1,
+      "mean": 14.343,
+      "changedPct": 18.92
+    },
+    {
+      "t": 4.35,
+      "mean": 14.343,
+      "changedPct": 18.92
+    }
+  ],
+  "meanOfMeans": 15.695,
+  "maxMean": 39.866,
+  "gate": "FAIL",
+  "gateThreshold": 2
+}

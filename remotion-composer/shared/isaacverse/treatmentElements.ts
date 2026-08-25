@@ -16,6 +16,12 @@ export type TreatmentElement = {
   x: number; y: number; w: number; h: number;
   rotation?: number;
   opacity?: number;
+  /** Constant base scale (unselected candidate cards sit at 0.96). */
+  scale?: number;
+  /** CSS mix-blend-mode for overlay shapes (host-reflection light = screen). */
+  blendMode?: string;
+  /** Per-property keyframes (t = element-local seconds) — slow push-ins. */
+  keyframes?: Record<string, { t: number; v: number; easing?: "linear" | "ease-in" | "ease-out" | "ease-in-out" }[]>;
   z?: number;
   text?: string;
   color?: string;
@@ -29,7 +35,9 @@ export type TreatmentElement = {
   fontStyle?: string;
   textShadow?: string;
   /** Gradient fill for text: rendered via background-clip in the editor flow. */
-  textGradient?: { start: string; end: string };
+  textGradient?: { start: string; end: string; stop?: number };
+  /** Badge-style solid background behind text (candidate badges). */
+  bgColor?: string;
   src?: string;
   fit?: "cover" | "contain";
   filter?: string;
@@ -53,6 +61,8 @@ export type TreatmentElement = {
   /** Continuous pulse after reveal: scale *= 1 + amp * sin(frame * radPerFrame)
    * (DiagramNodeView activePulse). */
   pulse?: { amp: number; radPerFrame: number };
+  /** Horizontal width wipe over its own window (ChapterCard accent line). */
+  wipeX?: { startSec: number; durationSec: number };
   /** Group-scale origin in frame px: sibling elements sharing an origin scale
    * together around it (mirrors a treatment DOM group transform). */
   groupOriginX?: number;
@@ -181,6 +191,40 @@ const characterPresenceElement = (treatmentId: string, beat: SemanticBeat, resol
   });
 };
 
+/** ChapterCard title wrap: the treatment's title div is width:86% of a
+ *  shrink-to-fit parent, so the text ALWAYS wraps at 0.86 × its own single-
+ *  line width (verified 2026-08-26: both render titles wrap to 2 lines).
+ *  Greedy word wrap with the calibrated Arial Black-900 factor (~0.65em/char
+ *  + letterSpacing) reproduces the DOM line breaks for both current titles. */
+export const wrapChapterTitle = (title: string, fontSize: number, letterSpacing: number): { lines: string[]; widthEst: number } => {
+  const charW = fontSize * 0.65;
+  const spaceW = charW + letterSpacing;
+  // widths computed on the UPPERCASED text (that's what renders), but the
+  // returned lines keep the ORIGINAL case — textTransform handles the rest
+  const words = title.trim().split(/\s+/);
+  const upper = words.map((w) => w.toUpperCase());
+  const wordW = (w: string) => w.length * charW + (w.length - 1) * letterSpacing;
+  const single = upper.reduce((sum, w, i) => sum + wordW(w) + (i > 0 ? spaceW : 0), 0);
+  const cap = single * 0.86;
+  const lines: string[] = [];
+  let cur = "";
+  let curW = 0;
+  upper.forEach((u, i) => {
+    const w = wordW(u);
+    const addW = cur ? spaceW + w : w;
+    if (curW + addW <= cap || !cur) {
+      cur = cur ? `${cur} ${words[i]}` : words[i];
+      curW += addW;
+    } else {
+      lines.push(cur);
+      cur = words[i];
+      curW = w;
+    }
+  });
+  if (cur) lines.push(cur);
+  return { lines, widthEst: Math.max(...lines.map((l) => l.split(/\s+/).reduce((sum, w, i) => sum + wordW(w.toUpperCase()) + (i > 0 ? spaceW : 0), 0))) };
+};
+
 const asStr = (v: unknown, fb = "") => typeof v === "string" ? v : fb;
 const asNum = (v: unknown, fb: number) => typeof v === "number" ? v : fb;
 const asArr = <T,>(v: unknown): T[] => Array.isArray(v) ? v as T[] : [];
@@ -200,27 +244,71 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       const longTitle = titleText.trim().length > 22;
       const gradientStart = s("colors.gradientStart", "#ff6b35");
       const gradientEnd = s("colors.gradientEnd", "#ffd166");
+      const cyan = s("colors.cyan", "#61d7e8");
+      const black = s("colors.black", "#07090d");
+      const fontSize = longTitle ? s("treatments.chapter-card.title.fontSizeLong", 82) : s("treatments.chapter-card.title.fontSizeShort", 96);
+      const titleLineHeight = s("treatments.chapter-card.title.lineHeight", 1.08);
+      const inDur = s("treatments.chapter-card.reveal.inDurationSec", 0.45);
+      const lineStart = s("treatments.chapter-card.reveal.lineStartSec", 0.15);
+      const lineEnd = s("treatments.chapter-card.reveal.lineEndSec", 0.8);
+      const accentHeight = s("treatments.chapter-card.accentLine.height", 8);
+      const accentMaxWidth = s("treatments.chapter-card.accentLine.maxWidth", 280);
+      const subtitleFontSize = s("treatments.chapter-card.subtitle.fontSize", 24);
+      // treatment title ALWAYS wraps (86% of its own max width — see
+      // wrapChapterTitle); layout = centered block: titleH + 26 + line + 22 + sub
+      const { lines: titleLines, widthEst: titleW } = wrapChapterTitle(titleText, fontSize, longTitle ? fontSize * 0.04 : fontSize * 0.08);
+      const titleH = Math.ceil(titleLines.length * fontSize * titleLineHeight);
+      const subH = Math.ceil(subtitleFontSize * 1.4);
+      const blockH = titleH + 26 + accentHeight + 22 + subH;
+      const blockTop = H / 2 - blockH / 2;
+      // the box only needs to be WIDE ENOUGH that the baked \n breaks are the
+      // ONLY breaks (text is centered; the box itself is invisible): the
+      // width estimate runs a few % short of true Arial Black metrics, so pad
+      // it — an auto-wrap inside the box would add a third line.
+      const titleBoxW = Math.min(Math.ceil(titleW * 1.18) + 24, Math.floor(W * 0.94));
+      const titleX = W / 2 - titleBoxW / 2;
+      const blockAnim = {
+        // treatment block entrance: opacity inProgress + scale 0.85→1
+        // (cubic-out) — exactly the p-fade-scale preset math
+        animIn: "p-fade-scale", animDurationSec: inDur, startSec: 0,
+      } as const;
       return [
-        text(`${id}:title`, 134, 380, 1652, 220, titleText, {
-          fontSize: longTitle ? s("treatments.chapter-card.title.fontSizeLong", 82) : s("treatments.chapter-card.title.fontSizeShort", 96),
-          fontWeight: s("treatments.chapter-card.title.fontWeight", 900), fontFamily: "Arial Black, Arial, sans-serif", textAlign: "center", textTransform: "uppercase",
-          color: "#f4e8cf", textShadow: `0 0 22px ${a}55`, textGradient: { start: gradientStart, end: gradientEnd },
-          animIn: "scale", animDurationSec: 0.45, z: 15, startSec: 0,
+        // radial backdrop + ambient glow (treatment AbsoluteFill + inset div)
+        shape(`${id}:bg`, 0, 0, W, H, {
+          background: `radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, ${black} 100%)`, z: 0, startSec: 0,
+        }),
+        shape(`${id}:bg-glow`, 0, 0, W, H, {
+          background: `radial-gradient(circle at 50% 50%, ${a}18, transparent 55%)`,
+          animIn: "fade", animEasing: "cubic-out", animDurationSec: inDur, z: 0, startSec: 0,
+        }),
+        text(`${id}:title`, titleX, blockTop, titleBoxW, titleH, titleLines.join("\n"), {
+          fontSize, fontWeight: s("treatments.chapter-card.title.fontWeight", 900), fontFamily: "Arial Black, Arial, sans-serif",
+          textTransform: "uppercase", lineHeight: titleLineHeight,
+          letterSpacing: longTitle ? fontSize * 0.04 : fontSize * 0.08,
+          textAlign: "center", textGradient: { start: gradientStart, end: gradientEnd, stop: 45 },
+          strokeWidth: 1.5, strokeColor: "rgba(0,0,0,0.25)",
+          filter: `drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 0 30px ${a}50)`,
+          ...blockAnim, z: 15,
           styleSource: {
             fontSize: longTitle ? "treatments.chapter-card.title.fontSizeLong" : "treatments.chapter-card.title.fontSizeShort",
             fontWeight: "treatments.chapter-card.title.fontWeight",
             textGradientStart: "colors.gradientStart", textGradientEnd: "colors.gradientEnd",
           },
         }),
-        shape(`${id}:accent-line`, 865, 620, s("treatments.chapter-card.accentLine.maxWidth", 190), s("treatments.chapter-card.accentLine.height", 5), {
-          background: `linear-gradient(90deg, transparent, ${gradientStart}, ${gradientEnd}, ${gradientStart}, transparent)`, boxShadow: `0 0 24px ${gradientStart}80`,
-          z: 12, startSec: 0.2, animIn: "scale", animDurationSec: 0.65,
+        // accent line: width wipes 0 -> lineProgress × maxWidth while the
+        // block entrance still applies (independent scaleX timing)
+        shape(`${id}:accent-line`, W / 2 - accentMaxWidth / 2, blockTop + titleH + 26, accentMaxWidth, accentHeight, {
+          background: `linear-gradient(90deg, transparent, ${gradientStart}, ${gradientEnd}, ${gradientStart}, transparent)`,
+          boxShadow: `0 0 24px ${gradientStart}80, 0 2px 8px rgba(0,0,0,0.5)`,
+          borderRadius: 4, wipeX: { startSec: lineStart, durationSec: Math.max(0.01, lineEnd - lineStart) },
+          ...blockAnim, z: 12,
           styleSource: { width: "treatments.chapter-card.accentLine.maxWidth", height: "treatments.chapter-card.accentLine.height" },
         }),
-        asStr(p.subtitle) ? text(`${id}:subtitle`, 288, 660, 1344, 60, asStr(p.subtitle), {
-          fontSize: s("treatments.chapter-card.subtitle.fontSize", 24), fontWeight: 900, fontFamily: "Arial, sans-serif", textAlign: "center", textTransform: "uppercase",
-          letterSpacing: 1.2, color: a === "#f2b84b" ? "#61d7e8" : "#f2b84b", opacity: 0.8, animIn: "fade", animDurationSec: 0.8, z: 12, startSec: 0.4,
-          textShadow: "0 2px 10px rgba(0,0,0,0.8)",
+        asStr(p.subtitle) ? text(`${id}:subtitle`, (W - 1651) / 2, blockTop + titleH + 26 + accentHeight + 22, 1651, subH, asStr(p.subtitle), {
+          fontSize: subtitleFontSize, fontWeight: 900, fontFamily: "Arial, sans-serif",
+          letterSpacing: subtitleFontSize * 0.08, textTransform: "uppercase", textAlign: "center",
+          color: cyan, textShadow: "0 2px 10px rgba(0,0,0,0.8)",
+          ...blockAnim, z: 12,
           styleSource: { fontSize: "treatments.chapter-card.subtitle.fontSize" },
         }) : null,
       ].filter(Boolean) as TreatmentElement[];
@@ -392,22 +480,40 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
 
     case "host-reflection-cinematic": {
       const src = assetSrc(beat, "character") ?? assetSrc(beat, "image") ?? "";
+      const black = s("colors.black", "#07090d");
+      const lightSide = asStr(p.lightSide, "left");
+      const entranceDur = s("treatments.host-reflection.entranceDurationSec", 0.5);
+      const pushStart = s("treatments.host-reflection.pushStart", 1.06);
+      const pushDur = s("treatments.host-reflection.pushDurationSec", 4);
+      const lbTop = s("treatments.host-reflection.letterboxTopPct", 8);
+      const lbBottom = s("treatments.host-reflection.letterboxBottomPct", 12);
+      const lbTopH = Math.round((lbTop / 100) * H);
+      const lbBottomH = Math.round((lbBottom / 100) * H);
+      // every element fades in with the whole-beat entrance (AbsoluteFill opacity)
+      const beatIn = { animIn: "fade", animEasing: "cubic-out", animDurationSec: entranceDur, startSec: 0 } as const;
+      const light = lightSide === "left"
+        ? "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)"
+        : "linear-gradient(270deg, rgba(242,184,75,.65), transparent 48%)";
       const els: TreatmentElement[] = [];
       if (src) els.push(image(`${id}:bg-image`, 0, 0, W, H, src, {
-        filter: s("treatments.host-reflection.filter", "saturate(1.05) contrast(1.15) brightness(.9)"), z: 1, animIn: "fade", animDurationSec: 0.5, startSec: 0,
+        filter: s("treatments.host-reflection.filter", "saturate(1.05) contrast(1.15) brightness(.9)"), z: 1,
+        // slow push-in (scale pushStart -> 1 over pushDur, cubic-out approximated
+        // by the quad ease-out keyframe easing)
+        keyframes: { scale: [{ t: 0, v: pushStart, easing: "ease-out" }, { t: pushDur, v: 1, easing: "linear" }] },
+        ...beatIn,
         styleSource: { filter: "treatments.host-reflection.filter" },
       }));
       els.push(shape(`${id}:light-overlay`, 0, 0, W, H, {
-        background: "linear-gradient(90deg, rgba(242,184,75,.65), transparent 48%)", z: 3, opacity: 0.7, startSec: 0,
+        background: light, blendMode: "screen", z: 3, opacity: 0.7, ...beatIn,
       }));
       els.push(shape(`${id}:vignette`, 0, 0, W, H, {
-        background: "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))", z: 4, startSec: 0,
+        background: "linear-gradient(180deg, rgba(0,0,0,.18), transparent 36%, transparent 65%, rgba(0,0,0,.7))", z: 4, ...beatIn,
       }));
-      els.push(shape(`${id}:letterbox-top`, 0, 0, W, 86, { background: "#07090d", z: 6, startSec: 0 }));
-      els.push(shape(`${id}:letterbox-bottom`, 0, 0 + 950, W, 130, { background: "#07090d", z: 6, startSec: 0 }));
-      els.push(text(`${id}:subtitle`, 0, 960, W, 110, asStr(p.subtitle, beat.transcript), {
+      els.push(shape(`${id}:letterbox-top`, 0, 0, W, lbTopH, { background: black, z: 6, ...beatIn }));
+      els.push(shape(`${id}:letterbox-bottom`, 0, H - lbBottomH, W, lbBottomH, { background: black, z: 6, ...beatIn }));
+      els.push(text(`${id}:subtitle`, Math.round(W * 0.08), H - lbBottomH, W - Math.round(W * 0.16), lbBottomH, asStr(p.subtitle, beat.transcript), {
         fontSize: s("treatments.host-reflection.subtitle.fontSize", 27), fontStyle: "italic", fontFamily: "Georgia, serif", textAlign: "center", color: a,
-        fontWeight: s("treatments.host-reflection.subtitle.fontWeight", 900), textShadow: "0 3px 12px #000, 0 0 24px rgba(0,0,0,0.8)", z: 14, animIn: "fade", animDurationSec: 0.5, startSec: 0.3,
+        fontWeight: s("treatments.host-reflection.subtitle.fontWeight", 900), textShadow: "0 3px 12px #000, 0 0 24px rgba(0,0,0,0.8)", z: 14, ...beatIn,
         styleSource: { fontSize: "treatments.host-reflection.subtitle.fontSize", fontWeight: "treatments.host-reflection.subtitle.fontWeight" },
       }));
       return els;
@@ -582,51 +688,93 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       const candidates = asArr<Record<string, unknown>>(p.candidates);
       const selected = asNum(p.selectedIndex, 0);
       const count = Math.max(1, Math.min(4, candidates.length));
-      const colW = (1574 - (count - 1) * 18) / count;
+      const black = s("colors.black", "#07090d");
+      const paper = s("colors.paper", "#f4e8cf");
       const gradientStart = s("colors.gradientStart", "#ff6b35");
       const gradientEnd = s("colors.gradientEnd", "#ffd166");
+      const kickerFontSize = s("treatments.candidate-comparison.kicker.fontSize", 17);
+      const titleFontSize = s("treatments.candidate-comparison.title.fontSize", 44);
+      const stagger = s("treatments.candidate-comparison.candidateStaggerSec", 0.22);
+      const springDamping = s("treatments.candidate-comparison.spring.damping", 18);
+      const springStiffness = s("treatments.candidate-comparison.spring.stiffness", 160);
+      const kickerH = kickerFontSize * 1.4222;
+      const titleH = titleFontSize * 1.4222;
+      // grid: left/right 7%, top 28% (302.4) bottom 12% (950.4), gap 18
+      const gridLeft = 0.07 * W;
+      const gridW = W - 2 * gridLeft;
+      const colW = (gridW - (count - 1) * 18) / count;
+      const cardTop = 0.28 * H;
+      const cardH = 0.88 * H - cardTop;
+      const imgH = cardH * 0.68;
+      const titleInDur = s("treatments.candidate-comparison.titleInDurationSec", 0.45);
+      const blockAnim = { animIn: "fade-slide-up", animSlidePx: 18, animEasing: "cubic-out", animDurationSec: titleInDur, startSec: 0 } as const;
       const els: TreatmentElement[] = [
-        text(`${id}:label`, 70, 54, 600, 30, "compare", {
-          fontSize: s("treatments.candidate-comparison.kicker.fontSize", 17), fontWeight: s("treatments.candidate-comparison.kicker.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 3.2, color: a, animIn: "fade", animDurationSec: 0.45, z: 10, startSec: 0,
-          textShadow: "0 2px 8px rgba(0,0,0,0.7)",
+        shape(`${id}:bg`, 0, 0, W, H, { background: black, z: 0, startSec: 0 }),
+        text(`${id}:label`, 70, 54, 600, kickerH, "compare", {
+          fontSize: kickerFontSize, fontWeight: s("treatments.candidate-comparison.kicker.fontWeight", 900),
+          fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
+          color: a, textShadow: "0 2px 8px rgba(0,0,0,0.7)", z: 10, ...blockAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.kicker.fontSize", fontWeight: "treatments.candidate-comparison.kicker.fontWeight" },
         }),
-        text(`${id}:title`, 70, 87, 1200, 55, asStr(p.title, beat.narrativeFunction), {
-          fontSize: s("treatments.candidate-comparison.title.fontSize", 44), fontWeight: s("treatments.candidate-comparison.title.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", color: "#f4e8cf", animIn: "fade", animDurationSec: 0.45, z: 10, startSec: 0,
-          textGradient: { start: gradientStart, end: gradientEnd }, textShadow: "0 3px 10px rgba(0,0,0,0.7)",
+        text(`${id}:title`, 70, 54 + kickerH + 10, 1200, titleH, asStr(p.title, beat.narrativeFunction), {
+          fontSize: titleFontSize, fontWeight: s("treatments.candidate-comparison.title.fontWeight", 900),
+          fontFamily: "Arial, sans-serif", color: paper, textAlign: "left",
+          textGradient: { start: gradientStart, end: gradientEnd },
+          filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.7))",
+          z: 10, ...blockAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.title.fontSize", fontWeight: "treatments.candidate-comparison.title.fontWeight", textGradientStart: "colors.gradientStart", textGradientEnd: "colors.gradientEnd" },
         }),
-        asStr(p.criteria) ? text(`${id}:criteria`, 70, 140, 1200, 30, asStr(p.criteria), {
-          fontSize: s("treatments.candidate-comparison.criteria.fontSize", 18), fontFamily: "Arial, sans-serif", color: "#f4e8cf", opacity: 0.68, animIn: "fade", animDurationSec: 0.45, z: 10, startSec: 0, fontWeight: 900,
+        asStr(p.criteria) ? text(`${id}:criteria`, 70, 54 + kickerH + 10 + titleH + 8, 1200, 25, asStr(p.criteria), {
+          fontSize: s("treatments.candidate-comparison.criteria.fontSize", 18), fontFamily: "Arial, sans-serif", color: paper, opacity: 0.68,
+          fontWeight: 900, textAlign: "left", z: 10, ...blockAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.criteria.fontSize" },
         }) : null,
       ].filter(Boolean) as TreatmentElement[];
       candidates.forEach((c, i) => {
         const isSel = i === selected;
         const col = asStr(c.color, isSel ? a : "#61d7e8");
-        const cx = 134 + i * (colW + 18);
-        const candStart = 0.2 + i * 0.2;
-        els.push(shape(`${id}:candidate-${i}-card`, cx, 302, colW, 650, {
-          borderWidth: 2, borderColor: isSel ? col : `${col}55`, borderRadius: 10, background: isSel ? `${col}18` : "rgba(7,9,13,.76)",
-          boxShadow: isSel ? `0 0 24px ${col}44` : "none", z: 5 + i, animIn: "slide-up", animDurationSec: 0.6, startSec: candStart,
+        const cx = gridLeft + i * (colW + 18);
+        const candStart = i * stagger;
+        // card entrance: spring opacity + translateY(24px) rise; unselected
+        // cards sit at constant 0.96 scale (treatment grid look)
+        const candAnim = {
+          animIn: "spring-slide-up", animSlidePx: 24, animDurationSec: 0.6, startSec: candStart,
+          animSpring: { damping: springDamping, stiffness: springStiffness, mass: 1, durationSec: 0.6, from: 1 },
+          // group scale around the CARD center (treatment scales the card div)
+          groupOriginX: cx + colW / 2, groupOriginY: cardTop + cardH / 2,
+        } as const;
+        const scale = isSel ? undefined : 0.96;
+        els.push(shape(`${id}:candidate-${i}-card`, cx, cardTop, colW, cardH, {
+          borderWidth: 2, borderColor: isSel ? col : `${col}55`, borderRadius: 10,
+          background: isSel ? `${col}18` : "rgba(7,9,13,.76)",
+          boxShadow: isSel ? `0 0 24px ${col}44` : "none",
+          z: 5 + i, scale, ...candAnim,
         }));
-        if (asStr(c.src)) els.push(image(`${id}:candidate-${i}-img`, cx + 2, 304, colW - 4, 440, asStr(c.src), {
-          fit: "cover", filter: isSel ? "none" : "grayscale(.65) brightness(.7)", z: 6 + i, animIn: "slide-up", animDurationSec: 0.6, startSec: candStart,
+        els.push(shape(`${id}:candidate-${i}-img-bg`, cx + 2, cardTop + 2, colW - 4, imgH, {
+          background: "#11151b", z: 6 + i, scale, ...candAnim,
         }));
-        els.push(text(`${id}:candidate-${i}-badge`, cx + 12, 314, 120, 25, isSel ? "selected" : "alternative", {
-          fontSize: 13, fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.6,
-          color: isSel ? col : "#f4e8cf", background: "rgba(0,0,0,.68)", z: 7 + i, startSec: candStart, textShadow: "0 1px 4px rgba(0,0,0,0.8)",
+        if (asStr(c.src)) els.push(image(`${id}:candidate-${i}-img`, cx + 2, cardTop + 2, colW - 4, imgH, asStr(c.src), {
+          fit: "cover", filter: isSel ? "none" : "grayscale(.65) brightness(.7)", z: 6 + i, scale, ...candAnim,
         }));
-        els.push(text(`${id}:candidate-${i}-label`, cx + 14, 560, colW - 28, 30, asStr(c.label), {
-          fontSize: s("treatments.candidate-comparison.candidate.fontSize", 18), fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase", color: col, z: 7 + i, animIn: "slide-up", animDurationSec: 0.6, startSec: candStart,
-          textShadow: "0 2px 6px rgba(0,0,0,0.7)",
+        els.push(text(`${id}:candidate-${i}-badge`, cx + 2 + 12, cardTop + 2 + 12, 130, 13 * 1.4 + 10, isSel ? "selected" : "alternative", {
+          fontSize: 13, fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.56,
+          color: isSel ? col : paper, bgColor: "rgba(0,0,0,.68)", borderRadius: 4,
+          textAlign: "left", z: 7 + i, startSec: candStart, textShadow: "0 1px 4px rgba(0,0,0,0.8)",
+        }));
+        const labelTop = cardTop + 2 + imgH + 14;
+        const labelFontSize = s("treatments.candidate-comparison.candidate.fontSize", 18);
+        els.push(text(`${id}:candidate-${i}-label`, cx + 2 + 16, labelTop, colW - 36, labelFontSize * 1.4222, asStr(c.label), {
+          fontSize: labelFontSize, fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase",
+          textAlign: "left", color: col, z: 7 + i, textShadow: "0 2px 6px rgba(0,0,0,0.7)", scale, ...candAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.candidate.fontSize" },
         }));
-        if (asStr(c.detail)) els.push(text(`${id}:candidate-${i}-detail`, cx + 14, 595, colW - 28, 60, asStr(c.detail), {
-          fontSize: 13, fontFamily: "Arial, sans-serif", color: "#f4e8cf", opacity: 0.7, lineHeight: 1.35, z: 7 + i, animIn: "slide-up", animDurationSec: 0.6, startSec: candStart,
-        }));
+        if (asStr(c.detail)) {
+          const detailLines = Math.max(1, Math.ceil((asStr(c.detail).length * 13 * 0.64) / (colW - 36)));
+          els.push(text(`${id}:candidate-${i}-detail`, cx + 2 + 16, labelTop + labelFontSize * 1.4222 + 6, colW - 36, detailLines * 13 * 1.35, asStr(c.detail), {
+            fontSize: 13, fontFamily: "Arial, sans-serif", color: paper, opacity: 0.7, lineHeight: 1.35,
+            textAlign: "left", z: 7 + i, scale, ...candAnim,
+          }));
+        }
       });
       return els;
     }

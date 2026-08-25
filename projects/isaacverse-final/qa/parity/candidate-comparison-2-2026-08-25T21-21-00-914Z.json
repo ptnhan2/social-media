@@ -1,0 +1,109 @@
+{
+  "label": "candidate-comparison-2",
+  "project": "isaacverse-final",
+  "window": {
+    "startSec": 14,
+    "endSec": 18.5,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-candidate-comparison-2-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-candidate-comparison-2-editor.mp4",
+  "durationSec": 4.544,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 1.032,
+      "changedPct": 2.052
+    },
+    {
+      "t": 0.35,
+      "mean": 3.392,
+      "changedPct": 12.845
+    },
+    {
+      "t": 0.6,
+      "mean": 4.143,
+      "changedPct": 8.64
+    },
+    {
+      "t": 0.85,
+      "mean": 4.047,
+      "changedPct": 9.195
+    },
+    {
+      "t": 1.1,
+      "mean": 3.962,
+      "changedPct": 9.036
+    },
+    {
+      "t": 1.35,
+      "mean": 4.09,
+      "changedPct": 8.992
+    },
+    {
+      "t": 1.6,
+      "mean": 4.362,
+      "changedPct": 9.092
+    },
+    {
+      "t": 1.85,
+      "mean": 4.208,
+      "changedPct": 9.407
+    },
+    {
+      "t": 2.1,
+      "mean": 4.211,
+      "changedPct": 9.421
+    },
+    {
+      "t": 2.35,
+      "mean": 4.342,
+      "changedPct": 9.142
+    },
+    {
+      "t": 2.6,
+      "mean": 4.615,
+      "changedPct": 9.948
+    },
+    {
+      "t": 2.85,
+      "mean": 4.691,
+      "changedPct": 10.428
+    },
+    {
+      "t": 3.1,
+      "mean": 4.675,
+      "changedPct": 10.183
+    },
+    {
+      "t": 3.35,
+      "mean": 4.578,
+      "changedPct": 10.432
+    },
+    {
+      "t": 3.6,
+      "mean": 4.257,
+      "changedPct": 9.006
+    },
+    {
+      "t": 3.85,
+      "mean": 4.257,
+      "changedPct": 9.005
+    },
+    {
+      "t": 4.1,
+      "mean": 4.257,
+      "changedPct": 9.005
+    },
+    {
+      "t": 4.35,
+      "mean": 4.257,
+      "changedPct": 9.005
+    }
+  ],
+  "meanOfMeans": 4.076,
+  "maxMean": 4.691,
+  "gate": "FAIL",
+  "gateThreshold": 2
+}

@@ -303,17 +303,18 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
     width: `${style.w * 100}%`,
     height: `${style.h * 100}%`,
     opacity: style.opacity,
-    transform: `${flipTransform}rotate(${style.rotation}deg) scale(${style.scale})`,
+    transform: `${flipTransform}rotate(${style.rotation}deg) scale(${style.scale}) scaleX(${style.scaleX})`,
     transformOrigin: groupOrigin ?? "center center",
     pointerEvents: "none",
     overflow: "hidden",
+    mixBlendMode: typeof md.blendMode === "string" ? (md.blendMode as React.CSSProperties["mixBlendMode"]) : undefined,
     zIndex: typeof md.z === "number" ? Math.round(md.z) : 10,
   };
   if (md.isTextClip) {
-    // gradient text (spec E2-1): generated titles carry textGradient {start, end}
-    const gradient = md.textGradient as { start?: string; end?: string } | undefined;
+    // gradient text (spec E2-1): generated titles carry textGradient {start, end, stop}
+    const gradient = md.textGradient as { start?: string; end?: string; stop?: number } | undefined;
     const gradientStyle: React.CSSProperties = gradient?.start && gradient?.end ? {
-      background: `linear-gradient(135deg, ${gradient.start} 0%, ${gradient.end} 55%, ${gradient.start} 100%)`,
+      background: `linear-gradient(135deg, ${gradient.start} 0%, ${gradient.end} ${gradient.stop ?? 55}%, ${gradient.start} 100%)`,
       WebkitBackgroundClip: "text",
       WebkitTextFillColor: "transparent",
       // gradient fills need the shadow on a wrapper effect, not textShadow
@@ -337,13 +338,14 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
           textTransform: typeof md.textTransform === "string" ? md.textTransform as React.CSSProperties["textTransform"] : undefined,
           WebkitTextStroke: typeof md.strokeWidth === "number" ? `${md.strokeWidth}px ${typeof md.strokeColor === "string" ? md.strokeColor : "#000"}` : undefined,
           background: typeof md.bgColor === "string" ? md.bgColor : gradientStyle.background,
+          borderRadius: typeof md.borderRadius === "number" ? md.borderRadius : undefined,
           WebkitBackgroundClip: gradientStyle.WebkitBackgroundClip,
           WebkitTextFillColor: gradientStyle.WebkitTextFillColor,
           textShadow: gradient ? undefined : (typeof md.shadowBlur === "number" ? `0 0 ${md.shadowBlur}px ${typeof md.shadowColor === "string" ? md.shadowColor : "rgba(0,0,0,.7)"}` : (typeof md.textShadow === "string" ? md.textShadow : "0 2px 8px rgba(0,0,0,.55)")),
           filter: typeof md.glowBlur === "number" ? `drop-shadow(0 0 ${md.glowBlur}px ${typeof md.glowColor === "string" ? md.glowColor : "#fff"})` : (filter ?? gradientStyle.filter),
-          // no horizontal padding: "0 2%" shifted left/right-aligned text by
-          // 2% of the box width vs the treatment path (E2 parity regression)
           padding: 0, boxSizing: "border-box", overflow: "hidden",
+          // explicit line breaks (baked wraps) survive: pre-line honors \n
+          whiteSpace: typeof md.text === "string" && md.text.includes("\n") ? "pre-line" : undefined,
         }}>
           {String(md.text ?? "")}
         </div>

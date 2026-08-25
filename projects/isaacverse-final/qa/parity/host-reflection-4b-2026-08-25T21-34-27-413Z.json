@@ -1,0 +1,89 @@
+{
+  "label": "host-reflection-4b",
+  "project": "isaacverse-final",
+  "window": {
+    "startSec": 22.5,
+    "endSec": 26,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-host-reflection-4b-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-host-reflection-4b-editor.mp4",
+  "durationSec": 3.563,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 3.43,
+      "changedPct": 8.286
+    },
+    {
+      "t": 0.35,
+      "mean": 4.953,
+      "changedPct": 10.548
+    },
+    {
+      "t": 0.6,
+      "mean": 5.199,
+      "changedPct": 9.602
+    },
+    {
+      "t": 0.85,
+      "mean": 5.893,
+      "changedPct": 9.601
+    },
+    {
+      "t": 1.1,
+      "mean": 6.347,
+      "changedPct": 10.136
+    },
+    {
+      "t": 1.35,
+      "mean": 6.624,
+      "changedPct": 10.438
+    },
+    {
+      "t": 1.6,
+      "mean": 6.861,
+      "changedPct": 10.738
+    },
+    {
+      "t": 1.85,
+      "mean": 6.955,
+      "changedPct": 10.905
+    },
+    {
+      "t": 2.1,
+      "mean": 6.888,
+      "changedPct": 11.095
+    },
+    {
+      "t": 2.35,
+      "mean": 6.818,
+      "changedPct": 10.87
+    },
+    {
+      "t": 2.6,
+      "mean": 6.528,
+      "changedPct": 10.434
+    },
+    {
+      "t": 2.85,
+      "mean": 6.032,
+      "changedPct": 10.252
+    },
+    {
+      "t": 3.1,
+      "mean": 5.462,
+      "changedPct": 9.686
+    },
+    {
+      "t": 3.35,
+      "mean": 4.834,
+      "changedPct": 8.882
+    }
+  ],
+  "meanOfMeans": 5.916,
+  "maxMean": 6.955,
+  "gate": "FAIL",
+  "gateThreshold": 2
+}

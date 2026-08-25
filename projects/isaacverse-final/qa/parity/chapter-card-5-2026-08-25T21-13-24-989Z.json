@@ -1,0 +1,89 @@
+{
+  "label": "chapter-card-5",
+  "project": "isaacverse-final",
+  "window": {
+    "startSec": 0,
+    "endSec": 3.5,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-chapter-card-5-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-chapter-card-5-editor.mp4",
+  "durationSec": 3.563,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 1.362,
+      "changedPct": 3.943
+    },
+    {
+      "t": 0.35,
+      "mean": 3.107,
+      "changedPct": 8.778
+    },
+    {
+      "t": 0.6,
+      "mean": 2.856,
+      "changedPct": 8.278
+    },
+    {
+      "t": 0.85,
+      "mean": 3.126,
+      "changedPct": 9.24
+    },
+    {
+      "t": 1.1,
+      "mean": 3.349,
+      "changedPct": 9.786
+    },
+    {
+      "t": 1.35,
+      "mean": 2.084,
+      "changedPct": 5.012
+    },
+    {
+      "t": 1.6,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 1.85,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 2.1,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 2.35,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 2.6,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 2.85,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 3.1,
+      "mean": 2,
+      "changedPct": 4.48
+    },
+    {
+      "t": 3.35,
+      "mean": 2,
+      "changedPct": 4.48
+    }
+  ],
+  "meanOfMeans": 2.277,
+  "maxMean": 3.349,
+  "gate": "FAIL",
+  "gateThreshold": 2
+}
