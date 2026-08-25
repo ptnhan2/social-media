@@ -59,3 +59,9 @@ node remotion-composer\scripts\render-window.mjs --project isaacverse-final --st
    — dùng `el.elementType ?? el.type`
 5. **Konva content**: treatments preview render bằng DOM (không canvas) —
    verify bằng img/DOM query, không pixel-sample canvas
+6. **CI @types/react**: react-konva kéo @types/react@19.x vào tree nhưng
+   package.json không pin → npm ci trên CI báo lock out-of-sync. PHẢI pin
+   `@types/react@^18` + `@types/react-dom@^18` khi cài Konva (hoặc bất kỳ
+   package nào peer-depend @types/react)
+7. **Rules-of-Hooks**: useCallback/useMemo KHÔNG ĐƯỢC đặt sau early-return
+   (loading guard) — hooks phải chạy cùng thứ tự mọi render

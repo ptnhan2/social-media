@@ -212,6 +212,25 @@
 - Gotcha: render baselines BEFORE editing code (rendered after = both sides
   identical, gate FAIL 0.0 falsely)
 
+### CI regression: @types/react lock sync (silent red since P0 Konva install)
+- react-konva pulls @types/react into the tree; package.json never pinned it
+  → local npm resolved 19.x, CI's npm ci reported lock out-of-sync
+  ("Missing: @types/react@19.2.18 from lock file") → CI RED silently from
+  15:35 (P0 Konva commit) through the entire night run until caught in G4
+- FIX: pin @types/react@^18 + @types/react-dom@^18 in devDependencies
+- LESSON: "CI xanh trên mọi commit" was STALE memory — verify gh run list
+  after EACH push; the check_ci_after_push principle exists for this reason
+- RULE: when installing any package with peer-dependency on @types/react
+  (react-konva, react-moveable, etc.), ALWAYS pin @types/react to match
+  the project's react version BEFORE committing
+
+### Part B scope decision (narrative framing)
+- nar-001 Part B (kicker narrativeFunction) stays on the 2 text/diagram
+  treatments (SemanticDiagram + ProcessTimeline) only — extending labels
+  to asset-heavy treatments (HostReflection, CinematicMetaphor, etc.)
+  would CLUTTER photo/cinematic shots. Asset treatments receive variety
+  via presence (hướng A) instead. Documented in CHARACTER-PRESENCE-SPEC.
+
 ## Experiments
 
 ### Generator session (E2-E6) — 2026-08-23 afternoon

@@ -295,13 +295,17 @@ layer xuống/lên • `Enter` đóng lasso.
 | 7 | (bug) Reload với layers persisted không auto-fit → doc tràn màn hình, click hụt | Fit chạy cả khi restore |
 | 8 | (bug) Aspect 3:4/4:3 Stability không hỗ trợ → 400 | Chỉ nhận enum của API: 21:9…9:21 |
 
-### Round 3+ — CÒN LẠI
-1. **Pose wiring vào video** — chưa có UI trong editor gắn pose vào scene/
-   timeline (việc lớn nhất — cần design session riêng)
-2. **History panel thumbnails** (giờ text-only)
-3. **Multi-doc** — 1 doc/project
-4. Wand marching-ants animation (hiện overlay tĩnh)
-5. Zoom-to-selection
+### Round 3 — ĐÃ FIX (commit ae33c04, 2026-08-25 đêm)
+| # | Vấn đề | Fix |
+|---|---|---|
+| 1 | Zoom-to-selection | 🔍→ Selection button (move tool) fits viewport vào AABB layers đang chọn + padding; fix stale `ui.selectedIds` closure trong actionsRef deps |
+| 2 | History panel text-only (không thumbnail) | 56px JPEG dataURL từ stage tại commit, `SET_ENTRY_THUMB` action, persisted với session; render thumb + label rows |
+| 3 | Wand overlay static (không pulse) | `WandPulseImage` — rAF set node.opacity 0.55..1 + batchDraw, zero React re-renders (marching-ants approximation) |
+
+### Còn lại (round 4+, cần user/design)
+1. **Multi-doc** — 1 doc/project; muốn nhiều pose song song phải New + save
+2. Anchor editor kéo thả (CHARACTER-PRESENCE-SPEC mục 2)
+3. `repurpose` pipeline (transcript → X/blog/shorts) — cần duyệt user
 
 Nguyên nhân bỏ sót: build theo feature-list của plan, không có pass
 "walk the whole flow như user lần đầu". Bài học: sau mỗi phase E2E phải

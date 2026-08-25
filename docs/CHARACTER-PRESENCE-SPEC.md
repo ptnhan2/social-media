@@ -5,7 +5,10 @@
 > render qua md.src path, draggable/keyframe-able. nar-002 variety DONE —
 > CONTEXT_PRESENCE 7 entries × 2-3 variants, deterministic rotation theo
 > beat.startSec. Production poses: 4 poses baked với head-front.png (VLM
-> 4/4 PASS). Chi tiết: docs/TODO-NEXT.md Phase A+C.
+> 4/4 PASS). Part B scope: kicker narrative framing giữ trên 2 treatment
+> diagram (SemanticDiagram + ProcessTimeline) — asset/cinematic treatments
+> nhận variety qua presence (hướng A) thay vì labels (sẽ clutter).
+> Chi tiết: docs/TODO-NEXT.md Phase A+C.
 
 
 > **⚠️ AUTO-CUT HEAD: DEFERRED** — 9+ cách thử, không cách nào đạt. Chi tiết:
