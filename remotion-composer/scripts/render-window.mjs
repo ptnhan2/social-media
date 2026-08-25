@@ -100,11 +100,14 @@ const sourceHash = (entryPoint) => {
   return hash.digest("hex");
 };
 
-export function syncRuntimePublic(slug) {
+export function syncRuntimePublic(slug, editorDocPath) {
   // LIVE editor doc → public: projects/<slug>/editor/current.json is the
   // single source of truth (editor_op + generator write there); the render
   // reads the public copy. Without this pull, clip edits never reach renders.
-  const liveEditor = path.join(composerRoot, "..", "projects", slug, "editor", "current.json");
+  // editorDocPath: optional override for parity measurement (cold projection)
+  // — syncs the given doc instead of the live one, so parity renders never
+  // pick up user edits that exist only in current.json.
+  const liveEditor = editorDocPath ?? path.join(composerRoot, "..", "projects", slug, "editor", "current.json");
   const publicEditor = path.join(composerRoot, "public", slug, "editor", "current.json");
   if (fs.existsSync(liveEditor)) {
     fs.mkdirSync(path.dirname(publicEditor), { recursive: true });
@@ -147,7 +150,7 @@ export function syncRuntimePublic(slug) {
   }
 }
 
-export function buildBundle(entry, { slug = "isaacverse-final" } = {}) {
+export function buildBundle(entry, { slug = "isaacverse-final", editorDocPath } = {}) {
   const entryPoint = entry || `projects/isaacverse-final/index.tsx`;
   const outDir = bundleCacheDir();
   const hashFile = path.join(composerRoot, outDir, ".source-hash");
@@ -155,7 +158,7 @@ export function buildBundle(entry, { slug = "isaacverse-final" } = {}) {
   const bundleExists = fs.existsSync(path.join(composerRoot, outDir, "bundle.js"));
   if (bundleExists && fs.existsSync(hashFile) && fs.readFileSync(hashFile, "utf8") === currentHash) {
     // source unchanged - reuse bundle, just sync runtime-fetched JSONs
-    syncRuntimePublic(slug);
+    syncRuntimePublic(slug, editorDocPath);
     return outDir;
   }
   // source changed (or first run): wipe bundle + ALL caches and rebuild
@@ -170,18 +173,18 @@ export function buildBundle(entry, { slug = "isaacverse-final" } = {}) {
   const r = runRemotion(["bundle", entryPoint, outDir]);
   fs.mkdirSync(path.join(composerRoot, outDir), { recursive: true });
   fs.writeFileSync(hashFile, currentHash);
-  syncRuntimePublic(slug);
+  syncRuntimePublic(slug, editorDocPath);
   return outDir;
 }
 
-export function buildWindowRender({ slug, composition, entry, editDocPath, startSec, endSec, quality = "draft", output, paddingSec = 0.45, scale, dryRun = false }) {
+export function buildWindowRender({ slug, composition, entry, editDocPath, editorDocPath, startSec, endSec, quality = "draft", output, paddingSec = 0.45, scale, dryRun = false }) {
   const info = projectInfo(slug, editDocPath);
   const window = computeWindow({ startSec, endSec, fps: info.fps, durationSec: info.durationSec, paddingSec });
   const qualityPreset = preset(quality);
   const outputPath = output || path.join(workspaceRoot, "projects", slug, "renders", "windows", `${slug}-${quality}-${window.startSec.toFixed(2)}-${window.endSec.toFixed(2)}.mp4`);
   // Step 1: bundle (rebuild only if TS/TSX source changed; always sync runtime JSONs).
   // Step 2: render from the bundle dir.
-  const bundleDir = dryRun ? "<bundle>" : buildBundle(entry, { slug });
+  const bundleDir = dryRun ? "<bundle>" : buildBundle(entry, { slug, editorDocPath });
   const args = ["render", bundleDir, composition || `${slug}-30s`, outputPath, `--frames=${window.startFrame}-${window.endFrame}`, `--scale=${typeof scale === "number" && scale > 0 ? scale : qualityPreset.scale}`, `--concurrency=${qualityPreset.concurrency}`, `--x264-preset=${qualityPreset.x264Preset}`, `--crf=${qualityPreset.crf}`, "--gl=angle"];
   return { ...window, outputPath, bundleDir, command: runRemotion(args, { dryRun }), args };
 }
@@ -189,18 +192,21 @@ export function buildWindowRender({ slug, composition, entry, editDocPath, start
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {
   const args = parseArgs(process.argv.slice(2));
   if (args.help || args.h) {
-    console.log("Usage: node scripts/render-window.mjs --project isaacverse-final --start 4 --end 8 [--quality draft] [--path treatment|editor] [--dry-run]");
+    console.log("Usage: node scripts/render-window.mjs --project isaacverse-final --start 4 --end 8 [--quality draft] [--path treatment|editor] [--editor-doc <path>] [--dry-run]");
     process.exit(0);
   }
   if (args.start === undefined || args.end === undefined) throw new Error("--start and --end are required");
   // --path editor renders the clip-first flow (composition <slug>-30s-editor);
   // default treatment keeps the v009-master flow (BeatTreatment + style store).
+  // --editor-doc overrides the synced editor doc (parity measurement uses the
+  // cold projection so user edits in current.json never pollute the diff).
   const pathMode = args.path === "editor" ? "editor" : "treatment";
   const result = buildWindowRender({
     slug: args.project || "isaacverse-final",
     composition: args.composition || (pathMode === "editor" ? `${args.project || "isaacverse-final"}-30s-editor` : undefined),
     entry: args.entry,
     editDocPath: args.editDoc,
+    editorDocPath: args.editorDoc ? path.resolve(args.editorDoc) : undefined,
     startSec: Number(args.start),
     endSec: Number(args.end),
     quality: args.quality || "draft",

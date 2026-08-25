@@ -1,76 +1,111 @@
-# TODO NEXT — NIGHT RUN 2026-08-24/25 — HOÀN TẤT 6/7 PHASE
+# TODO NEXT — NIGHT RUN 2026-08-25/26 — E2 PARITY CLOSE + PLAYWRIGHT E2E
 
-> Kết quả night run (user ngủ, autonomous mode — quyết định ghi trong commits).
-> Chi tiết evidence: HARNESS-RECOVERY.md + git log `bc12fe3..HEAD` đêm 24-25/08.
+> Night plan (user ngủ, autonomous mode 8h ~23:45→07:45). User đã cấp toàn quyền
+> quyết định; việc bắt buộc user → dồn sang mục "Morning review".
+> Quy tắc đêm: commit + push theo phase, CHECK CI sau mỗi push (lesson
+> check_ci_after_push), RCA khi fail (không blind revert), không fake gate.
 
-## Trạng thái các phase
+## Objective (north star)
 
-### Phase A — Pose wiring + production poses ✅ (commit cd03818, 44349e4)
-- addCharacterPresenceClip op (grammar geometry → overlay clip, userEdited
-  ledger) + 2 unit tests — renders qua md.src path sẵn có
-- PropertiesPanel tab "Character" cho beat clip: pose dropdown động từ
-  bridge list-poses + position/size/motion → clip spanning beat range
-- Track "Character" riêng (userCreated → top-level timeline row)
-- E2E: preview render + kéo được + render-window editor path (VLM confirm
-  character trong frame)
-- 4 production poses bake lại với head-front.png (VLM 4/4 PASS) + dọn
-  junk poses (check references trước)
-- BUG bắt được: Rules-of-Hooks violation (useCallback sau early-return)
+1. **E2 parity gate <2.0** (mean abs diff 0-255, compare trên cold projection):
+   đóng 3 gap còn lại (node layout math, footer, presence timing) trên 2 window
+   (semantic-diagram 3.5-7 + process-timeline 10.5-14). Gate đạt → flip default
+   render path (`--path editor` default + harness render_window default), master
+   render giữ chờ user bless buổi sáng. Gate KHÔNG đạt → documented honestly.
+2. **Playwright E2E suite cho Asset Studio**: infra (config + webServer +
+   chromium + Konva-DOM strategy) + ~12-15 test smoke/chức năng + CI job.
 
-### Phase B — E2 parity: bezier edges + springs ✅ (commit 6d22403)
-- Edge element (elementType=edge): SVG quadratic bezier + curvature +
-  gradient/brush stroke + draw-on reveal trong EditorClipOverlay
-- "spring" anim preset trong clipStyle (underdamped overshoot-settle)
-- Projection: semantic-diagram edges project đầy đủ (styleSource provenance)
-- BUG: editorProjection ghi đè elementType bằng el.type trong metadata
-  spread (edges biến mất âm thầm)
-- Đo lường (B5): beat interior mean 7-14 (trước: edges hoàn toàn thiếu),
-  frame 0 = 40 (cross-beat boundary artifact)
-- **B6 DECISION: gate <2.0 CHƯA đạt → KHÔNG flip default render path**
-  (remaining gaps: node box layout math khác, footer, presence timing —
-  VLM side-by-side đã list). Treatment path stays master.
+## Phases
 
-### Phase C — nar-001/nar-002 presence variety ✅ (commit ae69cc7)
-- CONTEXT_PRESENCE: 7 context entries × 2-3 variants (pose/position/motion/
-  size) — rotation deterministic theo beat.startSec (nar-002 "never same
-  framing twice"), cùng kết quả 2 render paths
-- 6 unit tests (consecutive-same-context differ, determinism, override
-  wins, variant table shape)
-- Part B scope: kicker narrative framing giữ trên 2 treatment diagram
-  (asset/cinematic treatments sẽ clutter nếu thêm label — documented)
-- VLM render verify: character hiển thị (variant theo seed)
+### Phase 0 — Boot + baseline (~30')
+- [ ] Vite dev server :5174 (background, persistent)
+- [ ] Parity tooling (PERMANENT, không phải temp script):
+  - `render-window.mjs --editor-doc <path>`: render editor path với doc chỉ định
+    (cold doc cho parity, không đụng live doc)
+  - `tools/quality/parity_diff.py`: pure PIL pixel-diff lib (mean + changed%,
+    không phụ thuộc harness)
+  - `scripts/parity-measure.mjs`: orchestrator — cold-generate → render 2 paths
+    → diff → JSON report
+- [ ] Baseline: semantic-diagram window, cold doc, record mean (kỳ vọng 7-14)
 
-### Phase D — Asset Studio round 3 ✅ (commit ae33c04)
-- Zoom-to-selection (🔍→ Selection button) + fix stale ui.selectedIds
-  closure trong actionsRef deps
-- History panel thumbnails (56px JPEG dataURL khi commit, persisted)
-- Wand selection pulse (node-level rAF, zero re-renders)
+### Phase 1 — Node layout parity (~2h)
+- [ ] P1.1 Node box height estimator (pure TS): padding 14/18/13 + label line +
+  detail wrap estimate + dot 8px (margin -4). Calibrate vs browser measureText
+  (chrome-devtools, Arial 900 uppercase 20px / detail 13px)
+- [ ] P1.2 Projection node: height từ estimator, label top = boxTop+14, detail
+  top = boxTop+14+labelH+6, DOT element mới (8×8, gradient, glow), boxShadow
+  DOUBLE match (`0 0 18px c38, inset 0 0 18px c12`)
+- [ ] P1.3 Node timing: `activeFrom ?? 0` (EditDoc có activeFrom 0.2/0.8/1.4 —
+  projection đang sai với stagger 0.3+i*0.25)
+- [ ] P1.4 clipStyle spring EXACT: import Remotion `spring` (pure fn, không
+  hook) + `md.animSpring {damping,stiffness,mass,durationSec,from}` + pulse
+  support (`md.pulse {amp,periodSec}` — activePulse 1+0.08*sin) + fps param
+  cho overlayStyleAt. Fallback nếu bundle issue: analytic spring thủ công
+- [ ] P1.5 Unit tests: estimator, spring parity (clipStyle == treatment math),
+  pulse, projection snapshot
+- [ ] P1.6 Measure lại + calibrate tối đa 2 vòng
 
-### Phase E — Harness & agent ✅ (commits a29da0d, 80688ac)
-- **E1: clip-editor subagent — E6 PASS 7/7** (agent autonomy loop đầu tiên
-  chạy trọn vẹn: delegate → editor_op → qa_gate → request_keep → persist)
-- 4 bug fix: subagent thiếu tools (tự revert), render-window không kéo
-  LIVE editor doc (clip edits invisible trong renders — regression từ
-  E6-era), driver resume 1 giá trị cho nhiều interrupts (keep bị parse
-  nhầm reject → agent revert đúng protocol), interrupt serialization
-  (dict value key, không phải attribute)
-- E2: render-review queue 4 items cũ (artifacts 22/08) — lành mạnh
-- E3: guardrail PASS — principle_compliance 14/14, code_quality 14/14
+### Phase 2 — Footer + presence + edges (~1.25h)
+- [ ] P2.1 Footer: right-anchor (right edge 1850, bottom 1035), textAlign
+  right, letterSpacing 1.12, color rgba(244,232,207,0.45) — semantic-diagram
+  "follow the thread" + process-timeline "step N/M" (verify vị trí treatment)
+- [ ] P2.2 Presence exact presets trong clipStyle: `p-slide-l/r/u/d` (±70px
+  frame-absolute), `p-pop` (spring 9/170/0.7, scale 0.4+0.6s), `p-jump-in`,
+  `p-drop-in`, `p-peek` (-46% clip width), `p-fade-scale` (cubic-out eased) +
+  filter double drop-shadow (black + accent33). Update PRESENCE_TO_CLIP_ANIM
+- [ ] P2.3 Edge reveal timing align vs treatment Edge component
 
-### Phase F — Playwright E2E suite ⏭️ SKIPPED (time-box)
-- Lý do: 3h sáng, cần infra decisions (test runner config, fixture
-  strategy cho Konva canvas) đáng có session riêng. Ad-hoc browser E2E
-  đã cover mọi feature đêm nay. **Defer to next session.**
+### Phase 3 — Gate + flip decision (~45')
+- [ ] P3.1 Gate measurement 2 windows, interior frames, frame-aligned starts
+  (tránh cross-beat boundary artifact như frame-0=40 đêm trước)
+- [ ] P3.2 Gate <2.0 cả 2 window → flip default (render-window + harness
+  render_window tool default editor; treatment = generator preview).
+  KHÔNG đạt → gap table documented. Sau đó: sync LIVE editor doc (sync mode —
+  unmodified refresh, userEdited keep) + verify editor-ops list
 
-### Phase G — Close-out ✅ (commit này)
-- Docs sync toàn bộ + archive html stale + memory + final push
+### Phase 4 — Playwright E2E Asset Studio (~2h)
+- [ ] P4.1 Infra (autonomous decisions): @playwright/test trong composer-app;
+  webServer = vite ephemeral port, reuseExistingServer; chromium; Konva
+  strategy = assert qua Konva node attrs + store state (page.evaluate), KHÔNG
+  pixel-sample canvas; data-testid trên panels; bridge API mock qua route
+  interception
+- [ ] P4.2 Tests batch 1: boot smoke (7 tools + panels), image upload
+  (fixture PNG), tool switch + cursor, undo/redo + history, session persist
+  across reload
+- [ ] P4.3 Tests batch 2: lasso polygon, wand flood-fill (fixture), eraser,
+  zoom-to-selection, guides/rulers, cheat sheet, mocked gen/inbox/recipes
+- [ ] P4.4 `npm run test:e2e` + CI job `studio-e2e` (ubuntu + chromium,
+  ~3min) — local green TRƯỚC khi commit
 
-## Còn lại sau đêm (next session)
+### Phase 5 — Guardrails + close-out (~1h)
+- [ ] P5.1 Full verify: vitest (137+new), typecheck, build; push theo phase +
+  `gh run list` sau MỖI push
+- [ ] P5.2 reviewer-agent subagent đọc diff cold (lean gate >200 dòng)
+- [ ] P5.3 Docs sync: GENERATOR-SPEC (E2 final + gate numbers + flip decision),
+    TODO-NEXT (kết quả đêm — file này), HARNESS-RECOVERY (rewrite cho buổi
+    sáng), ASSET-STUDIO-SPEC (E2E section), knowledge-base entry
+- [ ] P5.4 Memory save night-run-2026-08-26 decisions
 
-1. **E2 parity tiếp** (nếu muốn flip): node box layout math trong
-   projection (DiagramNodeView layout ≠ 270×100), footer text, presence
-   timing — cần đo lại sau mỗi mục
-2. **Playwright E2E suite** cho Asset Studio (infra decisions)
-3. Multi-doc studio + anchor editor kéo thả (CHARACTER-PRESENCE-SPEC)
-4. `repurpose` pipeline (transcript → X/blog/shorts) — cần duyệt user
-5. Poses production: user tự bake thêm poses bằng studio (công cụ đủ)
+## Morning review (cần user — không làm đêm)
+
+1. Flip blessing: nếu gate đạt, master render production có dùng editor flow
+   không (per GENERATOR-SPEC §2.6 "master render uses the editor flow")
+2. `repurpose` pipeline approval (đã defer từ trước)
+3. Multi-doc studio + anchor editor kéo thả (design session)
+4. User tự bake thêm poses bằng studio (công cụ đủ)
+
+## Risks + mitigations
+
+| Risk | Mitigation |
+|---|---|
+| clipStyle import remotion spring → bundle/UI issue | spring là pure fn; nếu typecheck/bundle fail → analytic spring thủ công (công thức sẵn: ω0=√(k/m), ζ=d/(2√(km))) |
+| Node height estimator sai | Calibration loop khách quan theo pixel-diff, tối đa 2 vòng; còn sai → VLM side-by-side tìm residual |
+| Gate không đạt honestly | DOCUMENT gap table, KHÔNG fake; treatment stays master (quyết định như B6 đêm trước) |
+| Playwright flaky trên Windows | retry 1 lần, headless chromium, route mock thay vì python bridge thật |
+| CI đỏ | RCA ngay theo protocol §8, không push thêm khi đang đỏ |
+
+## PAUSE conditions (chỉ khi)
+
+CI đỏ beyond fixable / git repo corruption / disk full. Mọi thứ khác → RCA +
+fix + tiếp tục. Paid key không dùng đêm nay (render local, pixel-diff free;
+VLM chỉ dùng làm tie-breaker evidence nếu cần).
