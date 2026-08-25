@@ -184,9 +184,12 @@ function docsEqual(a: DocState, b: DocState): boolean {
   if (a.layers.length !== b.layers.length) return false;
   return a.layers.every((la, i) => {
     const lb = b.layers[i];
+    // name/locked are part of the doc state: without them, rename/lock
+    // actions dedupe to a no-op and silently vanish from history
     return la.id === lb.id && la.src === lb.src && la.x === lb.x && la.y === lb.y &&
       la.scaleX === lb.scaleX && la.scaleY === lb.scaleY && la.rotation === lb.rotation &&
-      la.opacity === lb.opacity && la.visible === lb.visible;
+      la.opacity === lb.opacity && la.visible === lb.visible &&
+      la.name === lb.name && la.locked === lb.locked;
   });
 }
 
@@ -411,6 +414,12 @@ export function StoreProvider({
     }
   });
   const value = React.useMemo(() => ({ state, dispatch }), [state]);
+  // E2E test hook (DEV server only — never in a production build): exposes
+  // read-only state + dispatch so Playwright can locate layers deterministically
+  // (canvas coordinates) and assert store-level outcomes alongside the DOM.
+  if (import.meta.env.DEV) {
+    (window as unknown as Record<string, unknown>).__studio = { getState: () => value.state, dispatch };
+  }
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
 

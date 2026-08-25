@@ -12,7 +12,7 @@ export const StatusBar: React.FC<{ onFit: () => void }> = ({ onFit }) => {
   const toolDef = TOOL_BY_ID[ui.activeTool];
 
   return (
-    <footer className="as4-statusbar">
+    <footer className="as4-statusbar" data-testid="statusbar">
       <span className="as4-status-item">
         Zoom
         <select

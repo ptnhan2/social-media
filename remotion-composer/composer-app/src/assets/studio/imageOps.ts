@@ -253,5 +253,8 @@ export async function uploadDataUrl(dataUrl: string, projectId: string): Promise
   });
   const data = await r.json();
   if (!r.ok || !data.path) throw new Error(data.error || `upload failed: ${r.status}`);
-  return { path: String(data.path), src: fileUrl(String(data.path)) };
+  // BUSTED url: (1) the browser must not serve cached pixels when the server
+  // reuses a path, (2) the store's docsEqual dedupe keys on src — an un-busted
+  // same-path upload would silently drop the edit from history (E2E-caught).
+  return { path: String(data.path), src: fileUrlBusted(String(data.path)) };
 }

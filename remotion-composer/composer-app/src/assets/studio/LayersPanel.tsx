@@ -54,6 +54,8 @@ export const LayersPanel: React.FC = () => {
             <div
               key={layer.id}
               className={`as4-layer-item ${selected ? "selected" : ""} ${dropTargetId === layer.id ? "drop-target" : ""} ${layer.locked ? "locked" : ""}`}
+              data-testid={`layer-item-${layer.id}`}
+              data-selected={selected ? "true" : "false"}
               draggable={!renamingId}
               onClick={(e) => {
                 if (renamingId) return;

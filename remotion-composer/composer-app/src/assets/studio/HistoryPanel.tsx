@@ -19,7 +19,7 @@ export const HistoryPanel: React.FC = () => {
           {state.pointer + 1}/{state.entries.length}
         </span>
       </header>
-      <div className="as4-history-list" ref={listRef}>
+      <div className="as4-history-list" ref={listRef} data-testid="history-list">
         {state.entries.map((entry, i) => (
           <button
             key={i}

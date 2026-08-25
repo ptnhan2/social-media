@@ -2,16 +2,24 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch } from "fs";
 import { resolve, sep } from "path";
+import { fileURLToPath } from "url";
 import { spawn, spawnSync } from "child_process";
 import { createProjectStore } from "../shared/isaacverse/store";
 import { dispatchLocalOperation } from "../shared/isaacverse/operations";
 import { createKiloHandoff, listKiloHandoffs, updateKiloHandoff } from "../shared/isaacverse/handoff";
 
-const PUBLIC_DIR = resolve("C:/DevWork/social-media/remotion-composer/public");
+// Portable workspace layout: this config lives at
+// <workspace>/remotion-composer/composer-app/vite.config.ts — derive every
+// path from it instead of hardcoding absolute machine paths (CI + other
+// checkouts must boot the dev server with the same middleware).
+const APP_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)));
+const COMPOSER_ROOT = resolve(APP_ROOT, "..");
+const WORKSPACE_ROOT = resolve(COMPOSER_ROOT, "..");
+const PUBLIC_DIR = resolve(COMPOSER_ROOT, "public");
 const UPLOADS = resolve(PUBLIC_DIR, "uploads");
-const PROJECTS_ROOT = resolve("C:/DevWork/social-media/projects");
+const PROJECTS_ROOT = resolve(WORKSPACE_ROOT, "projects");
 const PROJECT_STORE = createProjectStore(PROJECTS_ROOT, PUBLIC_DIR);
-const RULES_ROOT = resolve("C:/DevWork/social-media/libraries/04-visual/feedback-rules");
+const RULES_ROOT = resolve(WORKSPACE_ROOT, "libraries/04-visual/feedback-rules");
 mkdirSync(UPLOADS, { recursive: true });
 
 const sendJson = (res: any, status: number, value: unknown) => {
@@ -20,9 +28,13 @@ const sendJson = (res: any, status: number, value: unknown) => {
   res.end(JSON.stringify(value));
 };
 
-const COMPOSER_ROOT = resolve("C:/DevWork/social-media/remotion-composer");
-const WORKSPACE_ROOT = resolve("C:/DevWork/social-media");
-const PY = resolve(WORKSPACE_ROOT, "harness/.venv/Scripts/python.exe");
+const PY = (() => {
+  const candidates = [
+    resolve(WORKSPACE_ROOT, "harness", ".venv", "Scripts", "python.exe"), // Windows
+    resolve(WORKSPACE_ROOT, "harness", ".venv", "bin", "python"), // linux/macos
+  ];
+  return candidates.find((candidate) => existsSync(candidate)) ?? candidates[0];
+})();
 const ASSET_API = resolve(WORKSPACE_ROOT, "tools/assets/asset_api.py");
 const STUDIO_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IsaacVerseComposer/1.0";
 

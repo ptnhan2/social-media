@@ -617,7 +617,7 @@ export const ImportPanel: React.FC<{
                   ↻
                 </button>
               </div>
-              <div className="as4-stock-grid as4-inbox-grid">
+              <div className="as4-stock-grid as4-inbox-grid" data-testid="inbox-grid">
                 {inboxFiles.map((f) => (
                   <button
                     key={f.path}

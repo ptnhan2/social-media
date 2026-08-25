@@ -6,7 +6,8 @@
     "dev": "vite --port 5174",
     "build": "vite build",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit --strict --skipLibCheck --target ES2021 --module ESNext --moduleResolution bundler --jsx react-jsx src/composer/VideoEditor.tsx src/composer/LeftRail.tsx src/composer/PropertiesPanel.tsx src/canvas/InteractiveCanvas.tsx src/editor/EditorTimeline.tsx src/editor/editorOperations.ts"
+    "typecheck": "tsc --noEmit --strict --skipLibCheck --target ES2021 --module ESNext --moduleResolution bundler --jsx react-jsx src/composer/VideoEditor.tsx src/composer/LeftRail.tsx src/composer/PropertiesPanel.tsx src/canvas/InteractiveCanvas.tsx src/editor/EditorTimeline.tsx src/editor/editorOperations.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@langchain/core": "^1.2.8",
@@ -24,6 +25,7 @@
     "use-image": "^1.1.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4",

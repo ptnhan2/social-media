@@ -1,0 +1,29 @@
+name: Studio E2E
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  studio-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install composer-app deps
+        run: cd remotion-composer/composer-app && npm ci
+      - name: Install Playwright chromium
+        run: cd remotion-composer/composer-app && npx playwright install --with-deps chromium
+      - name: Run Asset Studio E2E (fully mocked bridge)
+        run: cd remotion-composer/composer-app && npx playwright test
+      - name: Upload traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: remotion-composer/composer-app/test-results
+          retention-days: 3

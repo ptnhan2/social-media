@@ -503,6 +503,7 @@ export const CanvasStage: React.FC<CanvasStageProps> = ({ stageRef, actionsRef, 
     <div
       ref={containerRef}
       className="as4-canvas-wrap"
+      data-testid="studio-canvas"
       data-viewport={`${viewport.scale},${viewport.x},${viewport.y}`}
       data-doc={`${doc.docWidth},${doc.docHeight}`}
       onDragOver={(e) => e.preventDefault()}

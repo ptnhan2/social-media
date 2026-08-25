@@ -419,7 +419,7 @@ const AssetStudioInner: React.FC<{ projectId: string; onBack: () => void }> = ({
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [dispatch, state.ui, state.doc.layers, applyLasso, applyWandDelete]);
+  }, [dispatch, state.ui, state.doc.layers, applyLasso, applyWandDelete, showShortcuts]);
 
   const zoomBy = (factor: number) => {
     const stage = stageRef.current;

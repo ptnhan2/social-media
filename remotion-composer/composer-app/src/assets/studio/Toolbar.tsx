@@ -13,6 +13,8 @@ export const Toolbar: React.FC = () => {
           key={t.id}
           type="button"
           className={`as4-tool-btn ${active === t.id ? "active" : ""}`}
+          data-testid={`tool-${t.id}`}
+          data-active={active === t.id ? "true" : "false"}
           title={`${t.label} (${t.shortcut}) — ${t.hint}`}
           onClick={() => dispatch({ type: "SET_TOOL", tool: t.id })}
         >
