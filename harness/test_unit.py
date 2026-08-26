@@ -213,6 +213,46 @@ def test_style_rollback():
             sh.copy2(style_file, dst)
 
 
+def test_vlm_qa_pipeline():
+    print("\n=== VLM QA pipeline (PIPELINE-HARDENING-SPEC 3.4) ===")
+    from PIL import Image
+    import numpy as np
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from vlm_qa import _region_block_diff, _som_overlay, _iou, _parse_response
+
+    # two images: identical except a block changed
+    img_a = Image.new("RGB", (640, 360), (10, 10, 10))
+    img_b = Image.new("RGB", (640, 360), (10, 10, 10))
+    # draw a bright patch on b
+    for x in range(100, 200):
+        for y in range(50, 100):
+            img_b.putpixel((x, y), (255, 200, 0))
+
+    # region detection
+    regions = _region_block_diff(img_a, img_b)
+    check("changed region detected", len(regions) >= 1, f"regions={len(regions)}")
+    check("region has diff_score > 0", all(r["diff_score"] > 0 for r in regions), str(regions))
+
+    # SoM overlay produces a larger image with marks
+    marked = _som_overlay(img_b, regions)
+    check("SoM overlay upscaled", marked.width == 640 * 3, f"w={marked.width}")
+    check("SoM overlay not blank", marked.getpixel((marked.width - 1, marked.height - 1)) != (0, 0, 0), "")
+
+    # IoU: perfect overlap
+    region = {"x": 100, "y": 50, "w": 100, "h": 50}
+    perfect_bbox = [100 * 3, 50 * 3, 200 * 3, 100 * 3]  # scaled to match
+    check("IoU perfect overlap = 1.0", abs(_iou(perfect_bbox, region) - 1.0) < 0.01, str(_iou(perfect_bbox, region)))
+    check("IoU no overlap = 0.0", _iou([0, 0, 10, 10], region) == 0.0)
+    check("IoU null bbox = 0.0", _iou(None, region) == 0.0)
+
+    # response parsing
+    fake_response = '{"region": 1, "element_type": "text", "present_in": "both", "bbox": [300, 150, 600, 300], "semantic_note": "orange title"}'
+    parsed = _parse_response(fake_response, regions)
+    check("response parsed", len(parsed) == 1, str(parsed))
+    check("parsed has diff_region", "diff_region" in parsed[0], str(parsed[0]))
+    check("parsed has diff_score", "diff_score" in parsed[0], str(parsed[0]))
+
+
 if __name__ == "__main__":
     print(f"Running unit tests at {os.path.basename(__file__)}")
     test_think()
@@ -222,6 +262,7 @@ if __name__ == "__main__":
     test_treatment_from_knob_path()
     test_update_style_chain_smoke()
     test_style_rollback()
+    test_vlm_qa_pipeline()
     print(f"\n{'='*40}")
     print(f"Unit tests: {passed} passed, {failed} failed")
     print(f"{'='*40}")
