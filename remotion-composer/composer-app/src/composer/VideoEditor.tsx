@@ -19,13 +19,12 @@ import {
   addTransitionClip,
   deleteEditorClip,
   duplicateEditorClip,
-  migrateElementGeometry,
   groupClips,
   groupOfClip,
+  migrateEditorDoc,
   moveGroupClips,
   moveClipInTimeSafe,
   moveClipKeyframe,
-  normalizeTrackNames,
   removeClipKeyframe,
   renameEditorTrack,
   rippleEditorDoc,
@@ -223,7 +222,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
       if (!snapshot.editDoc) throw new Error("Project has no edit document");
       setDoc(snapshot.editDoc);
       const projected = snapshot.editorDoc || projectEditDocToEditor(snapshot.editDoc, { projectId });
-      setEditorDoc(migrateElementGeometry(normalizeTrackNames(projected), snapshot.editDoc.width, snapshot.editDoc.height));
+      setEditorDoc(migrateEditorDoc(projected));
       setStatusMessage(`Loaded ${projectId} · ${snapshot.state.currentVersion}`);
     }).catch((error: unknown) => {
       if (active) setLoadError(error instanceof Error ? error.message : String(error));
@@ -239,7 +238,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
         if (!snapshot.editDoc) return;
         setDoc(snapshot.editDoc);
         const projected = snapshot.editorDoc || projectEditDocToEditor(snapshot.editDoc, { projectId });
-        setEditorDoc(migrateElementGeometry(normalizeTrackNames(projected), snapshot.editDoc.width, snapshot.editDoc.height));
+        setEditorDoc(migrateEditorDoc(projected));
         setStatusMessage(`Synced from external change · ${snapshot.state.currentVersion}`);
       }).catch(() => { /* ignore sync errors */ });
     });

@@ -36,12 +36,12 @@ if (!existsSync(editorPath)) {
   process.exit(1);
 }
 
-// ---- load the operations via esbuild (TS -> ESM bundle) ----
-async function loadOps() {
+// ---- load shared TS modules via esbuild (TS -> ESM bundles) ----
+async function bundleModule(relPathFromShared, prefix) {
   const { build } = await import("esbuild");
-  const outfile = path.join(os.tmpdir(), `isaac-ops-${Date.now()}.mjs`);
+  const outfile = path.join(os.tmpdir(), `isaac-${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.mjs`);
   await build({
-    entryPoints: [path.join(ROOT, "remotion-composer", "composer-app", "src", "editor", "editorOperations.ts")],
+    entryPoints: [path.join(ROOT, "remotion-composer", "shared", "isaacverse", relPathFromShared)],
     bundle: true,
     format: "esm",
     platform: "node",
@@ -51,8 +51,37 @@ async function loadOps() {
   return import(pathToFileURL(outfile).href);
 }
 
+async function loadOps() {
+  return import(pathToFileURL(await buildOperationsBundle()).href);
+}
+async function buildOperationsBundle() {
+  const { build } = await import("esbuild");
+  const outfile = path.join(os.tmpdir(), `isaac-ops-main-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.mjs`);
+  await build({
+    entryPoints: [path.join(ROOT, "remotion-composer", "composer-app", "src", "editor", "editorOperations.ts")],
+    bundle: true,
+    format: "esm",
+    platform: "node",
+    outfile,
+    logLevel: "silent",
+  });
+  return outfile;
+}
+
+async function loadToolkitExtras() {
+  const migrations = await bundleModule("editorMigrations.ts", "ops-mig");
+  const validator = await bundleModule("validate.ts", "ops-val");
+  return {
+    migrateEditorDoc: migrations.migrateEditorDoc,
+    validateEditorDoc: validator.validateEditorDoc,
+  };
+}
+
 const ops = await loadOps();
-const doc = JSON.parse(readFileSync(editorPath, "utf-8"));
+const extras = await loadToolkitExtras();
+// MIGRATE before the op (PIPELINE-HARDENING-SPEC §3.1): ops must see canonical
+// geometry/edge units — same path the generator and the UI use.
+const doc = extras.migrateEditorDoc(JSON.parse(readFileSync(editorPath, "utf-8")));
 const findClip = (clipId) => doc.tracks.flatMap((track) => track.clips.map((clip) => ({ clip, trackId: track.id }))).find((entry) => entry.clip.id === clipId);
 
 const op = args.op;
@@ -137,7 +166,15 @@ if (!next) {
   }
 }
 
-// safety backup, then persist
+// safety backup, then persist — but only a VALID doc (PIPELINE-HARDENING-SPEC
+// §3.1): an invalid output fails loudly instead of flowing to the renderer's
+// defensive fallbacks. migrateEditorDoc is idempotent and stamps schemaVersion.
+next = extras.migrateEditorDoc(next);
+const issues = extras.validateEditorDoc(next);
+if (issues.length > 0) {
+  console.error(JSON.stringify({ ok: false, op, error: `VALIDATION REFUSED: ${issues.length} issue(s) — doc NOT written`, issues: issues.slice(0, 10) }, null, 2));
+  process.exit(1);
+}
 const backup = `${editorPath}.bak-${new Date().toISOString().replace(/[:.]/g, "-")}`;
 copyFileSync(editorPath, backup);
 writeFileSync(editorPath, JSON.stringify(next, null, 2), "utf-8");

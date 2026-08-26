@@ -3,6 +3,7 @@ import { cancelRender, continueRender, delayRender, staticFile } from "remotion"
 import type { IsaacVerseEditDoc } from "./types";
 import type { EditorDoc } from "./editor";
 import { IsaacVerseEditVideo } from "./EditVideo";
+import { migrateEditorDoc } from "./editorMigrations";
 
 const resolveSource = (source: string) => source.startsWith("http://") || source.startsWith("https://") || source.startsWith("data:") ? source : staticFile(source.replace(/^\/+/, ""));
 
@@ -22,7 +23,7 @@ export const ProjectLoader: React.FC<{ src: string; editorSrc?: string }> = ({ s
     let cancelled = false;
     const editorPayload = editorSrc ? fetch(resolveSource(editorSrc)).then((response) => response.ok ? response.json() : null) : Promise.resolve(null);
     Promise.all([fetch(resolveSource(src)).then((response) => { if (!response.ok) throw new Error(`EditDoc request failed: ${response.status}`); return response.json(); }), editorPayload])
-      .then(([payload, editorValue]) => { if (cancelled) return; setDoc(normalizeSources(payload) as IsaacVerseEditDoc); setEditor(editorValue ? normalizeSources(editorValue) as EditorDoc : null); continueRender(handle); })
+      .then(([payload, editorValue]) => { if (cancelled) return; setDoc(normalizeSources(payload) as IsaacVerseEditDoc); setEditor(editorValue ? migrateEditorDoc(normalizeSources(editorValue) as EditorDoc) : null); continueRender(handle); })
       .catch((reason: unknown) => { if (cancelled) return; const message = reason instanceof Error ? reason.message : String(reason); setError(message); cancelRender(new Error(message)); });
     return () => { cancelled = true; };
   }, [editorSrc, handle, src]);

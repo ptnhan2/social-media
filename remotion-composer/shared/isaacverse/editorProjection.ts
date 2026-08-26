@@ -1,6 +1,10 @@
 import type { IsaacVerseEditDoc, SemanticBeat } from "./types";
 import type { ClipRange, EditorAcceptedAssetKind, EditorClip, EditorDoc, EditorMarker, EditorProjectionOptions, EditorTrack, EditorTrackKind } from "./editor";
-import { generateTreatmentElements, type StyleResolver, type TreatmentElement } from "./treatmentElements";
+import { generateTreatmentElements, setStrictProjection, consumeProjectionWarnings, type StyleResolver, type TreatmentElement } from "./treatmentElements";
+
+// strict-projection warning trail (PIPELINE-HARDENING-SPEC §3.1) — re-exported
+// so the generate-editor CLI can enable/collect via the projection bundle.
+export { setStrictProjection, consumeProjectionWarnings };
 
 const visualCapabilities = { visual: true, audio: false, canvas: true, trim: true, split: true, gain: false, fade: false, mute: false, solo: false };
 const audioCapabilities = { visual: false, audio: true, canvas: false, trim: true, split: true, gain: true, fade: true, mute: true, solo: true };

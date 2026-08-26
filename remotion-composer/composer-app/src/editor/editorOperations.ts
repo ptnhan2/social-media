@@ -575,51 +575,10 @@ export const moveClipKeyframe = (editor: EditorDoc, clipId: string, property: st
   };
 };
 
-export const normalizeTrackNames = (editor: EditorDoc): EditorDoc => {
-  let overlayCount = 0;
-  let audioCount = 0;
-  const renamed = editor.tracks.map((track) => {
-    if (track.metadata?.userNamed === true) return track;
-    if (track.kind === "video") return track.name === "Main track" ? track : { ...track, name: "Main track" };
-    if (track.kind === "overlay" || track.kind === "text") {
-      overlayCount += 1;
-      return { ...track, name: `Overlay ${overlayCount}` };
-    }
-    audioCount += 1;
-    return { ...track, name: `Audio ${audioCount}` };
-  });
-  const changed = renamed.some((track, index) => track.name !== editor.tracks[index].name);
-  return changed ? { ...editor, tracks: renamed } : editor;
-};
-
-export const migrateElementGeometry = (editor: EditorDoc, docWidth: number, docHeight: number): EditorDoc => {
-  let changed = false;
-  const tracks = editor.tracks.map((track) => ({
-    ...track,
-    clips: track.clips.map((clip) => {
-      if (clip.kind !== "element") return clip;
-      const md = clip.metadata;
-      if (typeof md.x === "number") return clip;
-      const geometry = md.geometry as { x?: number; y?: number; width?: number; height?: number; rotation?: number } | undefined;
-      if (!geometry || typeof geometry.x !== "number" || typeof geometry.width !== "number") return clip;
-      changed = true;
-      return {
-        ...clip,
-        metadata: {
-          ...md,
-          x: geometry.x / docWidth,
-          y: (typeof geometry.y === "number" ? geometry.y : 0) / docHeight,
-          w: Math.max(0.01, geometry.width / docWidth),
-          h: Math.max(0.01, (typeof geometry.height === "number" ? geometry.height : geometry.width) / docHeight),
-          rotation: geometry.rotation || 0,
-          opacity: typeof md.opacity === "number" ? md.opacity : 1,
-          z: typeof md.z === "number" ? md.z : 5,
-        },
-      };
-    }),
-  }));
-  return changed ? { ...editor, tracks, revision: { ...editor.revision, revision: editor.revision.revision + 1 } } : editor;
-};
+// Migrations moved to shared/isaacverse/editorMigrations.ts (PIPELINE-HARDENING-SPEC
+// §3.1): ONE canonical implementation for the UI, the generator CLI bridge and
+// the render ProjectLoader. Re-exported here so existing import sites keep working.
+export { normalizeTrackNames, migrateElementGeometry, migrateEditorDoc, CURRENT_EDITOR_SCHEMA } from "../../../shared/isaacverse/editorMigrations";
 
 export const addTransitionClip = (editor: EditorDoc, atSec: number, transitionType: string, durationSec = 0.5): EditorDoc => {
   const transitionsTrack = editor.tracks.find((track) => track.id === "transitions");

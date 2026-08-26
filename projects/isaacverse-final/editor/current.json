@@ -6571,7 +6571,8 @@
   ],
   "revision": {
     "baseEditVersion": "v021",
-    "revision": 39,
-    "updatedAt": "2026-08-25T21:39:58.577Z"
-  }
+    "revision": 40,
+    "updatedAt": "2026-08-26T11:52:50.427Z"
+  },
+  "schemaVersion": 3
 }

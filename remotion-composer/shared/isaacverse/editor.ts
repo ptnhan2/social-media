@@ -113,6 +113,10 @@ export type EditorDoc = {
   /** Generator merge ledger (spec §2.3): clip ids the user deleted —
    *  regeneration must NOT resurrect them. */
   userDeletedClipIds?: string[];
+  /** Persisted-format version (PIPELINE-HARDENING-SPEC §3.1): readers at
+   *  every boundary migrate sequentially to CURRENT_EDITOR_SCHEMA before
+   *  use. Absent = v1 (pre-versioning docs). */
+  schemaVersion?: number;
 };
 
 export type EditorProjectionOptions = {

@@ -225,6 +225,17 @@ export const wrapChapterTitle = (title: string, fontSize: number, letterSpacing:
   return { lines, widthEst: Math.max(...lines.map((l) => l.split(/\s+/).reduce((sum, w, i) => sum + wordW(w.toUpperCase()) + (i > 0 ? spaceW : 0), 0))) };
 };
 
+// ---- strict projection warning trail (PIPELINE-HARDENING-SPEC §3.1) ----
+// Sync/generator mode sets strict: structural fallbacks (missing params that
+// silently produce empty beats) are COLLECTED and surfaced in the CLI summary
+// instead of vanishing. Lenient philosophy stays (nothing throws) — but a
+// trail exists so "sync thiếu" from malformed EditDoc params is visible.
+let strictProjection = false;
+const projectionWarnings: string[] = [];
+export const setStrictProjection = (value: boolean) => { strictProjection = value; };
+export const consumeProjectionWarnings = (): string[] => projectionWarnings.splice(0);
+const warnProjection = (ctx: string) => { if (strictProjection) projectionWarnings.push(ctx); };
+
 const asStr = (v: unknown, fb = "") => typeof v === "string" ? v : fb;
 const asNum = (v: unknown, fb: number) => typeof v === "number" ? v : fb;
 const asArr = <T,>(v: unknown): T[] => Array.isArray(v) ? v as T[] : [];
@@ -316,6 +327,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
 
     case "semantic-diagram": {
       const nodes = asArr<Record<string, unknown>>(p.nodes);
+      if (nodes.length === 0) warnProjection(`semantic-diagram @${id}: params.nodes missing/empty — projecting NO node clips`);
       const nodeFontSize = s("treatments.semantic-diagram.node.fontSize", 20);
       const nodeFontWeight = s("treatments.semantic-diagram.node.fontWeight", 900);
       const detailFontSize = s("treatments.semantic-diagram.node.detailFontSize", 13);
@@ -437,6 +449,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       // stay in percent units here (NOT converted to px).
       {
         const edges = asArr<Record<string, unknown>>(p.edges);
+        if (edges.length === 0) warnProjection(`semantic-diagram @${id}: params.edges missing/empty — projecting NO edge clips`);
         const nodeById = new Map(nodes.map((n) => [asStr(n.id), n]));
         const strokeStyle = s<Record<string, unknown>>("treatments.semantic-diagram.edge.stroke", {} as Record<string, unknown>);
         const strokeMode = asStr(strokeStyle.mode, "gradient");
@@ -575,6 +588,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
 
     case "process-timeline": {
       const steps = asArr<Record<string, unknown>>(p.steps);
+      if (steps.length === 0) warnProjection(`process-timeline @${id}: params.steps missing/empty — projecting NO step clips`);
       const active = asNum(p.activeStep, 0);
       const activeIdx = Math.min(steps.length - 1, Math.max(0, active));
       const gradientStart = s("colors.gradientStart", "#ff6b35");
@@ -686,6 +700,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
 
     case "candidate-comparison": {
       const candidates = asArr<Record<string, unknown>>(p.candidates);
+      if (candidates.length === 0) warnProjection(`candidate-comparison @${id}: params.candidates missing/empty — projecting NO candidate clips`);
       const selected = asNum(p.selectedIndex, 0);
       const count = Math.max(1, Math.min(4, candidates.length));
       const black = s("colors.black", "#07090d");
