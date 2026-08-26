@@ -116,11 +116,22 @@ Gate windows KHÔNG đổi: semantic-diagram 1.222, process-timeline 1.266
 
 ### Ưu tiên 0 — PIPELINE HARDENING (spec đầy đủ: `docs/PIPELINE-HARDENING-SPEC.md`)
 
-Buổi deep-dive kiến trúc 26/08 chỉ ra 6 điểm yếu (đều silent-failure) + giải pháp
-research-backed (Figma components, Redux Persist, VLM papers 2026, Set-of-Mark).
-**Spec chi tiết đang chờ user duyệt** — tóm tắt roadmap:
+**ĐỢT 1 "GIẾT IM LẶNG" — HOÀN TẤT 26/08** (commits bb404b5..59e3c68, CI xanh 3 workflows):
 
-**Đợt 1 — "Giết im lặng" (~1 ngày):**
+- [x] 1. KEEP gate revision stamping — sidecar `.render-report.json` sau mỗi
+      render + request_keep REFUSE khi stale (5 unit tests) — §3.3
+- [x] 2. editor-ops.mjs optimistic locking + harness retry trên conflict
+      (2 regression tests, registered trong npm test) — §3.6
+- [x] 3. Chain update_style → generate (scoped theo beat / full sync) —
+      ĐÓNG LỖ "SYNC THIẾU" đang sống, GENERATOR-SPEC risk #1 — §3.2-1a
+- [x] 4. Schema versioning: editorMigrations.ts (CURRENT=3, registry tuần tự
+      pattern Redux Persist) + migrate tại 4 boundary + validate output
+      trước write + strict-projection warnings — ĐÓNG risk #3 + semantic
+      drift (edge px→viewBox có migration + test). Live doc stamped v3.
+- [x] Verify cuối đợt: vitest 167/167, parity gates PASS (1.222/1.266 —
+      không đổi, migrations là no-op trên doc đã canonical), harness 18/18.
+
+**Đợt 2 — "Giết lan truyền" (~1 ngày, CHỜ TRIỂN KHAI):**
 1. KEEP gate revision stamping (render stale → refuse duyệt) — §3.3
 2. editor-ops.mjs optimistic locking (conflict với human edits) — §3.6
 3. Chain update_style → generate (đóng lỗ "sync thiếu" đang sống) — §3.2-1a

@@ -1,6 +1,7 @@
 # Pipeline Hardening Spec — 6 điểm yếu dễ vỡ nhất + giải pháp chi tiết
 
-> Status: **PROPOSED — chờ user duyệt** (per workflow rule: đề xuất → duyệt → implement).
+> Status: **APPROVED + Đợt 1 SHIPPED 2026-08-26** (commits bb404b5..59e3c68).
+> Đợt 2-3: chờ triển khai theo roadmap dưới.
 > Written 2026-08-26 chiều, từ buổi deep-dive kiến trúc sau night run E2 parity.
 > Research-backed — mọi giải pháp đều có căn cứ nghiên cứu hoặc precedent nội bộ,
 > không đề xuất theo bản năng (citations inline từng phần).
@@ -524,13 +525,13 @@ Verify cuối đợt 1: full test suite + parity gate re-run + CI xanh.
 
 ## 6. Acceptance criteria
 
-Đợt 1 xong khi:
-- [ ] request_keep từ chối render stale (test PASS)
-- [ ] editor_op conflict → exit 1 + message (test PASS)
-- [ ] update_style → sync tự chạy → render thấy knob mới (E2E manual check)
-- [ ] doc schema cũ → sync → migrate + validate + ghi schemaVersion mới (test PASS)
-- [ ] Sync trên doc hỏng → REFUSE với error list, KHÔNG ghi file (test PASS)
-- [ ] CI xanh (3 workflows), parity gate vẫn PASS (1.222/1.266)
+Đợt 1 xong khi: **— HOÀN TẤT 26/08 (CI xanh 3 workflows)**
+- [x] request_keep từ chối render stale (5 tests PASS)
+- [x] editor_op conflict → exit 1 + CONFLICT payload, file byte-identical (2 tests PASS)
+- [x] update_style → sync tự chạy (E2E smoke PASS: "generator refreshed (scoped)")
+- [x] doc schema cũ → sync → migrate + validate + ghi schemaVersion mới (10 vitest + E2E: live doc stamped v3, 106 refresh)
+- [x] Sync trên doc hỏng → REFUSE với error list, KHÔNG ghi file (validate-refusals wired + tested)
+- [x] CI xanh (3 workflows trên 59e3c68), parity gate vẫn PASS (1.222/1.266 re-verified)
 
 Đợt 2 xong khi:
 - [ ] style_rollback tool hoạt động + 1-principle-per-promote trong protocol
