@@ -116,6 +116,27 @@ if (!next) {
   process.exit(1);
 }
 
+// ---- OPTIMISTIC LOCKING (PIPELINE-HARDENING-SPEC §3.6) ----
+// The Composer UI save participates in version checks (409 on mismatch); this
+// bridge must too, or a human edit landing mid-op would be silently lost
+// (last-write-wins). Re-read the file right before writing and abort if the
+// revision moved. --simulateConflict forces the branch for the regression
+// test (the op result is never written in that case).
+{
+  const reread = JSON.parse(readFileSync(editorPath, "utf-8"));
+  const baseRev = doc.revision?.revision;
+  const liveRev = args.simulateConflict ? (typeof baseRev === "number" ? baseRev + 1 : 999) : reread.revision?.revision;
+  if (typeof baseRev === "number" && liveRev !== baseRev) {
+    console.error(JSON.stringify({
+      ok: false,
+      op,
+      conflict: true,
+      error: `CONFLICT: editor doc moved (r${baseRev} → r${liveRev}) while op was running — aborted; re-read and retry`,
+    }));
+    process.exit(1);
+  }
+}
+
 // safety backup, then persist
 const backup = `${editorPath}.bak-${new Date().toISOString().replace(/[:.]/g, "-")}`;
 copyFileSync(editorPath, backup);
