@@ -1,4 +1,4 @@
-"""E6 E2E driver: agent-driven clip edit through the KEEP gate (spec E6).
+﻿"""E6 E2E driver: agent-driven clip edit through the KEEP gate (spec E6).
 
 Sends the task to the real agent (Ox Alpha via LangGraph), lets it run
 editor_op -> qa_gate -> request_keep, answers the KEEP interrupt, and
@@ -12,7 +12,7 @@ import urllib.request
 sys.path.insert(0, "harness")
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-API = "http://localhost:2024"
+API = "http://localhost:2025"
 
 TASK = (
     "In project isaacverse-final, do ONE clip edit end-to-end. "

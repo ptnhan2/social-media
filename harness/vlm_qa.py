@@ -70,7 +70,10 @@ def _region_block_diff(img_a, img_b, block_w: int = 64, block_h: int = 36, thres
 
 
 def _som_overlay(img, regions, scale: int = 3):
-    """Draw numbered rectangles on the image for the marked regions (Set-of-Mark)."""
+    """Draw numbered rectangles on the image for the marked regions (Set-of-Mark).
+    Scale 3x maps 640x360 draft frames to 1920x1080 — matching the VLM's
+    expected bbox coordinate space (prompt says 'bbox in 1920x1080'). The _iou
+    function also multiplies by 3 to align diff regions to this space."""
     from PIL import Image, ImageDraw, ImageFont
     marked = img.copy()
     # upscale for clearer text rendering
@@ -168,7 +171,7 @@ def vlm_qa(video_before: str, video_after: str, sample_time: float = 2.0) -> dic
     # Step 4: build prompt + call VLM (frontier API via _call_vlm)
     import io
     buf = io.BytesIO()
-    marked_b.save(buf, format="JPEG", quality=92)
+    marked_b.save(buf, format="JPEG", quality=70)
     marked_b64 = base64.b64encode(buf.getvalue()).decode()
     content, system = _build_prompt(marked_b64, len(regions))
 
