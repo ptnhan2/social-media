@@ -10,6 +10,11 @@ const FinalProject = () => <ProjectLoader src="isaacverse-final/05-edit-doc.json
 // style store while preserving user edits (userEdited ledger).
 const FinalProjectEditor = () => <ProjectLoader src="isaacverse-final/05-edit-doc.json" editorSrc="isaacverse-final/editor/current.json" />;
 
+// ai-dialogue-therapy — first content-plan video (#2: "Why AI Dialogue Sounds
+// Like Therapy"). Reuses the isaacverse character poses + music bed.
+const TherapyProject = () => <ProjectLoader src="ai-dialogue-therapy/05-edit-doc.json" />;
+const TherapyProjectEditor = () => <ProjectLoader src="ai-dialogue-therapy/05-edit-doc.json" editorSrc="ai-dialogue-therapy/editor/current.json" />;
+
 const calculateFinalMetadata = async () => {
   const editDoc = await fetch(staticFile("isaacverse-final/05-edit-doc.json")).then((response) => response.json()) as { beats?: { startSec: number; durationSec: number }[] };
   const editorResponse = await fetch(staticFile("isaacverse-final/editor/current.json"));
@@ -18,9 +23,17 @@ const calculateFinalMetadata = async () => {
   return { durationInFrames: Math.ceil(Math.max(semanticDuration, editor?.durationSec || 0) * 30) };
 };
 
+const calculateTherapyMetadata = async () => {
+  const editDoc = await fetch(staticFile("ai-dialogue-therapy/05-edit-doc.json")).then((response) => response.json()) as { beats?: { startSec: number; durationSec: number }[] };
+  const semanticDuration = Math.max(0, ...(editDoc.beats || []).map((beat) => beat.startSec + beat.durationSec));
+  return { durationInFrames: Math.ceil(Math.max(semanticDuration, 0.1) * 30) };
+};
+
 export const Root: React.FC = () => (
   <>
     <Composition id="isaacverse-final-30s" component={FinalProject} durationInFrames={900} calculateMetadata={calculateFinalMetadata} fps={30} width={1920} height={1080} />
     <Composition id="isaacverse-final-30s-editor" component={FinalProjectEditor} durationInFrames={900} calculateMetadata={calculateFinalMetadata} fps={30} width={1920} height={1080} />
+    <Composition id="ai-dialogue-therapy-30s" component={TherapyProject} durationInFrames={900} calculateMetadata={calculateTherapyMetadata} fps={30} width={1920} height={1080} />
+    <Composition id="ai-dialogue-therapy-30s-editor" component={TherapyProjectEditor} durationInFrames={900} calculateMetadata={calculateTherapyMetadata} fps={30} width={1920} height={1080} />
   </>
 );

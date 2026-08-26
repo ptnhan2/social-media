@@ -216,7 +216,13 @@ export function buildWindowRender({ slug, composition, entry, editDocPath, edito
   const info = projectInfo(slug, editDocPath);
   const window = computeWindow({ startSec, endSec, fps: info.fps, durationSec: info.durationSec, paddingSec });
   const qualityPreset = preset(quality);
-  const outputPath = output || path.join(workspaceRoot, "projects", slug, "renders", "windows", `${slug}-${quality}-${window.startSec.toFixed(2)}-${window.endSec.toFixed(2)}.mp4`);
+  // Resolve --output against the WORKSPACE root (not the composer dir where
+  // Remotion runs): a relative --output like "projects/x/renders/y.mp4" was
+  // silently landing inside remotion-composer/projects/ (BLOCKER #1 from the
+  // first real video production, 2026-08-26 night).
+  const outputPath = output
+    ? path.resolve(workspaceRoot, output)
+    : path.join(workspaceRoot, "projects", slug, "renders", "windows", `${slug}-${quality}-${window.startSec.toFixed(2)}-${window.endSec.toFixed(2)}.mp4`);
   // Step 1: bundle (rebuild only if TS/TSX source changed; always sync runtime JSONs).
   // Step 2: render from the bundle dir.
   const bundleDir = dryRun ? "<bundle>" : buildBundle(entry, { slug, editorDocPath });

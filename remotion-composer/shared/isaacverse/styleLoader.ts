@@ -11,7 +11,11 @@ import { delayRender, continueRender, staticFile } from "remotion";
 let activeStyle: Record<string, unknown> = {};
 let loaded = false;
 let loadError: string | null = null;
-const handle = delayRender("Loading isaacverse-style.json");
+// 300s timeout: full 30s renders at draft quality on slower machines can exceed
+// the default 28s. The fetch completes instantly but Remotion's delayRender
+// timeout applies to the total wait INCLUDING render queue time across
+// concurrent browser tabs.
+const handle = delayRender("Loading isaacverse-style.json", { timeoutInMilliseconds: 300000 });
 
 fetch(staticFile("isaacverse-style.json"))
   .then((r) => {
