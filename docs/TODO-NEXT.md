@@ -1,166 +1,99 @@
-# TODO NEXT — NIGHT RUN 2026-08-25/26 — HOÀN TẤT 5/5 PHASE
+# TODO NEXT — NIGHT RUN 2026-08-26/27 — VLM DEEPSEEK + VIDEO #1
 
-> Kết quả night run (user ngủ, autonomous mode ~23:45→07:00). Quyết định ghi
-> trong commits `1fd5998..HEAD`. Evidence: qa/parity/*.json + git log.
+> Night plan (user ngủ ~23:40, autonomous 6h → ~05:40). Quy tắc: commit +
+> push theo phase, check CI sau mỗi push, RCA khi fail, không dừng giữa chừng.
+> PAUSE chỉ khi: paid key cạn / CI đỏ beyond fixable / repo corruption.
 
-## Objective (north star) — ĐẠT
+---
 
-1. **E2 parity gate <2.0: PASS cả 2 window + default render path ĐÃ FLIP sang editor**
-   - semantic-diagram (3.5-7): meanOfMeans **1.223** / max 1.621
-   - process-timeline (10.5-14): meanOfMeans **1.266** / max 1.576
-   - Hành trình: 9.316 → 3.922 → 2.388 → 1.288 → 1.223 (−87%)
-2. **Playwright E2E Asset Studio: 13/13 PASS local + CI job studio-e2e GREEN**
+## 🌅 MORNING REMINDERS — NHẮC USER NGAY LÚC SÁNG (đứng đầu file!)
 
-## Phase results
+1. **Flip blessing master render**: E2 gate đạt (1.222/1.266), default
+   render-window đã là editor — nhưng `npm run render:master` vẫn path cũ.
+   Chốt = master production dùng editor flow per GENERATOR-SPEC §2.6.
+2. **Review video #1 draft** (nếu đêm nay produce xong): topic "Why AI
+   Dialogue Sounds Like Therapy" — xem trong Composer, feedback qua UI.
+3. **`repurpose` pipeline approval**: transcript → X/blog/shorts — có trigger
+   trong AGENTS.md nhưng chưa build. Có làm không?
+4. **Multi-doc Studio + anchor editor kéo thả**: cần design session.
+5. **Model chính đã đổi**: Ox Alpha chết (404) → glm-5.3-flash qua Zhipu
+   coding endpoint. E6 đã re-verify PASS 7/7 với model mới.
 
-### Phase 0 — Parity tooling ✅
-- `tools/quality/parity_diff.py` (pure PIL, gate <2.0), `render-window.mjs
-  --editor-doc` (cold doc cho parity, không đụng live doc),
-  `scripts/parity-measure.mjs` (cold-generate → render 2 paths → diff →
-  report qa/parity/*.json)
-- Baseline: 9.316 meanOfMeans — diff mang tính hệ thống (layout), không transient
+## Night phases
 
-### Phase 1+2 — Parity closes ✅ (commit d6e1d90)
-Root causes (theo mức độ đóng góp):
-1. **BeatCamera**: overlay clips nằm NGOÀI camera (treatment scale 1→1.12 +
-   drift; editor đứng yên) — fix: overlay lồng trong beat Sequence + camera
-2. **Colors**: projection hardcode #f2b84b/#61d7e8 trong khi store v73 là
-   #ff6b35/#00d4ff — fix: đọc store như treatment
-3. **Node layout**: box DOM auto-height (83.35 thực vs 100 hardcode) + dot +
-   inset shadow + activeFrom timing + group scale (transformOrigin) +
-   activePulse — fix: estimator calibrated từ Chromium measureText
-   (line-height 1.44/1.35, ~0.75em/char uppercase-900)
-4. **clipStyle spring**: port CHÍNH XÁC thuật toán Remotion (advance/
-   springCalculation/measureSpring + duration stretch) — không import remotion
-   (clipStyle phải chạy được trong node/vitest). animSpring/animEasing/
-   animSlidePx/pulse metadata
-5. **Edges**: treatment vẽ trong viewBox 100×100 non-uniform stretch — px math
-   sai scale curvature ~3.4× + stroke mỏng ~10×; fix: viewBox units + reveal
-   double-offset + custom viewBox/pathD/revealTo (progress curve 100×12)
-6. **Presence**: pose PNG thật aspect 0.52-0.56 (không phải 3:4!) — box rộng
-   hơn 43px lệch tâm; fix PRESENCE_ASPECT map + p-* presets chính xác
-   (movement cubic-out, opacity linear ramps) + double drop-shadow
-7. **Text padding "0 2%"**: lệch trái/phải 2% box width — bỏ padding
-8. **process-timeline**: bg glow, gradient title + filter, spring stagger
-   0.18s, computed box layout, footer right-anchor
+### Phase 0 — Model & VLM setup (30 phút) — BẮT ĐẦU
 
-### Phase 3 — Flip ✅ (commit de96a8b)
-- render-window.mjs + harness render_window/qa_gate: default `editor`
-  (treatment = generator preview qua `--path treatment`)
-- LIVE editor doc sync mode: 91 clips refresh, 2 userEdited giữ, +7 elements
-- Render verify editor path trên live doc OK
+1. **HARNESS_MODEL → glm-5.3-flash qua coding endpoint**:
+   - `.env`: `HARNESS_MODEL=openai:glm-5.3-flash` +
+     `OPENAI_BASE_URL=https://open.bigmodel.cn/api/coding/paas/v4` (coding plan)
+   - Restart langgraph server (port 2025) + smoke test agent responds
+2. **VLM → deepseek-v4-flash-vision-exp**:
+   - Thêm DeepSeek provider vào `_VLM_DEFAULTS` trong harness_tools.py
+   - `.env`: `VLM_PROVIDER=deepseek`, `VLM_MODEL=deepseek-v4-flash-vision-exp`
+   - Research note: model ra 21/08/2026, beats Opus 4.8 trên 3/11 agent
+     benchmarks, ảnh ≤384 tokens, giá flash ($0.22/1M off-peak), API
+     OpenAI-compatible (base_url=api.deepseek.com/v1), 800×800 image resize
+3. **Check CI cho commit 973e666** (webhook delay từ lúc mất mạng)
+4. Smoke test VLM: gửi ảnh đơn giản → verify response
 
-### Phase 4 — Playwright E2E ✅ (commits d7972cd, 64de09b)
-- 13/13 tests: boot/shortcuts/import/rename/session-persist/undo-redo/tools/
-  zoom-to-sel/lasso/wand/eraser/poses/inbox — mock toàn bộ bridge
-- **3 production bug suite bắt được**: uploadDataUrl src không bust (history
-  entry bị dedupe nuốt + stale-cache), docsEqual bỏ name/locked (rename/lock
-  không vào history), stale closure showShortcuts (Escape không đóng modal)
-- CI `studio-e2e` job GREEN (ubuntu, chromium, ~2 phút, trace on failure)
-- vite.config.ts portable (bỏ hardcode C:/DevWork — CI boot được)
+### Phase 1 — VLM QA pipeline với DeepSeek (1.5h)
 
-### Phase 5 — Review + close-out ✅
-- **reviewer-agent cold-read diff**: bắt B1 MAJOR — overlay lồng trong beat
-  Sequence bị clip khi beat clip split/trim (regression với edited timeline,
-  parity gate không bắt được vì cold projection không có split). ĐÃ FIX:
-  overlay chỉ nest khi NẰM GỌN trong 1 beat clip, spanning → root
-- Hardening: B2 (presence aspect fallback), B3 (edge y2 default), R2
-  (imageCache bounded 64), parity-measure cleanup, vitest exclude e2e
-- Re-verify sau fix: parity PASS 1.222, E2E 13/13, vitest 157/157, CI xanh
+5. **Re-run vlm_qa pipeline với DeepSeek** (frontier-class — glm-4v-flash
+   hallucinated "owl mask" trên semantic diagram; DeepSeek phải ground đúng)
+6. **Verify IoU > 0.3** cho ít nhất một số region (DeepSeek là model mạnh,
+   nếu vẫn IoU=0 → debug coordinate space thêm)
+7. **Refactor visual_critique** → gọi vlm_qa pipeline (TODO treo từ hôm qua)
+8. **Update oracle-trust.md** với config DeepSeek
 
-## BONUS ROUND — Parity 4 treatment còn lại (commit 9cc187f)
+### Phase 2 — Produce video #1 từ content plan (3h) — FULL PIPELINE E2E
 
-Sau khi 5 phase chính xong, tiếp tục parity các treatment chưa đo:
+Video #2: **"Why AI Dialogue Sounds Like Therapy"**
+- Demand evidence mạnh nhất: Reddit r/slatestarcodex 445↑, 193 comments
+- Mechanism #3 Case study (theo content-plan rotation — tránh 2 mechanism
+  giống nhau liên tiếp)
+- Sources: Reddit threads, r/ClaudeAI 214↑
 
-| Window | Treatment | Trước | Sau | Trạng thái |
-|---|---|---|---|---|
-| 0-3.5 | chapter-card | 39.24 | **2.28** | −94%, residual sub-pixel gradient |
-| 14-18.5 | candidate-comparison | 15.70 | **3.45** | −78%, residual sub-pixel scale/noise-svg |
-| 22.5-26 | host-reflection (beat 7) | 29.95 | **5.92** | −80%, mixBlendMode screen + push keyframes |
-| 7-10.5 | host-reflection (beat 3) | 5.88 | 6.25* | maxMean 11.0→7.4; mean hơi tăng — xem note |
-| 18.5-22.5 | cinematic-metaphor | 3.24 | 3.24 | chưa đụng (shared fixes không ảnh hưởng) |
+Steps (pipeline chuẩn — AGENTS.md trigger):
+9.  **Story phase** (`lên content`): research topic → audience/goal →
+    surface + deeper problem → hero journey beats → script
+10. **Build VideoDoc** (04-video-doc.json): cấu trúc 12-point journey
+11. **Build EditDoc** (05-edit-doc.json): beats + treatments + audio plan
+    (dùng style store v73 — 40 principles đã học)
+12. **Voice**: TTS script qua ElevenLabs (monitor credits — PAUSE nếu cạn)
+13. **Assets**: stock search (Pexels/Unsplash) cho relevant footage +
+    character poses có sẵn
+14. **Cold projection** → EditorDoc (generate-editor.mjs --mode cold)
+15. **Draft render** + QA gates (pixel-diff, structural, VLM critique)
+16. **Document MỌI blocker** gặp phải — đây là lần đầu pipeline chạy full
+    cho video mới, mọi gap là phát hiện quý
 
-*host-reflection beat 3: các fix (blend/push/fade) đóng góp không đều —
-maxMean giảm mạnh nhưng mean tăng nhẹ; cần session riêng truy residual
-(svg screen asset + light blend).
+Lưu ý: project mới cần project slug riêng (không phải isaacverse-final).
+Kiểm tra project_store.py createBlankProject + sync-project-public.
 
-**Phát hiện quan trọng round 2**:
-- **ChapterCard title LUÔN wrap 2 dòng**: title div width 86% của parent
-  shrink-to-fit → wrap tại 0.86 × max-width CHÍNH NÓ (xác minh cả 2 title
-  render 2 dòng). `wrapChapterTitle` bake greedy wrap + `\n` (overlay text
-  mới hỗ trợ pre-line)
-- **Gradient stop**: overlay hardcode 55%, ChapterCard treatment 45% →
-  textGradient.stop metadata
-- **mixBlendMode "screen"** trên light overlay host-reflection — thiếu nó cả
-  ảnh sai look (beat 7: 29.9 → 5.9)
-- **Push-in keyframes**: scale 1.06→1 trong 4s qua md.keyframes
-- **wipeX preset**: accent line ChapterCard animate WIDTH (scaleX) riêng
-  timing với block entrance
-- **Group scale quanh card center** cho candidate 0.96 (per-element scale
-  làm lệch nội dung bên trong)
+### Phase 3 — Polish + close-out (1h)
 
-Gate windows KHÔNG đổi: semantic-diagram 1.222, process-timeline 1.266
-(re-verify sau round 2 ✓ PASS).
+17. **Parity residuals** (4 treatment — nếu còn thời gian)
+18. **Per-field ledger**: update trim/move/nudge ops (hiện default ['all'])
+19. **Docs**: TODO-NEXT (file này) cập nhật kết quả + knowledge-base entry
+20. **Memory save**: night-run-2026-08-27 decisions
+21. **Final push + CI check** (3 workflows xanh)
 
-## Morning review (cần user)
+## Trọng tâm đêm nay
 
-1. **Flip blessing**: E2 gate đạt — master render production có chuyển hẳn
-   sang editor flow không? (per GENERATOR-SPEC §2.6 "master render uses the
-   editor flow" — hiện master vẫn render qua lệnh cũ, chỉ default
-   render-window/harness là editor)
-2. `repurpose` pipeline approval (defer từ trước)
-3. Multi-doc studio + anchor editor kéo thả (design session)
-4. User tự bake thêm poses bằng studio (công cụ đủ)
+**Video #1 là việc quan trọng nhất.** Toàn bộ 11 ngày build infrastructure
+để chuẩn bị cho việc này. Video thật sẽ phơi ra mọi gap còn lại của
+pipeline — mỗi gap là phát hiện quý cho việc hoàn thiện harness.
 
-## Next-session backlog
+VLM DeepSeek là việc quan trọng thứ hai — pipeline SoM đã đúng mechanics,
+chỉ thiếu model đủ mạnh để ground bbox chính xác.
 
-### Ưu tiên 0 — PIPELINE HARDENING (spec đầy đủ: `docs/PIPELINE-HARDENING-SPEC.md`)
+## Gotchas (từ các đêm trước — không lặp lại)
 
-**ĐỢT 1 "GIẾT IM LẶNG" — HOÀN TẤT 26/08** (commits bb404b5..59e3c68, CI xanh 3 workflows):
-
-- [x] 1. KEEP gate revision stamping — sidecar `.render-report.json` sau mỗi
-      render + request_keep REFUSE khi stale (5 unit tests) — §3.3
-- [x] 2. editor-ops.mjs optimistic locking + harness retry trên conflict
-      (2 regression tests, registered trong npm test) — §3.6
-- [x] 3. Chain update_style → generate (scoped theo beat / full sync) —
-      ĐÓNG LỖ "SYNC THIẾU" đang sống, GENERATOR-SPEC risk #1 — §3.2-1a
-- [x] 4. Schema versioning: editorMigrations.ts (CURRENT=3, registry tuần tự
-      pattern Redux Persist) + migrate tại 4 boundary + validate output
-      trước write + strict-projection warnings — ĐÓNG risk #3 + semantic
-      drift (edge px→viewBox có migration + test). Live doc stamped v3.
-- [x] Verify cuối đợt: vitest 167/167, parity gates PASS (1.222/1.266 —
-      không đổi, migrations là no-op trên doc đã canonical), harness 18/18.
-
-**ĐỢT 2 "GIẾT LAN TRUYỀN" — HOÀN TẤT 26/08** (commit 3db4d8c..f2e1aa9):
-
-- [x] 5. Style store versioned rollback: snapshot mỗi version + style_rollback tool +
-      1-principle-per-promote protocol + minSupport correlation check — §3.5
-- [x] 6. Edited-fixture sync tests: routeOverlay pure function extracted +
-      5 vitest + B1 fixture (trimmed beat + overlay spanning) — §3.2-1c
-- [x] 7. VLM QA pipeline: harness/vlm_qa.py (SoM overlay + grounded structured
-      prompts + IoU verification) + oracle-trust.md rewrite với 6 citations — §3.4
-
-**Đợt 3 — session riêng (1-2 ngày):**
-8. Per-field override ledger (Figma `overriddenFields[]` pattern) — §3.2-1b
-
-### Việc còn lại (không phụ thuộc hardening)
-
-1. **Parity residuals 4 treatment** (xem bảng BONUS ROUND): chapter-card 2.28,
-   cinematic 3.24, candidate 3.45, host-reflection 5.9-6.3 — residuals là
-   sub-pixel/gradient/blend nuances; method: region-block mean analysis +
-   browser DOM replication (đã có pattern từ đêm nay)
-2. **Latent risks từ review** (GENERATOR-SPEC): estimator glyph-width
-   fragility với content mới (W/M vs i/l chars), e_phase baseline tautology
-   (không guard cross-path) — R1 overlay-spanning test đã fold vào hardening đợt 2
-3. Playwright batch 3: marquee select, guides/rulers, gen panel (mock),
-   recipes CRUD (mock)
-4. Studio performance: canvas render optimizations nếu user phàn nàn
-
-## Gotchas mới (đêm này — chi tiết trong HARNESS-RECOVERY)
-
-1. Playwright `route.request().postData()` là SYNC — `.then()` crash cả route
-   handler → mọi request treo, page chết
-2. Vite vitest default collect cả e2e/*.spec.ts — phải pin include src/**
-3. `.gitignore` rule `*.png` nuốt fixture E2E — CI fail ENOENT khi module
-   load (fs.readFileSync top-level)
-4. Repo-wide gitignore paths phải thêm exception `!remotion-composer/composer-app/e2e/fixtures/*.png`
+1. Playwright postData() là SYNC — không .then()
+2. vitest collect e2e/*.spec.ts — đã pin include src/**
+3. .gitignore *.png nuốt fixture — đã có exception
+4. Remotion Sequence clips children — overlay spanning → root
+5. PowerShell `&` với path có backslash — dùng workdir + full path
+6. LangGraph server port 2024 ghost socket — dùng port 2025
+7. Windows cp1252 encoding — reconfigure stdout utf-8 trong mọi script
+8. CHỐT: check CI sau MỖI push (lesson reinforced)

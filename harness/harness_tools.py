@@ -37,6 +37,17 @@ STYLE_REL = "libraries/04-visual/isaacverse-style.json"
 # ---------------------------------------------------------------------------
 
 _VLM_DEFAULTS = {
+    "deepseek": {
+        # DeepSeek-V4-Flash-Vision-Exp (2026-08-21): frontier-class VLM at
+        # flash pricing ($0.22/1M off-peak). Beats Opus 4.8 on 3/11 agent
+        # benchmarks. Images tokenized at <=384 tokens each (800x800 resize).
+        # OpenAI-compatible Chat Completions; base64/URL/Files API transports.
+        "base_url": "https://api.deepseek.com/v1",
+        "model": "deepseek-v4-flash-vision-exp",
+        "key_env": "DEEPSEEK_API_KEY",
+        "supports_video": False,
+        "max_tokens": 1500,
+    },
     "dashscope": {
         "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
         "model": "qwen3-vl-flash",
