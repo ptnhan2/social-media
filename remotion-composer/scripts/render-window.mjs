@@ -177,6 +177,41 @@ export function buildBundle(entry, { slug = "isaacverse-final", editorDocPath } 
   return outDir;
 }
 
+/** Render-freshness sidecar (PIPELINE-HARDENING-SPEC §3.3): records EXACTLY
+ *  what doc versions the render consumed, read from the bundle's public dir
+ *  (the bytes Remotion actually fetched). The KEEP gate compares
+ *  renderedFromRevision + editorDocHash against the live editor doc and
+ *  REFUSES approvals of stale renders — humans must never approve fiction. */
+export function buildRenderReport({ slug, bundleDir, outputPath, composition, window, quality }) {
+  const readJson = (rel) => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(composerRoot, bundleDir, "public", rel), "utf8"));
+    } catch {
+      return null;
+    }
+  };
+  const hashFile = (rel) => {
+    try {
+      return crypto.createHash("sha256").update(fs.readFileSync(path.join(composerRoot, bundleDir, "public", rel))).digest("hex").slice(0, 16);
+    } catch {
+      return null;
+    }
+  };
+  const editorDoc = readJson(path.join(slug, "editor", "current.json"));
+  return {
+    outputPath,
+    project: slug,
+    composition: composition || `${slug}-30s`,
+    renderedFromRevision: editorDoc?.revision?.revision ?? null,
+    editorDocHash: hashFile(path.join(slug, "editor", "current.json")),
+    editDocVersion: readJson(path.join(slug, "05-edit-doc.json"))?.version ?? null,
+    styleVersion: readJson("isaacverse-style.json")?.version ?? null,
+    window,
+    quality,
+    renderedAt: new Date().toISOString(),
+  };
+}
+
 export function buildWindowRender({ slug, composition, entry, editDocPath, editorDocPath, startSec, endSec, quality = "draft", output, paddingSec = 0.45, scale, dryRun = false }) {
   const info = projectInfo(slug, editDocPath);
   const window = computeWindow({ startSec, endSec, fps: info.fps, durationSec: info.durationSec, paddingSec });
@@ -186,7 +221,18 @@ export function buildWindowRender({ slug, composition, entry, editDocPath, edito
   // Step 2: render from the bundle dir.
   const bundleDir = dryRun ? "<bundle>" : buildBundle(entry, { slug, editorDocPath });
   const args = ["render", bundleDir, composition || `${slug}-30s`, outputPath, `--frames=${window.startFrame}-${window.endFrame}`, `--scale=${typeof scale === "number" && scale > 0 ? scale : qualityPreset.scale}`, `--concurrency=${qualityPreset.concurrency}`, `--x264-preset=${qualityPreset.x264Preset}`, `--crf=${qualityPreset.crf}`, "--gl=angle"];
-  return { ...window, outputPath, bundleDir, command: runRemotion(args, { dryRun }), args };
+  const command = runRemotion(args, { dryRun });
+  // freshness sidecar — written next to the output whenever the render succeeded
+  let renderReport = null;
+  if (!dryRun && command.status === 0) {
+    renderReport = buildRenderReport({ slug, bundleDir, outputPath, composition, window, quality });
+    try {
+      fs.writeFileSync(`${outputPath}.render-report.json`, JSON.stringify(renderReport, null, 2), "utf-8");
+    } catch {
+      /* sidecar is best-effort — the render itself already succeeded */
+    }
+  }
+  return { ...window, outputPath, bundleDir, command, args, renderReport };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {

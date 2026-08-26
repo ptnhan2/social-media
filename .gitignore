@@ -72,3 +72,4 @@ projects/*/editor/parity-cold.json
 remotion-composer/composer-app/test-results/
 remotion-composer/composer-app/playwright-report/
 test-results/
+projects/*/renders/**/*.render-report.json

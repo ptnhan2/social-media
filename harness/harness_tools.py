@@ -379,6 +379,50 @@ def think(reflection: str) -> str:
     return f"Reflection recorded: {reflection}"
 
 
+def _treatment_from_knob_path(style_path: str) -> str | None:
+    """'treatments.semantic-diagram.node.fontSize' -> 'semantic-diagram';
+    'colors.amber' -> None (global knob). Pure — unit-tested."""
+    parts = style_path.split(".")
+    if len(parts) >= 2 and parts[0] == "treatments":
+        return parts[1]
+    return None
+
+
+def _regenerate_editor_for_knob(style_path: str, slug: str = "isaacverse-final") -> str:
+    """Chain update_style -> generate-editor (PIPELINE-HARDENING-SPEC §3.2-1a,
+    closes GENERATOR-SPEC risk #1): a knob change must reach the DEFAULT
+    (editor) render without a manual sync step. Scoped per affected beat when
+    the knob belongs to one treatment; full sync for global knobs."""
+    edit_doc_path = os.path.join(PROJECT_ROOT, "projects", slug, "05-edit-doc.json")
+    if not os.path.exists(edit_doc_path):
+        return "generator refresh skipped (no edit doc)"
+    try:
+        with open(edit_doc_path, encoding="utf-8") as f:
+            edit_doc = json.load(f)
+    except Exception as exc:
+        return f"generator refresh skipped (edit doc unreadable: {exc})"
+    gen = os.path.join(RENDERER_DIR, "scripts", "generate-editor.mjs")
+    treatment_id = _treatment_from_knob_path(style_path)
+    if treatment_id:
+        beats = [b.get("id") for b in edit_doc.get("beats", [])
+                 if (b.get("treatment") or {}).get("id") == treatment_id]
+        if not beats:
+            return f"generator refresh skipped (no beats use treatment '{treatment_id}')"
+        parts = []
+        for beat in beats:
+            r = subprocess.run(["node", gen, "--project", slug, "--beat", str(beat)],
+                               capture_output=True, text=True, encoding="utf-8",
+                               errors="replace", cwd=RENDERER_DIR, timeout=180)
+            parts.append(f"beat {beat}: {'ok' if r.returncode == 0 else 'FAILED ' + ((r.stderr or r.stdout) or '')[:200]}")
+        return "generator refreshed (scoped): " + "; ".join(parts)
+    r = subprocess.run(["node", gen, "--project", slug, "--mode", "sync"],
+                       capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", cwd=RENDERER_DIR, timeout=300)
+    if r.returncode != 0:
+        return "generator refresh FAILED (full sync): " + ((r.stderr or r.stdout) or "")[:300]
+    return "generator refreshed (full sync ok — unmodified clips pick up the new knob value)"
+
+
 @tool
 def update_style(style_path: str, new_value: str) -> str:
     """Update a style knob by dot-notation path. APPROVAL-GATED (human must approve).
@@ -418,8 +462,14 @@ def update_style(style_path: str, new_value: str) -> str:
         os.path.join(RENDERER_DIR, "public", "isaacverse-style.json"),
     ]:
         shutil.copy2(style_file, dst)
+    # CHAIN (spec §3.2-1a): bake the new knob into the EditorDoc so the
+    # DEFAULT (editor) render reflects it — unmodified clips refresh, userEdited
+    # clips are kept + flagged stale. Failures are reported, never swallowed:
+    # a silent skip here is exactly the "sync thiếu" failure mode.
+    chain = _regenerate_editor_for_knob(style_path)
     return (f"Style updated: {style_path}\n  old: {json.dumps(old)}\n  new: {json.dumps(val)}\n"
-            f"  version: {style['version']}\n  File: /workspace/{STYLE_REL}")
+            f"  version: {style['version']}\n  {chain}\n"
+            f"  File: /workspace/{STYLE_REL}")
 
 
 @tool
@@ -442,8 +492,61 @@ def copy_render(source_path: str, destination_path: str) -> str:
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     import shutil
     shutil.copy2(src, dst)
+    # copy the freshness sidecar too — the KEEP gate reads it from the copy
+    side_src = src + ".render-report.json"
+    if os.path.exists(side_src):
+        shutil.copy2(side_src, dst + ".render-report.json")
     rel = os.path.relpath(dst, PROJECT_ROOT).replace("\\", "/")
     return f"Copied to /workspace/{rel} ({os.path.getsize(dst) // 1024} KB)"
+
+
+def _render_freshness(video_path: str) -> tuple[bool, str]:
+    """KEEP-gate freshness check (PIPELINE-HARDENING-SPEC §3.3).
+
+    Reads the render sidecar (`<video>.render-report.json`, written by
+    render-window.mjs) and compares renderedFromRevision + editorDocHash
+    against the LIVE editor doc. A human must never approve a diff rendered
+    from a stale doc. Returns (ok, message). Missing sidecar (older renders)
+    is allowed but reported as unverifiable — refusal only on PROVEN mismatch.
+    """
+    vid = _resolve_workspace_path(video_path)
+    sidecar = vid + ".render-report.json"
+    if not os.path.exists(sidecar):
+        return True, "freshness unverifiable (no render report sidecar — older render)"
+    try:
+        with open(sidecar, encoding="utf-8") as f:
+            report = json.load(f)
+    except Exception as exc:  # unreadable sidecar = cannot trust the render
+        return False, f"render report unreadable: {exc}"
+    slug = report.get("project")
+    rendered_rev = report.get("renderedFromRevision")
+    if not slug or not isinstance(rendered_rev, int):
+        return True, "render report lacks revision info — freshness not enforced"
+    live = os.path.join(PROJECT_ROOT, "projects", str(slug), "editor", "current.json")
+    if not os.path.exists(live):
+        return True, f"no live editor doc for '{slug}' — freshness not enforced"
+    try:
+        with open(live, encoding="utf-8") as f:
+            live_doc = json.load(f)
+    except Exception as exc:
+        return False, f"live editor doc unreadable ({slug}): {exc}"
+    live_rev = (live_doc.get("revision") or {}).get("revision")
+    if live_rev != rendered_rev:
+        return False, (
+            f"RENDER STALE: '{os.path.basename(vid)}' was rendered from editor revision "
+            f"r{rendered_rev} but the live doc is r{live_rev} — re-render BEFORE asking for a keep decision"
+        )
+    rendered_hash = report.get("editorDocHash")
+    if rendered_hash:
+        import hashlib
+        with open(live, "rb") as f:
+            live_hash = hashlib.sha256(f.read()).hexdigest()[:16]
+        if live_hash != rendered_hash:
+            return False, (
+                "RENDER STALE: editor doc content changed without a revision bump "
+                "(manual file edit?) — re-render before keep"
+            )
+    return True, f"fresh (editor r{rendered_rev})"
 
 
 @tool
@@ -491,8 +594,19 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
         cmd += ["--deltaSec", str(delta_sec)]
     if changes:
         cmd += ["--changes", changes]
-    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
-                            errors="replace", cwd=RENDERER_DIR, timeout=120)
+    def run_bridge():
+        return subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
+                              errors="replace", cwd=RENDERER_DIR, timeout=120)
+
+    result = run_bridge()
+    # CONFLICT RETRY (PIPELINE-HARDENING-SPEC §3.6): a human edit landed while
+    # the op was running → the bridge aborted without writing. Ops are
+    # idempotent per clipId, so one re-read + retry is safe.
+    if result.returncode != 0 and '"conflict": true' in (result.stderr or ""):
+        result = run_bridge()
+        if result.returncode != 0 and '"conflict": true' in (result.stderr or ""):
+            return ("EDITOR OP CONFLICT: the editor doc keeps moving (human editing?). "
+                    "Wait for the human save to settle, then retry.")
     out = (result.stdout or "").strip()
     err = (result.stderr or "").strip()
     if result.returncode != 0:
@@ -829,6 +943,15 @@ def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
     """
     from langgraph.types import interrupt
     import datetime
+    # FRESHNESS GATE (PIPELINE-HARDENING-SPEC §3.3): the human approves a RENDER
+    # DIFF — if the render is stale, they would be approving fiction. Refuse
+    # loudly and make the agent re-render before asking again.
+    fresh_ok, fresh_msg = _render_freshness(video_after)
+    if not fresh_ok:
+        return ("KEEP GATE REFUSED — " + fresh_msg + "\n"
+                "Never ask the human to approve a diff rendered from a stale doc. "
+                "Fix: re-render the window (render_window with the same args), then call "
+                "request_keep again with the fresh output.")
     payload = {
         "kind": "keep_gate",
         "knob": knob,
@@ -841,6 +964,7 @@ def request_keep(knob: str, old_value: str, new_value: str, video_before: str,
         "user_directed": user_directed,
         "feedback_context": feedback_context,
         "motivation": motivation,
+        "render_freshness": fresh_msg,
     }
     decision = interrupt(payload)
     # decision: {"type": "keep" | "reject", "note": str}
