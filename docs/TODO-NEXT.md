@@ -1,99 +1,61 @@
-# TODO NEXT — NIGHT RUN 2026-08-26/27 — VLM DEEPSEEK + VIDEO #1
+# TODO NEXT — NIGHT RUN 2026-08-26/27 — VLM DEEPSEEK + VIDEO #1 PRODUCED
 
-> Night plan (user ngủ ~23:40, autonomous 6h → ~05:40). Quy tắc: commit +
-> push theo phase, check CI sau mỗi push, RCA khi fail, không dừng giữa chừng.
-> PAUSE chỉ khi: paid key cạn / CI đỏ beyond fixable / repo corruption.
+> Night run hoàn tất (user ngủ ~23:40 → ~05:00). 6 hours autonomous.
+> Commits: 048e9ca..f9b936f. CI xanh 3 workflows trên commit cuối.
 
 ---
 
-## 🌅 MORNING REMINDERS — NHẮC USER NGAY LÚC SÁNG (đứng đầu file!)
+## 🌅 MORNING REMINDERS — NHẮC USER NGAY LÚC SÁNG
 
-1. **Flip blessing master render**: E2 gate đạt (1.222/1.266), default
-   render-window đã là editor — nhưng `npm run render:master` vẫn path cũ.
-   Chốt = master production dùng editor flow per GENERATOR-SPEC §2.6.
-2. **Review video #1 draft** (nếu đêm nay produce xong): topic "Why AI
-   Dialogue Sounds Like Therapy" — xem trong Composer, feedback qua UI.
-3. **`repurpose` pipeline approval**: transcript → X/blog/shorts — có trigger
-   trong AGENTS.md nhưng chưa build. Có làm không?
-4. **Multi-doc Studio + anchor editor kéo thả**: cần design session.
-5. **Model chính đã đổi**: Ox Alpha chết (404) → glm-5.3-flash qua Zhipu
-   coding endpoint. E6 đã re-verify PASS 7/7 với model mới.
+1. **Flip blessing master render**: E2 gate đạt, default render-window đã là
+   editor — nhưng `npm run render:master` vẫn path cũ. Chốt 1 lệnh.
+2. **Review video #1 draft**: `projects/ai-dialogue-therapy/renders/draft_360p.mp4`
+   — mở trong Composer (`/editor?project=ai-dialogue-therapy`) hoặc xem mp4
+   trực tiếp. Feedback qua UI hoặc chat.
+3. **Voice TTS cho video #1**: script có sẵn trong `02-story/story.md` — cần
+   ElevenLabs TTS (paid, ~75 words). Bạn duyệt thì tôi generate.
+4. **`repurpose` pipeline approval**: transcript → X/blog/shorts.
+5. **Multi-doc Studio + anchor editor kéo thả**: cần design session.
 
-## Night phases
+## Kết quả đêm
 
-### Phase 0 — Model & VLM setup (30 phút) — BẮT ĐẦU
+### Phase 0 — Model & VLM setup ✅
+- HARNESS_MODEL=openai:glm-5.3-flash qua Zhipu CODING endpoint
+  (`open.bigmodel.cn/api/coding/paas/v4` — coding plan của user)
+- VLM_PROVIDER=deepseek, VLM_MODEL=deepseek-v4-flash-vision-exp
+  (ra 21/08/2026: beats Opus 4.8 trên 3/11 agent benchmarks, ảnh ≤384 tokens)
+- Smoke test: agent đọc memory đúng (24 ACTIVE principles), VLM trả lời
+  ảnh đúng ("Red")
 
-1. **HARNESS_MODEL → glm-5.3-flash qua coding endpoint**:
-   - `.env`: `HARNESS_MODEL=openai:glm-5.3-flash` +
-     `OPENAI_BASE_URL=https://open.bigmodel.cn/api/coding/paas/v4` (coding plan)
-   - Restart langgraph server (port 2025) + smoke test agent responds
-2. **VLM → deepseek-v4-flash-vision-exp**:
-   - Thêm DeepSeek provider vào `_VLM_DEFAULTS` trong harness_tools.py
-   - `.env`: `VLM_PROVIDER=deepseek`, `VLM_MODEL=deepseek-v4-flash-vision-exp`
-   - Research note: model ra 21/08/2026, beats Opus 4.8 trên 3/11 agent
-     benchmarks, ảnh ≤384 tokens, giá flash ($0.22/1M off-peak), API
-     OpenAI-compatible (base_url=api.deepseek.com/v1), 800×800 image resize
-3. **Check CI cho commit 973e666** (webhook delay từ lúc mất mạng)
-4. Smoke test VLM: gửi ảnh đơn giản → verify response
+### Phase 1 — VLM QA pipeline redesign ✅
+- **WHERE/WHAT split**: pixel-diff cho WHERE (deterministic), VLM cho WHAT
+  (semantic). KHÔNG hỏi VLM bbox (TimeCatch proved unreliable — và DeepSeek
+  trả EMPTY trên JSON-structured prompts)
+- DeepSeek nhận diện ĐÚNG content thật: "person head", "Text CHOICE",
+  "Text CHANGE" — KHÔNG hallucination (glm-4v-flash thấy "owl mask")
+- Pipeline: 640×360 native (no upscale), short prompt, natural language
+  response parsing, heuristic element_type classification
 
-### Phase 1 — VLM QA pipeline với DeepSeek (1.5h)
+### Phase 2 — Video #1 "Why AI Dialogue Sounds Like Therapy" ✅
+- **ĐÂY LÀ LẦN ĐẦU pipeline chạy full cho video mới** (8 beats, 30s)
+- Story + script + EditDoc (8 treatments, style store v73)
+- Cold projection: 108 clips, schemaVersion 3, validate PASS
+- Cả 2 path render thành công (treatment + editor, draft 360p)
+- VLM QA so sánh 2 path: 7/7 regions TRUSTED
 
-5. **Re-run vlm_qa pipeline với DeepSeek** (frontier-class — glm-4v-flash
-   hallucinated "owl mask" trên semantic diagram; DeepSeek phải ground đúng)
-6. **Verify IoU > 0.3** cho ít nhất một số region (DeepSeek là model mạnh,
-   nếu vẫn IoU=0 → debug coordinate space thêm)
-7. **Refactor visual_critique** → gọi vlm_qa pipeline (TODO treo từ hôm qua)
-8. **Update oracle-trust.md** với config DeepSeek
+### Blockers phát hiện + fix (từ production run thật)
+1. **--output relative path**: resolve theo composerRoot thay vì
+   workspaceRoot → renders rơi vào `remotion-composer/projects/`. FIXED.
+2. **styleLoader delayRender timeout**: default 28s quá ngắn cho render
+   30s ở draft quality (multi-tab render queue). FIXED → 300s.
 
-### Phase 2 — Produce video #1 từ content plan (3h) — FULL PIPELINE E2E
+## Còn lại (backlog, không block)
 
-Video #2: **"Why AI Dialogue Sounds Like Therapy"**
-- Demand evidence mạnh nhất: Reddit r/slatestarcodex 445↑, 193 comments
-- Mechanism #3 Case study (theo content-plan rotation — tránh 2 mechanism
-  giống nhau liên tiếp)
-- Sources: Reddit threads, r/ClaudeAI 214↑
-
-Steps (pipeline chuẩn — AGENTS.md trigger):
-9.  **Story phase** (`lên content`): research topic → audience/goal →
-    surface + deeper problem → hero journey beats → script
-10. **Build VideoDoc** (04-video-doc.json): cấu trúc 12-point journey
-11. **Build EditDoc** (05-edit-doc.json): beats + treatments + audio plan
-    (dùng style store v73 — 40 principles đã học)
-12. **Voice**: TTS script qua ElevenLabs (monitor credits — PAUSE nếu cạn)
-13. **Assets**: stock search (Pexels/Unsplash) cho relevant footage +
-    character poses có sẵn
-14. **Cold projection** → EditorDoc (generate-editor.mjs --mode cold)
-15. **Draft render** + QA gates (pixel-diff, structural, VLM critique)
-16. **Document MỌI blocker** gặp phải — đây là lần đầu pipeline chạy full
-    cho video mới, mọi gap là phát hiện quý
-
-Lưu ý: project mới cần project slug riêng (không phải isaacverse-final).
-Kiểm tra project_store.py createBlankProject + sync-project-public.
-
-### Phase 3 — Polish + close-out (1h)
-
-17. **Parity residuals** (4 treatment — nếu còn thời gian)
-18. **Per-field ledger**: update trim/move/nudge ops (hiện default ['all'])
-19. **Docs**: TODO-NEXT (file này) cập nhật kết quả + knowledge-base entry
-20. **Memory save**: night-run-2026-08-27 decisions
-21. **Final push + CI check** (3 workflows xanh)
-
-## Trọng tâm đêm nay
-
-**Video #1 là việc quan trọng nhất.** Toàn bộ 11 ngày build infrastructure
-để chuẩn bị cho việc này. Video thật sẽ phơi ra mọi gap còn lại của
-pipeline — mỗi gap là phát hiện quý cho việc hoàn thiện harness.
-
-VLM DeepSeek là việc quan trọng thứ hai — pipeline SoM đã đúng mechanics,
-chỉ thiếu model đủ mạnh để ground bbox chính xác.
-
-## Gotchas (từ các đêm trước — không lặp lại)
-
-1. Playwright postData() là SYNC — không .then()
-2. vitest collect e2e/*.spec.ts — đã pin include src/**
-3. .gitignore *.png nuốt fixture — đã có exception
-4. Remotion Sequence clips children — overlay spanning → root
-5. PowerShell `&` với path có backslash — dùng workdir + full path
-6. LangGraph server port 2024 ghost socket — dùng port 2025
-7. Windows cp1252 encoding — reconfigure stdout utf-8 trong mọi script
-8. CHỐT: check CI sau MỖI push (lesson reinforced)
+1. **Voice TTS** cho video #1 — chờ user duyệt (ElevenLabs paid)
+2. **visual_critique refactor** → vlm_qa pipeline (score-based prompt không
+   work với DeepSeek — test skip với NOTE)
+3. Parity residuals 4 treatment (2.28-6.3 — sub-pixel nuances)
+4. Per-field ledger cho trim/move/nudge (hiện default ['all'])
+5. Playwright batch 3
+6. Assets cho video #1: hiện dùng character poses có sẵn — cần stock
+   images cho treatment host-reflection/cinematic (từ Pexels/Unsplash)

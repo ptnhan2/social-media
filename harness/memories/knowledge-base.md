@@ -58,6 +58,37 @@ docs/PIPELINE-HARDENING-SPEC.md (PROPOSED).
 - Descript Underlord = operator trên 1 doc (không re-projection, không học gu
   systematic); Runway = disposable output. Pattern mình = Figma components.
 
+## Night Run 2026-08-26/27 — Video #1 produced + VLM DeepSeek + pipeline E2E
+
+### Video #1: FIRST real production run (ai-dialogue-therapy)
+- Content plan #2 "Why AI Dialogue Sounds Like Therapy" (demand: r/slatestarcodex 445/193)
+- 8 beats, 30s, 8 treatments, style store v73, cold projection 108 clips
+- Both render paths OK (treatment + editor), VLM QA 7/7 TRUSTED
+- BLOCKER 1: --output relative path resolved against composerRoot (renders
+  silently landed in remotion-composer/projects/) — fixed: resolve workspaceRoot
+- BLOCKER 2: styleLoader delayRender 28s default too short for 30s draft
+  renders (multi-tab queue wait) — fixed: 300s timeout
+- MISSING: voice TTS (needs ElevenLabs + user approval), stock images for
+  cinematic treatments (currently reusing isaacverse character poses)
+
+### VLM: DeepSeek-V4-Flash-Vision-Exp (frontier at flash pricing)
+- Model: deepseek-v4-flash-vision-exp, ra 2026-08-21, ~$0.22/1M off-peak
+- Beats Opus 4.8 on 3/11 agent benchmarks, images <=384 tokens each
+- KEY FINDING: DeepSeek returns EMPTY on complex JSON-structured prompts
+  with images. Short natural-language prompts work perfectly.
+- KEY FINDING: DeepSeek correctly identifies content in SoM-marked regions
+  (character poses, text nodes) with ZERO hallucination — unlike glm-4v-flash
+  which saw "owl mask" on a semantic diagram
+- Pipeline redesign: WHERE/WHAT split — pixel-diff for WHERE (deterministic,
+  precise bboxes), VLM for WHAT (semantic identification only). Do NOT ask
+  VLM for bboxes (its weakest task per TimeCatch; also triggers empty responses)
+
+### Model switch: Ox Alpha dead (404) -> glm-5.3-flash via coding endpoint
+- HARNESS_MODEL=openai:glm-5.3-flash
+- OPENAI_BASE_URL=https://open.bigmodel.cn/api/coding/paas/v4 (coding plan)
+- E6 re-verified PASS 7/7 with this model
+- Agent reads memory correctly (24 ACTIVE principles), protocol v5 intact
+
 ## Night Run 2026-08-25/26 — E2 parity GATE PASS + editor path flip + Playwright E2E
 
 ### E2 parity gate MET (both windows < 2.0, cold projection)
