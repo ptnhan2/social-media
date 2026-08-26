@@ -56,9 +56,27 @@ const migrateV2 = (doc: EditorDoc): EditorDoc => {
   return changed ? { ...doc, tracks } : doc;
 };
 
-/** v3: reserved — per-field override ledger (Figma overriddenFields pattern,
- *  spec §3.2-1b). Placeholder that only stamps the version. */
-const migrateV3 = (doc: EditorDoc): EditorDoc => doc;
+/** v3: convert legacy `userEdited: true` to `overridden: { all: true }` — the
+ *  per-field override ledger (Figma overriddenFields pattern, spec §3.2-1b).
+ *  `all: true` preserves the old "keep entire clip" semantics for clips
+ *  that were marked before per-field tracking existed. New ops set specific
+ *  fields, enabling the sync merge to refresh non-overridden fields while
+ *  keeping the hand-edited ones. */
+const migrateV3 = (doc: EditorDoc): EditorDoc => {
+  let changed = false;
+  const tracks = doc.tracks.map((track) => ({
+    ...track,
+    clips: track.clips.map((clip) => {
+      const md = clip.metadata;
+      if (md.userEdited === true && !md.overridden) {
+        changed = true;
+        return { ...clip, metadata: { ...md, overridden: { all: true } } };
+      }
+      return clip;
+    }),
+  }));
+  return changed ? { ...doc, tracks } : doc;
+};
 
 const MIGRATIONS: Record<number, (doc: EditorDoc) => EditorDoc> = {
   1: migrateV1,

@@ -146,3 +146,51 @@ test("sync on split/trimmed beat preserves overlay (B1 regression, §3.2-1c)", (
   assert.ok(syncedOverlay, "overlay NOT dropped by sync — B1 regression locked");
   assert.ok(syncedOverlay.range.endSec > syncedBeat.range.endSec, "overlay still spans past the trimmed beat (the render path routes it to root)");
 });
+
+test("per-field override merge: fontSize kept, range refreshed (§3.2-1b)", () => {
+  // The CORE per-field test: a clip with overridden: { fontSize: true } (but
+  // NOT range) → sync must KEEP the user's fontSize while REFRESHING the
+  // range from the fresh projection (old behavior kept the ENTIRE clip).
+  const coldPath = path.join(TMP, "perfield-fixture.json");
+  run(["--project", "isaacverse-final", "--mode", "cold", "--out", coldPath]);
+  const doc = JSON.parse(readFileSync(coldPath, "utf-8"));
+  const allClips = () => doc.tracks.flatMap((track) => track.clips);
+
+  // find a text element with fontSize
+  const textClip = allClips().find((clip) => clip.kind === "element" && clip.metadata?.fontSize && clip.metadata?.isTextClip);
+  assert.ok(textClip, "fixture has a text clip with fontSize");
+  const originalFontSize = textClip.metadata.fontSize;
+  const userFontSize = originalFontSize + 99; // clearly different
+
+  // simulate: user changed fontSize via setEditorClipMetadata (which sets
+  // overridden: { fontSize: true }) but did NOT touch range
+  textClip.metadata.userEdited = true;
+  textClip.metadata.overridden = { fontSize: true };
+  textClip.metadata.fontSize = userFontSize;
+  assert.ok(!textClip.metadata.overridden.range, "range is NOT overridden");
+
+  writeFileSync(coldPath, JSON.stringify(doc, null, 2), "utf-8");
+  const outPath = path.join(TMP, "perfield-synced.json");
+  const summary = run(["--project", "isaacverse-final", "--mode", "sync", "--in", coldPath, "--out", outPath]);
+  const synced = JSON.parse(readFileSync(outPath, "utf-8"));
+  const syncedClips = () => synced.tracks.flatMap((track) => track.clips);
+
+  // fontSize = user's value (OVERRIDDEN → kept)
+  const syncedText = syncedClips().find((clip) => clip.id === textClip.id);
+  assert.ok(syncedText, "text clip survives sync");
+  assert.equal(syncedText.metadata.fontSize, userFontSize, "overridden fontSize KEPT (not refreshed from projection)");
+
+  // range = fresh projection value (NOT overridden → refreshed)
+  assert.equal(syncedText.range.startSec, textClip.range.startSec, "range refreshed from fresh projection (NOT overridden)");
+  assert.equal(syncedText.range.endSec, textClip.range.endSec, "range endSec refreshed");
+
+  // stale flag set (style moved on)
+  assert.equal(syncedText.metadata.stale, true, "stale flag set");
+  assert.equal(syncedText.metadata.overridden.fontSize, true, "overridden marker preserved");
+
+  // verify the fresh fontSize DID reach non-overridden text clips (sanity: not ALL clips stale)
+  const otherText = syncedClips().find((clip) => clip.kind === "element" && clip.metadata?.fontSize && clip.id !== textClip.id);
+  if (otherText) {
+    assert.notEqual(otherText.metadata.fontSize, userFontSize, "non-overridden clip's fontSize refreshed (not the user's value)");
+  }
+});

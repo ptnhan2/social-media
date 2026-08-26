@@ -24,10 +24,19 @@ const neighbors = (clips: EditorClip[], clipIndex: number) => {
 };
 
 /** Mark a clip as touched by the user — the generator merge ledger (spec §2.3):
- *  user-modified clips are kept on regeneration, never silently overwritten. */
-const userTouched = (clip: EditorClip): EditorClip => ({
+ *  user-modified clips are kept on regeneration, never silently overwritten.
+ *  Per-field override tracking (PIPELINE-HARDENING-SPEC §3.2-1b, Figma
+ *  overriddenFields pattern): `fields` records WHICH metadata fields the op
+ *  touched. The sync merge uses this to refresh non-overridden fields from
+ *  the fresh projection while keeping hand-edited values. Default: ["all"]
+ *  preserves the old "keep entire clip" semantics. */
+const userTouched = (clip: EditorClip, fields: string[] = ["all"]): EditorClip => ({
   ...clip,
-  metadata: { ...clip.metadata, userEdited: true },
+  metadata: {
+    ...clip.metadata,
+    userEdited: true, // backward compat (list op, count check, old merge)
+    overridden: { ...(clip.metadata.overridden as Record<string, boolean> || {}), ...Object.fromEntries(fields.map((f) => [f, true])) },
+  },
 });
 
 /** Append a deleted clip id to the user-deletion ledger (regeneration must not resurrect). */
@@ -209,7 +218,7 @@ export const setEditorClipMetadata = (editor: EditorDoc, clipId: string, changes
       ...track,
       clips: track.clips.map((clip) => clip.id !== clipId ? clip : {
         ...clip,
-        metadata: { ...clip.metadata, ...changes, userEdited: true },
+        metadata: { ...clip.metadata, ...changes, userEdited: true, overridden: { ...(clip.metadata.overridden as Record<string, boolean> || {}), ...Object.fromEntries(Object.keys(changes).map((k) => [k, true])) } },
       }),
     }),
     revision: updateRevision(editor),

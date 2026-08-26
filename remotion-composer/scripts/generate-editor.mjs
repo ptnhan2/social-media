@@ -166,15 +166,36 @@ async function main() {
       const existingEntry = existingClips.get(id);
       if (existingEntry) {
         const existingClip = existingEntry.clip;
-        if (existingClip.metadata?.userEdited === true) {
-          // KEEP user version; flag staleness when style or editdoc moved on
-          const staleReason = (existingClip.metadata?.styleResolvedAt?.storeVersion ?? 0) !== styleResolvedAt.storeVersion ? "style" : "editdoc";
-          stats.keptUser += 1;
-          return { ...existingClip, metadata: { ...existingClip.metadata, stale: true, staleReason } };
+        const overridden = existingClip.metadata?.overridden
+          || (existingClip.metadata?.userEdited === true ? { all: true } : {});
+        if (overridden.all === true || Object.keys(overridden).length === 0) {
+          if (overridden.all === true) {
+            // fully overridden → KEEP entirely + stale (legacy behavior)
+            const staleReason = (existingClip.metadata?.styleResolvedAt?.storeVersion ?? 0) !== styleResolvedAt.storeVersion ? "style" : "editdoc";
+            stats.keptUser += 1;
+            return { ...existingClip, metadata: { ...existingClip.metadata, stale: true, staleReason } };
+          }
+          // not overridden → refresh in place (keep its track placement)
+          stats.refreshed += 1;
+          return { ...freshClip, trackId: existingEntry.trackId };
         }
-        // unmodified -> refresh in place (keep its track placement)
-        stats.refreshed += 1;
-        return { ...freshClip, trackId: existingEntry.trackId };
+        // PARTIAL merge (PIPELINE-HARDENING-SPEC §3.2-1b, Figma pattern):
+        // start from the FRESH projection metadata, then overlay the hand-
+        // edited fields from the existing clip. Non-overridden fields pick
+        // up the new projection values; overridden fields keep the user's.
+        const staleReason = (existingClip.metadata?.styleResolvedAt?.storeVersion ?? 0) !== styleResolvedAt.storeVersion ? "style" : "editdoc";
+        const mergedMeta = { ...freshClip.metadata };
+        for (const [field, isOverridden] of Object.entries(overridden)) {
+          if (isOverridden && field !== "all" && field in existingClip.metadata) {
+            mergedMeta[field] = existingClip.metadata[field];
+          }
+        }
+        mergedMeta.userEdited = true;
+        mergedMeta.overridden = overridden;
+        mergedMeta.stale = true;
+        mergedMeta.staleReason = staleReason;
+        stats.keptUser += 1;
+        return { ...freshClip, metadata: mergedMeta, trackId: existingEntry.trackId };
       }
       stats.added += 1;
       return { ...freshClip };
