@@ -144,6 +144,12 @@ def test_treatment_from_knob_path():
 def test_update_style_chain_smoke():
     print("\n=== update_style E2E chain (knob -> generator refresh) ===")
     from harness_tools import update_style
+    # CI python-tests job installs NO node deps — the chain shells out to
+    # generate-editor.mjs which needs esbuild. Same guard as test_render_window.
+    renderer = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "remotion-composer")
+    if not os.path.exists(os.path.join(renderer, "node_modules", "esbuild")):
+        print("  SKIP: esbuild not installed (run npm install in remotion-composer) — CI does not install node deps for this job")
+        return
     knob = "treatments.semantic-diagram.node.glow"
     # read current value, flip it, verify the chain ran, then restore via git
     style_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "libraries", "04-visual", "isaacverse-style.json")
