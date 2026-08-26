@@ -131,19 +131,14 @@ Gate windows KHÔNG đổi: semantic-diagram 1.222, process-timeline 1.266
 - [x] Verify cuối đợt: vitest 167/167, parity gates PASS (1.222/1.266 —
       không đổi, migrations là no-op trên doc đã canonical), harness 18/18.
 
-**Đợt 2 — "Giết lan truyền" (~1 ngày, CHỜ TRIỂN KHAI):**
-1. KEEP gate revision stamping (render stale → refuse duyệt) — §3.3
-2. editor-ops.mjs optimistic locking (conflict với human edits) — §3.6
-3. Chain update_style → generate (đóng lỗ "sync thiếu" đang sống) — §3.2-1a
-4. Schema versioning + migration registry + validate output — §3.1
-   (đóng GENERATOR-SPEC risk #3 + semantic drift như edge px→viewBox)
+**ĐỢT 2 "GIẾT LAN TRUYỀN" — HOÀN TẤT 26/08** (commit 3db4d8c..f2e1aa9):
 
-**Đợt 2 — "Giết lan truyền" (~1 ngày):**
-5. Style store versioned rollback + 1-principle-per-promote — §3.5
-6. Edited-fixture sync tests (B1-class regression lock) — §3.2-1c
-7. VLM prompting pipeline: SoM overlay + grounded structured prompts +
-   IoU verification + oracle-trust rewrite (research-backed, KHÔNG hỏi
-   spot-the-diff nữa) — §3.4
+- [x] 5. Style store versioned rollback: snapshot mỗi version + style_rollback tool +
+      1-principle-per-promote protocol + minSupport correlation check — §3.5
+- [x] 6. Edited-fixture sync tests: routeOverlay pure function extracted +
+      5 vitest + B1 fixture (trimmed beat + overlay spanning) — §3.2-1c
+- [x] 7. VLM QA pipeline: harness/vlm_qa.py (SoM overlay + grounded structured
+      prompts + IoU verification) + oracle-trust.md rewrite với 6 citations — §3.4
 
 **Đợt 3 — session riêng (1-2 ngày):**
 8. Per-field override ledger (Figma `overriddenFields[]` pattern) — §3.2-1b
