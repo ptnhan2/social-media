@@ -364,6 +364,40 @@ def visual_critique(video_path: str, aspect: str = "all") -> str:
         frames = _extract_keyframes(full, max_frames=4)
     if not frames:
         return f"Could not extract frames from: {full}"
+
+    # DeepSeek path (PIPELINE-HARDENING-SPEC §3.4): SoM overlay + short natural-
+    # language prompts — complex JSON/score-based prompts return EMPTY responses
+    # from DeepSeek VLM. The vlm_qa pipeline handles the WHERE/WHAT split.
+    if cfg["provider"] == "deepseek":
+        try:
+            from vlm_qa import _extract_frame, _som_overlay, _region_block_diff
+            import base64 as _b64
+            import io as _io
+
+            # extract 3 keyframe samples + describe content via SoM-style prompt
+            sample_times = [1.0, 0.5, 0.8]  # fractions of duration
+            dur = _duration_of(full)
+            descriptions = []
+            for frac in sample_times:
+                t = dur * frac
+                frame = _extract_frame(full, t)
+                if frame is None:
+                    continue
+                buf = _io.BytesIO()
+                frame.save(buf, format="JPEG", quality=80)
+                frame_b64 = _b64.b64encode(buf.getvalue()).decode()
+                content = [
+                    {"type": "text", "text": f"Describe the visual elements in this frame from a video. What treatments/layouts, text content, character poses, and overall composition do you see? Be concise (3-5 sentences)."},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{frame_b64}"}},
+                ]
+                desc = _call_vlm(content, _VLM_SYSTEM + " Focus on what is VISIBLE, not scores.", timeout=120)
+                if not desc.startswith("VLM API error"):
+                    descriptions.append(f"[t={t:.1f}s] {desc}")
+            if descriptions:
+                return f"Visual critique ({aspect}) of {video_path} [VLM: {cfg['provider']}/{cfg['model']} — SoM keyframes]:\n\n" + "\n\n".join(descriptions)
+        except Exception:
+            pass  # fall through to generic keyframe path
+
     prompt += "\n\nContext: These are frames from an IsaacVerse-style story-driven video. Frames are sent in PAIRS (consecutive frames 80ms apart) — compare adjacent frames to detect MOTION and animation. If frames in a pair look identical, there is no motion at that point."
     content = [{"type": "text", "text": prompt}]
     for b64 in frames:
