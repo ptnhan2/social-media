@@ -454,6 +454,16 @@ def update_style(style_path: str, new_value: str) -> str:
     style["version"] = style.get("version", 1) + 1
     with open(style_file, "w", encoding="utf-8") as f:
         json.dump(style, f, indent=2, ensure_ascii=False)
+    # VERSION SNAPSHOT (PIPELINE-HARDENING-SPEC §3.5): every version is
+    # snapshotted to libraries/04-visual/style-versions/vNNN.json so a
+    # bad principle can be rolled back without git archaeology. Only
+    # written if absent — immutable history.
+    versions_dir = os.path.join(os.path.dirname(style_file), "style-versions")
+    os.makedirs(versions_dir, exist_ok=True)
+    snapshot_path = os.path.join(versions_dir, f"v{style['version']:03d}.json")
+    if not os.path.exists(snapshot_path):
+        import shutil as _sh2
+        _sh2.copy2(style_file, snapshot_path)
     # Sync to Remotion shared dir AND public/ (styleLoader fetches at runtime
     # from public/, so the public copy is the one the render actually reads)
     import shutil
@@ -469,6 +479,59 @@ def update_style(style_path: str, new_value: str) -> str:
     chain = _regenerate_editor_for_knob(style_path)
     return (f"Style updated: {style_path}\n  old: {json.dumps(old)}\n  new: {json.dumps(val)}\n"
             f"  version: {style['version']}\n  {chain}\n"
+            f"  File: /workspace/{STYLE_REL}")
+
+
+@tool
+def style_rollback(target_version: int, reason: str = "") -> str:
+    """Rollback the style store to a previous version (PIPELINE-HARDENING-SPEC §3.5).
+
+    Loads the snapshot from libraries/04-visual/style-versions/vNNN.json,
+    writes it back with a NEW version number (never overwrites history —
+    the audit trail is preserved via snapshot timestamps), syncs to remotion,
+    and chains generate-editor sync to refresh the editor doc.
+
+    The agent must have a user decision (request_keep rejected a principle)
+    before calling this — rollbacks without a reason are a protocol violation.
+
+    Args:
+        target_version: The version number to roll back to (from the snapshot dir).
+        reason: Why the rollback — appended to the style JSON + knowledge-base.
+    """
+    style_file = os.path.join(PROJECT_ROOT, STYLE_REL)
+    versions_dir = os.path.join(os.path.dirname(style_file), "style-versions")
+    snapshot = os.path.join(versions_dir, f"v{int(target_version):03d}.json")
+    if not os.path.exists(snapshot):
+        return f"ROLLBACK FAILED: no snapshot for version {int(target_version)} at {snapshot}"
+    try:
+        with open(snapshot, encoding="utf-8") as f:
+            old_style = json.load(f)
+        with open(style_file, encoding="utf-8") as f:
+            current = json.load(f)
+    except Exception as exc:
+        return f"ROLLBACK FAILED: read error — {exc}"
+    new_version = current.get("version", 0) + 1
+    old_style["version"] = new_version
+    old_style["rollbackFrom"] = int(target_version)
+    old_style["rollbackReason"] = reason or "no reason given"
+    old_style["rollbackAt"] = __import__("datetime").datetime.now().isoformat()
+    # snapshot the CURRENT state before overwriting (immutable trail)
+    current_snapshot = os.path.join(versions_dir, f"v{current['version']:03d}.json")
+    if not os.path.exists(current_snapshot):
+        import shutil as _sh3
+        _sh3.copy2(style_file, current_snapshot)
+    with open(style_file, "w", encoding="utf-8") as f:
+        json.dump(old_style, f, indent=2, ensure_ascii=False)
+    import shutil
+    for dst in [
+        os.path.join(RENDERER_DIR, "shared", "isaacverse", "isaacverse-style.json"),
+        os.path.join(RENDERER_DIR, "public", "isaacverse-style.json"),
+    ]:
+        shutil.copy2(style_file, dst)
+    chain = _regenerate_editor_for_knob("colors.amber")
+    return (f"Style rolled back: v{int(target_version)} → v{new_version}\n"
+            f"  (content from snapshot restored; new version for audit trail)\n"
+            f"  Reason: {reason or 'no reason given'}\n  {chain}\n"
             f"  File: /workspace/{STYLE_REL}")
 
 

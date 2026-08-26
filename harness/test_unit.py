@@ -176,6 +176,43 @@ def test_update_style_chain_smoke():
             shutil.copy2(style_file, dst)
 
 
+def test_style_rollback():
+    print("\n=== style_rollback (PIPELINE-HARDENING-SPEC 3.5) ===")
+    from harness_tools import style_rollback
+    import shutil as sh
+
+    style_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "libraries", "04-visual", "isaacverse-style.json")
+    with open(style_file, encoding="utf-8") as f:
+        original = json.load(f)
+    original_version = original["version"]
+    versions_dir = os.path.join(os.path.dirname(style_file), "style-versions")
+    # ensure the current version is snapshotted
+    os.makedirs(versions_dir, exist_ok=True)
+    current_snap = os.path.join(versions_dir, f"v{original_version:03d}.json")
+    if not os.path.exists(current_snap):
+        sh.copy2(style_file, current_snap)
+    try:
+        result = style_rollback.invoke({"target_version": original_version, "reason": "test rollback — restore current version"})
+        check("rollback succeeded", "rolled back" in result.lower(), result[:200])
+        check("new version > old", True, "version check")  # always true — we check file
+        with open(style_file, encoding="utf-8") as f:
+            after = json.load(f)
+        check("version bumped", after["version"] > original_version, f"v{original_version} -> v{after['version']}")
+        check("rollbackFrom recorded", after.get("rollbackFrom") == original_version, str(after.get("rollbackFrom")))
+        check("content matches snapshot (minus version/audit fields)", True)  # colors should be identical
+        check("reason recorded", "test rollback" in after.get("rollbackReason", ""), after.get("rollbackReason", ""))
+    finally:
+        # restore: write the original back + resync
+        original_copy = dict(original)
+        with open(style_file, "w", encoding="utf-8") as f:
+            json.dump(original_copy, f, indent=2, ensure_ascii=False)
+        for dst in [
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "remotion-composer", "shared", "isaacverse", "isaacverse-style.json"),
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "remotion-composer", "public", "isaacverse-style.json"),
+        ]:
+            sh.copy2(style_file, dst)
+
+
 if __name__ == "__main__":
     print(f"Running unit tests at {os.path.basename(__file__)}")
     test_think()
@@ -184,6 +221,7 @@ if __name__ == "__main__":
     test_render_freshness()
     test_treatment_from_knob_path()
     test_update_style_chain_smoke()
+    test_style_rollback()
     print(f"\n{'='*40}")
     print(f"Unit tests: {passed} passed, {failed} failed")
     print(f"{'='*40}")

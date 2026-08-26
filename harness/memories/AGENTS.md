@@ -89,6 +89,7 @@ Classify the feedback per these rules:
 
 - State your classification explicitly (think tool) — the user corrects at review if wrong.
 - Add the principle to /memories/taste-standard.md as a JSON block: status ACTIVE if it came directly from the user, confidence by signal count (high ≥ 3 consistent signals, medium 2, low 1).
+- **minSupport correlation check** (PIPELINE-HARDENING-SPEC §3.5): 2 signals for confidence "medium" must come from **≥2 distinct videos OR ≥2 distinct feedback sessions** — 2 items from the same review of the same video count as 1 signal, not 2. If only 1 source is available, the principle stays CANDIDATE (not ACTIVE) until a second independent source confirms.
 - If equivalent feedback already exists, INCREMENT its evidence instead of duplicating.
 
 ### Step 3 — SCAN FOR VIOLATIONS
@@ -138,10 +139,10 @@ Fix violations you find — even ones the user did not mention this session. Tha
 ## Hard limits (STOP CRITERIA)
 
 - **Maximum 3 improvement cycles per session-thread** (middleware-enforced). A cycle = one principle application round ending at request_keep.
-- **Maximum 1 principle per cycle** — apply it fully (all treatments) rather than many principles partially.
-- **Always revert** when qa_gate fails and cannot be fixed, or the user rejects.
+- **Maximum 1 principle per cycle** — apply it fully (all treatments) rather than many principles partially. This means ONE update_style bump per principle — if multiple knobs need changing for the same principle, they go in separate update_style calls (each bumps version), but the LOGICAL principle is one. This ensures a style_rollback target_version always maps to exactly one principle diff (canary/blast-radius principle, PIPELINE-HARDENING-SPEC §3.5).
+- **Always revert** when qa_gate fails and cannot be fixed, or the user rejects. Use style_rollback(target_version) to restore a known-good version — never hand-edit the JSON to undo.
 - **Never trust cross-call absolute score comparisons** — same-call pairwise only.
-- **Never trust VLM verdicts on GLOBAL changes** (brightness/zoom/motion) — proven blind. VLM is useful only for LOCAL high-contrast changes.
+- **Never trust VLM verdicts on GLOBAL changes** (brightness/zoom/motion) — proven blind (TimeCatch/TimeBlind/REVEAL 2026). VLM is useful only for LOCAL high-contrast changes WITH Set-of-Mark prompting + grounded bbox output + IoU verification (PIPELINE-HARDENING-SPEC §3.4).
 - **Never edit memory files' principle counts without a user decision** — verified/rejected track real review outcomes.
 - When the VLM is unavailable or control fails: treat as unverifiable, revert, report honestly.
 

@@ -129,6 +129,25 @@ export type EditorProjectionOptions = {
   styleResolvedAt?: { storeVersion: number; seed?: string };
 };
 
+/** Overlay routing decision (PIPELINE-HARDENING-SPEC §3.2-1c / B1 fix):
+ *  - overlay fully inside ONE beat clip (start >= host.start, end <= host.end)
+ *    → nest inside that beat's camera (the treatment path scales visuals)
+ *  - overlay spanning past the host clip (endSec > host.endSec, e.g. the
+ *    beat was trimmed AFTER the overlay was generated) → render at ROOT
+ *    (Remotion clips children to the parent Sequence window; a nested
+ *    overlay would vanish from the post-trim segment)
+ *  - overlay without a beatId → root
+ *  Returns { nested, host } — the render path uses host.range.startSec to
+ *  offset the nested overlay's own Sequence `from`. */
+export function routeOverlay(overlay: EditorClip, videoClips: EditorClip[]): { nested: boolean; host: EditorClip | null } {
+  const beatId = typeof overlay.source.beatId === "string" ? overlay.source.beatId : null;
+  if (!beatId) return { nested: false, host: null };
+  const candidates = videoClips.filter((c) => c.source.beatId === beatId);
+  const host = candidates.find((c) => overlay.range.startSec >= c.range.startSec - 0.001 && overlay.range.startSec < c.range.endSec);
+  const insideHost = host && overlay.range.endSec <= host.range.endSec + 0.001;
+  return { nested: Boolean(host && insideHost), host: host ?? null };
+}
+
 export type EditorOperation =
   | { type: "trim"; clipId: string; edge: "start" | "end"; timeSec: number }
   | { type: "split"; clipId: string; timeSec: number }

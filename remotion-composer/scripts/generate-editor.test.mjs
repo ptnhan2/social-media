@@ -103,3 +103,46 @@ test("scoped mode touches only the target beat", () => {
   const scopedTarget = scoped.tracks.flatMap((track) => track.clips).filter((clip) => clip.source?.beatId === target);
   assert.ok(scopedTarget.length > 0, "target beat clips present");
 });
+
+test("sync on split/trimmed beat preserves overlay (B1 regression, §3.2-1c)", () => {
+  // B1: when a beat clip is TRIMMED (userEdited) while an overlay attributed
+  // to that beat spans past the trimmed end, the overlay must NOT be dropped
+  // by sync — it survives (either kept if userEdited, or refreshed from the
+  // fresh projection which spans the ORIGINAL beat range). The routing
+  // decision (nest vs root) happens in the render path, not sync, but sync
+  // must preserve the spanning clip's range so the render path can route it
+  // to root (routeOverlay overlay.endSec > host.endSec → root).
+  const coldPath = path.join(TMP, "b1-fixture.json");
+  run(["--project", "isaacverse-final", "--mode", "cold", "--out", coldPath]);
+  const doc = JSON.parse(readFileSync(coldPath, "utf-8"));
+  const allClips = () => doc.tracks.flatMap((track) => track.clips);
+
+  // find a beat clip + one of its overlays
+  const beatClip = allClips().find((clip) => clip.kind === "beat" && clip.source?.beatId);
+  assert.ok(beatClip, "fixture has a beat clip");
+  const beatId = beatClip.source.beatId;
+  const overlay = allClips().find((clip) => clip.kind === "element" && clip.source?.beatId === beatId && clip.source?.elementId);
+  assert.ok(overlay, "fixture has an overlay for that beat");
+
+  // simulate: user trims the beat clip to be SHORTER than the overlay
+  beatClip.metadata.userEdited = true;
+  const trimmedEnd = overlay.range.endSec - 0.5; // overlay now spans past the trim
+  beatClip.range.endSec = trimmedEnd;
+  assert.ok(overlay.range.endSec > trimmedEnd, "overlay spans past trimmed beat");
+
+  writeFileSync(coldPath, JSON.stringify(doc, null, 2), "utf-8");
+  const outPath = path.join(TMP, "b1-synced.json");
+  const summary = run(["--project", "isaacverse-final", "--mode", "sync", "--in", coldPath, "--out", outPath]);
+  const synced = JSON.parse(readFileSync(outPath, "utf-8"));
+  const syncedClips = () => synced.tracks.flatMap((track) => track.clips);
+
+  // the trimmed beat clip (userEdited) survives with its trimmed range
+  const syncedBeat = syncedClips().find((clip) => clip.id === beatClip.id);
+  assert.ok(syncedBeat, "trimmed beat clip survives sync");
+  assert.equal(syncedBeat.range.endSec, trimmedEnd, "trimmed range preserved");
+
+  // the overlay survives (not dropped) — its range spans past the beat
+  const syncedOverlay = syncedClips().find((clip) => clip.id === overlay.id);
+  assert.ok(syncedOverlay, "overlay NOT dropped by sync — B1 regression locked");
+  assert.ok(syncedOverlay.range.endSec > syncedBeat.range.endSec, "overlay still spans past the trimmed beat (the render path routes it to root)");
+});

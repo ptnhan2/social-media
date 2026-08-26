@@ -1,0 +1,183 @@
+{
+  "version": 74,
+  "seed": "isaac-forensic-2026-08",
+  "status": "seed",
+  "colors": {
+    "amber": "#ff6b35",
+    "cyan": "#00d4ff",
+    "paper": "#ffffff",
+    "black": "#050508",
+    "accent2": "#e5484d",
+    "gradientStart": "#ff6b35",
+    "gradientEnd": "#ffd166"
+  },
+  "treatments": {
+    "semantic-diagram": {
+      "edge": {
+        "stroke": {
+          "mode": "solid",
+          "color": "rgba(242,184,75,0.58)",
+          "width": 2,
+          "linecap": "round",
+          "gradientStops": [
+            "#7fd8e8",
+            "#f2d58a"
+          ],
+          "brushDasharray": "3 1 5 2"
+        },
+        "revealDurationSec": 2,
+        "curvature": 0.12
+      },
+      "node": {
+        "borderWidth": 2,
+        "borderRadius": 10,
+        "background": "rgba(7,9,13,0.84)",
+        "fontSize": 20,
+        "detailFontSize": 13,
+        "glow": 19,
+        "padding": "14px 18px 13px",
+        "fontWeight": 900
+      },
+      "title": {
+        "fontSize": 46,
+        "fontWeight": 900,
+        "letterSpacing": "-0.02em"
+      },
+      "kicker": {
+        "fontSize": 18,
+        "fontWeight": 900,
+        "letterSpacing": "0.18em"
+      },
+      "entrance": {
+        "damping": 2,
+        "stiffness": 140,
+        "mass": 0.8,
+        "durationSec": 0.75
+      },
+      "centerLabel": {
+        "fontSize": 20
+      }
+    },
+    "chapter-card": {
+      "title": {
+        "fontSizeLong": 82,
+        "fontSizeShort": 96,
+        "lineHeight": 1.08,
+        "fontWeight": 900
+      },
+      "accentLine": {
+        "height": 5,
+        "maxWidth": 190,
+        "glow": 18
+      },
+      "reveal": {
+        "inDurationSec": 0.45,
+        "lineStartSec": 0.15,
+        "lineEndSec": 1.5
+      },
+      "subtitle": {
+        "fontSize": 24
+      }
+    },
+    "host-reflection": {
+      "filter": "saturate(1.05) contrast(1.15) brightness(.9)",
+      "pushStart": 1.06,
+      "pushDurationSec": 4,
+      "entranceDurationSec": 0.5,
+      "letterboxTopPct": 8,
+      "letterboxBottomPct": 12,
+      "subtitle": {
+        "fontFamily": "Georgia, serif",
+        "fontStyle": "italic",
+        "fontSize": 27,
+        "fontWeight": 900
+      }
+    },
+    "screen-proof": {
+      "cameraStart": 1.04,
+      "cameraDurationSec": 4,
+      "entranceDurationSec": 0.8,
+      "focusStartSec": 0.65,
+      "focusEndSec": 1.15,
+      "caption": {
+        "fontSize": 28
+      }
+    },
+    "audience-demand": {
+      "contextInStartSec": 2.4,
+      "contextInEndSec": 3.3,
+      "responseInStartSec": 3.5,
+      "responseInEndSec": 4.2,
+      "spring": {
+        "damping": 17,
+        "stiffness": 170
+      },
+      "kicker": {
+        "fontSize": 18,
+        "fontWeight": 900
+      },
+      "comments": {
+        "fontSize": 25,
+        "fontWeight": 900
+      },
+      "caption": {
+        "fontSize": 28
+      }
+    },
+    "process-timeline": {
+      "titleInDurationSec": 0.45,
+      "progressStartSec": 0.35,
+      "progressEndSec": 1.2,
+      "spring": {
+        "damping": 18,
+        "stiffness": 150
+      },
+      "kicker": {
+        "fontSize": 17,
+        "fontWeight": 900
+      },
+      "title": {
+        "fontSize": 48,
+        "fontWeight": 900
+      },
+      "step": {
+        "fontSize": 16,
+        "fontWeight": 900
+      }
+    },
+    "candidate-comparison": {
+      "titleInDurationSec": 0.45,
+      "candidateStaggerSec": 0.22,
+      "spring": {
+        "damping": 18,
+        "stiffness": 160
+      },
+      "kicker": {
+        "fontSize": 17,
+        "fontWeight": 900
+      },
+      "title": {
+        "fontSize": 44,
+        "fontWeight": 900
+      },
+      "criteria": {
+        "fontSize": 18
+      },
+      "candidate": {
+        "fontSize": 18
+      }
+    },
+    "cinematic-metaphor": {
+      "entranceDurationSec": 0.7,
+      "pushStart": 1.08,
+      "pushDurationSec": 4,
+      "label": {
+        "fontSize": 16,
+        "fontWeight": 900
+      },
+      "subtitle": {
+        "fontSize": 28
+      }
+    }
+  }
+}

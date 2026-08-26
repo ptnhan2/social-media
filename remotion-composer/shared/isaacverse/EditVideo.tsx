@@ -15,6 +15,7 @@ import {
 } from "./treatments";
 import type { IsaacVerseEditDoc, SemanticBeat } from "./types";
 import type { EditorDoc } from "./editor";
+import { routeOverlay } from "./editor";
 import { AudioMixer } from "./audio";
 import { cameraPhaseFrames } from "./motion";
 import { clipFilterCss, keyframeValueAt, overlayStyleAt } from "./clipStyle";
@@ -211,25 +212,16 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
   const timelineBeats = editor && videoTrack ? videoClips.map((clip) => ({ clip, beat: doc.beats.find((candidate) => candidate.id === clip.source.beatId) })).filter((entry): entry is { clip: typeof videoClips[number]; beat: SemanticBeat } => Boolean(entry.beat)) : doc.beats.map((beat) => ({ clip: undefined, beat }));
   const transitionClips = editor?.tracks.find((track) => track.id === "transitions")?.clips.filter((clip) => Boolean(clip.source.transitionId));
   const overlayClips = (editor?.tracks.filter((track) => (track.kind === "text" || track.kind === "overlay" || track.kind === "video") && !track.hidden).flatMap((track) => track.clips.filter((clip) => !clip.hidden && clip.kind === "element")) ?? []).slice().sort((a, b) => (typeof a.metadata.z === "number" ? a.metadata.z : 10) - (typeof b.metadata.z === "number" ? b.metadata.z : 10));
-  // E2 parity: overlays that belong to a beat render INSIDE that beat's
-  // BeatCamera (the treatment path scales/drifts its visuals with the camera —
-  // overlays outside the camera produced a systematic scale/drift diff).
-  // ONLY overlays fully inside one beat clip nest there: Remotion clips
-  // children to the parent Sequence window, so an overlay spanning past a
-  // (possibly trimmed/split) host clip must stay at the ROOT level or it
-  // would be cut off at the host clip's end.
   const overlaysByBeat = new Map<string, { clip: typeof overlayClips[number]; seqStartSec: number }[]>();
   const rootOverlays: typeof overlayClips = [];
   if (editor) {
     for (const overlay of overlayClips) {
-      const beatId = typeof overlay.source.beatId === "string" ? overlay.source.beatId : null;
-      const candidates = beatId ? videoClips.filter((c) => c.source.beatId === beatId) : [];
-      const host = candidates.find((c) => overlay.range.startSec >= c.range.startSec - 0.001 && overlay.range.startSec < c.range.endSec);
-      const insideHost = host && overlay.range.endSec <= host.range.endSec + 0.001;
-      if (host && insideHost) {
-        const list = overlaysByBeat.get(String(beatId)) ?? [];
+      const { nested, host } = routeOverlay(overlay, videoClips);
+      if (nested && host) {
+        const beatId = String(overlay.source.beatId);
+        const list = overlaysByBeat.get(beatId) ?? [];
         list.push({ clip: overlay, seqStartSec: host.range.startSec });
-        overlaysByBeat.set(String(beatId), list);
+        overlaysByBeat.set(beatId, list);
       } else {
         rootOverlays.push(overlay);
       }
