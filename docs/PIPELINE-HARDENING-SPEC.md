@@ -539,10 +539,13 @@ Verify cuối đợt 1: full test suite + parity gate re-run + CI xanh.
 - [ ] VLM pipeline: fixture SoM → semantic đúng + IoU verify + not_found cho vùng trống
 - [ ] oracle-trust.md rewrite với citations
 
-Đợt 3 xong khi:
-- [ ] Per-field ledger: clip overridden-range nhưng không overridden-fontSize →
-      sync update fontSize, giữ range (test PASS)
-- [ ] Migration userEdited → overridden an toàn cho docs tồn tại
+Đợt 3 xong khi: **— HOÀN TẤT 26/08 (CI xanh 3 workflows)**
+- [x] Per-field ledger: clip overridden-fontSize nhưng KHÔNG overridden-range →
+      sync KEEPS fontSize, REFRESHES range từ fresh projection (test PASS:
+      generate-editor.test.mjs "per-field override merge")
+- [x] Migration userEdited → overridden: { all: true } an toàn (migrateV3
+      in editorMigrations.ts; backward compat fallback trong merge:
+      `|| (userEdited ? { all: true } : {})`)
 
 ---
 
