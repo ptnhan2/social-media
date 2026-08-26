@@ -4,7 +4,7 @@
   "width": 1920,
   "height": 1080,
   "fps": 30,
-  "durationSec": 31,
+  "durationSec": 30,
   "tracks": [
     {
       "id": "video-main",
@@ -195,7 +195,7 @@
           "trackId": "video-main",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "resolve with a memorable rule",
           "source": {
@@ -566,7 +566,7 @@
           "trackId": "visual-1",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "bg",
           "source": {
@@ -999,7 +999,7 @@
           "trackId": "visual-2",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "bg-glow",
           "source": {
@@ -1352,7 +1352,7 @@
           "trackId": "visual-3",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "accent-line",
           "source": {
@@ -1823,7 +1823,7 @@
           "trackId": "visual-4",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "follow the thread",
           "source": {
@@ -2252,7 +2252,7 @@
           "trackId": "visual-5",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "Break the\nPattern",
           "source": {
@@ -6262,57 +6262,6 @@
           "hidden": false
         }
       ]
-    },
-    {
-      "id": "voice",
-      "kind": "voice",
-      "name": "Audio 1",
-      "order": 27,
-      "locked": false,
-      "muted": false,
-      "solo": false,
-      "hidden": false,
-      "source": {
-        "kind": "project",
-        "projectRef": "audio-plan.voice"
-      },
-      "accepts": [
-        "audio"
-      ],
-      "capabilities": {
-        "visual": false,
-        "audio": true,
-        "canvas": false,
-        "trim": true,
-        "split": true,
-        "gain": true,
-        "fade": true,
-        "mute": true,
-        "solo": true
-      },
-      "clips": [
-        {
-          "id": "clip:voice:ai-dialogue-therapy:voice",
-          "kind": "voice",
-          "trackId": "voice",
-          "range": {
-            "startSec": 0,
-            "endSec": 31
-          },
-          "label": "Voiceover",
-          "source": {},
-          "color": "cyan",
-          "metadata": {
-            "src": "ai-dialogue-therapy/audio/voice.mp3",
-            "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
-            "segmentId": "ai-dialogue-therapy:voice"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        }
-      ]
     }
   ],
   "markers": [
@@ -6503,7 +6452,7 @@
       "kind": "beat",
       "range": {
         "startSec": 26,
-        "endSec": 31
+        "endSec": 30
       },
       "label": "resolve with a memorable rule",
       "source": {
@@ -6627,8 +6576,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 5,
-    "updatedAt": "2026-08-26T19:29:09.132Z"
+    "revision": 4,
+    "updatedAt": "2026-08-26T19:16:32.187Z"
   },
   "schemaVersion": 3
 }

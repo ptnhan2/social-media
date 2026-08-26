@@ -375,7 +375,7 @@
       ],
       "journeySlot": "resolution",
       "startSec": 26,
-      "durationSec": 4,
+      "durationSec": 5,
       "transcript": "",
       "narrativeFunction": "resolve with a memorable rule",
       "treatment": {
@@ -422,7 +422,16 @@
   "scenes": [],
   "treatmentUsage": {},
   "audioPlan": {
-    "voice": [],
+    "voice": [
+      {
+        "id": "ai-dialogue-therapy:voice",
+        "src": "ai-dialogue-therapy/audio/voice.mp3",
+        "startSec": 0,
+        "endSec": 31,
+        "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
+        "gainDb": 0
+      }
+    ],
     "music": [
       {
         "id": "therapy-music",

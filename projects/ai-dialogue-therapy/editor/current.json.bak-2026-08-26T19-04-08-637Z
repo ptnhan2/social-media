@@ -4,7 +4,7 @@
   "width": 1920,
   "height": 1080,
   "fps": 30,
-  "durationSec": 31,
+  "durationSec": 30,
   "tracks": [
     {
       "id": "video-main",
@@ -195,7 +195,7 @@
           "trackId": "video-main",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "resolve with a memorable rule",
           "source": {
@@ -461,30 +461,34 @@
           "hidden": false
         },
         {
-          "id": "therapy-beat-06:bg",
+          "id": "therapy-beat-06:bg-image",
           "kind": "element",
           "trackId": "visual-1",
           "range": {
             "startSec": 18.5,
             "endSec": 22.5
           },
-          "label": "bg",
+          "label": "bg-image",
           "source": {
             "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:bg"
+            "elementId": "therapy-beat-06:bg-image"
           },
           "parentClipId": "clip:beat:therapy-beat-06",
           "color": "coral",
           "metadata": {
-            "id": "therapy-beat-06:bg",
-            "type": "shape",
+            "id": "therapy-beat-06:bg-image",
+            "type": "image",
             "x": 0,
             "y": 0,
             "w": 1,
             "h": 1,
-            "z": 0,
+            "src": "isaacverse-final/character/poses/present.png",
+            "z": 1,
             "opacity": 1,
-            "background": "#050508",
+            "fit": "cover",
+            "filter": "saturate(1.08) contrast(1.15) brightness(.9)",
+            "animIn": "fade",
+            "animDurationSec": 0.7,
             "startSec": 0,
             "styleResolvedAt": {
               "storeVersion": 73,
@@ -492,7 +496,7 @@
             },
             "rotation": 0,
             "isTextClip": false,
-            "elementType": "shape"
+            "elementType": "image"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -566,7 +570,7 @@
           "trackId": "visual-1",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "bg",
           "source": {
@@ -593,64 +597,6 @@
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "therapy-beat-06:bg-image",
-          "kind": "element",
-          "trackId": "visual-1",
-          "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
-          },
-          "label": "bg-image",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:bg-image"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "coral",
-          "metadata": {
-            "id": "therapy-beat-06:bg-image",
-            "type": "image",
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 1,
-            "src": "isaacverse-final/character/poses/present.png",
-            "z": 5,
-            "opacity": 1,
-            "fit": "cover",
-            "filter": "saturate(1.08) contrast(1.15) brightness(.9)",
-            "keyframes": {
-              "scale": [
-                {
-                  "t": 0,
-                  "v": 1.08,
-                  "easing": "ease-out"
-                },
-                {
-                  "t": 4,
-                  "v": 1,
-                  "easing": "linear"
-                }
-              ]
-            },
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
-            "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": false,
-            "elementType": "image"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -933,9 +879,6 @@
             "z": 3,
             "opacity": 1,
             "background": "radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, #ff6b3522, transparent 55%)",
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
             "startSec": 0,
             "styleResolvedAt": {
               "storeVersion": 73,
@@ -999,7 +942,7 @@
           "trackId": "visual-2",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "bg-glow",
           "source": {
@@ -1305,6 +1248,58 @@
           "hidden": false
         },
         {
+          "id": "therapy-beat-06:label",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 18.8,
+            "endSec": 22.5
+          },
+          "label": "the shift",
+          "source": {
+            "beatId": "therapy-beat-06",
+            "elementId": "therapy-beat-06:label"
+          },
+          "parentClipId": "clip:beat:therapy-beat-06",
+          "color": "amber",
+          "metadata": {
+            "id": "therapy-beat-06:label",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.05,
+            "w": 0.3125,
+            "h": 0.027777777777777776,
+            "text": "the shift",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 900,
+            "fontFamily": "Arial, sans-serif",
+            "textTransform": "uppercase",
+            "letterSpacing": 2.6,
+            "color": "#ff6b35",
+            "textShadow": "0 2px 10px #000",
+            "animIn": "fade",
+            "animDurationSec": 0.7,
+            "startSec": 0.3,
+            "styleSource": {
+              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
+              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 73,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
           "id": "therapy-beat-07:vignette",
           "kind": "element",
           "trackId": "visual-3",
@@ -1352,7 +1347,7 @@
           "trackId": "visual-3",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "accent-line",
           "source": {
@@ -1391,59 +1386,6 @@
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "therapy-beat-06:label",
-          "kind": "element",
-          "trackId": "visual-3",
-          "range": {
-            "startSec": 18.8,
-            "endSec": 22.5
-          },
-          "label": "the shift",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:label"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "amber",
-          "metadata": {
-            "id": "therapy-beat-06:label",
-            "type": "text",
-            "x": 0.036458333333333336,
-            "y": 0.05,
-            "w": 0.3125,
-            "h": 0.027777777777777776,
-            "text": "the shift",
-            "z": 14,
-            "opacity": 1,
-            "fontSize": 16,
-            "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
-            "textTransform": "uppercase",
-            "letterSpacing": 2.56,
-            "color": "#ff6b35",
-            "textShadow": "0 2px 10px #000",
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
-            "startSec": 0.3,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
-              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": true,
-            "elementType": "text"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1734,41 +1676,50 @@
           "hidden": false
         },
         {
-          "id": "therapy-beat-06:letterbox-bottom",
+          "id": "therapy-beat-06:subtitle",
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 18.5,
+            "startSec": 19,
             "endSec": 22.5
           },
-          "label": "letterbox-bottom",
+          "label": "Therapy office → battlefield",
           "source": {
             "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:letterbox-bottom"
+            "elementId": "therapy-beat-06:subtitle"
           },
           "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "coral",
+          "color": "amber",
           "metadata": {
-            "id": "therapy-beat-06:letterbox-bottom",
-            "type": "shape",
+            "id": "therapy-beat-06:subtitle",
+            "type": "text",
             "x": 0,
             "y": 0.8398148148148148,
             "w": 1,
             "h": 0.16018518518518518,
-            "z": 13,
+            "text": "Therapy office → battlefield",
+            "z": 14,
             "opacity": 1,
-            "background": "#050508",
+            "fontSize": 28,
+            "fontStyle": "italic",
+            "fontWeight": 900,
+            "fontFamily": "Georgia, serif",
+            "textAlign": "center",
+            "color": "#ff6b35",
+            "textShadow": "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)",
             "animIn": "fade",
-            "animEasing": "cubic-out",
             "animDurationSec": 0.7,
-            "startSec": 0,
+            "startSec": 0.5,
+            "styleSource": {
+              "fontSize": "treatments.cinematic-metaphor.subtitle.fontSize"
+            },
             "styleResolvedAt": {
               "storeVersion": 73,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
-            "isTextClip": false,
-            "elementType": "shape"
+            "isTextClip": true,
+            "elementType": "text"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1823,7 +1774,7 @@
           "trackId": "visual-4",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "follow the thread",
           "source": {
@@ -1855,58 +1806,6 @@
             "startSec": 0,
             "styleSource": {
               "fontSize": "treatments.chapter-card.subtitle.fontSize"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": true,
-            "elementType": "text"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "therapy-beat-06:subtitle",
-          "kind": "element",
-          "trackId": "visual-4",
-          "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
-          },
-          "label": "Therapy office → battlefield",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:subtitle"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "amber",
-          "metadata": {
-            "id": "therapy-beat-06:subtitle",
-            "type": "text",
-            "x": 0.09010416666666667,
-            "y": 0.8398148148148148,
-            "w": 0.8197916666666667,
-            "h": 0.16018518518518518,
-            "text": "Therapy office → battlefield",
-            "z": 14,
-            "opacity": 1,
-            "fontSize": 28,
-            "fontStyle": "italic",
-            "fontWeight": 900,
-            "fontFamily": "Georgia, serif",
-            "textAlign": "center",
-            "color": "#ff6b35",
-            "textShadow": "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)",
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
-            "startSec": 0,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.subtitle.fontSize"
             },
             "styleResolvedAt": {
               "storeVersion": 73,
@@ -2252,7 +2151,7 @@
           "trackId": "visual-5",
           "range": {
             "startSec": 26,
-            "endSec": 31
+            "endSec": 30
           },
           "label": "Break the\nPattern",
           "source": {
@@ -6262,57 +6161,6 @@
           "hidden": false
         }
       ]
-    },
-    {
-      "id": "voice",
-      "kind": "voice",
-      "name": "Audio 1",
-      "order": 27,
-      "locked": false,
-      "muted": false,
-      "solo": false,
-      "hidden": false,
-      "source": {
-        "kind": "project",
-        "projectRef": "audio-plan.voice"
-      },
-      "accepts": [
-        "audio"
-      ],
-      "capabilities": {
-        "visual": false,
-        "audio": true,
-        "canvas": false,
-        "trim": true,
-        "split": true,
-        "gain": true,
-        "fade": true,
-        "mute": true,
-        "solo": true
-      },
-      "clips": [
-        {
-          "id": "clip:voice:ai-dialogue-therapy:voice",
-          "kind": "voice",
-          "trackId": "voice",
-          "range": {
-            "startSec": 0,
-            "endSec": 31
-          },
-          "label": "Voiceover",
-          "source": {},
-          "color": "cyan",
-          "metadata": {
-            "src": "ai-dialogue-therapy/audio/voice.mp3",
-            "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
-            "segmentId": "ai-dialogue-therapy:voice"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        }
-      ]
     }
   ],
   "markers": [
@@ -6503,7 +6351,7 @@
       "kind": "beat",
       "range": {
         "startSec": 26,
-        "endSec": 31
+        "endSec": 30
       },
       "label": "resolve with a memorable rule",
       "source": {
@@ -6627,8 +6475,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 5,
-    "updatedAt": "2026-08-26T19:29:09.132Z"
+    "revision": 1,
+    "updatedAt": "2026-08-26T17:56:22.043Z"
   },
   "schemaVersion": 3
 }

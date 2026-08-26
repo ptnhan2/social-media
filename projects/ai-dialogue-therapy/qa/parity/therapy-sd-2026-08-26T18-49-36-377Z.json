@@ -1,0 +1,89 @@
+{
+  "label": "therapy-sd",
+  "project": "ai-dialogue-therapy",
+  "window": {
+    "startSec": 3.5,
+    "endSec": 7,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\renders\\windows\\parity-therapy-sd-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\renders\\windows\\parity-therapy-sd-editor.mp4",
+  "durationSec": 3.563,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 0.488,
+      "changedPct": 1.029
+    },
+    {
+      "t": 0.35,
+      "mean": 1.054,
+      "changedPct": 2.311
+    },
+    {
+      "t": 0.6,
+      "mean": 1.044,
+      "changedPct": 1.917
+    },
+    {
+      "t": 0.85,
+      "mean": 1.437,
+      "changedPct": 4.007
+    },
+    {
+      "t": 1.1,
+      "mean": 1.67,
+      "changedPct": 4.171
+    },
+    {
+      "t": 1.35,
+      "mean": 1.553,
+      "changedPct": 4.148
+    },
+    {
+      "t": 1.6,
+      "mean": 1.699,
+      "changedPct": 4.971
+    },
+    {
+      "t": 1.85,
+      "mean": 1.843,
+      "changedPct": 5.205
+    },
+    {
+      "t": 2.1,
+      "mean": 1.717,
+      "changedPct": 4.97
+    },
+    {
+      "t": 2.35,
+      "mean": 1.851,
+      "changedPct": 5.387
+    },
+    {
+      "t": 2.6,
+      "mean": 1.885,
+      "changedPct": 5.486
+    },
+    {
+      "t": 2.85,
+      "mean": 1.804,
+      "changedPct": 5.148
+    },
+    {
+      "t": 3.1,
+      "mean": 1.857,
+      "changedPct": 5.194
+    },
+    {
+      "t": 3.35,
+      "mean": 1.711,
+      "changedPct": 4.503
+    }
+  ],
+  "meanOfMeans": 1.544,
+  "maxMean": 1.885,
+  "gate": "PASS",
+  "gateThreshold": 2
+}

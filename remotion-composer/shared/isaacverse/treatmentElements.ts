@@ -509,7 +509,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         : "linear-gradient(270deg, rgba(242,184,75,.65), transparent 48%)";
       const els: TreatmentElement[] = [];
       if (src) els.push(image(`${id}:bg-image`, 0, 0, W, H, src, {
-        filter: s("treatments.host-reflection.filter", "saturate(1.05) contrast(1.15) brightness(.9)"), z: 1,
+        filter: s("treatments.host-reflection.filter", "saturate(1.05) contrast(1.15) brightness(.9)"), z: 1, fit: "cover",
         // slow push-in (scale pushStart -> 1 over pushDur, cubic-out approximated
         // by the quad ease-out keyframe easing)
         keyframes: { scale: [{ t: 0, v: pushStart, easing: "ease-out" }, { t: pushDur, v: 1, easing: "linear" }] },
@@ -796,23 +796,47 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
 
     case "cinematic-metaphor": {
       const src = assetSrc(beat, "image") ?? assetSrc(beat, "video") ?? "";
+      const mode = asStr(p.mode, "cinematic");
+      const filter = mode === "line-art"
+        ? "grayscale(1) sepia(1) hue-rotate(350deg) saturate(4) contrast(1.35) brightness(.9)"
+        : mode === "warm"
+        ? "sepia(.38) saturate(1.25) contrast(1.12) brightness(.9)"
+        : "saturate(1.08) contrast(1.15) brightness(.9)";
+      const entranceDur = s("treatments.cinematic-metaphor.entranceDurationSec", 0.7);
+      const pushStart = s("treatments.cinematic-metaphor.pushStart", 1.08);
+      const pushDur = s("treatments.cinematic-metaphor.pushDurationSec", 4);
+      const beatIn = { animIn: "fade", animEasing: "cubic-out", animDurationSec: entranceDur, startSec: 0 } as const;
       const els: TreatmentElement[] = [];
       if (src) els.push(image(`${id}:bg-image`, 0, 0, W, H, src, {
-        filter: "saturate(1.08) contrast(1.15) brightness(.9)", z: 1, animIn: "fade", animDurationSec: 0.7, startSec: 0,
+        filter, fit: "cover",
+        // push-in scale: pushStart → 1 over pushDur (cubic-out via ease-out keyframe)
+        keyframes: { scale: [{ t: 0, v: pushStart, easing: "ease-out" }, { t: pushDur, v: 1, easing: "linear" }] },
+        ...beatIn,
+      }));
+      els.push(shape(`${id}:bg`, 0, 0, W, H, {
+        background: s("colors.black", "#07090d"), z: 0, startSec: 0,
       }));
       els.push(shape(`${id}:vignette`, 0, 0, W, H, {
-        background: `radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, ${a}22, transparent 55%)`, z: 3, startSec: 0,
+        background: `radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, ${a}22, transparent 55%)`, z: 3, ...beatIn,
       }));
       if (asStr(p.label)) els.push(text(`${id}:label`, 70, 54, 600, 30, asStr(p.label), {
         fontSize: s("treatments.cinematic-metaphor.label.fontSize", 16), fontWeight: s("treatments.cinematic-metaphor.label.fontWeight", 900),
-        fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 2.6, color: a, textShadow: "0 2px 10px #000", z: 14, animIn: "fade", animDurationSec: 0.7, startSec: 0.3,
+        fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: s("treatments.cinematic-metaphor.label.fontSize", 16) * 0.16, color: a, textShadow: "0 2px 10px #000",
+        z: 14, animIn: "fade", animEasing: "cubic-out", animDurationSec: entranceDur, startSec: 0.3,
         styleSource: { fontSize: "treatments.cinematic-metaphor.label.fontSize", fontWeight: "treatments.cinematic-metaphor.label.fontWeight" },
       }));
-      if (asStr(p.subtitle)) els.push(text(`${id}:subtitle`, 0, 907, W, 173, asStr(p.subtitle, beat.transcript), {
-        fontSize: s("treatments.cinematic-metaphor.subtitle.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "Georgia, serif", textAlign: "center", color: a,
-        textShadow: "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)", z: 14, animIn: "fade", animDurationSec: 0.7, startSec: 0.5,
-        styleSource: { fontSize: "treatments.cinematic-metaphor.subtitle.fontSize" },
-      }));
+      if (asStr(p.subtitle)) {
+        // letterbox bottom bar (treatment: minHeight 16%, BLACK, flex-center)
+        const subH = Math.round(H * 0.16);
+        els.push(shape(`${id}:letterbox-bottom`, 0, H - subH, W, subH, {
+          background: s("colors.black", "#07090d"), z: 13, ...beatIn,
+        }));
+        els.push(text(`${id}:subtitle`, Math.round(W * 0.09), H - subH, W - Math.round(W * 0.18), subH, asStr(p.subtitle, beat.transcript), {
+          fontSize: s("treatments.cinematic-metaphor.subtitle.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "Georgia, serif", textAlign: "center", color: a,
+          textShadow: "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)", z: 14, ...beatIn,
+          styleSource: { fontSize: "treatments.cinematic-metaphor.subtitle.fontSize" },
+        }));
+      }
       return els;
     }
 

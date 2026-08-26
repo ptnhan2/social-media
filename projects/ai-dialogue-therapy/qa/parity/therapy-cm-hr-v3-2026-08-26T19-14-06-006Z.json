@@ -1,0 +1,169 @@
+{
+  "label": "therapy-cm-hr-v3",
+  "project": "ai-dialogue-therapy",
+  "window": {
+    "startSec": 18.5,
+    "endSec": 26,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\renders\\windows\\parity-therapy-cm-hr-v3-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\renders\\windows\\parity-therapy-cm-hr-v3-editor.mp4",
+  "durationSec": 7.552,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 8.439,
+      "changedPct": 34.247
+    },
+    {
+      "t": 0.35,
+      "mean": 21.702,
+      "changedPct": 52.814
+    },
+    {
+      "t": 0.6,
+      "mean": 24.814,
+      "changedPct": 54.365
+    },
+    {
+      "t": 0.85,
+      "mean": 25.652,
+      "changedPct": 55.656
+    },
+    {
+      "t": 1.1,
+      "mean": 26.046,
+      "changedPct": 56.254
+    },
+    {
+      "t": 1.35,
+      "mean": 26.288,
+      "changedPct": 56.53
+    },
+    {
+      "t": 1.6,
+      "mean": 26.258,
+      "changedPct": 56.634
+    },
+    {
+      "t": 1.85,
+      "mean": 26.012,
+      "changedPct": 56.635
+    },
+    {
+      "t": 2.1,
+      "mean": 25.752,
+      "changedPct": 56.521
+    },
+    {
+      "t": 2.35,
+      "mean": 25.145,
+      "changedPct": 56.069
+    },
+    {
+      "t": 2.6,
+      "mean": 24.486,
+      "changedPct": 55.472
+    },
+    {
+      "t": 2.85,
+      "mean": 23.574,
+      "changedPct": 54.46
+    },
+    {
+      "t": 3.1,
+      "mean": 22.66,
+      "changedPct": 53.776
+    },
+    {
+      "t": 3.35,
+      "mean": 21.472,
+      "changedPct": 52.207
+    },
+    {
+      "t": 3.6,
+      "mean": 20.468,
+      "changedPct": 50.509
+    },
+    {
+      "t": 3.85,
+      "mean": 19.336,
+      "changedPct": 48.654
+    },
+    {
+      "t": 4.1,
+      "mean": 3.633,
+      "changedPct": 11.49
+    },
+    {
+      "t": 4.35,
+      "mean": 4.114,
+      "changedPct": 10.455
+    },
+    {
+      "t": 4.6,
+      "mean": 5.29,
+      "changedPct": 11.576
+    },
+    {
+      "t": 4.85,
+      "mean": 6.204,
+      "changedPct": 13.537
+    },
+    {
+      "t": 5.1,
+      "mean": 6.805,
+      "changedPct": 14.986
+    },
+    {
+      "t": 5.35,
+      "mean": 7.213,
+      "changedPct": 15.498
+    },
+    {
+      "t": 5.6,
+      "mean": 7.49,
+      "changedPct": 16.007
+    },
+    {
+      "t": 5.85,
+      "mean": 7.544,
+      "changedPct": 16.182
+    },
+    {
+      "t": 6.1,
+      "mean": 7.431,
+      "changedPct": 15.819
+    },
+    {
+      "t": 6.35,
+      "mean": 7.185,
+      "changedPct": 15.23
+    },
+    {
+      "t": 6.6,
+      "mean": 6.771,
+      "changedPct": 14.683
+    },
+    {
+      "t": 6.85,
+      "mean": 6.293,
+      "changedPct": 13.941
+    },
+    {
+      "t": 7.1,
+      "mean": 5.651,
+      "changedPct": 12.361
+    },
+    {
+      "t": 7.35,
+      "mean": 4.814,
+      "changedPct": 10.767
+    }
+  ],
+  "meanOfMeans": 15.151,
+  "maxMean": 26.288,
+  "gate": "FAIL",
+  "gateThreshold": 2
+}
