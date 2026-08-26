@@ -315,7 +315,7 @@
         "assets": [
           {
             "kind": "image",
-            "src": "isaacverse-final/character/poses/present.png"
+            "src": "ai-dialogue-therapy/assets/therapy-session.jpg"
           }
         ]
       },
@@ -351,7 +351,7 @@
         "assets": [
           {
             "kind": "character",
-            "src": "isaacverse-final/character/poses/celebrate.png"
+            "src": "ai-dialogue-therapy/assets/two-people-talking.jpg"
           }
         ]
       },

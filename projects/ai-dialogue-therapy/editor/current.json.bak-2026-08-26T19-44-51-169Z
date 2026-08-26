@@ -521,7 +521,7 @@
             "y": 0,
             "w": 1,
             "h": 1,
-            "src": "ai-dialogue-therapy/assets/two-people-talking.jpg",
+            "src": "isaacverse-final/character/poses/celebrate.png",
             "z": 1,
             "opacity": 1,
             "fit": "cover",
@@ -621,7 +621,7 @@
             "y": 0,
             "w": 1,
             "h": 1,
-            "src": "ai-dialogue-therapy/assets/therapy-session.jpg",
+            "src": "isaacverse-final/character/poses/present.png",
             "z": 5,
             "opacity": 1,
             "fit": "cover",
@@ -6627,8 +6627,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 6,
-    "updatedAt": "2026-08-26T19:44:51.164Z"
+    "revision": 5,
+    "updatedAt": "2026-08-26T19:29:09.132Z"
   },
   "schemaVersion": 3
 }
