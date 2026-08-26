@@ -13,6 +13,51 @@
 - Pattern refined: region-block MEAN analysis (not just >threshold counts) +
   browser DOM replication of the overlay rendering + VLM only for local crops.
 
+## Architecture deep-dive 2026-08-26 (chiều) — 6 silent-failure points + VLM prompt redesign
+
+### Session context
+Sau night run E2 parity PASS, user hỏi sâu kiến trúc (2-path, sync, EditDoc vs
+EditorDoc, ai edit gì) -> chỉ ra 6 điểm yếu đều silent-failure. Full spec:
+docs/PIPELINE-HARDENING-SPEC.md (PROPOSED).
+
+### Bài học VLM prompting (user corrected 2 lần — internalize)
+1. KHÔNG hỏi VLM "hai frame khác nhau chỗ nào?" (spot-the-diff) — đây là task
+   Hardest-to-Describe (Visual Thoughts, NeurIPS 2025) + đúng vùng temporal
+   blindness (TimeCatch: VLM gần random; TimeBlind: 48.2% vs human 98.2%).
+   Đêm 25-26 đã hỏi sai rồi đổ "VLM nhiễu" — SAI: lỗi prompt design, không phải model.
+2. Cách hỏi ĐÚNG (research-backed):
+   - Set-of-Mark (Microsoft): deterministic pixel-diff tìm changed regions ->
+     overlay SỐ lên ảnh -> hỏi "vùng số N chứa gì?" (tham chiếu rời rạc > mơ hồ)
+   - Grounded CoT: bắt buộc bbox trong output -> hallucination lộ (GCoT CVPR 2026:
+     answer-grounding consistency chỉ 15-36% nếu không grounding)
+   - Structured output (JSON fields) > free-form (concise > verbose)
+   - Verify: IoU(VLM bbox, pixel-diff region) > 0.3 -> tin; thấp -> defer human
+3. Task routing: semantic frame-level (presence/OCR/màu) = VLM+verify AUTO được;
+   motion/temporal judgment = HUMAN luôn; aesthetic = HUMAN luôn; localization +
+   detection = deterministic (đã có compare_renders + region-block).
+4. VLM = frontier API (GPT-5/Gemini-3-Pro/Claude) — KHÔNG chạy local model.
+
+### 6 điểm yếu (chi tiết + code evidence trong spec)
+1. Sync seam: update_style KHÔNG chain generate (LIVE gap — spec risk #1);
+   per-clip boolean ledger (Figma dùng per-field overriddenFields[])
+2. KEEP gate duyệt trên render stale (đã xảy ra đêm E6) — fix: revision stamping
+3. VLM oracle hỏi sai task — fix: pipeline trên
+4. Style store: 1 principle sai -> lan MỌI video; không có rollback tool
+   (rollbackVersion chỉ có cho EditDoc) — fix: versioned snapshots + canary
+5. Concurrency: editor-ops.mjs KHÔNG tham gia optimistic locking (UI có 409)
+6. Schema: sync không validate; migrations load-time (UI) != sync-time (raw);
+   semantic drift không version marker (edge px->viewBox đêm qua — sync cứu
+   được unmodified, userEdited sống nhờ MAY)
+
+### Research đã dump (đừng research lại)
+- Figma: blog "How We Rebuilt Foundations of Component Instances" 03/2026,
+  API InstanceNode.overrides, restricted override surface, push-to-main
+- Redux Persist migrations: version + createMigrate tuần tự tại boundary
+- VLM: TimeCatch 2608.23474, TimeBlind 2602.00288, REVEAL 2602.11244,
+  SoM 2310.11441, GCoT CVPR 2026, Visual Thoughts NeurIPS 2025
+- Descript Underlord = operator trên 1 doc (không re-projection, không học gu
+  systematic); Runway = disposable output. Pattern mình = Figma components.
+
 ## Night Run 2026-08-25/26 — E2 parity GATE PASS + editor path flip + Playwright E2E
 
 ### E2 parity gate MET (both windows < 2.0, cold projection)

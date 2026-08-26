@@ -34,6 +34,7 @@
 | `ASSET-STUDIO-SPEC.md` | Asset studio design + per-option recipes. |
 | `CHARACTER-PRESENCE-SPEC.md` | Character presence wiring in editor. |
 | `GENERATOR-SPEC.md` | Generator architecture (E2-E6). |
+| `PIPELINE-HARDENING-SPEC.md` | 6 điểm yếu silent-failure + giải pháp research-backed (sync/schema/KEEP gate/VLM prompts/style rollback/concurrency) + 3-đợt roadmap. PROPOSED — chờ duyệt. |
 | `TASTE-AND-LEARNING-ROADMAP.md` | Overall roadmap (P1-P6). |
 | `AUTO-CUT-ATTEMPT-LOG.md` | Auto-cut experiment log. |
 | `TUTORIAL-CANDIDATES-REVIEW.md` | Isaac principle review surface. |

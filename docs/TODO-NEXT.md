@@ -114,13 +114,38 @@ Gate windows KHÔNG đổi: semantic-diagram 1.222, process-timeline 1.266
 
 ## Next-session backlog
 
+### Ưu tiên 0 — PIPELINE HARDENING (spec đầy đủ: `docs/PIPELINE-HARDENING-SPEC.md`)
+
+Buổi deep-dive kiến trúc 26/08 chỉ ra 6 điểm yếu (đều silent-failure) + giải pháp
+research-backed (Figma components, Redux Persist, VLM papers 2026, Set-of-Mark).
+**Spec chi tiết đang chờ user duyệt** — tóm tắt roadmap:
+
+**Đợt 1 — "Giết im lặng" (~1 ngày):**
+1. KEEP gate revision stamping (render stale → refuse duyệt) — §3.3
+2. editor-ops.mjs optimistic locking (conflict với human edits) — §3.6
+3. Chain update_style → generate (đóng lỗ "sync thiếu" đang sống) — §3.2-1a
+4. Schema versioning + migration registry + validate output — §3.1
+   (đóng GENERATOR-SPEC risk #3 + semantic drift như edge px→viewBox)
+
+**Đợt 2 — "Giết lan truyền" (~1 ngày):**
+5. Style store versioned rollback + 1-principle-per-promote — §3.5
+6. Edited-fixture sync tests (B1-class regression lock) — §3.2-1c
+7. VLM prompting pipeline: SoM overlay + grounded structured prompts +
+   IoU verification + oracle-trust rewrite (research-backed, KHÔNG hỏi
+   spot-the-diff nữa) — §3.4
+
+**Đợt 3 — session riêng (1-2 ngày):**
+8. Per-field override ledger (Figma `overriddenFields[]` pattern) — §3.2-1b
+
+### Việc còn lại (không phụ thuộc hardening)
+
 1. **Parity residuals 4 treatment** (xem bảng BONUS ROUND): chapter-card 2.28,
    cinematic 3.24, candidate 3.45, host-reflection 5.9-6.3 — residuals là
    sub-pixel/gradient/blend nuances; method: region-block mean analysis +
    browser DOM replication (đã có pattern từ đêm nay)
 2. **Latent risks từ review** (GENERATOR-SPEC): estimator glyph-width
    fragility với content mới (W/M vs i/l chars), e_phase baseline tautology
-   (không guard cross-path), R1 test: overlay spanning qua split
+   (không guard cross-path) — R1 overlay-spanning test đã fold vào hardening đợt 2
 3. Playwright batch 3: marquee select, guides/rulers, gen panel (mock),
    recipes CRUD (mock)
 4. Studio performance: canvas render optimizations nếu user phàn nàn
