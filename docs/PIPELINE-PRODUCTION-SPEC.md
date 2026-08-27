@@ -1,6 +1,8 @@
 # Production Pipeline Spec — nửa "produce" của harness (Phase 2)
 
 > **Status: DRAFT v1 — 2026-08-27. Chờ user duyệt trước khi implement.**
+> **Review UI (human-facing): `docs/PIPELINE-PRODUCTION-SPEC-REVIEW.html`** —
+> mở file này bằng browser; checklist D1-D6 trong đó là các điểm cần chốt.
 > Bối cảnh: harness hiện là refinement-only (11 tool critique/fix, 0 tool
 > produce — verified 27/08). Video #1 do builder (Kilo) làm tay. Flow chốt:
 > produce → TỰ critique → TỰ fix → lặp → user review một lần.
