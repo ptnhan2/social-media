@@ -1,0 +1,40 @@
+FOUNDATION TYPOGRAPHY DECISION — display font A/B through the full loop.
+
+Context: fonts.display is a style-store knob with two candidates. Two renders
+of the SAME beat (isaacverse-final chapter-card, 0.5-3s) exist, identical
+except the display font:
+- A (CURRENT store value): /workspace/projects/isaacverse-final/renders/windows/font-candidate-anton.mp4
+    stack = 'Anton', 'Archivo Black', 'Arial Black', sans-serif
+- B: /workspace/projects/isaacverse-final/renders/windows/font-candidate-archivo.mp4
+    stack = 'Archivo Black', 'Arial Black', sans-serif
+
+Flow:
+1. Read memory: /memories/knowledge-base.md (2026-08-27 foundation entries),
+   /memories/taste-standard.md (typo-001, typo-201), /memories/oracle-trust.md.
+2. think: classify scope/category; state how you will judge glyph choice.
+3. compare_renders(A, B) to confirm a real difference; then pairwise_verdict(A, B).
+   A/B font comparison is LOCAL high-contrast — a valid VLM use case.
+   Judge on: boldness/punch, legibility at video scale, fit with ACTIVE
+   principles (typo-001 bold+effects, typo-201 strict size tiers) and the
+   Isaac-style reference direction.
+4. Pick ONE winner. State the verdict numbers + your reasoning briefly in
+   your request_keep motivation.
+5. If winner differs from the current store value, update_style("fonts.display",
+   <winner stack> - copy the EXACT stack string from above). If winner ==
+   current, skip the update.
+6. Fresh evidence for the human: render_window(project isaacverse-final,
+   start_sec 0.5, end_sec 3.0, quality draft) once so the kept proposal reflects
+   current code + chosen font. If you flipped the knob, run
+   qa_gate(project isaacverse-final, start 0.5, end 3.0,
+   video_before '/workspace/projects/isaacverse-final/renders/windows/font-candidate-anton.mp4',
+   render_path 'editor') instead — the pixel-diff must PASS (>0.05 proves reach).
+7. request_keep(
+      knob "fonts.display",
+      old_value "<previous stack>", new_value "<chosen stack>",
+      video_before A-path above, video_after <your fresh winner render>,
+      verdict_summary "display font A/B decision: <winner>",
+      aspect "typography", user_directed False).
+
+Stop criteria: <= 25 tool calls. NO treatment-code edits needed for this task.
+If both candidates are genuinely indistinguishable by your tools, report that
+honestly and keep the current value with rationale.

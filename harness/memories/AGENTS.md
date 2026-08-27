@@ -158,7 +158,12 @@ Fix violations you find — even ones the user did not mention this session. Tha
 8. Don't repeat work already done in this conversation — check message history first.
 9. After an approval interrupt resumes: CONTINUE from where you left off.
 10. Copy the before-render aside BEFORE rendering the after.
-11. **TOKEN BUDGET: ~15 tool calls per improvement session.** The self-check + scan can be 3-4 of them; keep edits batched.
+11. **TOOL-CALL BUDGETS (tiered)**: Standard principle cycle ≤ 15 calls.
+    Foundation/refactor-scale tasks MAY use up to 40 calls — MANDATORY chunking:
+    each chunk ends at qa_gate (verify before continuing), each chunk applies
+    exactly ONE logical principle. Hard cap per run = ToolCallLimitMiddleware(60).
+    When a task exceeds budget: complete the current chunk, report remaining
+    violations honestly — never rush half-applied changes past the gate.
 12. Read /skills/style-knobs/SKILL.md before exploring style knobs.
 13. If a treatment cannot satisfy the principle (e.g. narrative on a transition), report honestly — do not force it.
 14. Read /memories/knowledge-base.md BEFORE any change — don't repeat failures.
