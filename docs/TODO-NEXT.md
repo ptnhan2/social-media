@@ -1,9 +1,14 @@
-# TODO NEXT — SESSION 2026-08-27 — PHASE 1 FOUNDATION SHIPPED
+# TODO NEXT — SESSION 2026-08-27 — PHASE 1 SHIPPED, PHASE 2 SPEC READY
 
-> **Phase 1 (lấp nền) HOÀN TẤT chiều 27/08**: typography foundation live —
-> Anton/Inter/Lora thay toàn bộ 47 chỗ Arial/Georgia hardcode. Font là KNOB
-> (style store v74 `fonts.*`) — agent học/đổi font không cần sửa code.
-> Parity gates PASS + CẢI THIỆN vs Arial baseline. Xem §"Đã ship".
+> **Phase 1 (lấp nền) HOÀN TẤT 27/08**: typography foundation live — Anton/
+> Inter/Lora thay 47 chỗ hardcode. Font là KNOB (store v74). Parity PASS +
+> cải thiện. **Font A/B chạy qua agent loop LẦN ĐẦU** (run_task.py, KEEP gate
+> thật): Anton giữ, agent tự diagnose candidate-B confound → rule mới trong KB.
+>
+> **Phase 2 SPEC VIẾT XONG chiều 27/08**: `docs/PIPELINE-PRODUCTION-SPEC.md`
+> (DRAFT v1) — 5 production pipelines dạng stages + QC gates + provenance +
+> learning hooks (không phải 1-hàm-1-tool — user correction). Chờ user duyệt
+> spec → implement M1 (voice core) trước vì VO là đồng hồ của video.
 
 ---
 
@@ -38,6 +43,16 @@
 **Font candidates cho user taste gate**: `projects/isaacverse-final/renders/windows/font-candidate-{anton,archivo}.mp4`
 
 ## VIỆC TIẾP THEO
+
+### 0. Phase 2 — duyệt spec + implement
+Spec: `docs/PIPELINE-PRODUCTION-SPEC.md` (DRAFT v1, có progress log traceability).
+- M1 voice pipeline (batch-per-beat, direction→text-prep, sample gate,
+  QC WER/clip/duration, timing coupling, post 2-pass loudnorm)
+- M2 image sourcing → M3 timeline/validate/scaffold → M4 mix-plan
+- Phát hiện: `tools/audio/isaacverse_voice.py` TỒN TẠI (plan/generate/
+  assemble/score) — spec EXTEND, không rebuild. Bugs: directive extract
+  nhưng KHÔNG áp vào text; batch không theo beat; thiếu QC/timestamps/
+  timing-coupling.
 
 ### 1. User taste gate (MỘT lần duy nhất — legitimate)
 User xem 2 candidates (Anton vs Archivo Black) → chốt display font.
