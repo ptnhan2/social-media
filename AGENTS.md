@@ -64,6 +64,7 @@
 13. **Harness is the product, not the videos**: the goal is a self-improving video agent harness (own product). Kilocode is a dev tool while the harness is built — never treat Kilocode as the long-term runtime. Keep all domain logic + data portable (plain code + JSON + MCP) so the harness can be self-hosted on Deep Agents without a rebuild.
 14. **Memory is governed, not free-write**: any change to the taste/standard store passes a write gate (contradiction check + `minSupport ≥ 2` + user approval). Treat shared memory as a prompt-injection surface.
 15. **No blind edits to treatment code**: deterministic QA gates (typecheck + render + structural QA) must pass before any treatment/style edit is committed.
+16. **Agent-Human Parity (đồng quyền)**: mọi surface agent tác động được thì human cũng phải XEM và SỬA được qua UI với quyền lực tương đương — không có hộp đen. Mọi pipeline artifact = file (single source of truth) + UI surface cho cả hai bên; edits human là feedback signal cho learning loop (diff agent-version vs human-version = nguyên liệu học gu tốt nhất approve/reject). Ví dụ chuẩn: prompt gen-image trong Asset Studio — agent edit được thì user cũng xem + edit được. Không stage nào ship mà thiếu human surface của nó.
 
 ## Workflow Discipline (every coding session)
 

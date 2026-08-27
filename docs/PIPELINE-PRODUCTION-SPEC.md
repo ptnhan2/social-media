@@ -1,232 +1,156 @@
 # Production Pipeline Spec — nửa "produce" của harness (Phase 2)
 
-> **Status: DRAFT v1 — 2026-08-27. Chờ user duyệt trước khi implement.**
+> **Status: DRAFT v2 — 2026-08-27 (tối). Chờ user duyệt trước khi implement.**
 > **Review UI (human-facing): `docs/PIPELINE-PRODUCTION-SPEC-REVIEW.html`** —
-> mở file này bằng browser; checklist D1-D6 trong đó là các điểm cần chốt.
-> Bối cảnh: harness hiện là refinement-only (11 tool critique/fix, 0 tool
-> produce — verified 27/08). Video #1 do builder (Kilo) làm tay. Flow chốt:
-> produce → TỰ critique → TỰ fix → lặp → user review một lần.
-> **Nguyên tắc từ user (27/08): production tool KHÔNG phải 1 hàm gọi API —
-> mỗi tool là pipeline nhiều stage + QC gates + provenance + learning hooks.**
+> mở file này bằng browser; checklist D1-D8 trong đó là các điểm cần chốt.
+> v2 thay v1: đối chiếu **Agent-Human Parity** (AGENTS.md rule #16) — v1 là
+> hộp đen: agent chạy stages, user chỉ thấy approve/reject. v2: mỗi stage
+> khai báo human surface (XEM + SỬA), mọi artifact là file chung, human edits
+> = learning signal.
 
 ---
 
 ## 0. Nguyên tắc thiết kế
 
-1. **Tool = pipeline stages + gates**, không phải wrapper mỏng. Mỗi stage có
-   input/output rõ, gate fail thì dừng có kiểm chứng (fail loudly).
-2. **Audio QC = deterministic số** (WER, LUFS, peak, duration drift) — VLM mù
-   âm thanh (oracle-trust.md). Taste cuối cùng = human KEEP gate.
-3. **VO là đồng hồ của video** (voice-first): measured duration của voice
-   quyết định `durationSec` của beat, không phải ngược lại.
-4. **Dựng trên cái có sẵn, không rebuild** — kho đã có nhiều hơn tưởng tượng:
-   - `tools/audio/isaacverse_voice.py`: plan/generate/assemble/score_takes
-     (sentence batching, multi-take, best-take scoring, EQ chain) — GIỮ, extend
-   - `tools/audio/elevenlabs_tts.py` (registry tool) — GIỮ làm transport
-   - `VoicePlan` schema (`voice.ts`) + `AudioPlan`/`AudioMixer` (`audio.tsx`:
-     DuckZones, master targetLufs) — render side đã hiểu ducking/voice segments
-   - whisperx `transcriber` (skills 05-audio): word-level timestamps → WER QC
-   - `libraries/05-audio/skills.md`: toàn bộ con số quy chuẩn đã mine
-     (sound-design, voice-performance-director, asset-director rules)
-5. **Provenance bắt buộc** mọi stage (provider, settings, seed, license) —
-   để agent học được cái gì tạo ra kết quả tốt, không phải đoán lại.
-6. **Learning hooks**: mỗi tool ghi vào memory những gì human-approved
-   (voice settings thắng, query pattern thắng, grade ID) — close the loop.
+1. **Tool = pipeline stages + gates** (user correction 27/08: không 1 hàm).
+2. **Agent-Human Parity — rule #16, ràng buộc kiến trúc, không phải tính năng
+   thêm sau**: mọi artifact agent đọc/ghi thì human phải xem + sửa được qua UI
+   cùng expressive power. Không stage nào ship thiếu human surface của nó.
+3. **One artifact, two first-class editors**: mỗi artifact = 1 file (single
+   source of truth) + agent tool (đọc/ghi qua file) + Composer UI panel (đọc/
+   ghi qua API có optimistic locking — pattern `/api/project/editor` + revision
+   hiện có). Conflict → 409 machinery có sẵn, không clobber.
+4. **Human edits = learning signal cao cấp**: mọi lần human sửa artifact mà
+   agent đã tạo → ghi DIFF (agent-version vs human-version) vào feedback.jsonl
+   (knob=`voice.direction.sentence-3` v.v.) — đây là feedback dạng demonstration,
+   mạnh hơn approve/reject (ILF research: feedback > demonstrations).
+5. **Audio QC = deterministic số** (WER/LUFS/peak/duration) — VLM mù tiếng.
+   Taste cuối = human gate.
+6. **VO là đồng hồ**: voice-first timing coupling.
+7. **Dựng trên cái có sẵn**: `isaacverse_voice.py`, `voice.ts` schema,
+   `audio.tsx` AudioPlan/AudioMixer (DuckZones, master LUFS), whisperx
+   transcriber, skills 05-audio numbers, `/api/project/editor` locking pattern,
+   Asset Studio prompt-parity precedent.
+8. **Provenance bắt buộc** + **learning hooks** mọi stage.
 
 ---
 
-## 1. VOICE PIPELINE — `voice_pipeline` (ưu tiên #1: VO là đồng hồ)
+## 1. VOICE PIPELINE — `voice_pipeline` + Composer "Voice" panel
 
-Wrap + extend `isaacverse_voice.py`. Tool expose theo OPERATION (như hiện tại)
-thêm operations mới; agent gọi từng stage, không nhảy cóc.
+### Artifacts (files — single source of truth, cả 2 bên ghi)
 
-### Stage map
+| File | Nội dung | Human surface |
+|---|---|---|
+| `projects/<slug>/voice/plan.json` | VoicePlan mở rộng: sentences + batchId=beatId + deliveryCues + providerText + qcMetrics + takes + selection | **Voice Direction panel** |
+| `projects/<slug>/voice/takes/*.wav` | Stems per batch/take (48kHz) | Takes & QC panel (audio players) |
+| `projects/<slug>/voice/manifest.json` | Provenance + settings + costs + history | Hiện trong panel (read-only + history) |
+| Beat timing patch | Đề xuất durationSec mới | **Timing diff view** (trước khi apply) |
 
-| # | Stage | Input → Output | Gate |
-|---|---|---|---|
-| A | **plan** | script + beat map → `VoicePlan` (batch per beat) | validate: mọi beat có ≥1 batch |
-| B | **direction** | VoicePlan → per-batch `delivery_cues` + provider text prep | human review cues 1 lần |
-| C | **sample gate** | 1 batch khó nhất → 1 sample take | **human approve (≤3 iter)** |
-| D | **generate** | approved settings → multi-take (2-3) per batch, `with-timestamps` | settings identical mọi call |
-| E | **qc** | takes → metrics | WER / clip / duration / silence gates |
-| F | **select** | QC-passed takes → best per batch | auto (score có sẵn) |
-| G | **post** | selected takes → per-batch WAV stems + chain | loudnorm 2-pass |
-| H | **timing** | stems → beat `durationSec` proposal | patch qua editor_op/patch |
-| I | **mix-plan** | stems + cues → `AudioPlan` (DuckZones, ambience, SFX) | schema validate |
-| J | **record** | kết quả → memory (KB + preferences) | — |
+### Stage map — mỗi stage có agent action + human surface + gate
 
-### Chi tiết stage
+| # | Stage | Agent làm gì | Human surface (XEM + SỬA) | Gate |
+|---|---|---|---|---|
+| A | **plan** | Script + beat map → sentences, batch per BEAT | Direction panel: danh sách beat ↔ câu; **user sửa text câu, tách/gộp batch** (sửa → bump revision, agent đọc lại) | mọi beat ≥1 batch |
+| B | **direction** | Sinh `voice_performance` + per-batch `delivery_cues` + `providerText` (CHUỖI THẬT gửi ElevenLabs: tags/CAPS/breaks) | **Provider text field — như prompt Asset Studio: user thấy đúng chuỗi sẽ gửi, sửa trực tiếp** (thêm [pause], CAPS từ cần nhấn). Sửa = feedback diff | human review cues 1 lần |
+| C | **sample gate** | Gen 1 take từ batch khó nhất + QC metrics | **Sample player + compare với scripted expectation; user SỬA direction rồi bấm "re-sample"** — không chỉ approve/reject | approve ≤3 iter (mỗi iter có thể là user-edit) |
+| D | **generate** | Multi-take 2-3/batch, identical settings, `with-timestamps` | **Voice settings panel: voiceId, stability, style, speed — user chỉnh được** (edit = feedback về gu giọng) | settings so programmatic mỗi call |
+| E | **qc** | WER (whisperx) ≤5%, clip ≥−0.5dB FAIL, duration ±15%, silence >1.5s, confidence <0.8 | **QC dashboard per take: badge PASS/FAIL + số (WER, LUFS, peak, dur) + audio player + transcript diff highlight** (từ sai chỗ nào) | take fail → loại; batch fail → regen |
+| F | **select** | Best-take scoring (có sẵn) trên QC-passed | **Takes list per batch: play từng take, user ĐỔI take được** (override = feedback mạnh nhất về gu) | auto + human override |
+| G | **post** | Chain: HPF 80 → denoise → EQ → comp 3:1 → 2-pass loudnorm −16/−1.5 | **Chain params = knobs trong style store** (fonts-parity precedent) → hiện trong panel; preview A/B trước/sau per take | loudnorm 2-pass |
+| H | **timing** | Stem durations → beat durationSec proposal | **Timing diff view trong Composer: beat trước → sau, voice waveform overlay; user chỉnh padding từng beat trước khi apply** | apply qua patch (không hand-edit) |
+| I | **mix-plan** | Emit AudioPlan (stems, music duck 18-20dB cut 2-4kHz, SFX, DuckZones, master −16/−1.5) | Composer đã có audio controls per track (gain/mute) — mix-plan artifacts hiện trong audio inspector | schema validate |
+| J | **record** | Ghi KB + preferences | Đã có (human verdicts flow qua gates); THÊM: mọi human-edit diff từ B/C/D/F/H cũng ghi feedback.jsonl | — |
 
-**A. plan** — batch theo **BEAT**, không phải 2 câu tùy ý (bug hiện tại:
-`batch_size=2` cắt tuỳ hứng, không khớp beat → không regen được per-beat).
-Input thêm `beat_map: [{beatId, transcript}]` từ 05-edit-doc.json.
-GIỮ: `sentence_parts()`, settings defaults (stability 0.35, similarity 0.75,
-style 0.35 — từ pipeline cũ). SỬA: batch_id = beatId.
-
-**B. direction** (nhấn nhá — ý user #1) — theo **voice-performance-director**
-(skills 05-audio): top-level `voice_performance` (intent, pacing profile,
-energy curve, pause policy) + per-batch `delivery_cues` (pace, energy,
-emphasis_words, pause timing). Provider text prep:
-- **multilingual_v2** (mặc định hiện tại): KHÔNG có phoneme tags → emphasis
-  bằng CAPS + punctuation (ellipsis = pause); từ khó → pronunciation dictionary
-  (≤3 locators/request) hoặc alias tags. QUY TẮC SẮT: không đổi từ, chỉ prepend
-  tags + caps (ElevenLabs best-practices).
-- **eleven_v3** (khi cần cảm xúc mạnh): audio tags `[pause]` `[whispers]`
-  `[excited]` + IPA (80-90% consistent); KHÔNG có SSML break; stability mode
-  Creative/Natural/Robust. Cảnh báo: quá nhiều break tags → instability
-  artifacts; tag phải khớp tính cách giọng.
-- SỬA bug hiện tại: `directive()` extract được emphasis/emotion nhưng
-  `_generate()` gửi batch_text TRẦN — directive chưa bao giờ được áp vào text.
-- Mapping directive → text prep là FUNCTION thuần có unit test.
-
-**C. sample gate** (tiết kiệm + chất lượng — asset-director rules): trước khi
-batch, generate đúng 1 take từ batch **khó nhất** (nhiều emphasis/pause nhất
-— không phải batch đầu), kèm QC metrics. Human approve qua request_keep-style
-interrupt (≤3 iterations). Flat-voice failure rule: monotone/rushed/miss pauses
-→ KHÔNG batch — sửa direction rồi sample lại. Chi phí sample ~$0.03-0.08 phòng
-waste $1-3.
-
-**D. generate** — multi-take (2-3 take/batch, seed khác nhau). **Voice
-consistency enforcement** (longform rule #1): identical provider settings trên
-MỌI call, so programmatically, ghi `voice_consistency.identical_settings=true`.
-Dùng endpoint **`with-timestamps`**: trả character-level alignment → word timing
-→ (a) đề xuất pause offsets chính xác, (b) data cho subtitles sau này.
-Settings: ElevenLabs mapping từ skills — stability thấp hơn (variation),
-moderate style, speed 0.7-1.2, similarity_boost cao.
-
-**E. qc** (xử lý chất lượng — ý user #3/#4, deterministic):
-- **WER gate**: transcribe take (whisperx transcriber, word timestamps) → so
-  với script → WER ≤ 5% (từ khóa: tên riêng/term kỹ thuật 0 sai).
-- **Clip gate**: `max_volume` ≥ -0.5 dBFS → FAIL (lấy từ `audio_take_metrics`
-  có sẵn).
-- **Duration gate**: measured vs expected (chars/WPM heuristic + alignment)
-  ±15% (asset-director rule).
-- **Silence/garble**: trailing/leading silence > 1.5s flag; transcription
-  confidence trung bình < 0.8 flag (whisperx probability).
-- LUFS measure (pyloudnorm hoặc loudnorm print_format=json) — ghi số, chưa
-  norm ở stage này.
-Take fail QC → loại, dùng take khác; cả batch fail → báo để regen (không
-nuốt lỗi).
-
-**F. select** — GIỮ `choose_best_take`/`score_take_metrics` (dynamic range −
-timing penalty − clipped penalty), lọc sẵn theo QC pass. Target duration dùng
-alignment thực (không còn heuristic chars/14 khi có timestamps).
-
-**G. post** (âm vang/tiếng phòng — ý user #3/#4) — chain TTS chuẩn từ
-sound-design skills, áp PER BATCH STEM (stems giữ nguyên để re-mix), uniform
-loudnorm ở cuối:
-```
-highpass=f=80 (HPF 80-100Hz)
-afftdn (denoise — TTS artifacts)
-equalizer=f=500:t=q:w=1:g=-3 (cut boxiness)
-equalizer=f=3000:t=q:w=1.5:g=+2.5 (presence boost 2-5k)
-[nếu artifact 6-8k: notch cut]
-acompressor=threshold=-26dB:ratio=3:attack=2:release=15 (3:1, TTS cần comp hơn human)
-loudnorm 2-PASS I=-16:TP=-1.5:LRA=11 (linear=true) — YouTube/streaming target
-```
-LƯU Ý "tiếng phòng/âm vang": VO TTS giữ KHÔ (dry) — room feel đến từ
-**ambience bed** + **ducking** (AudioPlan đã model: `ambience`, `DuckZone`,
-master `targetLufs`), KHÔNG reverb trực tiếp vào voice (reverb vào TTS = muddiness
-— sound-design rule). Chỉ scene đánh dấu `bigSpace: true` mới thêm light room
-send (aecho nhẹ, knob-gated `voice.roomSend`) — default OFF.
-
-**H. timing coupling** (cái bỏ sót lớn nhất) — measured duration từng stem →
-đề xuất beat `durationSec = stem + pauseBefore + breathPad(0.25-0.4s)`, tổng ≥
-voice. Output = **patch proposal** áp qua editor_op/patch (KHÔNG hand-edit
-current.json — invariant). Nếu VO > planned ×1.05 → flag cho script rewrite
-(longform rule), không tự kéo beat vô hạn.
-
-**I. mix-plan** — emit `AudioPlan` schema có sẵn: voice segments (stems +
-offsets), music beds (duck 18-20dB under VO, cut 2-4kHz music band), SFX cues
-(whoosh lead 10-20ms, levels theo skills), DuckZones (6-12dB duck, 22dB cho
-educational phức tạp), master `{targetLufs: -16, maxTruePeakDbfs: -1.5,
-limiter: true}`. Render side (AudioMixer) đã consume schema này — không cần
-render thay đổi.
-
-**J. record** — voice identity + settings + take selection + QC scores +
-human sample verdict → `harness/memories/` (KB entry + preferences.jsonl qua
-request_keep). Principle ví dụ: "stability 0.35 + style 0.35 phù hợp topic
-tech; voice X giữ làm identity kênh".
-
-### Data flow (không đổi schema render)
-
-`VoicePlan` mở rộng (batchId=beatId, deliveryCues, qcMetrics, alignment) —
-backward-compatible: mọi field mới optional. Stems + manifest ghi
-`projects/<slug>/voice/` (stems WAV 48kHz, manifest JSON). `dubbing/` giữ cho
-dub flow sau.
+### Fixes bugs pipeline cũ (giữ từ v1)
+directive extract nhưng KHÔNG áp vào text (giờ providerText là artifact user
+xem/sửa được); batch không theo beat; không QC/WER; không timestamps; không
+timing coupling. Quy tắc sắt provider text: không đổi TỪ, chỉ thêm tags/caps
+— user edit cũng theo rule này (UI validate).
 
 ---
 
-## 2. IMAGE SOURCING — `source_image` pipeline
+## 2. IMAGE SOURCING — `source_image` + Composer "Assets" panel
 
-| Stage | Nội dung |
-|---|---|
-| query build | per beat: subject (script semantics) + visual anchor + mood/màu → prompt; **CHAI 3-pass self-review** (draft → critique 5-aspects → rewrite — asset-director rule) |
-| fetch | Unsplash (Pexels fallback khi key fixed); orientation/size filter |
-| dedupe | perceptual hash vs các video trước (không tái sử dụng ảnh đã dùng) |
-| provenance | photographer + license + URL + query → manifest (bắt buộc) |
-| cohesion | grade từ style store (một hệ filter); KHÔNG dán cover mỗi ảnh một kiểu |
-| relevance QC | VLM AUTO được (presence/subject match — local high-contrast + grounded prompt theo oracle-trust); fail → query lại (≤2 vòng) |
-| gate | request_keep cho taste (human) |
-| learning | query pattern thắng → KB |
+| Stage | Agent | Human surface (XEM + SỬA) |
+|---|---|---|
+| query build | Per beat: subject + mood + CHAI 3-pass | **Query card per beat — như prompt Asset Studio: user thấy query, sửa query, bấm re-search** (edit = feedback về query pattern) |
+| fetch | Unsplash (Pexels fallback) | — |
+| dedupe | Perceptual hash vs ảnh đã dùng mọi video | Dedupe log hiện trong panel |
+| provenance | Photographer + license + URL + query | **Provenance badge trên mỗi ảnh** |
+| cohesion | Grade từ style store | **Grade = knob** (user chỉnh toàn video) |
+| relevance QC | VLM grounded presence check (AUTO được) | **QC verdict per ảnh (match/không) + user thay ảnh: chọn candidate khác hoặc upload ảnh own** (upload API có sẵn) |
+| gate | — | Taste keep — sau khi user đã có thể chỉnh mọi thứ |
 
----
+Output artifacts: `projects/<slug>/assets/images/manifest.json` (queries,
+candidates, provenance, QC verdicts, selection) + files. Panel sửa manifest
+qua API locking như voice.
 
 ## 3. TIMELINE GENERATION — `generate_timeline`
 
-Wrap `generate-editor.mjs` cold mode + BẮT BUỘC qua `validate_edit_doc` trước.
-Output structured JSON cho agent tự chẩn đoán: clips generated, strict
-projection warnings, missing assets, style version applied, backup path.
-Không nuốt warning (hiện tại warnings in stdout — agent không thấy).
+Wrap generate-editor cold + validate trước. **Human surface**: generation
+report hiện trong Composer (clips generated, strict warnings, missing assets,
+style version) — không nuốt warning trong stdout như hiện tại; user thấy và
+bấm regenerate sau khi tự fix edit-doc qua editor hiện có.
 
 ## 4. EDIT-DOC VALIDATION — `validate_edit_doc`
 
-Rules: beats contiguous (start[i+1] == end[i]), durationSec > 0, assets tồn
-tại trên disk (theo src path), audio cues resolvable (src tồn tại), treatment
-params đủ fields bắt buộc per treatment id, schemaVersion hiện hành, không
-clip id trùng. Return: `{ok, errors[], warnings[]}` structured.
+Rules (contiguity, duration>0, assets tồn tại, cues resolvable, params đủ,
+schemaVersion). **Human surface**: validation report panel — cùng report agent
+đọc, render dạng checklist PASS/FAIL trong Composer; user fix bằng editor UI
+hiện có rồi re-validate.
 
 ## 5. PROJECT SCAFFOLDING — `new_project`
 
-`00-state.json` + 7 dirs chuẩn + public sync + projects registry list.
-Đơn giản thật — nhưng contract đúng (schemaVersion, slug regex) mới không
-gãy ở các tool sau.
+Contract chuẩn. **Human surface**: project list + create đã có trong Composer.
 
 ---
 
-## 6. AGENT SURFACE & PROTOCOL
+## 6. API & LOCKING (đối xứng `/api/project/editor`)
 
-- Mỗi pipeline = 1 tool, nhiều `operation`; kết quả luôn structured JSON
-  (metrics, warnings, artifacts) — agent đọc để tự quyết bước tiếp.
-- Budget tier: produce run ≤ 40 calls (rule 11 đã tier), mỗi stage-gate là
-  điểm dừng tự nhiên.
-- Gates cho human: sample approval (voice), image taste keep, final keep.
-  Builder KHÔNG chạy thay agent — builder chỉ duyệt gate (như font A/B).
-- Agent KHÔNG có shell → các operations mới expose qua harness_tools.py
-  (wrap tools/audio BaseTool qua registry, hoặc port logic vào harness_tools).
+Mọi production artifact qua cùng pattern:
+- `GET /api/project/voice?projectId=` → plan.json + takes manifest
+- `POST /api/project/voice` `{plan, expectedRevision}` → 409 nếu stale (như
+  editor). Tương tự `/api/project/images` cho image manifest.
+- Agent side: tool đọc file TRỰC TIẾP trước mỗi stage (không cache), ghi qua
+  cùng file; revision bump bởi cả 2 bên; editor-ops bridge pattern (optimistic
+  locking + retry) áp cho voice/images bridge operations.
+- **Agent tool và UI là 2 client của cùng 1 file** — không có đường riêng nào.
 
-## 7. LEARNING HOOKS (schema additions)
+## 7. LEARNING HOOKS (nâng cấp: edits ≠ chỉ verdicts)
 
-- `voice-identity.md` (memories): voice đang dùng + settings + verdict history
-- preferences.jsonl: mở rộng knob=`voice.settings.*`, `image.query-pattern`
-- KB entries: mỗi production run (chi phí, QC numbers, quyết định)
+- Mọi human EDIT trên artifact: diff (agent→human) ghi feedback.jsonl với
+  knob cụ thể (`voice.direction.batch-3.providerText`,
+  `image.query.beat-5`, `voice.take-selection.batch-2`)
+- pattern_extractor mở rộng: nhóm edit-patterns (user hay sửa gì? caps? pause?
+  query words?) → principle candidates
+- voice-identity.md: settings thắng + lịch sử user overrides
+- Nguyên tắc: **approve/reject là tín hiệu 1 bit; edit là tín hiệu đầy đủ** —
+  học từ cả hai, ưu tiên edit.
 
-## 8. ROADMAP
+## 8. ROADMAP v2 — parity ship CÙNG stage, không bolt-on sau
 
-| Milestone | Nội dung | Tests |
+| M | Pipeline + UI cùng lúc | Tests |
 |---|---|---|
-| M1 | Voice core: batch-per-beat, direction→text-prep, sample gate, QC gates (WER/clip/duration), timing coupling, post chain 2-pass | unit: text-prep mapping, QC thresholds, timing math; E2E: 1 beat thật |
-| M2 | Image sourcing: query CHAI, dedupe, provenance, relevance QC | unit: query builder, dedupe; E2E: 1 beat |
-| M3 | Timeline/validation/scaffold + structured warnings | unit rules; E2E produce mini-video 10-15s zero-manual |
-| M4 | Mix-plan emit + DuckZones + master targets (render đã sẵn) | parity audio smoke |
+| M1a | Voice core stages A-E + **Direction panel (provider text editable) + QC dashboard** | unit: text-prep mapping, QC thresholds; UI: panel render + edit → revision bump + 409 |
+| M1b | Stages F-J + **Takes panel (player + override) + Timing diff view** | unit: scoring, timing math; E2E: 1 beat thật, user override take → feedback.jsonl có diff |
+| M2 | Image sourcing + **Query cards + candidate grid + provenance** | unit: query builder, dedupe; E2E: 1 beat, user sửa query → re-search → feedback |
+| M3 | Timeline/validate + **report panel**; mini-video 10-15s zero-manual | E2E produce |
+| M4 | Mix-plan emit + audio inspector wiring | audio smoke |
 
-## 9. PROGRESS LOG (vừa làm vừa ghi — traceability)
+Nguyên tắc里程碑: **mỗi M ship đủ cặp (agent stage + human surface)** — không
+có "UI sau này".
 
-- **2026-08-27 tối**: research LUFS/loudnorm (YouTube -16 LUFS, TP -1.5, 2-pass
-  linear=true), ElevenLabs capabilities (with-timestamps char alignment; v3
-  audio tags KHÔNG SSML; v2 CAPS/dictionary; nhiều break = instability),
-  khoá học skills 05-audio đã mine đủ số chuẩn (sound-design chain, ±15%,
-  voice-performance-director, sample gate ≤3, voice consistency enforcement).
-  Phát hiện `isaacverse_voice.py` tồn tại (plan/generate/assemble/score) +
-  bug: directive extract nhưng KHÔNG áp vào text, batch không theo beat, thiếu
-  QC/WER/timestamps/timing-coupling. Spec v1 viết — chờ duyệt.
+## 9. PROGRESS LOG (vừa làm vừa ghi)
+
+- **2026-08-27 tối (v2)**: user đối chiếu rule đồng quyền (AGENTS.md #16 —
+  giờ mới persist vào constitution + memory) → audit v1: 10/10 stage voice +
+  5/5 image là hộp đen (user chỉ approve/reject). Viết lại v2: artifacts là
+  files + API locking đối xứng editor + human surface khai báo TỪNG STAGE
+  (provider text editable như prompt Asset Studio, QC dashboard + players,
+  take override, timing diff, query cards). Learning hooks nâng cấp: human
+  edits = feedback đầy đủ (diff), không chỉ verdicts. Roadmap tách M1a/M1b
+  để UI ship cùng stage.
+- **2026-08-27 chiều (v1)**: research LUFS/ loudnorm (−16/−1.5, 2-pass),
+  ElevenLabs (with-timestamps, v3 audio tags, v2 caps/dictionary), skills
+  05-audio numbers; phát hiện `isaacverse_voice.py` + bugs (directive không
+  áp, batch không theo beat, không QC/timestamps/timing). Spec v1.

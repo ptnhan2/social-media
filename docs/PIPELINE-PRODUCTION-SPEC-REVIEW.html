@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIPELINE PRODUCTION SPEC v1 — REVIEW</title>
+<title>PIPELINE PRODUCTION SPEC v2 — REVIEW</title>
 <style>
   @font-face { font-family: "Anton"; src: url("../remotion-composer/public/fonts/anton-regular.ttf") format("truetype"); font-weight: 100 900; }
   @font-face { font-family: "Inter"; src: url("../remotion-composer/public/fonts/inter-var.ttf") format("truetype"); font-weight: 100 900; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #07090d; color: #e8e4da; font-family: "Inter", "Segoe UI", sans-serif; line-height: 1.55; padding: 40px 24px 80px; max-width: 1080px; margin: 0 auto; }
+  body { background: #07090d; color: #e8e4da; font-family: "Inter", "Segoe UI", sans-serif; line-height: 1.55; padding: 40px 24px 80px; max-width: 1120px; margin: 0 auto; }
   h1 { font-family: "Anton", "Arial Black", sans-serif; font-weight: 400; font-size: 44px; letter-spacing: 0.02em; color: #fff; text-transform: uppercase; line-height: 1.05; }
   h1 .accent { background: linear-gradient(135deg, #ff6b35, #ffd166); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  h2 { font-family: "Anton", "Arial Black", sans-serif; font-weight: 400; font-size: 26px; color: #ffd166; letter-spacing: 0.04em; text-transform: uppercase; margin: 44px 0 14px; padding-top: 18px; border-top: 1px solid #1d2330; }
+  h2 { font-family: "Anton", "Arial Black", sans-serif; font-weight: 400; font-size: 26px; color: #ffd166; letter-spacing: 0.04em; text-transform: uppercase; margin: 46px 0 14px; padding-top: 18px; border-top: 1px solid #1d2330; }
   h3 { font-size: 16px; font-weight: 800; color: #00d4ff; margin: 22px 0 8px; }
   .kicker { color: #00d4ff; font-size: 12px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 10px; }
   .sub { color: #8b93a3; font-size: 14px; margin-top: 8px; }
@@ -23,19 +23,20 @@
   .callout.green { border-left-color: #2dd4a0; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
   .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
-  @media (max-width: 800px) { .grid2, .grid4 { grid-template-columns: 1fr; } }
+  @media (max-width: 820px) { .grid2, .grid4 { grid-template-columns: 1fr; } }
   .card { background: #0b0f17; border: 1px solid #1d2330; border-radius: 10px; padding: 14px 16px; }
   .card h4 { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 6px; letter-spacing: 0.04em; }
   .card p, .card li { font-size: 13px; color: #b9bfcc; }
-  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
-  th { text-align: left; color: #8b93a3; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 8px 10px; border-bottom: 2px solid #26303f; }
-  td { padding: 9px 10px; border-bottom: 1px solid #151b26; vertical-align: top; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  th { text-align: left; color: #8b93a3; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 8px 9px; border-bottom: 2px solid #26303f; }
+  td { padding: 9px 9px; border-bottom: 1px solid #151b26; vertical-align: top; }
   td .gate { color: #ffd166; font-weight: 700; }
   td code, li code, p code { background: #141b28; color: #7fd8e8; padding: 1px 6px; border-radius: 4px; font-size: 12.5px; }
-  .stage-id { font-family: "Anton", "Arial Black", sans-serif; color: #ff6b35; font-size: 17px; }
+  .stage-id { font-family: "Anton", "Arial Black", sans-serif; color: #ff6b35; font-size: 16px; }
   .fix { color: #2dd4a0; font-weight: 700; }
   .bug { color: #ff6b6b; font-weight: 700; }
   .num { color: #ffd166; font-weight: 700; }
+  .human { color: #2dd4a0; }
   ul { padding-left: 20px; margin: 8px 0; }
   li { margin: 4px 0; }
   .check { background: #0b0f17; border: 1px solid #1d2330; border-radius: 10px; padding: 16px 18px; margin: 14px 0; }
@@ -45,48 +46,42 @@
   .flow .step { background: #101722; border: 1px solid #26303f; border-radius: 6px; padding: 6px 11px; font-size: 12.5px; font-weight: 700; color: #d8dee9; }
   .flow .step.gate { border-color: #8a6a1a; background: #241c08; color: #ffd166; }
   .flow .arr { color: #4a5468; font-weight: 800; }
+  .parity-arch { display: grid; grid-template-columns: 1fr 56px 1fr; gap: 10px; align-items: center; margin: 18px 0; }
+  .parity-arch .side { background: #0b0f17; border: 1px solid #1d2330; border-radius: 10px; padding: 14px 16px; }
+  .parity-arch .file { background: #141b28; border: 1px solid #2dd4a0; border-radius: 10px; padding: 14px 16px; text-align: center; }
+  .parity-arch .file b { color: #2dd4a0; }
   .footer { margin-top: 56px; color: #4a5468; font-size: 12px; border-top: 1px solid #1d2330; padding-top: 16px; }
   a { color: #00d4ff; text-decoration: none; }
 </style>
 </head>
 <body>
 
-<div class="kicker">Phase 2 · Production capability · Spec review</div>
-<h1>Production Pipeline <span class="accent">Spec v1</span></h1>
-<p class="sub">5 production pipelines cho harness — mỗi tool là <b>pipeline nhiều stage + QC gates + provenance + learning hooks</b>, không phải 1 hàm gọi API.
-<span class="badge draft">DRAFT v1 — chờ duyệt</span><span class="badge date">2026-08-27 · commit 264f76e</span></p>
+<div class="kicker">Phase 2 · Production capability · Spec v2 — parity-first</div>
+<h1>Production Pipeline <span class="accent">Spec v2</span></h1>
+<p class="sub">5 production pipelines + <b>Agent-Human Parity trên mọi stage</b>.
+<span class="badge draft">DRAFT v2 — chờ duyệt</span><span class="badge date">2026-08-27 tối · AGENTS.md rule #16</span></p>
 
 <div class="callout">
-<b>Trả lời thẳng nhận xét của bạn:</b> bạn đúng — production tool không thể là <code>generate_voice(text, voice)</code> rồi xong.
-Voice là pipeline 10 stage; image sourcing là 7 stage; và VO là <b>đồng hồ của video</b> (voice-first timing) — điều pipeline cũ bỏ sót hoàn toàn.
+<b>Đối chiếu rule cốt lõi của bạn (giờ là AGENTS.md #16):</b> "Agent làm được thì human cũng làm được — xem + sửa được, không hộp đen."
+<br><br><b>Audit v1: 15/15 stage là hộp đen.</b> Agent chạy mọi thứ, user chỉ thấy approve/reject 1 bit. v2 viết lại: <b>mỗi stage khai báo human surface, parity ship CÙNG stage</b> (không bolt-on sau), và mọi lần user SỬA = feedback signal đầy đủ cho learning loop — mạnh hơn approve/reject.
 </div>
 
-<h2>1 · Phát hiện quan trọng nhất: kho đã có nhiều hơn tưởng tượng</h2>
-<div class="grid2">
-  <div class="card"><h4>✅ Đã tồn tại (GIỮ, không rebuild)</h4>
-    <ul>
-      <li><code>tools/audio/isaacverse_voice.py</code> — plan / generate multi-take / assemble / score_takes + EQ chain</li>
-      <li><code>voice.ts</code> schema: emphasisWords, pause, emotion per sentence, multi-take + LUFS, eqPreset, dubs</li>
-      <li><code>audio.tsx</code> AudioPlan: DuckZones, ambience, SFX cues, master targetLufs — <b>render side đã hiểu ducking</b></li>
-      <li>skills <code>05-audio</code>: toàn bộ con số chuẩn đã mine sẵn (LUFS, duck, EQ, WPM, ±15%)</li>
-    </ul>
-  </div>
-  <div class="card"><h4>🐞 Bug tìm thấy trong pipeline cũ</h4>
-    <ul>
-      <li><span class="bug">Directive extract xong KHÔNG áp vào text</span> — <code>generate()</code> gửi text trần, nhấn nhá chỉ nằm trên giấy</li>
-      <li><span class="bug">Batch cắt "2 câu tùy ý"</span> — không theo beat → surgical regen bất khả thi</li>
-      <li><span class="bug">Zero QC</span> — không WER, không clip-detect, không duration check</li>
-      <li><span class="bug">Không dùng with-timestamps</span> — ElevenLabs trả char-level alignment (word timing miễn phí) mà bỏ qua</li>
-      <li><span class="bug">Không timing coupling</span> — VO không điều khiển beat duration</li>
-    </ul>
-  </div>
+<h2>1 · Kiến trúc parity — one file, two first-class editors</h2>
+<div class="parity-arch">
+  <div class="side"><h4>🤖 Agent</h4><p>Tool stages đọc/ghi <code>plan.json</code>, takes, manifest — qua file trực tiếp, re-read mỗi stage (không cache)</p></div>
+  <div class="arr" style="text-align:center;color:#2dd4a0;font-weight:800;">⇄</div>
+  <div class="side"><h4>👤 Bạn (Composer UI)</h4><p>Panels xem + sửa mọi artifact qua API <code>expectedRevision</code> + 409 locking — pattern <code>/api/project/editor</code> có sẵn</p></div>
 </div>
+<div class="parity-arch">
+  <div class="file" style="grid-column: 1 / -1;"><b>📁 projects/&lt;slug&gt;/voice/plan.json · takes/*.wav · images/manifest.json</b><br>single source of truth — 2 client, revision bump cả 2 phía, conflict → 409 (không clobber)</div>
+</div>
+<p class="sub">Đúng pattern <code>editor/current.json</code> đang chạy (agent qua editor_op, bạn qua Composer) — và đúng pattern prompt Asset Studio bạn lấy làm ví dụ.</p>
 
-<h2>2 · Voice pipeline — 10 stages, VO là đồng hồ</h2>
+<h2>2 · Voice pipeline — 10 stages, mỗi stage có human surface</h2>
 <div class="flow">
   <span class="step">A plan</span><span class="arr">→</span>
   <span class="step">B direction</span><span class="arr">→</span>
-  <span class="step gate">C sample gate</span><span class="arr">→</span>
+  <span class="step gate">C sample</span><span class="arr">→</span>
   <span class="step">D generate</span><span class="arr">→</span>
   <span class="step gate">E QC</span><span class="arr">→</span>
   <span class="step">F select</span><span class="arr">→</span>
@@ -97,103 +92,122 @@ Voice là pipeline 10 stage; image sourcing là 7 stage; và VO là <b>đồng h
 </div>
 
 <table>
-  <tr><th style="width:120px">Stage</th><th>Nội dung — đối chiếu 4 điểm bạn nêu</th><th style="width:170px">Gate</th></tr>
+  <tr><th style="width:70px">Stage</th><th>Agent làm gì</th><th style="width:31%"><span class="human">Bạn xem + sửa được gì</span></th><th style="width:120px">Gate</th></tr>
   <tr><td><span class="stage-id">A</span> plan</td>
-      <td>Batch theo <b>BEAT</b> (fix bug batch-tùy-ý) — mọi beat có voice riêng, regen surgical được</td>
-      <td class="gate">mọi beat có ≥1 batch</td></tr>
+      <td>Script → câu, batch theo <b>BEAT</b> (fix bug batch-tùy-ý)</td>
+      <td class="human">Direction panel: beat ↔ câu; <b>sửa text, tách/gộp batch</b> → revision bump, agent đọc lại</td>
+      <td class="gate">mọi beat ≥1 batch</td></tr>
   <tr><td><span class="stage-id">B</span> direction</td>
-      <td><b>Nhấn nhá (điểm 1):</b> voice_performance plan + per-batch delivery cues → provider text prep. <code>multilingual_v2</code>: CAPS + punctuation + pronunciation dictionary (≤3 locators). <code>eleven_v3</code>: audio tags <code>[pause]</code> <code>[excited]</code> + IPA (80-90%). <b>Quy tắc sắt: không đổi từ, chỉ thêm tags/caps</b> — và fix bug "directive không được áp"</td>
-      <td class="gate">human review cues 1 lần</td></tr>
-  <tr><td><span class="stage-id">C</span> sample gate</td>
-      <td>Generate 1 take từ batch <b>khó nhất</b> (không phải batch đầu) — duyệt trước khi batch. Flat-voice → sửa direction, không batch</td>
-      <td class="gate">human approve ≤3 iter (~$0.05 chống waste $1-3)</td></tr>
+      <td>Sinh cues + <b>providerText</b> — chuỗi THẬT gửi ElevenLabs (tags/CAPS/breaks). Fix bug "directive không được áp". Quy tắc: không đổi từ, chỉ thêm tags</td>
+      <td class="human"><b>Provider text field — như prompt Asset Studio</b>: thấy đúng chuỗi sẽ gửi, sửa trực tiếp ([pause], CAPS). Mọi edit = feedback diff</td>
+      <td class="gate">review cues 1 lần</td></tr>
+  <tr><td><span class="stage-id">C</span> sample</td>
+      <td>Gen 1 take từ batch khó nhất + QC</td>
+      <td class="human"><b>Sample player + SỬA direction rồi re-sample</b> — không chỉ approve/reject</td>
+      <td class="gate">approve ≤3 iter</td></tr>
   <tr><td><span class="stage-id">D</span> generate</td>
-      <td><b>Loại giọng (điểm 2):</b> voice identity của kênh, multi-take 2-3/batch, <b>identical settings mọi call</b> (voice consistency enforcement), endpoint <code>with-timestamps</code> → char-level alignment = word timing miễn phí</td>
+      <td>Multi-take 2-3/batch, identical settings mọi call, <code>with-timestamps</code> → word timing</td>
+      <td class="human"><b>Voice settings panel</b>: voiceId, stability, style, speed — chỉnh được (edit = feedback gu giọng)</td>
       <td class="gate">settings so programmatic</td></tr>
-  <tr><td><span class="stage-id">E</span> qc</td>
-      <td>Deterministic (VLM mù tiếng): <b>WER ≤ 5%</b> (whisperx transcribe so script; tên riêng 0 sai), clip <code>max_volume ≥ -0.5dB</code> FAIL, duration ±15%, silence >1.5s flag, confidence &lt;0.8 flag</td>
-      <td class="gate">take fail → loại; batch fail → regen</td></tr>
+  <tr><td><span class="stage-id">E</span> QC</td>
+      <td>WER ≤5% (whisperx so script), clip ≥−0.5dB FAIL, duration ±15%, silence &gt;1.5s</td>
+      <td class="human"><b>QC dashboard per take</b>: badge PASS/FAIL + số + audio player + <b>transcript diff highlight</b> (từ sai chỗ nào)</td>
+      <td class="gate">fail → loại/regen</td></tr>
   <tr><td><span class="stage-id">F</span> select</td>
-      <td>Best-take scoring có sẵn (dynamic range − timing penalty − clip penalty), lọc theo QC pass; target từ alignment thực</td>
-      <td class="gate">auto</td></tr>
+      <td>Best-take scoring (dynamic − timing − clip penalty)</td>
+      <td class="human"><b>Takes list: play từng take, ĐỔI take được</b> — override là feedback mạnh nhất về gu</td>
+      <td class="gate">auto + override</td></tr>
   <tr><td><span class="stage-id">G</span> post</td>
-      <td><b>Âm vang / tiếng phòng (điểm 3+4):</b> VO TTS giữ <b>KHÔ</b> (reverb trực tiếp = muddiness — sound-design rule). Room feel = ambience bed + ducking (render đã hỗ trợ DuckZones). Chain: HPF 80Hz → denoise → EQ cut 500Hz / boost 3kHz / notch 6-8k artifact → comp 3:1 → <b>2-pass loudnorm −16 LUFS · TP −1.5 · linear=true</b>. Scene <code>bigSpace</code> mới thêm room send nhẹ (knob, default OFF)</td>
+      <td>HPF 80Hz → denoise → EQ → comp 3:1 → <b>2-pass loudnorm −16 LUFS / −1.5 TP</b>. VO giữ KHÔ; room = ambience + ducking (DuckZones render đã có)</td>
+      <td class="human"><b>Chain params = style-store knobs</b> (như fonts); A/B preview trước/sau từng take</td>
       <td class="gate">loudnorm 2-pass</td></tr>
   <tr><td><span class="stage-id">H</span> timing</td>
-      <td><b>Voice-first coupling:</b> measured stem duration → beat <code>durationSec</code> = stem + breath pad 0.25-0.4s, áp qua <code>editor_op/patch</code> (không hand-edit). VO &gt; planned ×1.05 → flag rewrite script</td>
+      <td>Stem durations → beat durationSec = stem + breath pad; VO &gt;×1.05 planned → flag rewrite</td>
+      <td class="human"><b>Timing diff view</b>: beat trước → sau + waveform overlay; <b>chỉnh padding từng beat</b> trước khi apply</td>
       <td class="gate">patch + verify</td></tr>
   <tr><td><span class="stage-id">I</span> mix-plan</td>
-      <td>Emit <code>AudioPlan</code> có sẵn: stems + offsets, music beds (duck 18-20dB, cut 2-4kHz music band), SFX cues (whoosh lead 10-20ms), master {−16 LUFS, −1.5 TP, limiter}</td>
+      <td>Emit AudioPlan: stems, music duck 18-20dB + cut 2-4kHz, SFX, master −16/−1.5</td>
+      <td class="human">Audio inspector (gain/mute per track đã có trong Composer)</td>
       <td class="gate">schema validate</td></tr>
   <tr><td><span class="stage-id">J</span> record</td>
-      <td>Voice identity + settings thắng + QC scores + human verdict → memory (KB + preferences) — agent học giọng, không đoán lại</td>
+      <td>Ghi KB + preferences</td>
+      <td class="human">Mọi human-edit diff (B/C/D/F/H) cũng vào feedback.jsonl</td>
       <td class="gate">—</td></tr>
 </table>
 
-<h2>3 · Bốn pipeline còn lại — cùng kiểu stages + gates</h2>
+<h2>3 · Image sourcing — query cards như prompt Asset Studio</h2>
 <div class="grid2">
-  <div class="card"><h4>🖼 source_image — 7 stages</h4>
+  <div class="card"><h4>🖼 Agent stages</h4>
     <ul>
-      <li>Query build <b>per beat</b> (script semantics + mood) + CHAI 3-pass self-review</li>
-      <li>Fetch Unsplash (Pexels fallback) → dedupe perceptual-hash (không tái dùng ảnh cũ)</li>
-      <li>Provenance bắt buộc: photographer + license + URL</li>
-      <li>Cohesion: một hệ grade từ style store (không dán cover mỗi ảnh một kiểu)</li>
-      <li>Relevance QC: VLM AUTO được (grounded presence check — điểm mạnh của VLM) → fail → query lại ≤2 vòng → <span class="gate">human taste keep</span></li>
+      <li>Query build per beat + CHAI 3-pass self-review</li>
+      <li>Unsplash fetch (Pexels fallback) · perceptual-hash dedupe mọi video</li>
+      <li>Provenance: photographer + license + URL</li>
+      <li>Cohesion grade từ style store · VLM relevance QC (grounded, AUTO được)</li>
     </ul>
   </div>
-  <div class="card"><h4>🎬 generate_timeline + validate + scaffold</h4>
+  <div class="card"><h4>👤 Human surface</h4>
     <ul>
-      <li><code>generate_timeline</code>: wrap generate-editor cold + <b>bắt buộc qua validate</b> trước; output structured JSON (warnings, missing assets) — agent tự chẩn đoán, không nuốt warning</li>
-      <li><code>validate_edit_doc</code>: contiguity, duration &gt;0, assets tồn tại trên disk, audio cues resolvable, params đủ, schemaVersion</li>
-      <li><code>new_project</code>: contract chuẩn (00-state, 7 dirs, schemaVersion, slug regex)</li>
+      <li><b>Query card per beat — sửa query, bấm re-search</b> (như prompt Asset Studio)</li>
+      <li>Candidate grid: <b>provenance badge + QC verdict</b> mỗi ảnh</li>
+      <li><b>Đổi ảnh: chọn candidate khác hoặc upload ảnh own</b> (upload API có sẵn)</li>
+      <li>Grade knob chỉnh toàn video · taste keep SAU khi đã chỉnh mọi thứ</li>
     </ul>
   </div>
 </div>
 
-<h2>4 · Ranh giới vai trò (chốt từ trưa nay)</h2>
+<h2>4 · Timeline / validate / scaffold</h2>
+<div class="card"><ul>
+  <li><code>generate_timeline</code>: generation report hiện trong Composer (warnings, missing assets) — không nuốt trong stdout; user thấy, tự fix edit-doc qua editor, regenerate</li>
+  <li><code>validate_edit_doc</code>: checklist PASS/FAIL render trong panel — cùng report agent đọc</li>
+  <li><code>new_project</code>: project list + create đã có sẵn UI</li>
+</ul></div>
+
+<h2>5 · Learning loop nâng cấp — edits là tín hiệu đầy đủ</h2>
 <div class="grid4">
-  <div class="card"><h4>🤖 Agent</h4><p>Chạy TOÀN BỘ stages, đọc QC numbers, tự quyết bước tiếp trong budget (≤40 calls tiered)</p></div>
-  <div class="card"><h4>👤 Bạn</h4><p>Xuất hiện tại đúng 3 gates: <b>sample approval</b> (voice), <b>image taste</b>, <b>final keep</b>. Mỗi gate = 1 quyết định, không QA tay</p></div>
-  <div class="card"><h4>🔧 Builder (Kilo)</h4><p>Chỉ thêm capability/surface mới. Không chạy stage thay agent — kể cả nhanh hơn</p></div>
-  <div class="card"><h4>🧠 Memory</h4><p>Mọi human verdict + settings thắng + QC numbers ghi vào KB/preferences — flywheel học gu</p></div>
+  <div class="card"><h4>Trước (v1)</h4><p>Approve/reject = <b>1 bit</b> mỗi gate. Học được ít.</p></div>
+  <div class="card"><h4>Sau (v2)</h4><p>Human EDIT = <b>demonstration đầy đủ</b>. Diff agent-version → human-version ghi feedback.jsonl với knob cụ thể.</p></div>
+  <div class="card"><h4>Ví dụ</h4><p>Bạn sửa <code>providerText</code> batch-3 thêm <code>[pause]</code> → principle candidate: "user muốn nghỉ ở mệnh đề phụ". Bạn đổi take 2→1 → "user ưu tiên giọng trầm hơn".</p></div>
+  <div class="card"><h4>pattern_extractor</h4><p>Mở rộng nhóm edit-patterns → principle candidates. Ưu tiên học từ edit hơn verdict.</p></div>
 </div>
 
-<h2>5 · Con số chuẩn (từ research + skills đã mine — không chế)</h2>
+<h2>6 · Roadmap v2 — parity ship CÙNG stage</h2>
+<div class="flow">
+  <span class="step gate">M1a voice A-E + Direction panel + QC dashboard</span><span class="arr">→</span>
+  <span class="step gate">M1b voice F-J + Takes panel + Timing diff</span><span class="arr">→</span>
+  <span class="step">M2 image + Query cards</span><span class="arr">→</span>
+  <span class="step">M3 timeline + report panel</span><span class="arr">→</span>
+  <span class="step">M4 mix-plan</span>
+</div>
+<p class="sub">Nguyên tắc milestone: <b>không stage nào ship thiếu human surface của nó</b>. Mỗi M có unit tests + UI tests (panel render, edit → revision bump, 409 conflict). Progress log trong spec MD §9.</p>
+
+<h2>7 · Con số chuẩn (research + skills đã mine)</h2>
 <table>
-  <tr><th>Thông số</th><th>Giá trị</th><th>Nguồn</th></tr>
-  <tr><td>Loudness target (voice stems)</td><td class="num">−16 LUFS integrated · TP −1.5 dBTP · LRA 11 · 2-pass linear=true</td><td>ffmpeg loudnorm / EBU R128</td></tr>
-  <tr><td>Music under VO</td><td class="num">duck 18-20 dB (22 dB educational phức tạp) · cut 2-4 kHz music band</td><td>sound-design skills</td></tr>
-  <tr><td>TTS chain</td><td class="num">HPF 80Hz · cut 500Hz · boost 2-5kHz · notch 6-8kHz artifact · comp 3:1 (attack 2ms, release 15ms, thr −26dB)</td><td>sound-design skills</td></tr>
-  <tr><td>Narration pace</td><td class="num">140-150 WPM (short-form 180-200)</td><td>cinematic / short-form skills</td></tr>
-  <tr><td>Duration tolerance</td><td class="num">±15% vs expected; VO &gt; ×1.05 planned → rewrite</td><td>asset-director / longform skills</td></tr>
-  <tr><td>Sample gate</td><td class="num">≤3 iterations, ~$0.03-0.08/sample, lấy section khó nhất</td><td>asset-director skills</td></tr>
-  <tr><td>ElevenLabs settings</td><td class="num">stability 0.35 · similarity 0.75 · style 0.35 · speed 0.7-1.2 · speaker_boost on</td><td>voice-performance-director + pipeline cũ</td></tr>
-  <tr><td>ElevenLabs control</td><td class="num">v3: audio tags + IPA (không SSML); v2: CAPS/dictionary; quá nhiều break = instability</td><td>ElevenLabs docs</td></tr>
+  <tr><th>Thông số</th><th>Giá trị</th></tr>
+  <tr><td>Loudness</td><td class="num">−16 LUFS · TP −1.5 dBTP · LRA 11 · 2-pass linear=true</td></tr>
+  <tr><td>Music under VO</td><td class="num">duck 18-20 dB (22 dB educational) · cut 2-4 kHz music band</td></tr>
+  <tr><td>TTS chain</td><td class="num">HPF 80Hz · cut 500Hz · boost 2-5kHz · notch 6-8k · comp 3:1 · limiter −1.5</td></tr>
+  <tr><td>Pace / duration</td><td class="num">140-150 WPM · ±15% tolerance · VO &gt;×1.05 planned → rewrite</td></tr>
+  <tr><td>Sample gate</td><td class="num">≤3 iter · từ batch khó nhất · ~$0.05 chống waste $1-3</td></tr>
+  <tr><td>ElevenLabs</td><td class="num">v3: audio tags + IPA (không SSML) · v2: CAPS/dictionary · nhiều break = instability</td></tr>
+  <tr><td>Voice settings</td><td class="num">stability 0.35 · similarity 0.75 · style 0.35 · speed 0.7-1.2</td></tr>
 </table>
 
-<h2>6 · Roadmap — M1 trước vì VO là đồng hồ</h2>
-<div class="flow">
-  <span class="step gate">M1 voice core</span><span class="arr">→</span>
-  <span class="step">M2 image sourcing</span><span class="arr">→</span>
-  <span class="step">M3 timeline/validate/scaffold</span><span class="arr">→</span>
-  <span class="step">M4 mix-plan emit</span>
-</div>
-<p class="sub">Mỗi milestone có unit tests riêng (text-prep mapping, QC thresholds, timing math) + E2E (1 beat thật → mini-video 10-15s zero-manual ở M3). Progress log ghi trong spec MD theo từng bước — traceability như bạn yêu cầu.</p>
-
-<h2>7 · Checklist duyệt — tích để chốt</h2>
+<h2>8 · Checklist duyệt — tích để chốt (reload trang nếu cần)</h2>
 <div class="check">
-  <label><input type="checkbox"><span><b>D1 — Loudness −16 LUFS / TP −1.5 (2-pass, linear)</b> cho voice stems; master mix giữ targetLufs trong AudioPlan</span></label>
+  <label><input type="checkbox"><span><b>D1 — Loudness −16 LUFS / TP −1.5 (2-pass, linear)</b> cho voice stems</span></label>
   <label><input type="checkbox"><span><b>D2 — VO khô + ambience/ducking cho room feel</b>; room send chỉ cho scene bigSpace (knob, default OFF)</span></label>
-  <label><input type="checkbox"><span><b>D3 — Sample gate ≤3 iterations</b> từ batch khó nhất, trước khi batch toàn video</span></label>
-  <label><input type="checkbox"><span><b>D4 — Voice-first timing</b>: beat duration theo measured VO (patch qua editor_op), VO &gt;×1.05 → flag rewrite</span></label>
-  <label><input type="checkbox"><span><b>D5 — M1 voice trước</b>, rồi M2 image → M3 timeline → M4 mix</span></label>
-  <label><input type="checkbox"><span><b>D6 — Giọng kênh</b>: giữ voice identity hiện tại của video #1 (multilingual_v2) hay casting lại?</span></label>
+  <label><input type="checkbox"><span><b>D3 — Sample gate ≤3 iterations</b> từ batch khó nhất, mỗi iter user có thể SỬA direction rồi re-sample</span></label>
+  <label><input type="checkbox"><span><b>D4 — Voice-first timing</b>: beat duration theo measured VO + user chỉnh padding từng beat trước apply</span></label>
+  <label><input type="checkbox"><span><b>D5 — Parity pattern</b>: one file + two editors + 409 locking (như editor/current.json) cho voice plan + image manifest</span></label>
+  <label><input type="checkbox"><span><b>D6 — Human edits = learning signal</b>: mọi edit diff vào feedback.jsonl, pattern_extractor học từ edits</span></label>
+  <label><input type="checkbox"><span><b>D7 — Thứ tự M1a (voice core + Direction/QC panels) → M1b → M2 → M3 → M4</b></span></label>
+  <label><input type="checkbox"><span><b>D8 — Giọng kênh</b>: giữ voice identity video #1 (multilingual_v2) hay casting lại qua audition panel?</span></label>
 </div>
 
 <div class="footer">
-  Spec đầy đủ (agent-facing): <code>docs/PIPELINE-PRODUCTION-SPEC.md</code> · Progress log §9 ·
-  Review page này: <code>docs/PIPELINE-PRODUCTION-SPEC-REVIEW.html</code> ·
-  Từ giờ mọi thứ trình bày cho user review đều dạng HTML (AGENTS.md hygiene #1 — đã lưu memory correction)
+  Spec đầy đủ (agent-facing): <code>docs/PIPELINE-PRODUCTION-SPEC.md</code> v2 · Progress log §9 ·
+  Quy tắc parity: <code>AGENTS.md</code> Non-negotiable #16 (mới persist 27/08 tối) ·
+  Mọi review presentation = HTML (hygiene #1)
 </div>
 
 </body>
