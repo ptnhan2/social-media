@@ -127,9 +127,11 @@ const accent = (beat: SemanticBeat, resolve: StyleResolver) => {
 // ---- semantic-diagram node box layout (mirrors DiagramNodeView DOM) ----
 // The treatment renders node boxes with DOM auto-height; the projection must
 // ESTIMATE that height. Constants calibrated 2026-08-25 via Chromium
-// measureText/DOM on Arial: line-height 900 = 1.44em, uppercase-900 width
-// ≈ 0.75em/char, mixed-900 ≈ 0.64em/char. Both render paths run in the same
-// Chromium, so the line-height constants are exact; wrap counts are estimates.
+// measureText/DOM, recalibrated 2026-08-27 for the Inter body font
+// (fonts.body role — foundation typography swap): line-height 900 = 1.44em,
+// uppercase-900 width ≈ 0.74em/char, mixed-900 ≈ 0.63em/char. Both render
+// paths run in the same Chromium, so the line-height constants are exact;
+// wrap counts are estimates (verify with parity-measure after font swaps).
 export const NODE_BOX = {
   width: 270,
   border: 2,
@@ -141,8 +143,8 @@ export const NODE_BOX = {
   dotOverlap: 4,
   labelLineHeight: 1.44,
   detailLineHeight: 1.35,
-  labelCharEm: 0.75,
-  detailCharEm: 0.64,
+  labelCharEm: 0.74,
+  detailCharEm: 0.63,
 } as const;
 
 /** Estimated node box/total height from label+detail text (DOM auto-layout
@@ -194,10 +196,12 @@ const characterPresenceElement = (treatmentId: string, beat: SemanticBeat, resol
 /** ChapterCard title wrap: the treatment's title div is width:86% of a
  *  shrink-to-fit parent, so the text ALWAYS wraps at 0.86 × its own single-
  *  line width (verified 2026-08-26: both render titles wrap to 2 lines).
- *  Greedy word wrap with the calibrated Arial Black-900 factor (~0.65em/char
- *  + letterSpacing) reproduces the DOM line breaks for both current titles. */
-export const wrapChapterTitle = (title: string, fontSize: number, letterSpacing: number): { lines: string[]; widthEst: number } => {
-  const charW = fontSize * 0.65;
+ *  Greedy word wrap with the display-font char factor (fonts.displayCharEm
+ *  style-store knob; 0.65 was the old Arial Black-900 calibration, 0.56 is
+ *  the 2026-08-27 Anton default — recalibrate via parity-measure when
+ *  fonts.display changes) reproduces the DOM line breaks. */
+export const wrapChapterTitle = (title: string, fontSize: number, letterSpacing: number, charEm = 0.56): { lines: string[]; widthEst: number } => {
+  const charW = fontSize * charEm;
   const spaceW = charW + letterSpacing;
   // widths computed on the UPPERCASED text (that's what renders), but the
   // returned lines keep the ORIGINAL case — textTransform handles the rest
@@ -267,7 +271,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       const subtitleFontSize = s("treatments.chapter-card.subtitle.fontSize", 24);
       // treatment title ALWAYS wraps (86% of its own max width — see
       // wrapChapterTitle); layout = centered block: titleH + 26 + line + 22 + sub
-      const { lines: titleLines, widthEst: titleW } = wrapChapterTitle(titleText, fontSize, longTitle ? fontSize * 0.04 : fontSize * 0.08);
+      const { lines: titleLines, widthEst: titleW } = wrapChapterTitle(titleText, fontSize, longTitle ? fontSize * 0.04 : fontSize * 0.08, s("fonts.displayCharEm", 0.56));
       const titleH = Math.ceil(titleLines.length * fontSize * titleLineHeight);
       const subH = Math.ceil(subtitleFontSize * 1.4);
       const blockH = titleH + 26 + accentHeight + 22 + subH;
@@ -293,7 +297,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           animIn: "fade", animEasing: "cubic-out", animDurationSec: inDur, z: 0, startSec: 0,
         }),
         text(`${id}:title`, titleX, blockTop, titleBoxW, titleH, titleLines.join("\n"), {
-          fontSize, fontWeight: s("treatments.chapter-card.title.fontWeight", 900), fontFamily: "Arial Black, Arial, sans-serif",
+          fontSize, fontWeight: s("treatments.chapter-card.title.fontWeight", 900), fontFamily: "display",
           textTransform: "uppercase", lineHeight: titleLineHeight,
           letterSpacing: longTitle ? fontSize * 0.04 : fontSize * 0.08,
           textAlign: "center", textGradient: { start: gradientStart, end: gradientEnd, stop: 45 },
@@ -316,7 +320,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           styleSource: { width: "treatments.chapter-card.accentLine.maxWidth", height: "treatments.chapter-card.accentLine.height" },
         }),
         asStr(p.subtitle) ? text(`${id}:subtitle`, (W - 1651) / 2, blockTop + titleH + 26 + accentHeight + 22, 1651, subH, asStr(p.subtitle), {
-          fontSize: subtitleFontSize, fontWeight: 900, fontFamily: "Arial, sans-serif",
+          fontSize: subtitleFontSize, fontWeight: 900, fontFamily: "body", lineHeight: 1.4,
           letterSpacing: subtitleFontSize * 0.08, textTransform: "uppercase", textAlign: "center",
           color: cyan, textShadow: "0 2px 10px rgba(0,0,0,0.8)",
           ...blockAnim, z: 12,
@@ -364,13 +368,13 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         shape(`${id}:bg-glow`, 0, 0, W, H, { background: `radial-gradient(circle at 50% 46%, ${a}12, transparent 42%)`, z: 0, startSec: 0 }),
         (asStr(p.kicker) || beat.narrativeFunction) ? text(`${id}:kicker`, 86, 62, 800, kickerH, asStr(p.kicker) || beat.narrativeFunction, {
           fontSize: kickerFontSize, fontWeight: kickerFontWeight,
-          fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
+          fontFamily: "body", lineHeight: 1.4222, textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
           color: cyan, animIn: "fade-slide-up", animSlidePx: 18, animEasing: "cubic-out", animDurationSec: 0.55, z: 15, startSec: 0, textShadow: "0 2px 8px rgba(0,0,0,0.7)",
           styleSource: { fontSize: "treatments.semantic-diagram.kicker.fontSize", fontWeight: "treatments.semantic-diagram.kicker.fontWeight" },
         }) : null,
         text(`${id}:title`, 86, 62 + kickerH + 12, 1200, titleH, asStr(p.title, beat.narrativeFunction), {
           fontSize: titleFontSize, fontWeight: titleFontWeight,
-          fontFamily: "Arial Black, Arial, sans-serif", color: paper, textAlign: "left",
+          fontFamily: "display", lineHeight: 1.4087, color: paper, textAlign: "left",
           letterSpacing: titleFontSize * -0.02, strokeWidth: 1, strokeColor: "rgba(0,0,0,0.2)",
           filter: `drop-shadow(0 3px 10px rgba(0,0,0,0.6)) drop-shadow(0 0 18px ${a}30)`,
           animIn: "fade-slide-up", animSlidePx: 18, animEasing: "cubic-out", animDurationSec: 0.55, z: 15, startSec: 0,
@@ -386,7 +390,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           borderRadius: 125, borderWidth: 2, borderColor: `${cyan}88`, background: "linear-gradient(135deg, rgba(0,212,255,0.10), rgba(255,107,53,0.08))", boxShadow: `0 0 38px ${cyan}28`, z: 5, startSec: 0,
         }) : null,
         asStr(p.centerLabel) ? text(`${id}:center-label-text`, W / 2 - 125, H / 2 - 125, 250, 250, asStr(p.centerLabel), {
-          fontSize: s("treatments.semantic-diagram.centerLabel.fontSize", 20), fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.6,
+          fontSize: s("treatments.semantic-diagram.centerLabel.fontSize", 20), fontWeight: 900, fontFamily: "body", textTransform: "uppercase", letterSpacing: 1.6,
           color: cyan, textAlign: "center", z: 6, startSec: 0, textShadow: "0 2px 8px rgba(0,0,0,0.7)",
           styleSource: { fontSize: "treatments.semantic-diagram.centerLabel.fontSize" },
         }) : null,
@@ -428,12 +432,12 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           }, ...group,
         }));
         els.push(text(`${id}:node-${i}-label`, innerLeft, labelTop, innerW, labelH, label, {
-          fontSize: nodeFontSize, fontWeight: nodeFontWeight, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: nodeFontSize * 0.04, textAlign: "left",
+          fontSize: nodeFontSize, fontWeight: nodeFontWeight, fontFamily: "body", textTransform: "uppercase", letterSpacing: nodeFontSize * 0.04, lineHeight: NODE_BOX.labelLineHeight, textAlign: "left",
           color, z: 11, textShadow: "0 2px 6px rgba(0,0,0,0.7)",
           styleSource: { fontSize: "treatments.semantic-diagram.node.fontSize", fontWeight: "treatments.semantic-diagram.node.fontWeight" }, ...group,
         }));
         if (detail) els.push(text(`${id}:node-${i}-detail`, innerLeft, labelTop + labelH + NODE_BOX.detailMarginTop, innerW, detailH, detail, {
-          fontSize: detailFontSize, fontFamily: "Arial, sans-serif", color: paper, opacity: 0.78, lineHeight: NODE_BOX.detailLineHeight, fontWeight: 900, textAlign: "left", z: 11,
+          fontSize: detailFontSize, fontFamily: "body", color: paper, opacity: 0.78, lineHeight: NODE_BOX.detailLineHeight, fontWeight: 900, textAlign: "left", z: 11,
           styleSource: { fontSize: "treatments.semantic-diagram.node.detailFontSize" }, ...group,
         }));
         // the dot under the box (overlaps the bottom border by 4px);
@@ -485,7 +489,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       if (sdPresence) els.push(sdPresence);
       // footer: right-anchored (right: 70 → right edge 1850), bottom: 45
       els.push(text(`${id}:footer`, 1850 - 500, 1080 - 45 - footerH, 500, footerH, "follow the thread", {
-        fontSize: 14, fontWeight: 400, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.12, textAlign: "right",
+        fontSize: 14, fontWeight: 400, fontFamily: "body", lineHeight: 1.2, textTransform: "uppercase", letterSpacing: 1.12, textAlign: "right",
         color: "rgba(244,232,207,0.45)", z: 8, startSec: 0,
       }));
       return els;
@@ -525,7 +529,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       els.push(shape(`${id}:letterbox-top`, 0, 0, W, lbTopH, { background: black, z: 6, ...beatIn }));
       els.push(shape(`${id}:letterbox-bottom`, 0, H - lbBottomH, W, lbBottomH, { background: black, z: 6, ...beatIn }));
       els.push(text(`${id}:subtitle`, Math.round(W * 0.08), H - lbBottomH, W - Math.round(W * 0.16), lbBottomH, asStr(p.subtitle, beat.transcript), {
-        fontSize: s("treatments.host-reflection.subtitle.fontSize", 27), fontStyle: "italic", fontFamily: "Georgia, serif", textAlign: "center", color: a,
+        fontSize: s("treatments.host-reflection.subtitle.fontSize", 27), fontStyle: "italic", fontFamily: "editorial", textAlign: "center", color: a,
         fontWeight: s("treatments.host-reflection.subtitle.fontWeight", 900), textShadow: "0 3px 12px #000, 0 0 24px rgba(0,0,0,0.8)", z: 14, ...beatIn,
         styleSource: { fontSize: "treatments.host-reflection.subtitle.fontSize", fontWeight: "treatments.host-reflection.subtitle.fontWeight" },
       }));
@@ -543,7 +547,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         fit: "contain", filter: "drop-shadow(0 0 12px rgba(242,184,75,.45))", z: 8, animIn: "slide-up", animDurationSec: 0.5, startSec: 0.4,
       }));
       if (asStr(p.caption)) els.push(text(`${id}:caption`, 154, 935, 1612, 60, asStr(p.caption), {
-        fontSize: s("treatments.screen-proof.caption.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "Arial, sans-serif", textAlign: "center", color: "#f4e8cf",
+        fontSize: s("treatments.screen-proof.caption.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "body", textAlign: "center", color: "#f4e8cf",
         textShadow: "0 3px 12px #000, 0 0 18px rgba(0,0,0,0.7)", z: 14, animIn: "fade", animDurationSec: 0.5, startSec: 0.6,
         styleSource: { fontSize: "treatments.screen-proof.caption.fontSize" },
       }));
@@ -560,7 +564,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       }));
       els.push(text(`${id}:label`, 70, 54, 600, 30, "audience demand", {
         fontSize: s("treatments.audience-demand.kicker.fontSize", 18), fontWeight: s("treatments.audience-demand.kicker.fontWeight", 900),
-        fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 3.2, color: a, opacity: 0.9, z: 10, startSec: 0, textShadow: "0 2px 8px rgba(0,0,0,0.7)",
+        fontFamily: "body", textTransform: "uppercase", letterSpacing: 3.2, color: a, opacity: 0.9, z: 10, startSec: 0, textShadow: "0 2px 8px rgba(0,0,0,0.7)",
         styleSource: { fontSize: "treatments.audience-demand.kicker.fontSize", fontWeight: "treatments.audience-demand.kicker.fontWeight" },
       }));
       comments.forEach((c, i) => {
@@ -572,14 +576,14 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         }));
         els.push(text(`${id}:comment-${i}-text`, cx - 240, cy - 30, 480, 60, asStr(c.text), {
           fontSize: s("treatments.audience-demand.comments.fontSize", 25), fontWeight: s("treatments.audience-demand.comments.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", color: "#14171c", lineHeight: 1.2, z: 13 + i, animIn: "bounce", animDurationSec: 0.55, startSec: cStart,
+          fontFamily: "body", color: "#14171c", lineHeight: 1.2, z: 13 + i, animIn: "bounce", animDurationSec: 0.55, startSec: cStart,
           textShadow: "0 1px 2px rgba(0,0,0,0.25)",
           styleSource: { fontSize: "treatments.audience-demand.comments.fontSize", fontWeight: "treatments.audience-demand.comments.fontWeight" },
         }));
       });
       if (hostSrc) els.push(image(`${id}:host`, 1536, 525, 384, 520, hostSrc, { fit: "contain", z: 20, animIn: "slide-up", animDurationSec: 0.5, startSec: 0.25 + comments.length * 0.25 }));
       if (asStr(p.caption)) els.push(text(`${id}:caption`, 154, 940, 1612, 50, asStr(p.caption), {
-        fontSize: s("treatments.audience-demand.caption.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "Georgia, serif", textAlign: "center", color: "#f4e8cf",
+        fontSize: s("treatments.audience-demand.caption.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "editorial", textAlign: "center", color: "#f4e8cf",
         textShadow: "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)", z: 25, animIn: "fade", animDurationSec: 0.5, startSec: 0.5 + comments.length * 0.25,
         styleSource: { fontSize: "treatments.audience-demand.caption.fontSize" },
       }));
@@ -618,14 +622,14 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         shape(`${id}:bg-glow`, 0, 0, W, H, { background: `radial-gradient(circle at 50% 60%, ${a}14, transparent 48%)`, z: 0, startSec: 0 }),
         text(`${id}:label`, 76, 62, 600, kickerH, asStr(p.kicker) || beat.narrativeFunction || "workflow", {
           fontSize: kickerFontSize, fontWeight: s("treatments.process-timeline.kicker.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
+          fontFamily: "body", lineHeight: 1.4222, textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
           color: a, animIn: "fade-slide-up", animSlidePx: 18, animEasing: "cubic-out", animDurationSec: titleInDur, z: 10, startSec: 0,
           textShadow: "0 2px 8px rgba(0,0,0,0.7)",
           styleSource: { fontSize: "treatments.process-timeline.kicker.fontSize", fontWeight: "treatments.process-timeline.kicker.fontWeight" },
         }),
         text(`${id}:title`, 76, 62 + kickerH + 12, 1200, titleH, asStr(p.title, beat.narrativeFunction), {
           fontSize: titleFontSize, fontWeight: s("treatments.process-timeline.title.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", color: paper, textAlign: "left",
+          fontFamily: "display", lineHeight: 1.4222, color: paper, textAlign: "left",
           textGradient: { start: gradientStart, end: gradientEnd },
           filter: `drop-shadow(0 3px 10px rgba(0,0,0,0.7)) drop-shadow(0 0 16px ${a}40)`,
           animIn: "fade-slide-up", animSlidePx: 18, animEasing: "cubic-out", animDurationSec: titleInDur, z: 10, startSec: 0,
@@ -658,7 +662,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         const dotSize = selected ? 28 : 20;
         const labelH = stepFontSize * 1.4222;
         const detailFontSize = 12;
-        const detailLines = asStr(st.detail) ? Math.max(1, Math.ceil((asStr(st.detail).length * detailFontSize * 0.64) / 148)) : 0;
+        const detailLines = asStr(st.detail) ? Math.max(1, Math.ceil((asStr(st.detail).length * detailFontSize * 0.63) / 148)) : 0;
         const detailH = detailLines * detailFontSize * 1.3;
         const boxH = 2 + 12 + labelH + (detailLines ? 6 + detailH : 0) + 12 + 2;
         const stepTotalH = dotSize + 18 + boxH;
@@ -680,23 +684,23 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         }));
         els.push(text(`${id}:step-${i}-label`, sx - 90 + 16, boxTop + 14, 148, labelH, asStr(st.label), {
           fontSize: stepFontSize, fontWeight: s("treatments.process-timeline.step.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: stepFontSize * 0.04, textAlign: "center",
+          fontFamily: "body", lineHeight: 1.4222, textTransform: "uppercase", letterSpacing: stepFontSize * 0.04, textAlign: "center",
           color: col, z: 9, textShadow: "0 2px 8px rgba(0,0,0,0.8)", ...stepAnim,
           styleSource: { fontSize: "treatments.process-timeline.step.fontSize", fontWeight: "treatments.process-timeline.step.fontWeight" },
         }));
         if (asStr(st.detail)) els.push(text(`${id}:step-${i}-detail`, sx - 90 + 16, boxTop + 14 + labelH + 6, 148, detailH, asStr(st.detail), {
-          fontSize: detailFontSize, fontFamily: "Arial, sans-serif", color: paper, opacity: 0.7, lineHeight: 1.3, textAlign: "center", z: 9, fontWeight: 900, ...stepAnim,
+          fontSize: detailFontSize, fontFamily: "body", color: paper, opacity: 0.7, lineHeight: 1.3, textAlign: "center", z: 9, fontWeight: 900, ...stepAnim,
         }));
       });
       const ptPresence = characterPresenceElement("process-timeline", beat, s);
       if (ptPresence) els.push(ptPresence);
       // footer: right 76 → right edge 1844, bottom 48 → bottom edge 1032
       els.push(text(`${id}:footer`, 1844 - 500, 1032 - footerH, 500, footerH, `step ${activeIdx + 1} / ${steps.length}`, {
-        fontSize: 14, fontWeight: 400, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.12, textAlign: "right",
-        color: "rgba(244,232,207,.5)", z: 8, startSec: 0,
-      }));
-      return els;
-    }
+        fontSize: 14, fontWeight: 400, fontFamily: "body", lineHeight: 1.2, textTransform: "uppercase", letterSpacing: 1.12, textAlign: "right",
+          color: "rgba(244,232,207,.5)", z: 8, startSec: 0,
+        }));
+        return els;
+      }
 
     case "candidate-comparison": {
       const candidates = asArr<Record<string, unknown>>(p.candidates);
@@ -727,20 +731,20 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
         shape(`${id}:bg`, 0, 0, W, H, { background: black, z: 0, startSec: 0 }),
         text(`${id}:label`, 70, 54, 600, kickerH, "compare", {
           fontSize: kickerFontSize, fontWeight: s("treatments.candidate-comparison.kicker.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
+          fontFamily: "body", lineHeight: 1.4222, textTransform: "uppercase", letterSpacing: kickerFontSize * 0.18, textAlign: "left",
           color: a, textShadow: "0 2px 8px rgba(0,0,0,0.7)", z: 10, ...blockAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.kicker.fontSize", fontWeight: "treatments.candidate-comparison.kicker.fontWeight" },
         }),
         text(`${id}:title`, 70, 54 + kickerH + 10, 1200, titleH, asStr(p.title, beat.narrativeFunction), {
           fontSize: titleFontSize, fontWeight: s("treatments.candidate-comparison.title.fontWeight", 900),
-          fontFamily: "Arial, sans-serif", color: paper, textAlign: "left",
+          fontFamily: "display", lineHeight: 1.4222, color: paper, textAlign: "left",
           textGradient: { start: gradientStart, end: gradientEnd },
           filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.7))",
           z: 10, ...blockAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.title.fontSize", fontWeight: "treatments.candidate-comparison.title.fontWeight", textGradientStart: "colors.gradientStart", textGradientEnd: "colors.gradientEnd" },
         }),
         asStr(p.criteria) ? text(`${id}:criteria`, 70, 54 + kickerH + 10 + titleH + 8, 1200, 25, asStr(p.criteria), {
-          fontSize: s("treatments.candidate-comparison.criteria.fontSize", 18), fontFamily: "Arial, sans-serif", color: paper, opacity: 0.68,
+          fontSize: s("treatments.candidate-comparison.criteria.fontSize", 18), fontFamily: "body", color: paper, opacity: 0.68,
           fontWeight: 900, textAlign: "left", z: 10, ...blockAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.criteria.fontSize" },
         }) : null,
@@ -772,21 +776,21 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           fit: "cover", filter: isSel ? "none" : "grayscale(.65) brightness(.7)", z: 6 + i, scale, ...candAnim,
         }));
         els.push(text(`${id}:candidate-${i}-badge`, cx + 2 + 12, cardTop + 2 + 12, 130, 13 * 1.4 + 10, isSel ? "selected" : "alternative", {
-          fontSize: 13, fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: 1.56,
+          fontSize: 13, fontWeight: 900, fontFamily: "body", textTransform: "uppercase", letterSpacing: 1.56,
           color: isSel ? col : paper, bgColor: "rgba(0,0,0,.68)", borderRadius: 4,
           textAlign: "left", z: 7 + i, startSec: candStart, textShadow: "0 1px 4px rgba(0,0,0,0.8)",
         }));
         const labelTop = cardTop + 2 + imgH + 14;
         const labelFontSize = s("treatments.candidate-comparison.candidate.fontSize", 18);
         els.push(text(`${id}:candidate-${i}-label`, cx + 2 + 16, labelTop, colW - 36, labelFontSize * 1.4222, asStr(c.label), {
-          fontSize: labelFontSize, fontWeight: 900, fontFamily: "Arial, sans-serif", textTransform: "uppercase",
+          fontSize: labelFontSize, fontWeight: 900, fontFamily: "body", textTransform: "uppercase",
           textAlign: "left", color: col, z: 7 + i, textShadow: "0 2px 6px rgba(0,0,0,0.7)", scale, ...candAnim,
           styleSource: { fontSize: "treatments.candidate-comparison.candidate.fontSize" },
         }));
         if (asStr(c.detail)) {
-          const detailLines = Math.max(1, Math.ceil((asStr(c.detail).length * 13 * 0.64) / (colW - 36)));
+          const detailLines = Math.max(1, Math.ceil((asStr(c.detail).length * 13 * 0.63) / (colW - 36)));
           els.push(text(`${id}:candidate-${i}-detail`, cx + 2 + 16, labelTop + labelFontSize * 1.4222 + 6, colW - 36, detailLines * 13 * 1.35, asStr(c.detail), {
-            fontSize: 13, fontFamily: "Arial, sans-serif", color: paper, opacity: 0.7, lineHeight: 1.35,
+            fontSize: 13, fontFamily: "body", color: paper, opacity: 0.7, lineHeight: 1.35,
             textAlign: "left", z: 7 + i, scale, ...candAnim,
           }));
         }
@@ -821,7 +825,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
       }));
       if (asStr(p.label)) els.push(text(`${id}:label`, 70, 54, 600, 30, asStr(p.label), {
         fontSize: s("treatments.cinematic-metaphor.label.fontSize", 16), fontWeight: s("treatments.cinematic-metaphor.label.fontWeight", 900),
-        fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: s("treatments.cinematic-metaphor.label.fontSize", 16) * 0.16, color: a, textShadow: "0 2px 10px #000",
+        fontFamily: "body", textTransform: "uppercase", letterSpacing: s("treatments.cinematic-metaphor.label.fontSize", 16) * 0.16, color: a, textShadow: "0 2px 10px #000",
         z: 14, animIn: "fade", animEasing: "cubic-out", animDurationSec: entranceDur, startSec: 0.3,
         styleSource: { fontSize: "treatments.cinematic-metaphor.label.fontSize", fontWeight: "treatments.cinematic-metaphor.label.fontWeight" },
       }));
@@ -832,7 +836,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
           background: s("colors.black", "#07090d"), z: 13, ...beatIn,
         }));
         els.push(text(`${id}:subtitle`, Math.round(W * 0.09), H - subH, W - Math.round(W * 0.18), subH, asStr(p.subtitle, beat.transcript), {
-          fontSize: s("treatments.cinematic-metaphor.subtitle.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "Georgia, serif", textAlign: "center", color: a,
+          fontSize: s("treatments.cinematic-metaphor.subtitle.fontSize", 28), fontStyle: "italic", fontWeight: 900, fontFamily: "editorial", textAlign: "center", color: a,
           textShadow: "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)", z: 14, ...beatIn,
           styleSource: { fontSize: "treatments.cinematic-metaphor.subtitle.fontSize" },
         }));
@@ -843,7 +847,7 @@ export const generateTreatmentElements = (beat: SemanticBeat, resolve: StyleReso
     default:
       return [
         text(`${id}:fallback`, 100, 400, 1720, 200, beat.narrativeFunction, {
-          fontSize: 48, fontWeight: 800, fontFamily: "Arial, sans-serif", textAlign: "center", color: "#ec6a5e", z: 10,
+          fontSize: 48, fontWeight: 800, fontFamily: "body", textAlign: "center", color: "#ec6a5e", z: 10,
         }),
       ];
   }

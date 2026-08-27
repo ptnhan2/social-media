@@ -221,7 +221,9 @@ describe("semantic-diagram projection (E2 parity fields)", () => {
     expect(kicker?.animSlidePx).toBe(18);
     expect(kicker?.animEasing).toBe("cubic-out");
     const title = byRole("title")[0];
-    expect(title?.fontFamily).toContain("Arial Black");
+    // foundation typography: projection emits the ROLE; the render resolves
+    // it to the style-store stack (fonts.display) via resolveFontFamily
+    expect(title?.fontFamily).toBe("display");
   });
 
   it("presence element uses exact-fit aspect + p-preset anim", () => {

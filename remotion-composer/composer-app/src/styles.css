@@ -1,4 +1,14 @@
 /* IsaacVerse Composer — live review and edit UI */
+/* Foundation fonts (Phase 1 typography): served by Vite from
+   remotion-composer/public/fonts via publicDir. Same files the video
+   treatments use (shared/isaacverse/fontFaces.ts). */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-var.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", system-ui, sans-serif; }
 .app { max-width: 1600px; margin: 0 auto; padding: 24px 28px 60px; }

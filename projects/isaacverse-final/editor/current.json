@@ -273,7 +273,7 @@
             "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -312,7 +312,7 @@
             "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -373,7 +373,7 @@
               "filter": "treatments.host-reflection.filter"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -412,7 +412,7 @@
             "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -451,7 +451,7 @@
             "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -464,42 +464,38 @@
           "hidden": false
         },
         {
-          "id": "final-beat-06:bg-image",
+          "id": "final-beat-06:bg",
           "kind": "element",
           "trackId": "visual-1",
           "range": {
             "startSec": 18.5,
             "endSec": 22.5
           },
-          "label": "bg-image",
+          "label": "bg",
           "source": {
             "beatId": "final-beat-06",
-            "elementId": "final-beat-06:bg-image"
+            "elementId": "final-beat-06:bg"
           },
           "parentClipId": "clip:beat:final-beat-06",
           "color": "coral",
           "metadata": {
-            "id": "final-beat-06:bg-image",
-            "type": "image",
+            "id": "final-beat-06:bg",
+            "type": "shape",
             "x": 0,
             "y": 0,
             "w": 1,
             "h": 1,
-            "src": "isaacverse-final/noise-field.svg",
-            "z": 1,
+            "z": 0,
             "opacity": 1,
-            "fit": "cover",
-            "filter": "saturate(1.08) contrast(1.15) brightness(.9)",
-            "animIn": "fade",
-            "animDurationSec": 0.7,
+            "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
             "isTextClip": false,
-            "elementType": "image"
+            "elementType": "shape"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -555,7 +551,7 @@
               "filter": "treatments.host-reflection.filter"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -594,7 +590,7 @@
             "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -644,11 +640,69 @@
             "revealDurationSec": 0.001,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
             "isTextClip": false
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:bg-image",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "bg-image",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:bg-image"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "coral",
+          "metadata": {
+            "id": "final-beat-06:bg-image",
+            "type": "image",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "src": "isaacverse-final/noise-field.svg",
+            "z": 5,
+            "opacity": 1,
+            "fit": "cover",
+            "filter": "saturate(1.08) contrast(1.15) brightness(.9)",
+            "keyframes": {
+              "scale": [
+                {
+                  "t": 0,
+                  "v": 1.08,
+                  "easing": "ease-out"
+                },
+                {
+                  "t": 4,
+                  "v": 1,
+                  "easing": "linear"
+                }
+              ]
+            },
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -673,16 +727,16 @@
           "metadata": {
             "id": "final-beat-01:title",
             "type": "text",
-            "x": 0.09869791666666666,
+            "x": 0.15104166666666666,
             "y": 0.3773148148148148,
-            "w": 0.8026041666666667,
+            "w": 0.6979166666666666,
             "h": 0.1648148148148148,
             "text": "The timeline is not the\nedit",
             "z": 15,
             "opacity": 1,
             "fontSize": 82,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "display",
             "textTransform": "uppercase",
             "lineHeight": 1.08,
             "letterSpacing": 3.2800000000000002,
@@ -705,7 +759,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -744,14 +798,15 @@
             "opacity": 1,
             "fontSize": 14,
             "fontWeight": 400,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.2,
             "textTransform": "uppercase",
             "letterSpacing": 1.12,
             "textAlign": "right",
             "color": "rgba(244,232,207,0.45)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -781,16 +836,16 @@
           "metadata": {
             "id": "final-beat-08:title",
             "type": "text",
-            "x": 0.16640625,
+            "x": 0.209375,
             "y": 0.3773148148148148,
-            "w": 0.6671875,
+            "w": 0.58125,
             "h": 0.1648148148148148,
             "text": "Choose the decision\nfirst",
             "z": 15,
             "opacity": 1,
             "fontSize": 82,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "display",
             "textTransform": "uppercase",
             "lineHeight": 1.08,
             "letterSpacing": 3.2800000000000002,
@@ -813,7 +868,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -852,7 +907,8 @@
             "opacity": 1,
             "fontSize": 17,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 3.06,
             "textAlign": "left",
@@ -868,7 +924,7 @@
               "fontWeight": "treatments.candidate-comparison.kicker.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -924,7 +980,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -998,7 +1054,7 @@
             "animDurationSec": 0.45,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1037,7 +1093,7 @@
             "background": "radial-gradient(circle at 50% 46%, #ff6b3512, transparent 42%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1080,7 +1136,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1119,7 +1175,7 @@
             "background": "radial-gradient(circle at 50% 60%, #ff6b3514, transparent 48%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1156,9 +1212,12 @@
             "z": 3,
             "opacity": 1,
             "background": "radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, #ff6b3522, transparent 55%)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1201,7 +1260,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1243,7 +1302,7 @@
             "animDurationSec": 0.45,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1294,7 +1353,7 @@
               "height": "treatments.chapter-card.accentLine.height"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1345,7 +1404,7 @@
               "height": "treatments.chapter-card.accentLine.height"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1405,7 +1464,7 @@
             "elementType": "text",
             "userEdited": true,
             "stale": true,
-            "staleReason": "editdoc"
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1439,7 +1498,8 @@
             "opacity": 1,
             "fontSize": 44,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "display",
+            "lineHeight": 1.4222,
             "color": "#ffffff",
             "textAlign": "left",
             "textGradient": {
@@ -1459,7 +1519,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1518,7 +1578,7 @@
               "gradientStops": "treatments.process-timeline.progress"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1591,7 +1651,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1643,64 +1703,12 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "final-beat-06:label",
-          "kind": "element",
-          "trackId": "visual-3",
-          "range": {
-            "startSec": 18.8,
-            "endSec": 22.5
-          },
-          "label": "the invisible problem",
-          "source": {
-            "beatId": "final-beat-06",
-            "elementId": "final-beat-06:label"
-          },
-          "parentClipId": "clip:beat:final-beat-06",
-          "color": "amber",
-          "metadata": {
-            "id": "final-beat-06:label",
-            "type": "text",
-            "x": 0.036458333333333336,
-            "y": 0.05,
-            "w": 0.3125,
-            "h": 0.027777777777777776,
-            "text": "the invisible problem",
-            "z": 14,
-            "opacity": 1,
-            "fontSize": 16,
-            "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
-            "textTransform": "uppercase",
-            "letterSpacing": 2.6,
-            "color": "#ff6b35",
-            "textShadow": "0 2px 10px #000",
-            "animIn": "fade",
-            "animDurationSec": 0.7,
-            "startSec": 0.3,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
-              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": true,
-            "elementType": "text"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1737,7 +1745,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1776,7 +1784,8 @@
             "opacity": 1,
             "fontSize": 24,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4,
             "letterSpacing": 1.92,
             "textTransform": "uppercase",
             "textAlign": "center",
@@ -1789,7 +1798,7 @@
               "fontSize": "treatments.chapter-card.subtitle.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1828,7 +1837,8 @@
             "opacity": 1,
             "fontSize": 24,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4,
             "letterSpacing": 1.92,
             "textTransform": "uppercase",
             "textAlign": "center",
@@ -1841,7 +1851,7 @@
               "fontSize": "treatments.chapter-card.subtitle.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1880,14 +1890,68 @@
             "opacity": 1,
             "fontSize": 14,
             "fontWeight": 400,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.2,
             "textTransform": "uppercase",
             "letterSpacing": 1.12,
             "textAlign": "right",
             "color": "rgba(244,232,207,.5)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:label",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 18.8,
+            "endSec": 22.5
+          },
+          "label": "the invisible problem",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:label"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-06:label",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.05,
+            "w": 0.3125,
+            "h": 0.027777777777777776,
+            "text": "the invisible problem",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 2.56,
+            "color": "#ff6b35",
+            "textShadow": "0 2px 10px #000",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
+            "startSec": 0.3,
+            "styleSource": {
+              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
+              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1926,7 +1990,8 @@
             "opacity": 1,
             "fontSize": 46,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "display",
+            "lineHeight": 1.4087,
             "color": "#ffffff",
             "textAlign": "left",
             "letterSpacing": -0.92,
@@ -1943,7 +2008,7 @@
               "fontWeight": "treatments.semantic-diagram.title.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1981,7 +2046,7 @@
             "z": 10,
             "opacity": 0.68,
             "fontSize": 18,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "fontWeight": 900,
             "textAlign": "left",
@@ -1994,7 +2059,7 @@
               "fontSize": "treatments.candidate-comparison.criteria.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2082,7 +2147,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2125,7 +2190,7 @@
             "boxShadow": "0 0 38px #00d4ff28",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2167,7 +2232,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2180,50 +2245,41 @@
           "hidden": false
         },
         {
-          "id": "final-beat-06:subtitle",
+          "id": "final-beat-06:letterbox-bottom",
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 19,
+            "startSec": 18.5,
             "endSec": 22.5
           },
-          "label": "noise can look like progress",
+          "label": "letterbox-bottom",
           "source": {
             "beatId": "final-beat-06",
-            "elementId": "final-beat-06:subtitle"
+            "elementId": "final-beat-06:letterbox-bottom"
           },
           "parentClipId": "clip:beat:final-beat-06",
-          "color": "amber",
+          "color": "coral",
           "metadata": {
-            "id": "final-beat-06:subtitle",
-            "type": "text",
+            "id": "final-beat-06:letterbox-bottom",
+            "type": "shape",
             "x": 0,
             "y": 0.8398148148148148,
             "w": 1,
             "h": 0.16018518518518518,
-            "text": "noise can look like progress",
-            "z": 14,
+            "z": 13,
             "opacity": 1,
-            "fontSize": 28,
-            "fontStyle": "italic",
-            "fontWeight": 900,
-            "fontFamily": "Georgia, serif",
-            "textAlign": "center",
-            "color": "#ff6b35",
-            "textShadow": "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)",
+            "background": "#050508",
             "animIn": "fade",
+            "animEasing": "cubic-out",
             "animDurationSec": 0.7,
-            "startSec": 0.5,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.subtitle.fontSize"
-            },
+            "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
-            "isTextClip": true,
-            "elementType": "text"
+            "isTextClip": false,
+            "elementType": "shape"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -2260,12 +2316,64 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "final-beat-06:subtitle",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 18.5,
+            "endSec": 22.5
+          },
+          "label": "noise can look like progress",
+          "source": {
+            "beatId": "final-beat-06",
+            "elementId": "final-beat-06:subtitle"
+          },
+          "parentClipId": "clip:beat:final-beat-06",
+          "color": "amber",
+          "metadata": {
+            "id": "final-beat-06:subtitle",
+            "type": "text",
+            "x": 0.09010416666666667,
+            "y": 0.8398148148148148,
+            "w": 0.8197916666666667,
+            "h": 0.16018518518518518,
+            "text": "noise can look like progress",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 28,
+            "fontStyle": "italic",
+            "fontWeight": 900,
+            "fontFamily": "editorial",
+            "textAlign": "center",
+            "color": "#ff6b35",
+            "textShadow": "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.cinematic-metaphor.subtitle.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -2299,7 +2407,8 @@
             "opacity": 1,
             "fontSize": 17,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 3.06,
             "textAlign": "left",
@@ -2315,7 +2424,7 @@
               "fontWeight": "treatments.process-timeline.kicker.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2386,7 +2495,7 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.6,
             "color": "#00d4ff",
@@ -2397,7 +2506,7 @@
               "fontSize": "treatments.semantic-diagram.centerLabel.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2451,7 +2560,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2493,7 +2602,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2535,7 +2644,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2574,7 +2683,8 @@
             "opacity": 1,
             "fontSize": 48,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "display",
+            "lineHeight": 1.4222,
             "color": "#ffffff",
             "textAlign": "left",
             "textGradient": {
@@ -2594,7 +2704,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2679,7 +2789,7 @@
             "animDurationSec": 0.6,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2718,7 +2828,7 @@
             "opacity": 1,
             "fontSize": 13,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.56,
             "color": "#ffffff",
@@ -2728,7 +2838,7 @@
             "startSec": 0,
             "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2773,7 +2883,7 @@
             "animDurationSec": 0.55,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2812,7 +2922,7 @@
             "opacity": 1,
             "fontSize": 27,
             "fontStyle": "italic",
-            "fontFamily": "Georgia, serif",
+            "fontFamily": "editorial",
             "textAlign": "center",
             "color": "#ff6b35",
             "fontWeight": 900,
@@ -2826,7 +2936,7 @@
               "fontWeight": "treatments.host-reflection.subtitle.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2865,7 +2975,7 @@
             "opacity": 1,
             "fontSize": 27,
             "fontStyle": "italic",
-            "fontFamily": "Georgia, serif",
+            "fontFamily": "editorial",
             "textAlign": "center",
             "color": "#ff6b35",
             "fontWeight": 900,
@@ -2879,7 +2989,7 @@
               "fontWeight": "treatments.host-reflection.subtitle.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2963,7 +3073,7 @@
             "animDurationSec": 0.6,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3002,7 +3112,7 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "textAlign": "left",
             "color": "#ec6a5e",
@@ -3025,7 +3135,7 @@
               "fontSize": "treatments.candidate-comparison.candidate.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3089,7 +3199,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3160,7 +3270,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -3182,7 +3293,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3220,7 +3331,7 @@
             "z": 7,
             "opacity": 0.7,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "textAlign": "left",
@@ -3239,7 +3350,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3278,9 +3389,10 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
+            "lineHeight": 1.44,
             "textAlign": "left",
             "color": "#61d7e8",
             "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
@@ -3305,7 +3417,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3375,7 +3487,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -3392,7 +3504,7 @@
             "animDurationSec": 0.6,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3430,7 +3542,7 @@
             "z": 11,
             "opacity": 0.78,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "fontWeight": 900,
@@ -3455,7 +3567,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3510,7 +3622,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3595,7 +3707,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.18,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3648,7 +3760,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3712,7 +3824,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3796,7 +3908,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.18,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3835,7 +3947,7 @@
             "opacity": 1,
             "fontSize": 13,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.56,
             "color": "#f2b84b",
@@ -3845,7 +3957,7 @@
             "startSec": 0.22,
             "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3884,9 +3996,10 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
+            "lineHeight": 1.44,
             "textAlign": "left",
             "color": "#f2b84b",
             "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
@@ -3911,7 +4024,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3999,7 +4112,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4050,7 +4163,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4089,7 +4202,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -4111,7 +4225,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4150,7 +4264,7 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "textAlign": "left",
             "color": "#f2b84b",
@@ -4172,7 +4286,7 @@
               "fontSize": "treatments.candidate-comparison.candidate.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4210,7 +4324,7 @@
             "z": 11,
             "opacity": 0.78,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "fontWeight": 900,
@@ -4235,7 +4349,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4331,7 +4445,7 @@
               "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4377,7 +4491,7 @@
               "opacity": "treatments.semantic-diagram.characterPresence"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4415,7 +4529,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -4432,7 +4546,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.18,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4470,7 +4584,7 @@
             "z": 8,
             "opacity": 0.7,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "textAlign": "left",
@@ -4488,7 +4602,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4552,7 +4666,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4637,7 +4751,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.36,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4693,7 +4807,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4732,9 +4846,10 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
+            "lineHeight": 1.44,
             "textAlign": "left",
             "color": "#ec6a5e",
             "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
@@ -4759,7 +4874,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4806,7 +4921,7 @@
               "opacity": "treatments.process-timeline.characterPresence"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4890,7 +5005,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.36,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4944,7 +5059,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4982,7 +5097,7 @@
             "z": 11,
             "opacity": 0.78,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "fontWeight": 900,
@@ -5007,7 +5122,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5078,7 +5193,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -5100,7 +5216,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5139,7 +5255,7 @@
             "opacity": 1,
             "fontSize": 13,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.56,
             "color": "#ffffff",
@@ -5149,7 +5265,7 @@
             "startSec": 0.44,
             "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5219,7 +5335,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -5236,7 +5352,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.36,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5275,7 +5391,7 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "textAlign": "left",
             "color": "#61d7e8",
@@ -5298,7 +5414,7 @@
               "fontSize": "treatments.candidate-comparison.candidate.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5386,7 +5502,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5438,7 +5554,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5502,7 +5618,7 @@
               "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5554,7 +5670,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.54,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5592,7 +5708,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "textAlign": "left",
@@ -5611,7 +5727,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5695,7 +5811,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.54,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5766,7 +5882,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -5788,7 +5905,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5858,7 +5975,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -5875,7 +5992,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.54,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -6571,8 +6688,8 @@
   ],
   "revision": {
     "baseEditVersion": "v021",
-    "revision": 41,
-    "updatedAt": "2026-08-26T13:53:35.366Z"
+    "revision": 46,
+    "updatedAt": "2026-08-27T10:54:43.942Z"
   },
   "schemaVersion": 3
 }

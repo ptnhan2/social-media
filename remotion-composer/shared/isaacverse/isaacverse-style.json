@@ -1,5 +1,5 @@
 {
-  "version": 73,
+  "version": 74,
   "seed": "isaac-forensic-2026-08",
   "status": "seed",
   "colors": {
@@ -87,7 +87,7 @@
       "letterboxTopPct": 8,
       "letterboxBottomPct": 12,
       "subtitle": {
-        "fontFamily": "Georgia, serif",
+        "fontFamily": "editorial",
         "fontStyle": "italic",
         "fontSize": 27,
         "fontWeight": 900
@@ -179,5 +179,13 @@
         "fontSize": 28
       }
     }
+  },
+  "fonts": {
+    "display": "'Anton', 'Archivo Black', 'Arial Black', sans-serif",
+    "body": "'Inter', Arial, sans-serif",
+    "editorial": "'Lora', Georgia, serif",
+    "displayCharEm": 0.56,
+    "bodyLabelCharEm": 0.74,
+    "bodyDetailCharEm": 0.63
   }
 }

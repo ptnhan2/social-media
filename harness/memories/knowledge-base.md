@@ -58,6 +58,49 @@ docs/PIPELINE-HARDENING-SPEC.md (PROPOSED).
 - Descript Underlord = operator trên 1 doc (không re-projection, không học gu
   systematic); Runway = disposable output. Pattern mình = Figma components.
 
+## SESSION 2026-08-27 afternoon — PHASE 1 FOUNDATION: typography shipped
+
+### Root cause of "ugly" (user was right)
+Video #1 was ugly at the LAYER BELOW knobs: 47 hardcoded Arial/Arial Black/
+Georgia spots, no fonts section in the style store, CSS-glow idiom, stock
+photos pasted full-frame. Critique loop tunes numbers; it cannot tune Arial
+into a typeface. Foundation first, improvement second.
+
+### What shipped (Phase 1)
+- fontFaces.ts: @font-face (Anton, Archivo Black, Inter var, Lora italic var)
+  + FontFaces component (delayRender until document.fonts loaded) +
+  fontStack(role)/resolveFontFamily (role strings + legacy literal mapping)
+- Role-based fonts: display/body/editorial as STYLE-STORE KNOBS (v74) — font
+  swaps are agent-learnable, live-propagate to all existing editor docs
+  (roles resolve at render time, never baked as literals)
+- Explicit lineHeight on every top-anchored text stack in BOTH paths —
+  layout becomes font-metric-independent (kicker 1.4222, title 1.4087/1.4222,
+  node label 1.44, footer 1.2, step label 1.4222, chapter subtitle 1.4)
+- Calibration knobs: fonts.displayCharEm (Anton 0.56 vs Arial Black 0.65),
+  NODE_BOX recalibrated for Inter (0.74/0.63)
+- Parity: sd 3.5-7 = 1.064 PASS, pt 10.5-14 = 0.964 PASS — BOTH IMPROVED vs
+  Arial baseline (1.222/1.266). Window 7-10.5 is host-reflection (mislabelled
+  "process-timeline" historically) — 6.3 is pre-existing residual, NOT regression.
+- Fonts proven loading: Anton vs Archivo renders differ 17.98 mean (fallback
+  would make them identical). VLM: "condensed, bold, legible, punchy".
+
+### INCIDENT — test_unit.py destroyed uncommitted work (root cause + class)
+update_style chain-smoke + rollback tests ran on REAL store and "restored"
+via `git checkout` -> wiped the uncommitted v74 fonts store mid-session.
+Symptoms: store silently back to v73-no-fonts, v075.json artifact, v074.json
+clobbered, public/shared copies reverted.
+CLASS: never restore state via git checkout in tests/tools — dirty trees are
+normal mid-session. FIX: byte-exact save/restore of every touched file +
+snapshot-dir cleanup; verified non-destructive (34/34, hashes unchanged).
+
+### Reviewer subagent catches (all fixed)
+MAJOR: BeatElementOverlay rendered metadata.fontFamily RAW (canvas-override
+text would render literal "display"). MINORs: projection missing lineHeight
+emission, Lora weight range (400 700 -> 100 900), charEm 0.64->0.63
+consistency, rollback test not restoring live editor doc, chain-smoke
+hardcoded value. Pattern: emit-lineHeight-when-DOM-pins-it keeps both paths
+byte-equivalent regardless of font.
+
 ## SESSION 2026-08-27 morning — CRITICAL FLOW CORRECTION (user 2 corrections)
 
 ### Correction 1: Self-critique before user review

@@ -19,6 +19,7 @@ import { routeOverlay } from "./editor";
 import { AudioMixer } from "./audio";
 import { cameraPhaseFrames } from "./motion";
 import { clipFilterCss, keyframeValueAt, overlayStyleAt } from "./clipStyle";
+import { FontFaces, resolveFontFamily } from "./fontFaces";
 
 const asString = (value: unknown, fallback = "") => typeof value === "string" ? value : fallback;
 const asNumber = (value: unknown, fallback: number) => typeof value === "number" && Number.isFinite(value) ? value : fallback;
@@ -55,7 +56,7 @@ const elementAsset = (beat: SemanticBeat, sourcePath?: string, metadata?: Record
 };
 
 const MissingTreatment: React.FC<{ id: string; beatId: string }> = ({ id, beatId }) => (
-  <AbsoluteFill style={{ background: "#090b10", color: "#ec6a5e", alignItems: "center", justifyContent: "center", fontFamily: "Arial, sans-serif" }}>
+  <AbsoluteFill style={{ background: "#090b10", color: "#ec6a5e", alignItems: "center", justifyContent: "center", fontFamily: resolveFontFamily("body") }}>
     <div style={{ border: "1px solid #ec6a5e", padding: 28, textAlign: "center" }}>
       <div style={{ fontSize: 18, fontWeight: 700 }}>Missing treatment</div>
       <div style={{ marginTop: 8, opacity: 0.75 }}>{id}</div>
@@ -157,7 +158,7 @@ export const BeatElementOverlay: React.FC<{ beat: SemanticBeat; includeUnmodifie
       const isText = element.kind === "text" || element.kind === "node" || element.kind === "step";
        const src = elementAsset(beat, element.sourcePath, metadata);
       return (
-        <div key={element.id} data-element-id={element.id} style={{ position: "absolute", left: `${geometry.x / 9.6}%`, top: `${geometry.y / 5.4}%`, width: `${geometry.width / 9.6}%`, height: `${geometry.height / 5.4}%`, transform: `rotate(${geometry.rotation || 0}deg)`, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", color: typeof metadata.color === "string" ? metadata.color : "#f4f7f7", fontFamily: typeof metadata.fontFamily === "string" ? metadata.fontFamily : "inherit", fontSize: typeof metadata.fontSize === "number" ? metadata.fontSize : 28, fontWeight: typeof metadata.fontWeight === "number" ? metadata.fontWeight : 600, textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,.55)" }}>
+        <div key={element.id} data-element-id={element.id} style={{ position: "absolute", left: `${geometry.x / 9.6}%`, top: `${geometry.y / 5.4}%`, width: `${geometry.width / 9.6}%`, height: `${geometry.height / 5.4}%`, transform: `rotate(${geometry.rotation || 0}deg)`, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", color: typeof metadata.color === "string" ? metadata.color : "#f4f7f7", fontFamily: typeof metadata.fontFamily === "string" ? resolveFontFamily(metadata.fontFamily) : "inherit", fontSize: typeof metadata.fontSize === "number" ? metadata.fontSize : 28, fontWeight: typeof metadata.fontWeight === "number" ? metadata.fontWeight : 600, textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,.55)" }}>
           {isText ? elementText(metadata.text ?? valueAtPath(beat, element.sourcePath), element.role) : src ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: metadata.fit === "cover" ? "cover" : "contain" }} /> : null}
         </div>
       );
@@ -229,6 +230,7 @@ export const IsaacVerseEditVideo: React.FC<{ doc: IsaacVerseEditDoc; editor?: Ed
   }
   return (
     <AbsoluteFill style={{ background: "#07090d" }}>
+      <FontFaces />
       {doc.audioPlan ? <AudioMixer plan={doc.audioPlan} editor={editor} /> : null}
       <AbsoluteFill style={gradeStyle(doc.colorGrade)}>
         {timelineBeats.map(({ clip, beat }) => (
@@ -319,7 +321,7 @@ const EditorClipOverlay: React.FC<{ clip: EditorDoc["tracks"][number]["clips"][n
           display: "flex", alignItems: "center",
           justifyContent: md.textAlign === "left" ? "flex-start" : md.textAlign === "right" ? "flex-end" : "center",
           color: typeof md.color === "string" ? md.color : "#ffffff",
-          fontFamily: typeof md.fontFamily === "string" ? md.fontFamily : "Inter, sans-serif",
+          fontFamily: resolveFontFamily(typeof md.fontFamily === "string" ? md.fontFamily : undefined),
           fontSize: keyframeValueAt(Array.isArray((md.keyframes as Record<string, unknown> | undefined)?.fontSize) ? (md.keyframes as Record<string, never>).fontSize as never : undefined, localSec, typeof md.fontSize === "number" ? md.fontSize : 48),
           fontWeight: typeof md.fontWeight === "number" ? md.fontWeight : 700,
           fontStyle: md.fontStyle === "italic" ? "italic" : md.italic ? "italic" : "normal",

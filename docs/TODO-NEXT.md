@@ -1,72 +1,86 @@
-# TODO NEXT — SESSION 2026-08-27 SÁNG — CRITICAL DIRECTION CORRECTION
+# TODO NEXT — SESSION 2026-08-27 — PHASE 1 FOUNDATION SHIPPED
 
-> User correction sáng 27/08 (quan trọng nhất từ trước đến nay): flow
-> "produce → nhường user review" là SAI. Flow đúng: **produce → TỰ critique
-> → TỰ fix → TỰ re-render → LẶP → chỉ show user khi quality ổn**.
-> Harness có đủ tools (VLM critique, agent protocol, style knobs) — dùng chúng.
-> User KHÔNG phải QA department của hệ thống mình build.
+> **Phase 1 (lấp nền) HOÀN TẤT chiều 27/08**: typography foundation live —
+> Anton/Inter/Lora thay toàn bộ 47 chỗ Arial/Georgia hardcode. Font là KNOB
+> (style store v74 `fonts.*`) — agent học/đổi font không cần sửa code.
+> Parity gates PASS + CẢI THIỆN vs Arial baseline. Xem §"Đã ship".
 
 ---
 
-## 🚨 BÀI HỌC CHỐT (từ user, 27/08 sáng)
+## 🚨 BÀI HỌC CHỐT (từ user, 27/08)
 
-1. **Tự đặt mình vào user position**: Trước khi đề xuất user làm gì, tự hỏi
-   "nếu tôi là user, tôi có muốn làm việc này thủ công không khi hệ thống
-   có tools để tự động?"
-2. **User feedback = raw material cho learning loop, KHÔNG phải QA step**.
-   Video tệ → agent tự critique → tự fix. User chỉ thấy kết quả cuối.
-3. **Đừng hỏi permission những thứ không cần permission** (flip master render
-   là ví dụ — gate pass + tests pass + CI xanh = tự quyết).
+1. **Tự đặt mình vào user position**: trước khi đề xuất user làm gì thủ công,
+   tự hỏi "hệ thống có tool tự động việc này chưa?"
+2. **User feedback = raw material cho learning loop, KHÔNG phải QA step**
+3. **Đừng hỏi permission những thứ đã có gate pass**
+4. **Nền phải đẹp trước khi improve** — video #1 "TỆ" vì nền xấu (Arial +
+   CSS glow + stock), không phải vì thiếu critique loop
+5. **Harness = refinement-only** (11 tool critique/fix, zero tool produce) —
+   video #1 do Kilo làm tay. Phase 2 = lấp production capability.
 
-## Trạng thái hiện tại
+## Đã ship — Phase 1 foundation (27/08 chiều)
 
-### Video #1 "Why AI Dialogue Sounds Like Therapy"
-- `projects/ai-dialogue-therapy/renders/draft_v2.mp4` — 31s, voice + stock images
-- **User verdict: TỆ** — và đó là đúng (chưa chạy critique loop lần nào)
-- **CHƯA TỰ CRITIQUE**: tôi produce xong là nhảy sang "user review" — sai flow
-- VLM critique đang chạy dở (beat-by-beat self-critique)
+| Việc | Bằng chứng |
+|---|---|
+| Font files (OFL): Anton, Inter variable, Lora italic | `remotion-composer/public/fonts/` |
+| `fontFaces.ts` — @font-face + FontFaces (delayRender) + fontStack/resolveFontFamily | role-based: display/body/editorial |
+| 47 chỗ Arial/Georgia → role fonts (2 render paths) | treatments.tsx + treatmentElements.ts |
+| Fonts là KNOB: `fonts.display/body/editorial` + charEm calibration | style store v74 + snapshot |
+| Legacy clip metadata live-adopt new fonts (không cần regenerate) | resolveFontFamily map "Arial..." → role |
+| Explicit lineHeight mọi top-anchored stacks (font-independent layout) | kicker 1.4222, title 1.4087/1.4222, label 1.44... |
+| Parity gates | sd 1.064 PASS (baseline 1.222), pt 0.964 PASS (baseline 1.266) |
+| Fonts proven loading | Anton vs Archivo render diff 17.98 |
+| VLM verify | "condensed, bold, legible, punchy" trên video #1 |
+| **FIX test_unit.py destructive restore** | tests dùng `git checkout` đã WIPE store chưa commit → giờ byte-exact restore, verified non-destructive |
+| Reviewer subagent | 1 MAJOR (BeatElementOverlay raw font) + 6 MINOR — ALL fixed |
 
-### Đã flip (không cần hỏi)
-- Master render: `npm run render:master` giờ dùng `--path editor`
-- Commit: `aad6e8a` (pushed)
+**Video #1 re-render với nền mới**: `projects/ai-dialogue-therapy/renders/draft_v3_fonts.mp4`
+**Font candidates cho user taste gate**: `projects/isaacverse-final/renders/windows/font-candidate-{anton,archivo}.mp4`
 
-### Đã config (đêm 26-27)
-- Model: `openai:glm-5.3-flash` qua Zhipu coding endpoint
-- VLM: `deepseek-v4-flash-vision-exp` (frontier, ~$0.22/1M)
-- VLM pipeline: WHERE/WHAT split, SoM, natural-language prompts
-- visual_critique refactored cho DeepSeek
+## VIỆC TIẾP THEO
 
-## VIỆC TIẾP THEO (sau compact)
+### 1. User taste gate (MỘT lần duy nhất — legitimate)
+User xem 2 candidates (Anton vs Archivo Black) → chốt display font.
+Anton là default hiện tại. Nếu đổi: update `fonts.display` knob + recalibrate
+`fonts.displayCharEm` (Anton 0.56, Archivo ~0.68) + parity re-run chapter-card.
 
-### 1. HOÀN TẤT self-critique loop cho video #1 (ưu tiên #1)
-```
-a. Chạy beat-by-beat VLM critique (8 beats, score + problems)
-b. Agent đọc critiques → extract principles
-c. Agent fix treatments/style knobs
-d. Re-render → critique lại → lặp
-e. CHỈ show user khi score ổn (≥3.5/5 hoặc user thấy ổn)
-```
-Script critique đang dở — chạy lại từ đầu.
+### 2. Phase 1 phần còn lại (design tokens + asset cohesion)
+- Type scale / spacing tokens hoá (nếu cần)
+- Unified grade cho stock images (một hệ filter duy nhất)
+- Backlog: PropertiesPanel font select hiển thị role strings (UI polish)
 
-### 2. Fix các vấn đề mà VLM critique sẽ phơi ra
-Dự kiến (từ visual_critique ban đầu):
-- Text quá nhỏ trong candidate-comparison
-- Chapter-card có thể đơn điệu
-- Cinematic-metaphor image content chưa match
-- Timing/pacing cần điều chỉnh
+### 3. Phase 2 — Production capability (session tiếp)
+Tools mới vào harness_tools.py: `new_project`, `source_image` (Unsplash +
+provenance), `generate_voice` (ElevenLabs), `generate_timeline` (wrap
+generate-editor cold), `validate_edit_doc`. Protocol v5 thêm production loop.
+Acceptance: agent produce mini video 10-15s từ topic prompt, zero bước tay.
 
-### 3. E6 agent loop: dùng CHO video #1
-Thay vì chỉ chạy E6 test fixture — dùng agent protocol v5 THẬT:
-critique → principle → fix → qa_gate → request_keep (user chỉ duyệt kết quả)
+### 4. Phase 3 — Loop thật
+Agent tự produce video từ zero trên nền mới → tự critique → tự fix → iterate
+→ user review MỘT lần. Video #1 cũ thành throwaway bootstrap.
 
-## Còn lại (backlog)
+## Backlog
 
-- Parity residuals (sub-pixel — sau khi video #1 chất lượng ổn)
+- Parity residuals (host-reflection 6.3 — pre-existing, mixBlendMode class)
 - Per-field ledger cho trim/move/nudge
-- Playwright batch 3
-- repurpose pipeline (user: "hệ thống còn chưa chất lượng đâu" — đúng)
-- Multi-doc Studio + anchor editor (session sau)
+- PropertiesPanel fontFamily select (role-aware)
+- repurpose pipeline, Multi-doc Studio — sau Phase 2-3
 
-## Servers đang chạy
-- Composer UI: http://localhost:5174 (vite, persistent)
+## Vận hành mới
+
+```powershell
+# Đổi display font (knob, live-propagate mọi project):
+#   update_style "fonts.display" "'Archivo Black', sans-serif"
+#   + recalibrate fonts.displayCharEm + parity chapter-card re-run
+
+# Font candidates đã render:
+#   projects/isaacverse-final/renders/windows/font-candidate-anton.mp4
+#   projects/isaacverse-final/renders/windows/font-candidate-archivo.mp4
+
+# Video #1 với nền mới:
+#   projects/ai-dialogue-therapy/renders/draft_v3_fonts.mp4
+```
+
+## Servers
+- Composer UI: http://localhost:5174 (persistent)
 - LangGraph agent: port 2025 (persistent)

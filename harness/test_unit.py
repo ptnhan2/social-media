@@ -158,29 +158,41 @@ def test_update_style_chain_smoke():
         print("  SKIP: esbuild not installed (run npm install in remotion-composer) — CI does not install node deps for this job")
         return
     knob = "treatments.semantic-diagram.node.glow"
-    # read current value, flip it, verify the chain ran, then restore via git
-    style_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "libraries", "04-visual", "isaacverse-style.json")
+    # Content-based save/restore (NEVER `git checkout` — that wipes
+    # UNCOMMITTED work; it already destroyed an in-progress store once,
+    # 2026-08-27). Save exact bytes of every file the chain touches.
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    style_file = os.path.join(root, "libraries", "04-visual", "isaacverse-style.json")
+    editor_file = os.path.join(root, "projects", "isaacverse-final", "editor", "current.json")
+    # current+1: robust regardless of the store's actual value (byte-exact
+    # restore below puts it back)
     with open(style_file, encoding="utf-8") as f:
-        current = json.load(f)["treatments"]["semantic-diagram"]["node"]["glow"]
-    new_val = current + 1
+        current_glow = json.load(f)["treatments"]["semantic-diagram"]["node"]["glow"]
+    new_val = current_glow + 1
+    saved = {}
+    for f in [style_file, editor_file,
+              os.path.join(root, "remotion-composer", "public", "isaacverse-style.json"),
+              os.path.join(root, "remotion-composer", "shared", "isaacverse", "isaacverse-style.json")]:
+        if os.path.exists(f):
+            with open(f, "rb") as fh:
+                saved[f] = fh.read()
+    # update_style bumps the store version + writes a vNNN snapshot — record
+    # the versions dir so test-created snapshots get cleaned up too
+    versions_dir = os.path.join(os.path.dirname(style_file), "style-versions")
+    pre_test_snaps = set(os.listdir(versions_dir)) if os.path.isdir(versions_dir) else set()
     try:
         result = update_style.invoke({"style_path": knob, "new_value": str(new_val)})
         check("chain message present", "generator refreshed" in result, result[-300:])
         check("no refresh failure", "FAILED" not in result, result[-300:])
     finally:
-        # restore BOTH the style store and the live editor doc (the chain
-        # bumped its revision) — git has the committed state
-        import subprocess as sp
-        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        for target in ["libraries/04-visual/isaacverse-style.json", "projects/isaacverse-final/editor/current.json"]:
-            sp.run(["git", "checkout", "--", target], cwd=root, capture_output=True)
-        # re-sync the restored style into the remotion copies
-        import shutil
-        for dst in [
-            os.path.join(root, "remotion-composer", "shared", "isaacverse", "isaacverse-style.json"),
-            os.path.join(root, "remotion-composer", "public", "isaacverse-style.json"),
-        ]:
-            shutil.copy2(style_file, dst)
+        # byte-exact restore of the pre-test state (works with or without git)
+        for f, data in saved.items():
+            with open(f, "wb") as fh:
+                fh.write(data)
+        if os.path.isdir(versions_dir):
+            created = [n for n in os.listdir(versions_dir) if n not in pre_test_snaps]
+            for n in created:
+                os.remove(os.path.join(versions_dir, n))
 
 
 def test_style_rollback():
@@ -196,8 +208,31 @@ def test_style_rollback():
     # ensure the current version is snapshotted
     os.makedirs(versions_dir, exist_ok=True)
     current_snap = os.path.join(versions_dir, f"v{original_version:03d}.json")
-    if not os.path.exists(current_snap):
+    snap_existed = os.path.exists(current_snap)
+    snap_saved = None
+    if snap_existed:
+        with open(current_snap, "rb") as fh:
+            snap_saved = fh.read()
+    else:
         sh.copy2(style_file, current_snap)
+    # byte-exact store backup (content restore — no git, see chain-smoke note)
+    with open(style_file, "rb") as fh:
+        store_saved = fh.read()
+    # style_rollback re-syncs the remotion copies — save those bytes too
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sync_targets = [
+        os.path.join(root, "remotion-composer", "shared", "isaacverse", "isaacverse-style.json"),
+        os.path.join(root, "remotion-composer", "public", "isaacverse-style.json"),
+        # the rollback chains generate-editor (scoped regen) which rewrites
+        # the LIVE editor doc — save it too or the test leaves version drift
+        os.path.join(root, "projects", "isaacverse-final", "editor", "current.json"),
+    ]
+    sync_saved = {}
+    for f in sync_targets:
+        if os.path.exists(f):
+            with open(f, "rb") as fh:
+                sync_saved[f] = fh.read()
+    pre_test_snaps = set(os.listdir(versions_dir))
     try:
         result = style_rollback.invoke({"target_version": original_version, "reason": "test rollback — restore current version"})
         check("rollback succeeded", "rolled back" in result.lower(), result[:200])
@@ -209,15 +244,23 @@ def test_style_rollback():
         check("content matches snapshot (minus version/audit fields)", True)  # colors should be identical
         check("reason recorded", "test rollback" in after.get("rollbackReason", ""), after.get("rollbackReason", ""))
     finally:
-        # restore: write the original back + resync
-        original_copy = dict(original)
-        with open(style_file, "w", encoding="utf-8") as f:
-            json.dump(original_copy, f, indent=2, ensure_ascii=False)
-        for dst in [
-            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "remotion-composer", "shared", "isaacverse", "isaacverse-style.json"),
-            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "remotion-composer", "public", "isaacverse-style.json"),
-        ]:
-            sh.copy2(style_file, dst)
+        # restore: pre-test store bytes + pre-test snapshot bytes; delete any
+        # snapshot the rollback created so the versions dir stays truthful
+        with open(style_file, "wb") as fh:
+            fh.write(store_saved)
+        if snap_existed and snap_saved is not None:
+            with open(current_snap, "wb") as fh:
+                fh.write(snap_saved)
+        elif not snap_existed:
+            os.remove(current_snap)
+        created = [n for n in os.listdir(versions_dir) if n not in pre_test_snaps]
+        for n in created:
+            os.remove(os.path.join(versions_dir, n))
+        if created:
+            print(f"  removed test-created snapshots: {created}")
+        for f, data in sync_saved.items():
+            with open(f, "wb") as fh:
+                fh.write(data)
 
 
 def test_vlm_qa_pipeline():

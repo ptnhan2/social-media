@@ -140,6 +140,18 @@ export function syncRuntimePublic(slug, editorDocPath) {
     [`public/${slug}/05-edit-doc.json`, `${slug}/05-edit-doc.json`],
     [`public/${slug}/editor/current.json`, `${slug}/editor/current.json`],
   ];
+  // Foundation fonts (shared/isaacverse/fontFaces.ts): same no-rebuild sync —
+  // new/updated font files reach the bundle's public dir every render.
+  const fontsFrom = path.join(composerRoot, "public", "fonts");
+  const fontsTo = path.join(composerRoot, bundleCacheDir(), "public", "fonts");
+  if (fs.existsSync(fontsFrom)) {
+    fs.mkdirSync(fontsTo, { recursive: true });
+    for (const f of fs.readdirSync(fontsFrom)) {
+      if (!f.startsWith(".") && fs.statSync(path.join(fontsFrom, f)).isFile()) {
+        fs.copyFileSync(path.join(fontsFrom, f), path.join(fontsTo, f));
+      }
+    }
+  }
   for (const [src, rel] of srcs) {
     const from = path.join(composerRoot, src);
     const to = path.join(composerRoot, bundleCacheDir(), "public", rel);
