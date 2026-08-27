@@ -1,75 +1,71 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-26 ~06:50 (night run 25/26, including bonus parity round).
-> Previous: 03:15 25/08.
-> **TRẠNG THÁI: NIGHT RUN HOÀN TẤT 5/5 PHASE + BONUS PARITY ROUND** — E2 parity
-> GATE PASS + default render path flipped sang editor + Playwright E2E 13/13 +
-> review hardening + parity round 2 (4 treatments).
-> Full evidence + decisions: `docs/TODO-NEXT.md` + git log `1fd5998..HEAD`.
+> Updated 2026-08-27 ~13:50. Previous: night run 26-27.
+> **CRITICAL DIRECTION: user đã chỉnh flow — produce → TỰ critique → TỰ fix
+→ TỰ re-render → lặp → CHỈ show user khi quality ổn. User KHÔNG phải QA.**
+> Chi tiết: `docs/TODO-NEXT.md` (file này đọc sau TODO-NEXT).
 
 ---
 
-## 🌅 VIỆC TIẾP THEO (session sau)
+## 🌅 VIỆC TIẾP THEO (session sau — NGAY SAU COMPACT)
 
-1. **Morning review với user** (xem TODO-NEXT "Morning review"): flip
-   blessing cho master render, repurpose approval, multi-doc design
-2. **Parity residuals 4 treatment** (TODO-NEXT bảng BONUS ROUND): chapter-card
-   2.28, cinematic 3.24, candidate 3.45, host-reflection 5.9-6.3 — sub-pixel/
-   gradient/blend nuances; method đã có pattern
-3. Playwright batch 3 + latent risks từ review (TODO-NEXT backlog)
+1. **HOÀN TẤT self-critique loop cho video #1** — script đang dở, chạy lại:
+   - Beat-by-beat VLM critique (8 beats × score + problems)
+   - Agent đọc critiques → extract principles
+   - Agent fix treatments/style knobs
+   - Re-render → critique → lặp đến khi ổn
+   - CHỈ show user khi score ≥3.5/5 hoặc ổn
 
-## 🌙 TÓM TẮT ĐÊM (chi tiết TODO-NEXT + commits 1fd5998..HEAD)
+2. **Dùng E6 agent loop THẬT** cho video #1 (không chỉ fixture test):
+   critique → principle → fix → qa_gate → request_keep
 
-- **E2 GATE PASS**: semantic-diagram 1.222, process-timeline 1.266
-  (threshold 2.0, cold projection) — re-verified sau mọi round. Default
-  render path = editor; treatment = preview (`--path treatment`).
-- **8 root causes parity round 1**: camera nesting, store colors, node
-  DOM-height estimator + group scale + pulse, Remotion spring port chính xác,
-  edge viewBox units, PRESENCE_ASPECT (0.52-0.56 không phải 3:4), text
-  padding, process-timeline layout.
-- **Bonus round 2** (4 treatments): chapter-card 39.2→2.28 (title LUÔN wrap
-  2 dòng — 86% shrink-to-fit parent), candidate 15.7→3.45 (grid + spring +
-  group scale 0.96), host-reflection beat-7 29.9→5.92 (mixBlendMode screen),
-  cinematic 3.24 chưa đụng.
-- **Playwright E2E**: 13/13 + CI job studio-e2e GREEN. Suite bắt 3 bug
-  production thật (upload src bust, docsEqual bỏ name/locked, stale closure
-  Escape).
-- **reviewer-agent bắt B1 MAJOR**: overlay clip khi beat split/trim — đã fix.
-- LIVE editor doc synced x2 (91 + 98 refresh), 157/157 vitest, CI xanh mọi
-  commit (3 workflows).
+3. Fix mọi gap mà self-critique phơi ra
+
+## 🌙 TÓM TẮT ĐÊM 26-27 + SÁNG 27/08
+
+- **Video #1 "Why AI Dialogue Sounds Like Therapy" PRODUCED**: 31s, voice
+  (ElevenLabs), stock images (Unsplash), 8 beats × 8 treatments
+- **User verdict: TỆ** — đúng, vì chưa chạy critique loop lần nào
+- **Flow bị user chỉnh**: produce xong không nhường user QA — TỰ critique
+  bằng harness tools, tự fix, chỉ show khi ổn
+- Master render flipped to editor path (`aad6e8a`)
+- Model: glm-5.3-flash (coding endpoint), VLM: DeepSeek-V4-Flash-Vision-Exp
+- VLM pipeline: WHERE/WHAT split, SoM, natural-language — ZERO hallucination
+- visual_critique refactored cho DeepSeek
+- CI xanh 3 workflows trên commit cuối
 
 ## 🔧 VẬN HÀNH
 
 ```powershell
-# Composer dev (:5174)
-cd remotion-composer\composer-app; npx vite --port 5174
-# Asset Studio E2E (tự boot server riêng :5199)
-cd remotion-composer\composer-app; npm run test:e2e
-# Parity measurement (cold doc, 2 paths, report qa/parity/)
-node remotion-composer\scripts\parity-measure.mjs --project isaacverse-final --start 3.5 --end 7
-# Render (default giờ là EDITOR path; treatment = preview)
-node remotion-composer\scripts\render-window.mjs --project isaacverse-final --start 3.5 --end 7 --quality draft
-node remotion-composer\scripts\render-window.mjs --project isaacverse-final --start 3.5 --end 7 --quality draft --path treatment
+# Composer UI (:5174 — đang chạy persistent)
+cd remotion-composer\composer-app; npx vite --port 5174 --strictPort
+
+# LangGraph agent (:2025 — đang chạy persistent)
+harness\.venv\Scripts\python.exe -m langgraph_cli dev --port 2025 --host 127.0.0.1
+
+# Self-critique một video (VLM beat-by-beat)
+# → dùng visual_critique tool + vlm_qa pipeline (harness/vlm_qa.py)
+
+# Render (default giờ là EDITOR path)
+node remotion-composer\scripts\render-window.mjs --project ai-dialogue-therapy --start 0 --end 31 --quality draft
+
+# Parity measurement
+node remotion-composer\scripts\parity-measure.mjs --project ai-dialogue-therapy --start 3.5 --end 7
 ```
 
-## ⚠️ GOTCHAS MỚI (đêm này)
+## ⚠️ GOTCHAS MỚI
 
-1. **Playwright postData()**: SYNC, không phải promise — `.then()` crash route
-   handler → mọi request treo, browser session chết
-2. **vitest collect e2e specs**: mặc định vitest nhặt cả `e2e/*.spec.ts` —
-   vite.config.ts đã pin `test.include: ["src/**/*.test.{ts,tsx}"]`
-3. **`.gitignore *.png` nuốt E2E fixture** → CI fail ENOENT ở module load —
-   đã thêm exception `!remotion-composer/composer-app/e2e/fixtures/*.png`
-4. **Remotion Sequence clips children**: overlay lồng trong beat Sequence bị
-   clip theo duration của Sequence đó — overlay spanning qua split/trim phải
-   render ở root level
-5. **preview canvas của studio** trong browser thật không ảnh hưởng fetch
-   monkeypatch — chỉ page.route của Playwright chặn được <img> loads
-6. **VLM glm-4v-flash noisy với global diff** (như memory) — dùng region crop
-   + quantitative bbox/profile (PIL) thay vì tin VLM descriptions
+1. **DeepSeek VLM**: trả EMPTY trên complex JSON prompts — dùng natural
+   language short prompts (đã refactor visual_critique + vlm_qa)
+2. **eleven_v3 SDK**: chưa support `language` kwarg → fallback multilingual_v2
+3. **--output relative path**: resolve workspaceRoot (đã fix)
+4. **styleLoader delayRender**: 300s timeout (đã fix)
+5. **Pexels API**: 401 Unauthorized (key expired?) — dùng Unsplash thay thế
+6. **Vite port 5174**: Test-NetConnection có thể báo False nhưng HTTP 200 OK
 
-## 📌 GHI NHỚ TỪ MEMORY (vẫn đúng)
+## 📌 GHI NHỚ
 
-- Check CI (`gh run list`) sau MỖI push — đêm này CI xanh mọi commit
-- Ox Alpha không xem được ảnh — VLM Zhipu cho image analysis (region crops)
-- Lean discipline: diff lớn → reviewer-agent cold-read (đã làm, bắt được B1)
+- Check CI sau MỖI push
+- E6 protocol hoạt động (PASS 7/7 với glm-5.3-flash)
+- Style store v73, 40 principles, schemaVersion 3
+- Video #1 parity: 4/7 PASS (sub-pixel residuals)

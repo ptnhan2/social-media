@@ -58,6 +58,26 @@ docs/PIPELINE-HARDENING-SPEC.md (PROPOSED).
 - Descript Underlord = operator trên 1 doc (không re-projection, không học gu
   systematic); Runway = disposable output. Pattern mình = Figma components.
 
+## SESSION 2026-08-27 morning — CRITICAL FLOW CORRECTION (user 2 corrections)
+
+### Correction 1: Self-critique before user review
+- WRONG flow: produce video -> ask user to review and give feedback
+- RIGHT flow: produce -> self-critique (VLM + agent) -> self-fix -> re-render -> LOOP -> only show user when quality is acceptable
+- User is NOT the QA department for the harness we built 11 days
+- Video #1 was produced WITHOUT running critique loop even once — then I asked
+  user to review. User said "TE" (terrible) — correctly, and pointed out the absurdity
+
+### Correction 2: Don't ask permission for gated decisions
+- Master render flip: gate PASS + tests PASS + CI green -> just do it
+- I asked user for "blessing" — unnecessary over-caution
+- Only need user for: un-gated risk, direction change, significant paid spend
+
+### Principle going forward
+- Before asking user to do anything manually, ask: "would I want to do this
+  by hand if the system has tools to automate it?"
+- User feedback through Composer UI = raw material for learning loop
+  (principle extraction), NOT a QA step in the production flow
+
 ## Night Run 2026-08-26/27 — Video #1 produced + VLM DeepSeek + pipeline E2E
 
 ### Video #1: FIRST real production run (ai-dialogue-therapy)

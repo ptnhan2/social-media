@@ -1,76 +1,72 @@
-# TODO NEXT — NIGHT RUN 2026-08-26/27 — VIDEO #1 COMPLETE (draft with voice + images)
+# TODO NEXT — SESSION 2026-08-27 SÁNG — CRITICAL DIRECTION CORRECTION
 
-> Night run hoàn tất (user ngủ ~23:40 → ~05:00). 6 hours autonomous.
-> Commits: 048e9ca..73f08b2 (8 commits). CI xanh 3 workflows trên commit cuối.
+> User correction sáng 27/08 (quan trọng nhất từ trước đến nay): flow
+> "produce → nhường user review" là SAI. Flow đúng: **produce → TỰ critique
+> → TỰ fix → TỰ re-render → LẶP → chỉ show user khi quality ổn**.
+> Harness có đủ tools (VLM critique, agent protocol, style knobs) — dùng chúng.
+> User KHÔNG phải QA department của hệ thống mình build.
 
 ---
 
-## 🌅 MORNING REMINDERS — NHẮC USER NGAY LÚC SÁNG
+## 🚨 BÀI HỌC CHỐT (từ user, 27/08 sáng)
 
-1. **REVIEW VIDEO #1**: `projects/ai-dialogue-therapy/renders/draft_v2.mp4`
-   — 31s, có voice + stock images. Mở trực tiếp hoặc trong Composer
-   (`/editor?project=ai-dialogue-therapy`). Feedback qua UI hoặc chat.
-2. **Flip blessing master render**: default render-window đã là editor —
-   nhưng `npm run render:master` vẫn path cũ. Chốt 1 lệnh.
-3. **`repurpose` pipeline approval**: transcript → X/blog/shorts.
-4. **Multi-doc Studio + anchor editor kéo thả**: cần design session.
-5. **Model chính đã hoạt động**: glm-5.3-flash qua coding endpoint (E6 PASS).
+1. **Tự đặt mình vào user position**: Trước khi đề xuất user làm gì, tự hỏi
+   "nếu tôi là user, tôi có muốn làm việc này thủ công không khi hệ thống
+   có tools để tự động?"
+2. **User feedback = raw material cho learning loop, KHÔNG phải QA step**.
+   Video tệ → agent tự critique → tự fix. User chỉ thấy kết quả cuối.
+3. **Đừng hỏi permission những thứ không cần permission** (flip master render
+   là ví dụ — gate pass + tests pass + CI xanh = tự quyết).
 
-## Kết quả đêm — TẤT CẢ HOÀN TẤT
+## Trạng thái hiện tại
 
-### Video #1 "Why AI Dialogue Sounds Like Therapy" — COMPLETE DRAFT ✅
+### Video #1 "Why AI Dialogue Sounds Like Therapy"
+- `projects/ai-dialogue-therapy/renders/draft_v2.mp4` — 31s, voice + stock images
+- **User verdict: TỆ** — và đó là đúng (chưa chạy critique loop lần nào)
+- **CHƯA TỰ CRITIQUE**: tôi produce xong là nhảy sang "user review" — sai flow
+- VLM critique đang chạy dở (beat-by-beat self-critique)
 
+### Đã flip (không cần hỏi)
+- Master render: `npm run render:master` giờ dùng `--path editor`
+- Commit: `aad6e8a` (pushed)
+
+### Đã config (đêm 26-27)
+- Model: `openai:glm-5.3-flash` qua Zhipu coding endpoint
+- VLM: `deepseek-v4-flash-vision-exp` (frontier, ~$0.22/1M)
+- VLM pipeline: WHERE/WHAT split, SoM, natural-language prompts
+- visual_critique refactored cho DeepSeek
+
+## VIỆC TIẾP THEO (sau compact)
+
+### 1. HOÀN TẤT self-critique loop cho video #1 (ưu tiên #1)
 ```
-projects/ai-dialogue-therapy/
-├── 02-story/story.md              ← story + script
-├── 05-edit-doc.json               ← 8 beats + treatments + audioPlan
-├── editor/current.json            ← 111 clips, schemaVersion 3
-├── renders/
-│   ├── draft_v2.mp4               ← FINAL: 31s, voice + stock images ★
-│   ├── draft_voiced.mp4           ← intermediate (char poses as bg)
-│   └── draft_360p.mp4             ← first render (no voice)
+a. Chạy beat-by-beat VLM critique (8 beats, score + problems)
+b. Agent đọc critiques → extract principles
+c. Agent fix treatments/style knobs
+d. Re-render → critique lại → lặp
+e. CHỈ show user khi score ổn (≥3.5/5 hoặc user thấy ổn)
 ```
+Script critique đang dở — chạy lại từ đầu.
 
-**Pipeline steps completed:**
-- Story: surface=therapy-speak, deeper=fear of homogenized fiction
-- Script: 75 words
-- EditDoc: 8 beats, 8 treatments
-- Voice: ElevenLabs multilingual_v2, 31s voiceover ✓
-- Assets: Unsplash stock images (therapy-session, two-people-talking) ✓
-- Cold projection: 111 clips, schemaVersion 3, validate PASS
-- Both paths render ✓
-- VLM QA: DeepSeek identifies content correctly ✓
+### 2. Fix các vấn đề mà VLM critique sẽ phơi ra
+Dự kiến (từ visual_critique ban đầu):
+- Text quá nhỏ trong candidate-comparison
+- Chapter-card có thể đơn điệu
+- Cinematic-metaphor image content chưa match
+- Timing/pacing cần điều chỉnh
 
-### VLM DeepSeek — FIRST REAL USE ✅
-- deepseek-v4-flash-vision-exp: frontier-class, ~$0.22/1M
-- SoM pipeline: WHERE/WHAT split (pixel-diff for WHERE, VLM for WHAT)
-- ZERO hallucination (glm-4v-flash saw "owl masks")
-- visual_critique refactored: DeepSeek path uses natural-language prompts
-
-### Parity video #1 (7 windows)
-| Window | Mean | Gate |
-|---|---|---|
-| chapter-card (0-3.5) | 0.72 | PASS |
-| semantic-diagram (3.5-7) | 1.54 | PASS |
-| host-reflection (7-10.5) | 2.87 | FAIL (push-scale easing) |
-| process-timeline (10.5-14) | 1.42 | PASS |
-| candidate-comparison (14-18.5) | 3.19 | FAIL (group scale) |
-| cinematic+host (18.5-26) | 10.42→improved | FAIL (image content) |
-| chapter-card-2 (26-30) | 1.44 | FAIL (close, sub-pixel) |
-
-4/7 PASS — cùng lớp sub-pixel residual như isaacverse-final.
-
-### Blockers đã fix (từ production run)
-1. `--output` relative path → resolve workspaceRoot ✓
-2. styleLoader delayRender 28s → 300s ✓
-3. Cinematic-metaphor: fit:cover + mode filter + letterbox + entrance ✓
-4. visual_critique DeepSeek: SoM natural-language path ✓
+### 3. E6 agent loop: dùng CHO video #1
+Thay vì chỉ chạy E6 test fixture — dùng agent protocol v5 THẬT:
+critique → principle → fix → qa_gate → request_keep (user chỉ duyệt kết quả)
 
 ## Còn lại (backlog)
 
-1. **User review video #1** → feedback → patch → master render
-2. Parity residuals (sub-pixel class — same as isaacverse-final)
-3. Per-field ledger cho trim/move/nudge ops
-4. Playwright batch 3
-5. EleventLabs v3: SDK chưa support `language` kwarg — khi update,
-   switch sang v3 cho quality tốt hơn
+- Parity residuals (sub-pixel — sau khi video #1 chất lượng ổn)
+- Per-field ledger cho trim/move/nudge
+- Playwright batch 3
+- repurpose pipeline (user: "hệ thống còn chưa chất lượng đâu" — đúng)
+- Multi-doc Studio + anchor editor (session sau)
+
+## Servers đang chạy
+- Composer UI: http://localhost:5174 (vite, persistent)
+- LangGraph agent: port 2025 (persistent)
