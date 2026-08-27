@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch } from "fs";
 import { resolve, sep } from "path";
@@ -9,7 +9,7 @@ import { dispatchLocalOperation } from "../shared/isaacverse/operations";
 import { createKiloHandoff, listKiloHandoffs, updateKiloHandoff } from "../shared/isaacverse/handoff";
 
 // Portable workspace layout: this config lives at
-// <workspace>/remotion-composer/composer-app/vite.config.ts — derive every
+// <workspace>/remotion-composer/composer-app/vite.config.ts â€” derive every
 // path from it instead of hardcoding absolute machine paths (CI + other
 // checkouts must boot the dev server with the same middleware).
 const APP_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)));
@@ -58,7 +58,7 @@ const runAssetBridge = (cmd: Record<string, unknown>): Record<string, unknown> =
     cwd: WORKSPACE_ROOT, windowsHide: true, encoding: "utf-8",
     input: JSON.stringify(cmd), timeout: 300000, maxBuffer: 64 * 1024 * 1024,
   });
-  // python exits 1 for {ok: false} results too — surface that JSON instead of
+  // python exits 1 for {ok: false} results too â€” surface that JSON instead of
   // a generic crash message when stdout is parseable.
   if (proc.stdout && proc.stdout.trim().startsWith("{")) {
     try {
@@ -238,7 +238,7 @@ export default defineConfig({
             } catch (error) { sendJson(res, 409, { error: error instanceof Error ? error.message : String(error) }); }
           });
         });
-        // Upload an image (base64) → save to public/uploads → return its URL.
+        // Upload an image (base64) â†’ save to public/uploads â†’ return its URL.
         // Review-tool only: lets you drop a test image onto the canvas without a build step.
         server.middlewares.use("/api/upload", (req, res) => {
           if (req.method !== "POST") { res.statusCode = 405; res.end("405"); return; }
@@ -314,7 +314,7 @@ export default defineConfig({
           });
         });
 
-        // Serve studio files (inbox/poses/head) — path-restricted
+        // Serve studio files (inbox/poses/head) â€” path-restricted
         server.middlewares.use("/api/assets/file", (req, res) => {
           const url = new URL(req.url || "/", "http://composer.local");
           const rel = url.searchParams.get("p") || "";
@@ -340,6 +340,99 @@ export default defineConfig({
             elapsedSec: Math.round((Date.now() - job.startedAt) / 1000),
             message: job.message,
             outputUrl: job.status === "done" ? `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(job.outputPath)}` : undefined,
+          });
+        });
+        // ============ VOICE PIPELINE (PIPELINE-PRODUCTION-SPEC v3) ============
+        // Regen ONE voice clip: TTS takes + deterministic QC + post-chain +
+        // apply onto the editor doc via the bridge (revision bump, per-field
+        // override keeps user-edited providerText). Job pattern mirrors
+        // /api/render: the UI and the agent call the SAME endpoint.
+        const voiceJobs = new Map<string, { status: "regenerating" | "done" | "error"; startedAt: number; message?: string; result?: unknown }>();
+        server.middlewares.use("/api/project/audio-regen/status", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const jobId = url.searchParams.get("jobId") || "";
+          const job = voiceJobs.get(jobId);
+          if (!job) { sendJson(res, 404, { error: "Unknown voice job" }); return; }
+          sendJson(res, 200, {
+            status: job.status,
+            elapsedSec: Math.round((Date.now() - job.startedAt) / 1000),
+            message: job.message,
+            result: job.status === "done" ? job.result : undefined,
+          });
+        });
+        server.middlewares.use("/api/project/audio-regen", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const clipId = String(body.clipId || "");
+              if (!projectId || !clipId) throw new Error("projectId and clipId are required");
+              const snapshot = PROJECT_STORE.load(projectId);
+              const editorDoc = snapshot.editorDoc;
+              if (!editorDoc) throw new Error("Project has no editor document");
+              const clip = editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
+              if (!clip) throw new Error(`Unknown clip: ${clipId}`);
+              if (clip.kind !== "voice") throw new Error(`Clip ${clipId} is not a voice clip`);
+              const md = clip.metadata as Record<string, unknown>;
+              // CURRENT state wins (user edits included) — parity: the timeline
+              // clip is the single source of truth for what gets spoken.
+              const providerText = String(
+                body.providerText ?? md.providerText ?? md.sentenceText ?? md.transcript ?? "",
+              ).trim();
+              if (!providerText) throw new Error("clip has no providerText/sentenceText/transcript to speak");
+              const settings = {
+                ...(md.voiceSettings as Record<string, unknown> ?? {}),
+                ...(body.voiceSettings as Record<string, unknown> ?? {}),
+              };
+              const payload = {
+                projectId, clipId, providerText, voiceSettings: settings,
+                expectedSec: typeof body.expectedSec === "number" ? body.expectedSec : undefined,
+                takes: typeof body.takes === "number" ? body.takes : 2,
+              };
+              const jobId = `voice-${Date.now()}`;
+              voiceJobs.set(jobId, { status: "regenerating", startedAt: Date.now() });
+              const child = spawn(PY, [resolve(WORKSPACE_ROOT, "tools/audio/voice_regen.py")], {
+                cwd: WORKSPACE_ROOT, windowsHide: true,
+                stdio: ["pipe", "pipe", "pipe"],
+              });
+              let stdout = ""; let stderr = "";
+              child.stdout.on("data", (c: Buffer) => stdout += c.toString());
+              child.stderr.on("data", (c: Buffer) => stderr += c.toString());
+              child.stdin.write(JSON.stringify(payload));
+              child.stdin.end();
+              child.on("error", (error) => {
+                voiceJobs.set(jobId, { status: "error", startedAt: Date.now(), message: error.message });
+              });
+              child.on("exit", (code) => {
+                const job = voiceJobs.get(jobId);
+                if (!job) return;
+                if (code !== 0) {
+                  job.status = "error";
+                  job.message = `voice_regen exited ${code}: ${(stderr || stdout).slice(0, 300)}`;
+                  return;
+                }
+                try {
+                  const jsonSpan = (text: string) => text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1);
+                  const result = JSON.parse(jsonSpan(stdout) || "{}");
+                  if (!result.ok) throw new Error(result.error || "voice_regen reported failure");
+                  // apply onto the editor doc through the BRIDGE (revision +
+                  // optimistic locking + validation — never a direct write)
+                  const apply = spawnSync(process.execPath, [
+                    "scripts/editor-ops.mjs", "--project", projectId, "--op", "voice_apply",
+                    "--clipId", clipId, "--result", JSON.stringify(result),
+                  ], { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
+                  if (apply.status !== 0) throw new Error(String(apply.stderr || apply.stdout).slice(0, 300));
+                  job.status = "done";
+                  job.result = { ...result, applied: JSON.parse(jsonSpan(apply.stdout) || "{}") };
+                } catch (error) {
+                  job.status = "error";
+                  job.message = error instanceof Error ? error.message : String(error);
+                }
+              });
+              sendJson(res, 200, { jobId, clipId, providerText });
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
           });
         });
         server.middlewares.use("/api/render", (req, res) => {

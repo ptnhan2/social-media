@@ -913,6 +913,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
           ) : selectedClip ? (
             <PropertiesPanel
               clip={selectedClip}
+              projectId={projectId}
               tab={propTab}
               onTabChange={setPropTab}
               autoFocusText={autoFocusText}

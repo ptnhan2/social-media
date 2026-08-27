@@ -1,6 +1,7 @@
 import type { IsaacVerseEditDoc, SemanticBeat } from "./types";
 import type { ClipRange, EditorAcceptedAssetKind, EditorClip, EditorDoc, EditorMarker, EditorProjectionOptions, EditorTrack, EditorTrackKind } from "./editor";
 import { generateTreatmentElements, setStrictProjection, consumeProjectionWarnings, type StyleResolver, type TreatmentElement } from "./treatmentElements";
+import { buildProviderText } from "./voiceClip";
 
 // strict-projection warning trail (PIPELINE-HARDENING-SPEC §3.1) — re-exported
 // so the generate-editor CLI can enable/collect via the projection bundle.
@@ -124,7 +125,13 @@ const packIntoTracks = (clips: EditorClip[]): EditorClip[][] => {
 const addAudioPlanClips = (doc: IsaacVerseEditDoc, tracks: Map<string, EditorTrack>) => {
   const duckZones = doc.audioPlan?.beats.flatMap((beat) => beat.duckZones) ?? [];
   for (const segment of doc.audioPlan?.voice ?? []) {
-    addClip(tracks, "voice", clip({ id: `clip:voice:${segment.id}`, kind: "voice", trackId: "voice", range: { startSec: segment.startSec, endSec: segment.endSec }, label: "Voiceover", source: {}, color: "cyan", metadata: { src: segment.src, transcript: segment.transcript, segmentId: segment.id } }));
+    // Voice pipeline parity (PIPELINE-PRODUCTION-SPEC v3): the clip carries
+    // the DIRECTION fields the Audio tab edits — sentenceText (working copy
+    // of the transcript) and providerText (the exact string sent to the TTS
+    // provider). Sync merge keeps user-edited providerText via the per-field
+    // override ledger; unmodified clips refresh from here.
+    const segmentBeat = doc.beats.find((beat) => beat.startSec === segment.startSec || (segment.startSec >= beat.startSec && segment.startSec < beat.startSec + beat.durationSec));
+    addClip(tracks, "voice", clip({ id: `clip:voice:${segment.id}`, kind: "voice", trackId: "voice", range: { startSec: segment.startSec, endSec: segment.endSec }, label: "Voiceover", source: segmentBeat ? { beatId: segmentBeat.id } : {}, color: "cyan", metadata: { src: segment.src, transcript: segment.transcript, sentenceText: segment.transcript, providerText: buildProviderText(segment.transcript), segmentId: segment.id } }));
   }
   for (const track of doc.audioPlan?.music ?? []) {
     addClip(tracks, "music", clip({ id: `clip:music:${track.id}`, kind: "music", trackId: "music", range: { startSec: track.startSec, endSec: track.endSec }, label: "Music bed", source: {}, color: "amber", metadata: { src: track.src, gainDb: track.gainDb, density: track.density, beatGrid: track.beatGrid ?? [], duckZones, trackId: track.id } }));

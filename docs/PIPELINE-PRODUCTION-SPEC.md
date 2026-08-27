@@ -140,6 +140,23 @@ per-field override, migrations — không state song song nào để lệch.
 
 ## 9. PROGRESS LOG
 
+- **2026-08-28 ~01:20 (M1a SHIPPED)**: voice parity loop live end-to-end.
+  Shipped: `voiceClip.ts` (buildProviderText + validate + QC builder),
+  projection sinh sentenceText/providerText cho voice clips, Audio tab
+  VoiceSection (sentence + provider text + voice settings + QC readout +
+  Regen button), bridge op `voice_apply` (machine fields override-marked,
+  providerText user-edit sống sót — có test), `tools/audio/voice_regen.py`
+  (TTS takes + QC deterministic + post-chain 2-pass loudnorm), API
+  `/api/project/audio-regen` (+status, job pattern, apply qua bridge),
+  AudioMixer clip-src override (timeline clip = truth cho audio của nó).
+  Tests: 184/184 vitest (12 mới) + 5/5 node. E2E THẬT trên
+  ai-dialogue-therapy: job 13s, 2 takes, QC 4/4 PASS (loudness −16.54 LUFS
+  trúng target −16), apply rev 8 qua bridge; editor doc restore từ backup
+  sau E2E (transcript segment chỉ là hook line — clip sẽ co lại đúng 4.6s;
+  per-beat segments là việc của produce flow khi viết audioPlan).
+  Bugs vấp trong E2E: (1) editor-ops in JSON pretty-print đa dòng → parser
+  dòng-cuối vỡ → fix jsonSpan (từ { đầu đến } cuối); (2) route prefix
+  match: /status phải đăng ký TRƯỚC route chính.
 - **2026-08-27 23:56 (v3 — user correction #3)**: "tại sao không dựa vào
   timeline editor luôn? user lúc nào cũng mở editor, có track audio sẵn, chỉ
   cần fix prompt + regen từng đoạn track audio" → audit code: voice/music/

@@ -154,7 +154,10 @@ export const AudioMixer: React.FC<{ plan: AudioPlan; editor?: EditorDoc }> = ({ 
       {plan.voice.flatMap((segment) => {
         const clips = voiceClips.filter((clip) => clip.metadata.segmentId === segment.id);
         if (!clips.length) return [<VoiceTrack key={segment.id} segment={segment} fps={fps} muted={Boolean(editorVoice?.muted || isMutedBySolo("voice"))} />];
-        return clips.map((clip) => <VoiceTrack key={clip.id} segment={{ ...segment, startSec: clip.range.startSec, endSec: clip.range.endSec }} fps={fps} gainDb={typeof clip.metadata.gainDb === "number" ? clip.metadata.gainDb : 0} fadeInSec={typeof clip.metadata.fadeInSec === "number" ? clip.metadata.fadeInSec : 0} fadeOutSec={typeof clip.metadata.fadeOutSec === "number" ? clip.metadata.fadeOutSec : 0} speed={typeof clip.metadata.speed === "number" ? clip.metadata.speed : 1} muted={Boolean(editorVoice?.muted || isMutedBySolo("voice") || clip.muted)} />);
+        // Voice pipeline parity (SPEC v3): a regenerated clip points at its own
+        // stem via metadata.src — the timeline clip is the truth for its audio;
+        // the plan segment src stays as the planned/original source.
+        return clips.map((clip) => <VoiceTrack key={clip.id} segment={{ ...segment, src: typeof clip.metadata.src === "string" && clip.metadata.src ? clip.metadata.src : segment.src, startSec: clip.range.startSec, endSec: clip.range.endSec }} fps={fps} gainDb={typeof clip.metadata.gainDb === "number" ? clip.metadata.gainDb : 0} fadeInSec={typeof clip.metadata.fadeInSec === "number" ? clip.metadata.fadeInSec : 0} fadeOutSec={typeof clip.metadata.fadeOutSec === "number" ? clip.metadata.fadeOutSec : 0} speed={typeof clip.metadata.speed === "number" ? clip.metadata.speed : 1} muted={Boolean(editorVoice?.muted || isMutedBySolo("voice") || clip.muted)} />);
       })}
       {plan.beats.flatMap((beat) => beat.sfx.flatMap((cue) => {
         const clips = sfxClips.filter((clip) => clip.source.audioCueId === cue.id);

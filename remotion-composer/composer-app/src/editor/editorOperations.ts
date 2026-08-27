@@ -225,6 +225,51 @@ export const setEditorClipMetadata = (editor: EditorDoc, clipId: string, changes
   };
 };
 
+/** Voice pipeline stage F-H apply (PIPELINE-PRODUCTION-SPEC v3): write the
+ *  regen result onto the voice clip — stem src, QC verdict, selected take —
+ *  and stretch the clip to the measured stem duration (voice-first timing).
+ *  Machine write: does NOT set userEdited, and the machine-owned fields are
+ *  marked overridden so a later sync regenerates around them. providerText is
+ *  deliberately untouched — the user's edit (if any) survives by design. */
+export const applyVoiceTake = (
+  editor: EditorDoc,
+  clipId: string,
+  result: { src: string; qc: Record<string, unknown>; takeId: string; takes?: unknown[]; stemDurationSec: number; breathPadSec?: number; providerText?: string },
+): EditorDoc => {
+  const location = locateClip(editor, clipId);
+  const clip = location.clip;
+  if (clip.kind !== "voice") throw new Error(`clip ${clipId} is not a voice clip`);
+  if (!(result.stemDurationSec > 0)) throw new Error("stemDurationSec must be > 0");
+  const pad = result.breathPadSec ?? 0.3;
+  const newEnd = Math.max(clip.range.startSec + 0.5, clip.range.startSec + result.stemDurationSec + pad);
+  const machineFields = ["src", "qc", "takeId", "takes", "regeneratedAt"];
+  return {
+    ...editor,
+    tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
+      ...track,
+      clips: track.clips.map((c) => c.id !== clipId ? c : {
+        ...c,
+        range: { ...c.range, endSec: newEnd },
+        metadata: {
+          ...c.metadata,
+          src: result.src,
+          qc: result.qc,
+          takeId: result.takeId,
+          ...(result.takes !== undefined ? { takes: result.takes } : {}),
+          regeneratedAt: new Date().toISOString(),
+          ...(result.providerText !== undefined && !(c.metadata.overridden as Record<string, boolean> | undefined)?.providerText
+            ? { providerText: result.providerText }
+            : {}),
+          // machine-set state must survive a sync regeneration (per-field
+          // override merge) — the timeline clip is the truth for its audio
+          overridden: { ...(c.metadata.overridden as Record<string, boolean> || {}), ...Object.fromEntries(machineFields.map((f) => [f, true])) },
+        },
+      }),
+    }),
+    revision: updateRevision(editor),
+  };
+};
+
 export const setEditorClipRange = (editor: EditorDoc, clipId: string, range: { startSec?: number; endSec?: number }): EditorDoc => {
   const location = locateClip(editor, clipId);
   if (location.clip.locked || editor.tracks[location.trackIndex].locked) throw new Error("clip is locked");

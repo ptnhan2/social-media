@@ -127,13 +127,23 @@ try {
       next = ops.rippleEditorDoc(doc, Number(args.fromSec), Number(args.deltaSec));
       detail = `ripple from ${args.fromSec}s by ${args.deltaSec}s`;
       break;
+    case "voice_apply": {
+      // Voice pipeline (SPEC v3): apply a regen result (stem src + QC + take
+      // + measured duration) onto the voice clip. Machine write — providerText
+      // user edits survive via the per-field override ledger.
+      if (!args.clipId || !args.result) throw new Error("--clipId and --result <json> are required");
+      const result = JSON.parse(args.result);
+      next = ops.applyVoiceTake(doc, args.clipId, result);
+      detail = `${args.clipId} voice <- ${result.takeId} (qc ${result.qc?.pass === true ? "PASS" : "FAIL"}, ${result.stemDurationSec?.toFixed?.(2)}s)`;
+      break;
+    }
     case "delete":
       if (!args.clipId) throw new Error("--clipId is required");
       next = ops.deleteEditorClip(doc, args.clipId);
       detail = `${args.clipId} deleted (ledgered)`;
       break;
     default:
-      throw new Error(`unknown op: ${op} (split|trim|move|metadata|ripple|delete|list)`);
+      throw new Error(`unknown op: ${op} (split|trim|move|metadata|ripple|delete|voice_apply|list)`);
   }
 } catch (error) {
   console.error(JSON.stringify({ ok: false, op, error: String(error.message ?? error) }));

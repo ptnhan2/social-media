@@ -1,6 +1,7 @@
 import React from "react";
 import type { EditorClip } from "../../../shared/isaacverse/editor";
 import { ANIM_PRESETS, EFFECT_PRESETS, FILTER_PRESETS, SPEED_PRESETS, TRANSITION_PRESETS } from "../../../shared/isaacverse/clipStyle";
+import { validateProviderTextEdit } from "../../../shared/isaacverse/voiceClip";
 
 export type PropTab = "transform" | "text" | "audio" | "animation" | "speed" | "color" | "transition" | "character" | "info";
 
@@ -34,9 +35,114 @@ export type PropertiesPanelProps = {
   /** Pose wiring: available pose names (dynamic from the pose library). */
   poseList?: string[];
   onAddPresence?: (options: CharacterPresenceOptions) => void;
+  /** Voice pipeline (SPEC v3): project slug for the audio-regen endpoint. */
+  projectId?: string;
 };
 
 const num = (value: unknown, fallback: number) => (typeof value === "number" && Number.isFinite(value) ? value : fallback);
+
+/** Voice clip parity surface (PIPELINE-PRODUCTION-SPEC v3, M1a): sentence +
+ *  provider text (the EXACT string sent to the TTS — Asset-Studio-prompt
+ *  pattern), voice settings, QC readout, and per-clip surgical regen. */
+const VoiceSection: React.FC<{
+  clip: EditorClip;
+  projectId?: string;
+  onCommit: (changes: Record<string, unknown>) => void;
+}> = ({ clip, projectId, onCommit }) => {
+  const md = clip.metadata as Record<string, unknown>;
+  const sentenceText = typeof md.sentenceText === "string" ? md.sentenceText : typeof md.transcript === "string" ? md.transcript : "";
+  const providerText = typeof md.providerText === "string" ? md.providerText : sentenceText;
+  const voiceSettings = (md.voiceSettings as Record<string, unknown>) ?? {};
+  const qc = md.qc as { pass?: boolean; checks?: { id: string; label: string; pass: boolean; value: string; threshold: string }[]; durationSec?: number; expectedSec?: number; wer?: number | null } | undefined;
+  const [regenState, setRegenState] = React.useState<"idle" | "running" | "done" | "error">("idle");
+  const [regenMessage, setRegenMessage] = React.useState("");
+  const [draftSentence, setDraftSentence] = React.useState(sentenceText);
+  const [draftProvider, setDraftProvider] = React.useState(providerText);
+  React.useEffect(() => { setDraftSentence(sentenceText); setDraftProvider(providerText); }, [sentenceText, providerText]);
+  const wordCheck = validateProviderTextEdit(sentenceText, draftProvider);
+
+  const regen = async () => {
+    if (!projectId) { setRegenState("error"); setRegenMessage("projectId unavailable"); return; }
+    setRegenState("running"); setRegenMessage("");
+    try {
+      const start = await fetch("/api/project/audio-regen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId, clipId: clip.id, takes: 2 }),
+      }).then((r) => r.json());
+      if (!start.jobId) throw new Error(start.error || "regen failed to start");
+      for (let i = 0; i < 90; i += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const status = await fetch(`/api/project/audio-regen/status?jobId=${encodeURIComponent(start.jobId)}`).then((r) => r.json());
+        if (status.status === "done") {
+          setRegenState("done");
+          setRegenMessage(`Regenerated — QC ${status.result?.qc?.pass === true ? "PASS" : "FAIL"}, ${status.result?.stemDurationSec ?? "?"}s`);
+          return;
+        }
+        if (status.status === "error") throw new Error(status.message || "regen error");
+      }
+      throw new Error("regen timed out");
+    } catch (error) {
+      setRegenState("error");
+      setRegenMessage(error instanceof Error ? error.message : String(error));
+    }
+  };
+
+  return (
+    <div className="ve-prop-section">
+      <label className="ve-prop-field">
+        <span>Sentence text</span>
+        <textarea rows={2} value={draftSentence} onChange={(e) => setDraftSentence(e.target.value)}
+          onBlur={() => { if (draftSentence !== sentenceText) onCommit({ sentenceText: draftSentence }); }} />
+      </label>
+      <label className="ve-prop-field">
+        <span>Provider text (chuỗi gửi TTS)</span>
+        <textarea rows={3} value={draftProvider} onChange={(e) => setDraftProvider(e.target.value)}
+          onBlur={() => { if (draftProvider !== providerText) onCommit({ providerText: draftProvider }); }} />
+      </label>
+      {!wordCheck.ok ? (
+        <p className="ve-hint">⚠ Từ đã đổi ({wordCheck.changedWords.slice(0, 6).join(", ")}) — tags/CAPS thoải mái, nhưng đổi từ sẽ lệch script.</p>
+      ) : (
+        <p className="ve-hint">[pause] qua dấu "…", nhấn bằng CAPS — không đổi từ.</p>
+      )}
+      <div className="ve-prop-grid">
+        <label className="ve-prop-field">
+          <span>Voice ID</span>
+          <input type="text" value={String(voiceSettings.voiceId ?? "")} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, voiceId: e.target.value } })} />
+        </label>
+        <label className="ve-prop-field">
+          <span>Stability</span>
+          <input type="number" step="0.05" min="0" max="1" value={num(voiceSettings.stability, 0.35)} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, stability: Number(e.target.value) } })} />
+        </label>
+        <label className="ve-prop-field">
+          <span>Style</span>
+          <input type="number" step="0.05" min="0" max="1" value={num(voiceSettings.style, 0.35)} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, style: Number(e.target.value) } })} />
+        </label>
+        <label className="ve-prop-field">
+          <span>Speed</span>
+          <input type="number" step="0.05" min="0.7" max="1.2" value={num(voiceSettings.speed, 1)} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, speed: Number(e.target.value) } })} />
+        </label>
+      </div>
+      {qc ? (
+        <div className="ve-prop-field">
+          <span>QC {qc.pass === true ? <b style={{ color: "#2dd4a0" }}>PASS</b> : <b style={{ color: "#ff6b6b" }}>FAIL</b>}</span>
+          <ul style={{ margin: "4px 0 0", paddingLeft: 16, fontSize: 12, color: "#b9bfcc" }}>
+            {(qc.checks ?? []).map((check) => (
+              <li key={check.id} style={{ color: check.pass ? "#b9bfcc" : "#ff9b9b" }}>
+                {check.pass ? "✓" : "✗"} {check.label}: {check.value} ({check.threshold})
+              </li>
+            ))}
+            {qc.wer !== null && qc.wer !== undefined ? <li>WER: {(qc.wer * 100).toFixed(1)}%</li> : null}
+          </ul>
+        </div>
+      ) : null}
+      <button type="button" className="ve-prop-btn" disabled={regenState === "running"} onClick={() => void regen()}>
+        {regenState === "running" ? "Regenerating…" : "Regenerate voice (2 takes + QC)"}
+      </button>
+      {regenMessage ? <p className="ve-hint">{regenMessage}</p> : null}
+    </div>
+  );
+};
 
 const PALETTE = ["#ffffff", "#000000", "#f2b84b", "#61d7e8", "#ec6a5e", "#2dd4a0", "#8f7bff", "#f4e8cf", "#ffe066", "#ff6b9d", "#4ecdc4", "#45b7d1"];
 
@@ -51,7 +157,7 @@ const ColorField: React.FC<{ label: string; value: string; onChange: (color: str
 );
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
-  clip, tab, onTabChange, autoFocusText, onAutoFocusTextDone, armedProps, onToggleArm, selectedKeyframe, onSetEasing, onCommit, onCommitRange, onDelete, onDuplicate, canDelete, onZOrder, onFlip, onSetSpeed, poseList, onAddPresence,
+  clip, tab, onTabChange, autoFocusText, onAutoFocusTextDone, armedProps, onToggleArm, selectedKeyframe, onSetEasing, onCommit, onCommitRange, onDelete, onDuplicate, canDelete, onZOrder, onFlip, onSetSpeed, poseList, onAddPresence, projectId,
 }) => {
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
   React.useEffect(() => {
@@ -254,6 +360,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       {activeTab === "audio" ? (
         <div className="ve-prop-section">
+          {clip.kind === "voice" ? <VoiceSection clip={clip} projectId={projectId} onCommit={onCommit} /> : null}
           <label className="ve-prop-field">
             <span>Gain dB</span>
             <input type="number" step="0.5" value={num(md.gainDb, 0)} onChange={(e) => onCommit({ gainDb: Number(e.target.value) })} />
