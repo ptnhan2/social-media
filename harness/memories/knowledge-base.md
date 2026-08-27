@@ -909,3 +909,21 @@ MUST show mean_diff > 0 before any VLM critique is trusted.
 - Verdict: **GLM-4V-Flash + keyframe sampling is NOT a valid quality oracle for motion.**
   Until a better oracle exists (Qwen3-VL native video input, or pairwise A/B), treat all
   motion-score claims from it as noise.
+
+### Experiment: fonts.display A/B (Anton vs Archivo Black) — KEPT Anton, GAP flagged
+- Date: 2026-08-27 (same session as Phase-1 foundation typography)
+- Segment: isaacverse-final chapter-card beat 0.5-3s
+- Evidence: pixel-diff gate PASS max mean 18.201 (~17% pixels changed) — both real fonts loaded,
+  no fallback collapse (consistent with font-fingerprint mean 17.98). pairwise_verdict control
+  PASSED; assessment different; winner "first" (A = Anton). Narrated details untrusted per protocol.
+- Decision: KEEP current store value fonts.display='Anton','Archivo Black','Arial Black',sans-serif.
+  No update_style needed (winner == current); fresh draft editor render 0.5-3s attached as evidence.
+- USER NOTE (recorded feedback.jsonl) — candidate B was evaluated UNFAIRLY:
+  1. Title wrap + box width in the editor doc were baked with displayCharEm=0.56 (Anton-calibrated).
+     Archivo Black is wider -> baked \n + narrow box double-wrapped ("TIMELINE IS NOT" repeated);
+     the verdict's drift direction confirms crowding, so B's STYLE was never fairly compared.
+     Rule: future A/B on metric-coupled knobs must rebake/regenerate geometry PER CANDIDATE first.
+  2. fonts.* knob changes do NOT trigger editor-doc regeneration (update_style chains only
+     treatment.* paths); charEm recalibration alone cannot fix baked-clip geometry ->
+     OPEN ITEM: fonts->regen bridge (register fonts.* role handlers in generate-editor.mjs
+     scoped-regen, or chain regeneration when a fonts.* knob flips).
