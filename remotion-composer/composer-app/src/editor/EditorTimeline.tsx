@@ -1,6 +1,6 @@
 import React from "react";
 import type { ClipKeyframe, ClipRange, EditorClip, EditorDoc, EditorTrack } from "../../../shared/isaacverse/editor";
-import { downsampleWaveform } from "../composer/waveform";
+import { loadWaveformLevels } from "../composer/waveform";
 
 export type EditorTool = "select" | "trim" | "split" | "ripple";
 
@@ -92,22 +92,20 @@ const layoutTrackClips = (clips: EditorClip[]): { clip: EditorClip; lane: number
 };
 
 const TimelineWaveform: React.FC<{ src?: string; range: ClipRange }> = ({ src, range }) => {
+  const durationSec = Math.max(0.5, range.endSec - range.startSec);
+  const bins = Math.min(160, Math.max(28, Math.round(durationSec * 12)));
   const [levels, setLevels] = React.useState<number[] | null>(null);
   React.useEffect(() => {
     let active = true;
     if (!src || typeof window === "undefined") { setLevels(null); return () => { active = false; }; }
-    const AudioContextCtor = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextCtor) return () => { active = false; };
-    const context = new AudioContextCtor();
-    fetch(src).then((response) => response.arrayBuffer()).then((data) => context.decodeAudioData(data)).then((buffer) => {
-      if (active) setLevels(downsampleWaveform(buffer.getChannelData(0), 28));
-      void context.close();
-    }).catch(() => { if (active) setLevels(null); void context.close(); });
-    return () => { active = false; void context.close(); };
-  }, [src]);
-  const bars = levels || Array.from({ length: 28 }, (_, index) => 0.22 + ((index * 17) % 11) / 100);
+    loadWaveformLevels(src, bins)
+      .then((peaks) => { if (active) setLevels(peaks); })
+      .catch(() => { if (active) setLevels(null); });
+    return () => { active = false; };
+  }, [src, bins]);
+  const bars = levels || Array.from({ length: bins }, (_, index) => 0.22 + ((index * 17) % 11) / 100);
   return <span className="editor-audio-visuals" aria-label={src ? "Decoded audio waveform" : "Audio waveform unavailable"}>
-    <span className="editor-waveform">{bars.map((level, index) => <i key={index} style={{ height: `${Math.max(10, level * 100)}%` }} />)}</span>
+    <span className="editor-waveform">{bars.map((level, index) => <i key={index} style={{ height: `${Math.max(8, level * 100)}%` }} />)}</span>
     <span className="editor-waveform-label">{range.startSec.toFixed(1)}s</span>
   </span>;
 };

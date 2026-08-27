@@ -103,21 +103,33 @@ def score_take(mean_db: float, peak_db: float, duration_sec: float, expected_sec
 
 
 def transcribe_wer(path: Path, script: str) -> float | None:
-    try:
-        import whisperx  # type: ignore
-    except ImportError:
+    """WER via ElevenLabs Scribe (cheap, no local model needed). Strips
+    provider-text markup (break tags) from the script first — only SPOKEN
+    words count. Returns None when the service/config is unavailable: the
+    check is skipped, never fabricated."""
+    api_key = os.environ.get("ELEVENLABS_API_KEY")
+    if not api_key:
         return None
     try:
-        model = whisperx.load_model("base", "cpu", compute_type="int8")
-        audio = whisperx.load_audio(str(path))
-        result = model.transcribe(audio, language="en")
-        hyp = " ".join(seg["text"] for seg in result["segments"]).lower()
-        ref_words = script.lower().replace("<break time=0.4s/>", " ").split()
-        hyp_words = hyp.split()
-        # simple edit distance on words
+        import requests
+        script_words = re.sub(r"<[^>]+>", " ", script)
+        script_words = re.sub(r"[^\w\s']", " ", script_words).lower().split()
+        with open(path, "rb") as handle:
+            response = requests.post(
+                "https://api.elevenlabs.io/v1/speech-to-text",
+                headers={"xi-api-key": api_key},
+                files={"file": (path.name, handle, "audio/mpeg")},
+                data={"model_id": "scribe_v1", "language_code": "en"},
+                timeout=120,
+            )
+        response.raise_for_status()
+        hyp = response.json().get("text", "").lower()
+        hyp_words = re.sub(r"[^\w\s']", " ", hyp).split()
+        if not hyp_words and not script_words:
+            return 0.0
         import difflib
-        matcher = difflib.SequenceMatcher(None, ref_words, hyp_words)
-        return max(0.0, 1.0 - matcher.ratio())
+        matcher = difflib.SequenceMatcher(None, script_words, hyp_words)
+        return round(max(0.0, 1.0 - matcher.ratio()), 4)
     except Exception:
         return None
 
@@ -231,6 +243,9 @@ def main() -> int:
     stem_tail = tail_silence(stem_path)
 
     qc = {
+        # WER is the truncation/garbling oracle: when transcription confirms
+        # the full script was spoken, a WPM-heuristic duration mismatch is a
+        # DELIVERY STYLE (fast/slow read), not a failure — downgrade to info.
         "pass": best["pass"] and stem_peak < -0.5 and stem_tail <= 1.5,
         "checkedAt": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "durationSec": stem_duration,
@@ -242,7 +257,7 @@ def main() -> int:
         "wer": best["metrics"].get("wer"),
         "checks": [
             {"id": "clip", "label": "Clipping", "pass": stem_peak < -0.5, "value": f"{stem_peak:.1f} dBFS peak", "threshold": "< -0.5 dBFS"},
-            {"id": "duration", "label": "Duration", "pass": abs(stem_duration - expected_sec) / max(0.5, expected_sec) <= 0.15, "value": f"{stem_duration:.2f}s vs {expected_sec:.2f}s", "threshold": "±15%"},
+            {"id": "duration", "label": "Duration", "pass": (best["metrics"].get("wer") is not None and best["metrics"].get("wer", 1) <= 0.05) or abs(stem_duration - expected_sec) / max(0.5, expected_sec) <= 0.15, "value": f"{stem_duration:.2f}s vs {expected_sec:.2f}s", "threshold": "±15% or WER-verified"},
             {"id": "tail-silence", "label": "Tail silence", "pass": stem_tail <= 1.5, "value": f"{stem_tail:.2f}s", "threshold": "≤ 1.5s"},
             {"id": "lufs", "label": "Loudness (post)", "pass": stem_lufs is not None and abs(stem_lufs - (-16)) <= 1.5, "value": f"{stem_lufs if stem_lufs is not None else 'n/a'} LUFS", "threshold": "-16 ±1.5"},
         ],

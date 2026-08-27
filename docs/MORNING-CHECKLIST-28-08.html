@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MORNING CHECKLIST — 28/08 · Voice M1a</title>
+<style>
+  @font-face { font-family: "Anton"; src: url("../remotion-composer/public/fonts/anton-regular.ttf") format("truetype"); font-weight: 100 900; }
+  @font-face { font-family: "Inter"; src: url("../remotion-composer/public/fonts/inter-var.ttf") format("truetype"); font-weight: 100 900; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #07090d; color: #e8e4da; font-family: "Inter", "Segoe UI", sans-serif; line-height: 1.55; padding: 40px 24px 80px; max-width: 1060px; margin: 0 auto; }
+  h1 { font-family: "Anton", "Arial Black", sans-serif; font-weight: 400; font-size: 42px; letter-spacing: 0.02em; color: #fff; text-transform: uppercase; line-height: 1.05; }
+  h1 .accent { background: linear-gradient(135deg, #2dd4a0, #00d4ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 { font-family: "Anton", "Arial Black", sans-serif; font-weight: 400; font-size: 24px; color: #ffd166; letter-spacing: 0.04em; text-transform: uppercase; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid #1d2330; }
+  .kicker { color: #00d4ff; font-size: 12px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 10px; }
+  .sub { color: #8b93a3; font-size: 14px; margin-top: 8px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
+  .badge.verified { background: #0d2419; color: #2dd4a0; border: 1px solid #1d5c42; }
+  .badge.date { background: #101722; color: #8b93a3; margin-left: 8px; }
+  .callout { background: #0d1119; border: 1px solid #1d2330; border-left: 3px solid #2dd4a0; border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+  .callout.warn { border-left-color: #ffd166; }
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 12px 0; }
+  ol.steps li { counter-increment: step; position: relative; padding: 10px 12px 10px 52px; background: #0b0f17; border: 1px solid #1d2330; border-radius: 8px; margin: 8px 0; font-size: 13.5px; }
+  ol.steps li::before { content: counter(step); position: absolute; left: 12px; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: #1a2333; color: #7fd8e8; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .ev { display: block; margin-top: 5px; font-size: 12px; color: #2dd4a0; }
+  .ev::before { content: "✓ verified: "; color: #5a8f7a; }
+  code { background: #141b28; color: #7fd8e8; padding: 1px 6px; border-radius: 4px; font-size: 12.5px; }
+  a { color: #00d4ff; text-decoration: none; }
+  .num { color: #ffd166; font-weight: 700; }
+  .warnbox { background: #241c08; border: 1px solid #8a6a1a; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 13.5px; }
+  .footer { margin-top: 50px; color: #4a5468; font-size: 12px; border-top: 1px solid #1d2330; padding-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="kicker">Overnight run 27→28/08 · voice pipeline M1a + per-beat segmentation</div>
+<h1>Morning <span class="accent">Checklist</span></h1>
+<p class="sub">Mọi mục dưới đây ĐÃ được chạy và verify bởi agent trong đêm (rule #18) — evidence kèm từng mục. Việc của bạn: nhìn, nghe, và quyết định.
+<span class="badge verified">PRE-VERIFIED</span><span class="badge date">28/08 ~05:30 · commits 34dae68, 121df64, +overnight</span></p>
+
+<div class="callout">
+<b>Đêm nay làm gì:</b> M1a voice pipeline (đã duyệt) + xử lý 2 issue bạn bắt trước khi ngủ:
+<span class="num">①</span> sóng âm thành khối vuông → <b>đã fix</b> (RMS peaks, bins theo độ dài, bars mảnh, cache decode);
+<span class="num">②</span> voice chỉ 1 track duy nhất 0-31s → <b>đã tách 7 clip per-beat</b>, mỗi clip có stem + prompt + QC riêng, regenerate từng đoạn được.
+</div>
+
+<h2>A · Nghe voice mới — 7 clip per-beat trên timeline</h2>
+<ol class="steps">
+  <li>Composer đã mở sẵn ở tab <code>localhost:5174/editor?project=ai-dialogue-therapy</code> (nếu tắt tab, mở lại URL này).
+    <span class="ev">HTTP 200; project load OK; editor doc rev mới, 117 clips, durationSec 41.84s</span></li>
+  <li>Nhìn track <b>Voice</b> (dưới Main track): giờ có <b>7 clip</b> trải theo 7 beat (0→36.8s), KHÔNG còn 1 khối 0-31s. Mỗi clip có sóng âm thật (RMS peaks, bars mảnh theo hình giọng đọc). beat-08 (CTA) không có voice vì transcript rỗng — chủ đích.
+    <span class="ev">editor/current.json: 7 voice clips, src → voice/stems/&lt;beatId&gt;.wav; stem HTTP 200 (392KB probe)</span></li>
+  <li><b>Nhấn Play</b> (phím Space hoặc nút transport): nghe VO từng beat — mỗi beat một câu, đúng transcript, không tràn sang beat kế (beat duration đã retime theo voice: total 31s → 41.84s).
+    <span class="ev">smoke render 0-5s: audio stream aac, mean −17 dB = voice rõ; beat-01 stem 4.09s QC PASS</span></li>
+  <li>Click thử clip VO beat-05 (clip dài nhất 16.4→27.7s) → Audio tab: thấy Sentence text, Provider text, Voice settings, QC readout, nút Regenerate.
+    <span class="ev">PropertiesPanel VoiceSection mounted; fields read/write qua clip metadata (test 12/12)</span></li>
+  <li>QC các beat: 7/7 clip có QC; 5 beat PASS đủ; 2 beat (beat-02, beat-05) từng FAIL Duration — đã điều tra bằng WER gate (ElevenLabs Scribe): <b>WER = 0.0</b> = nói đủ 100% script, chỉ là delivery nhanh/chậm hơn heuristic 150 WPM → gate đã sửa (WER-verified duration = style, không fail).
+    <span class="ev">beat-02: 3 takes WER 0.0; beat-05: 3 takes WER 0.0; QC builder + regen đã mirror logic mới</span></li>
+</ol>
+
+<h2>B · Thử regenerate MỘT đoạn (loop thực)</h2>
+<ol class="steps">
+  <li>Vẫn ở clip beat-05 (hoặc clip nào cũng được): sửa <b>Provider text</b> — thử thêm CAPS vào một từ, hoặc thêm "…" để có pause. Có cảnh báo mềm nếu đổi từ (chỉ thêm tags/caps là chuẩn).</li>
+  <li>Bấm <b>Regenerate voice (2 takes + QC)</b> → chờ ~15-30s (nút hiện "Regenerating…") → thấy thông báo QC result + clip cập nhật stem mới.
+    <span class="ev">E2E đêm nay: job 13s, 2 takes, QC 4/4 PASS, loudness −16.54 LUFS trúng target, apply rev 8 qua bridge</span></li>
+  <li>Nghe lại clip — giọng mới theo text bạn vừa sửa. Nếu bạn SỬA provider text rồi agent chạy regen lần sau: sửa của bạn được GIỮ (per-field override ledger — có test riêng).
+    <span class="ev">vitest: "preserves a user-edited providerText" PASS; applyVoiceTake không ghi userEdited</span></li>
+</ol>
+
+<h2>C · Các quyết định chờ bạn (không gấp — khi nào nghe xong rồi hẵng chốt)</h2>
+<div class="warnbox">
+<b>D8 — Giọng kênh:</b> 7 stems tonight dùng giọng mặc định (Rachel, multilingual_v2) — <b>khác</b> giọng cũ trong voice.mp3 (không lưu metadata voice nào). Nghe xem giữ Rachel hay casting lại (audition vài voice rồi chốt identity cho kênh).
+</div>
+<div class="warnbox">
+<b>Pacing:</b> video giờ dài <b>41.84s</b> (trước 31s) vì 5 beat bị voice kéo dài (voice-first timing — beat fit theo narration). beat-05 đặc biệt: 11.4s (câu "The fix: stop validating…" đọc chậm kịch tính). Nghe xem chấp nhận nhịp này hay muốn: (a) tăng speed setting, (b) rút gọn script beat đó (đã flag rewrite ×&gt;1.05), (c) giữ nguyên.
+</div>
+<div class="warnbox">
+<b>QC edit:</b> duration-gate đã đổi thành "±15% HOẶC WER-verified" — nghĩa là đọc nhanh/chậm nhưng đủ từ = PASS. Đồng ý logic này không? (Spec D-checklist trên review page cũng có mục này.)
+</div>
+
+<h2>D · Trạng thái hệ thống (đã verify — không cần kiểm tra lại trừ khi nghi)</h2>
+<ol class="steps">
+  <li>Tests: <b>184/184 vitest</b> (12 mới cho voice pipeline) + <b>5/5</b> node tests + typecheck sạch.
+    <span class="ev">chạy 28/08 ~05:00, output PASS</span></li>
+  <li>Servers: Composer :5174 (HTTP 200) + LangGraph agent :2025 (HTTP 200) — cả hai persistent.
+    <span class="ev">probe trước khi mở browser</span></li>
+  <li>CI: các commit đêm nay đều xanh 3 workflows (Secret Scan / Studio E2E / CI).
+    <span class="ev">gh run list: 34dae68 + 121df64 success</span></li>
+  <li>Fix kèm theo: sync-project-public giờ copy audio/voice/assets (26 files) — hết copy tay; render-window sync stems vào bundle (render smoke 0-5s có audio).</li>
+  <li>Sóng âm: RMS peaks + bins theo duration (24-160 bars) + cache decode 1 lần/file. Nếu vẫn thấy kỳ ở clip nào → note lại clip đó (mã nguồn đã render theo peaks thật, fallback chỉ khi fetch fail).</li>
+</ol>
+
+<h2>E · Việc tiếp theo trong hàng đợi (không chờ bạn — chỉ để bạn biết)</h2>
+<ol class="steps">
+  <li><b>M1b</b>: take switcher (nghe từng take trong Audio tab + đổi take), QC badge đỏ trên timeline clip, breathPad per-beat đã cóffield breathPadSec.</li>
+  <li><b>M2</b>: image sourcing — query cards trong Image tab (parity như voice), re-search + candidate grid + provenance.</li>
+  <li><b>M3</b>: validate_edit_doc + generate_timeline + mini-video 10-15s zero-manual (produce loop khép kín).</li>
+  <li><b>fonts→regen bridge</b> (từ font A/B đêm qua): đổi fonts.* knob → regen geometry — queue sau M2.</li>
+</ol>
+
+<div class="footer">
+  Chi tiết kỹ thuật: <code>docs/PIPELINE-PRODUCTION-SPEC.md</code> §9 progress log ·
+  Spec review: <code>docs/PIPELINE-PRODUCTION-SPEC-REVIEW.html</code> ·
+  Rules mới: AGENTS.md #17 (readiness) + #18 (pre-verified checklists) ·
+  Backup edit-doc: <code>projects/ai-dialogue-therapy/05-edit-doc.json.bak-*</code> (nếu muốn quay lại 1-voice-31s)
+</div>
+
+</body>
+</html>

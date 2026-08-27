@@ -133,6 +133,24 @@ export function syncRuntimePublic(slug, editorDocPath) {
       }
     }
   }
+  // Voice stems (PIPELINE-PRODUCTION-SPEC v3): same no-rebuild sync —
+  // regenerated stems must reach renders without a manual copy.
+  const voiceFrom = path.join(composerRoot, "public", slug, "voice");
+  const voiceTo = path.join(composerRoot, bundleCacheDir(), "public", slug, "voice");
+  if (fs.existsSync(voiceFrom)) {
+    fs.mkdirSync(voiceTo, { recursive: true });
+    for (const entry of fs.readdirSync(voiceFrom, { withFileTypes: true })) {
+      if (entry.name.startsWith(".")) continue;
+      const s = path.join(voiceFrom, entry.name);
+      const t = path.join(voiceTo, entry.name);
+      if (entry.isDirectory()) {
+        fs.mkdirSync(t, { recursive: true });
+        for (const f of fs.readdirSync(s)) {
+          if (!f.startsWith(".")) fs.copyFileSync(path.join(s, f), path.join(t, f));
+        }
+      } else if (fs.statSync(s).isFile()) fs.copyFileSync(s, t);
+    }
+  }
   // Copy the runtime-fetched JSONs into the bundle's public dir so renders
   // pick up style/edit-doc changes WITHOUT a bundle rebuild.
   const srcs = [

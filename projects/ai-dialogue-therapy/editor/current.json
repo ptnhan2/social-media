@@ -4,7 +4,7 @@
   "width": 1920,
   "height": 1080,
   "fps": 30,
-  "durationSec": 31,
+  "durationSec": 41.836,
   "tracks": [
     {
       "id": "video-main",
@@ -41,7 +41,7 @@
           "trackId": "video-main",
           "range": {
             "startSec": 0,
-            "endSec": 3.5
+            "endSec": 4.437
           },
           "label": "name the false solution",
           "source": {
@@ -62,8 +62,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "reframe the unit of editing",
           "source": {
@@ -84,8 +84,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "show evidence in context",
           "source": {
@@ -106,8 +106,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "give a repeatable process",
           "source": {
@@ -128,8 +128,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "compare the meaningful choice",
           "source": {
@@ -150,8 +150,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
+            "startSec": 27.749,
+            "endSec": 31.749
           },
           "label": "name the failure mode",
           "source": {
@@ -172,8 +172,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "deliver the usable rule",
           "source": {
@@ -194,8 +194,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 26,
-            "endSec": 31
+            "startSec": 36.836,
+            "endSec": 41.836
           },
           "label": "resolve with a memorable rule",
           "source": {
@@ -249,7 +249,7 @@
           "trackId": "visual-1",
           "range": {
             "startSec": 0,
-            "endSec": 3.5
+            "endSec": 4.437
           },
           "label": "bg",
           "source": {
@@ -270,7 +270,7 @@
             "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -287,8 +287,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "bg",
           "source": {
@@ -309,7 +309,7 @@
             "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -326,8 +326,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "bg-image",
           "source": {
@@ -370,7 +370,7 @@
               "filter": "treatments.host-reflection.filter"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -387,8 +387,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "bg",
           "source": {
@@ -409,7 +409,7 @@
             "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -426,8 +426,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "bg",
           "source": {
@@ -448,46 +448,7 @@
             "background": "#050508",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": false,
-            "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "therapy-beat-06:bg",
-          "kind": "element",
-          "trackId": "visual-1",
-          "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
-          },
-          "label": "bg",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:bg"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "coral",
-          "metadata": {
-            "id": "therapy-beat-06:bg",
-            "type": "shape",
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 1,
-            "z": 0,
-            "opacity": 1,
-            "background": "#050508",
-            "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -504,8 +465,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "bg-image",
           "source": {
@@ -548,7 +509,7 @@
               "filter": "treatments.host-reflection.filter"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -565,8 +526,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 26,
-            "endSec": 31
+            "startSec": 36.836,
+            "endSec": 41.836
           },
           "label": "bg",
           "source": {
@@ -587,7 +548,46 @@
             "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "therapy-beat-06:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 27.749,
+            "endSec": 31.749
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "therapy-beat-06",
+            "elementId": "therapy-beat-06:bg"
+          },
+          "parentClipId": "clip:beat:therapy-beat-06",
+          "color": "coral",
+          "metadata": {
+            "id": "therapy-beat-06:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "#050508",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -604,8 +604,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
+            "startSec": 27.749,
+            "endSec": 31.749
           },
           "label": "bg-image",
           "source": {
@@ -645,7 +645,7 @@
             "animDurationSec": 0.7,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -695,7 +695,7 @@
           "trackId": "visual-2",
           "range": {
             "startSec": 0,
-            "endSec": 3.5
+            "endSec": 4.437
           },
           "label": "bg-glow",
           "source": {
@@ -719,7 +719,7 @@
             "animDurationSec": 0.45,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -736,8 +736,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "bg-glow",
           "source": {
@@ -758,7 +758,7 @@
             "background": "radial-gradient(circle at 50% 46%, #ff6b3512, transparent 42%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -775,8 +775,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "light-overlay",
           "source": {
@@ -801,7 +801,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -818,8 +818,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "bg-glow",
           "source": {
@@ -840,7 +840,7 @@
             "background": "radial-gradient(circle at 50% 60%, #ff6b3514, transparent 48%)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -857,8 +857,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-0-card",
           "source": {
@@ -896,49 +896,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": false,
-            "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "therapy-beat-06:vignette",
-          "kind": "element",
-          "trackId": "visual-2",
-          "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
-          },
-          "label": "vignette",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:vignette"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "coral",
-          "metadata": {
-            "id": "therapy-beat-06:vignette",
-            "type": "shape",
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 1,
-            "z": 3,
-            "opacity": 1,
-            "background": "radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, #ff6b3522, transparent 55%)",
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
-            "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -955,8 +913,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "light-overlay",
           "source": {
@@ -981,7 +939,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -998,8 +956,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 26,
-            "endSec": 31
+            "startSec": 36.836,
+            "endSec": 41.836
           },
           "label": "bg-glow",
           "source": {
@@ -1023,7 +981,49 @@
             "animDurationSec": 0.45,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "therapy-beat-06:vignette",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 27.749,
+            "endSec": 31.749
+          },
+          "label": "vignette",
+          "source": {
+            "beatId": "therapy-beat-06",
+            "elementId": "therapy-beat-06:vignette"
+          },
+          "parentClipId": "clip:beat:therapy-beat-06",
+          "color": "coral",
+          "metadata": {
+            "id": "therapy-beat-06:vignette",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 3,
+            "opacity": 1,
+            "background": "radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.78) 100%), linear-gradient(90deg, #ff6b3522, transparent 55%)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1068,12 +1068,65 @@
       },
       "clips": [
         {
+          "id": "therapy-beat-06:label",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 28.049,
+            "endSec": 31.749
+          },
+          "label": "the shift",
+          "source": {
+            "beatId": "therapy-beat-06",
+            "elementId": "therapy-beat-06:label"
+          },
+          "parentClipId": "clip:beat:therapy-beat-06",
+          "color": "amber",
+          "metadata": {
+            "id": "therapy-beat-06:label",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.05,
+            "w": 0.3125,
+            "h": 0.027777777777777776,
+            "text": "the shift",
+            "z": 14,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 2.56,
+            "color": "#ff6b35",
+            "textShadow": "0 2px 10px #000",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
+            "startSec": 0.3,
+            "styleSource": {
+              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
+              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
           "id": "therapy-beat-01:accent-line",
           "kind": "element",
           "trackId": "visual-3",
           "range": {
             "startSec": 0,
-            "endSec": 3.5
+            "endSec": 4.437
           },
           "label": "accent-line",
           "source": {
@@ -1106,7 +1159,7 @@
               "height": "treatments.chapter-card.accentLine.height"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1123,8 +1176,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "center-label",
           "source": {
@@ -1149,7 +1202,7 @@
             "boxShadow": "0 0 38px #00d4ff28",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1166,8 +1219,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "vignette",
           "source": {
@@ -1191,7 +1244,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1208,8 +1261,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "progress-track",
           "source": {
@@ -1241,7 +1294,7 @@
             "revealDurationSec": 0.001,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1257,8 +1310,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-0-img-bg",
           "source": {
@@ -1292,7 +1345,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1309,8 +1362,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "vignette",
           "source": {
@@ -1334,7 +1387,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1351,8 +1404,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 26,
-            "endSec": 31
+            "startSec": 36.836,
+            "endSec": 41.836
           },
           "label": "accent-line",
           "source": {
@@ -1385,65 +1438,12 @@
               "height": "treatments.chapter-card.accentLine.height"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
             "isTextClip": false,
             "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
-          "id": "therapy-beat-06:label",
-          "kind": "element",
-          "trackId": "visual-3",
-          "range": {
-            "startSec": 18.8,
-            "endSec": 22.5
-          },
-          "label": "the shift",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:label"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "amber",
-          "metadata": {
-            "id": "therapy-beat-06:label",
-            "type": "text",
-            "x": 0.036458333333333336,
-            "y": 0.05,
-            "w": 0.3125,
-            "h": 0.027777777777777776,
-            "text": "the shift",
-            "z": 14,
-            "opacity": 1,
-            "fontSize": 16,
-            "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
-            "textTransform": "uppercase",
-            "letterSpacing": 2.56,
-            "color": "#ff6b35",
-            "textShadow": "0 2px 10px #000",
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
-            "startSec": 0.3,
-            "styleSource": {
-              "fontSize": "treatments.cinematic-metaphor.label.fontSize",
-              "fontWeight": "treatments.cinematic-metaphor.label.fontWeight"
-            },
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": true,
-            "elementType": "text"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1488,7 +1488,7 @@
           "trackId": "visual-4",
           "range": {
             "startSec": 0,
-            "endSec": 3.5
+            "endSec": 4.437
           },
           "label": "sounds like therapy",
           "source": {
@@ -1509,7 +1509,8 @@
             "opacity": 1,
             "fontSize": 24,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4,
             "letterSpacing": 1.92,
             "textTransform": "uppercase",
             "textAlign": "center",
@@ -1522,7 +1523,7 @@
               "fontSize": "treatments.chapter-card.subtitle.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1539,8 +1540,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "therapy",
           "source": {
@@ -1561,7 +1562,7 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.6,
             "color": "#00d4ff",
@@ -1572,7 +1573,7 @@
               "fontSize": "treatments.semantic-diagram.centerLabel.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1589,8 +1590,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "letterbox-top",
           "source": {
@@ -1614,7 +1615,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1631,8 +1632,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "step-0-dot",
           "source": {
@@ -1667,7 +1668,7 @@
             "animDurationSec": 0.6,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1684,8 +1685,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-0-img",
           "source": {
@@ -1721,7 +1722,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1734,54 +1735,12 @@
           "hidden": false
         },
         {
-          "id": "therapy-beat-06:letterbox-bottom",
-          "kind": "element",
-          "trackId": "visual-4",
-          "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
-          },
-          "label": "letterbox-bottom",
-          "source": {
-            "beatId": "therapy-beat-06",
-            "elementId": "therapy-beat-06:letterbox-bottom"
-          },
-          "parentClipId": "clip:beat:therapy-beat-06",
-          "color": "coral",
-          "metadata": {
-            "id": "therapy-beat-06:letterbox-bottom",
-            "type": "shape",
-            "x": 0,
-            "y": 0.8398148148148148,
-            "w": 1,
-            "h": 0.16018518518518518,
-            "z": 13,
-            "opacity": 1,
-            "background": "#050508",
-            "animIn": "fade",
-            "animEasing": "cubic-out",
-            "animDurationSec": 0.7,
-            "startSec": 0,
-            "styleResolvedAt": {
-              "storeVersion": 73,
-              "seed": "isaac-forensic-2026-08"
-            },
-            "rotation": 0,
-            "isTextClip": false,
-            "elementType": "shape"
-          },
-          "linkedClipIds": [],
-          "locked": false,
-          "muted": false,
-          "hidden": false
-        },
-        {
           "id": "therapy-beat-07:letterbox-top",
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "letterbox-top",
           "source": {
@@ -1805,7 +1764,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1822,8 +1781,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 26,
-            "endSec": 31
+            "startSec": 36.836,
+            "endSec": 41.836
           },
           "label": "follow the thread",
           "source": {
@@ -1844,7 +1803,8 @@
             "opacity": 1,
             "fontSize": 24,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4,
             "letterSpacing": 1.92,
             "textTransform": "uppercase",
             "textAlign": "center",
@@ -1857,7 +1817,7 @@
               "fontSize": "treatments.chapter-card.subtitle.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1870,12 +1830,54 @@
           "hidden": false
         },
         {
+          "id": "therapy-beat-06:letterbox-bottom",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 27.749,
+            "endSec": 31.749
+          },
+          "label": "letterbox-bottom",
+          "source": {
+            "beatId": "therapy-beat-06",
+            "elementId": "therapy-beat-06:letterbox-bottom"
+          },
+          "parentClipId": "clip:beat:therapy-beat-06",
+          "color": "coral",
+          "metadata": {
+            "id": "therapy-beat-06:letterbox-bottom",
+            "type": "shape",
+            "x": 0,
+            "y": 0.8398148148148148,
+            "w": 1,
+            "h": 0.16018518518518518,
+            "z": 13,
+            "opacity": 1,
+            "background": "#050508",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.7,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
           "id": "therapy-beat-06:subtitle",
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 18.5,
-            "endSec": 22.5
+            "startSec": 27.749,
+            "endSec": 31.749
           },
           "label": "Therapy office → battlefield",
           "source": {
@@ -1897,7 +1899,7 @@
             "fontSize": 28,
             "fontStyle": "italic",
             "fontWeight": 900,
-            "fontFamily": "Georgia, serif",
+            "fontFamily": "editorial",
             "textAlign": "center",
             "color": "#ff6b35",
             "textShadow": "0 3px 12px #000, 0 0 20px rgba(0,0,0,0.7)",
@@ -1909,7 +1911,7 @@
               "fontSize": "treatments.cinematic-metaphor.subtitle.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -1959,7 +1961,7 @@
           "trackId": "visual-5",
           "range": {
             "startSec": 0,
-            "endSec": 3.5
+            "endSec": 4.437
           },
           "label": "AI\nDialogue",
           "source": {
@@ -1971,16 +1973,16 @@
           "metadata": {
             "id": "therapy-beat-01:title",
             "type": "text",
-            "x": 0.32369791666666664,
+            "x": 0.3450520833333333,
             "y": 0.36342592592592593,
-            "w": 0.35260416666666666,
+            "w": 0.3098958333333333,
             "h": 0.1925925925925926,
             "text": "AI\nDialogue",
             "z": 15,
             "opacity": 1,
             "fontSize": 96,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "display",
             "textTransform": "uppercase",
             "lineHeight": 1.08,
             "letterSpacing": 7.68,
@@ -2003,7 +2005,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2020,8 +2022,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "follow the thread",
           "source": {
@@ -2042,14 +2044,15 @@
             "opacity": 1,
             "fontSize": 14,
             "fontWeight": 400,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.2,
             "textTransform": "uppercase",
             "letterSpacing": 1.12,
             "textAlign": "right",
             "color": "rgba(244,232,207,0.45)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2066,8 +2069,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "letterbox-bottom",
           "source": {
@@ -2091,7 +2094,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2108,8 +2111,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "step-0-box",
           "source": {
@@ -2143,7 +2146,7 @@
             "animDurationSec": 0.6,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2160,8 +2163,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "alternative",
           "source": {
@@ -2182,7 +2185,7 @@
             "opacity": 1,
             "fontSize": 13,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.56,
             "color": "#ffffff",
@@ -2192,7 +2195,7 @@
             "startSec": 0,
             "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2209,8 +2212,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "letterbox-bottom",
           "source": {
@@ -2234,7 +2237,7 @@
             "animDurationSec": 0.5,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2251,8 +2254,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 26,
-            "endSec": 31
+            "startSec": 36.836,
+            "endSec": 41.836
           },
           "label": "Break the\nPattern",
           "source": {
@@ -2264,16 +2267,16 @@
           "metadata": {
             "id": "therapy-beat-08:title",
             "type": "text",
-            "x": 0.30442708333333335,
+            "x": 0.32838541666666665,
             "y": 0.36342592592592593,
-            "w": 0.39114583333333336,
+            "w": 0.34322916666666664,
             "h": 0.1925925925925926,
             "text": "Break the\nPattern",
             "z": 15,
             "opacity": 1,
             "fontSize": 96,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "display",
             "textTransform": "uppercase",
             "lineHeight": 1.08,
             "letterSpacing": 7.68,
@@ -2296,7 +2299,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2345,8 +2348,8 @@
           "kind": "element",
           "trackId": "visual-6",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "accent-line",
           "source": {
@@ -2373,7 +2376,7 @@
             "animDurationSec": 0.55,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2390,8 +2393,8 @@
           "kind": "element",
           "trackId": "visual-6",
           "range": {
-            "startSec": 7,
-            "endSec": 10.5
+            "startSec": 7.937,
+            "endSec": 11.631
           },
           "label": "RLHF rewards empathy — every c",
           "source": {
@@ -2412,7 +2415,7 @@
             "opacity": 1,
             "fontSize": 27,
             "fontStyle": "italic",
-            "fontFamily": "Georgia, serif",
+            "fontFamily": "editorial",
             "textAlign": "center",
             "color": "#ff6b35",
             "fontWeight": 900,
@@ -2426,7 +2429,7 @@
               "fontWeight": "treatments.host-reflection.subtitle.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2443,8 +2446,8 @@
           "kind": "element",
           "trackId": "visual-6",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "step 4 / 4",
           "source": {
@@ -2465,14 +2468,15 @@
             "opacity": 1,
             "fontSize": 14,
             "fontWeight": 400,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.2,
             "textTransform": "uppercase",
             "letterSpacing": 1.12,
             "textAlign": "right",
             "color": "rgba(244,232,207,.5)",
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2489,8 +2493,8 @@
           "kind": "element",
           "trackId": "visual-6",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "Therapy",
           "source": {
@@ -2511,7 +2515,7 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "textAlign": "left",
             "color": "#ec6a5e",
@@ -2534,7 +2538,7 @@
               "fontSize": "treatments.candidate-comparison.candidate.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2551,8 +2555,8 @@
           "kind": "element",
           "trackId": "visual-6",
           "range": {
-            "startSec": 22.5,
-            "endSec": 26
+            "startSec": 31.749,
+            "endSec": 36.836
           },
           "label": "Permission to interrupt. Permi",
           "source": {
@@ -2573,7 +2577,7 @@
             "opacity": 1,
             "fontSize": 27,
             "fontStyle": "italic",
-            "fontFamily": "Georgia, serif",
+            "fontFamily": "editorial",
             "textAlign": "center",
             "color": "#ff6b35",
             "fontWeight": 900,
@@ -2587,7 +2591,7 @@
               "fontWeight": "treatments.host-reflection.subtitle.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2636,8 +2640,8 @@
           "kind": "element",
           "trackId": "visual-7",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "what AI defaults to",
           "source": {
@@ -2658,7 +2662,8 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 3.2399999999999998,
             "textAlign": "left",
@@ -2674,7 +2679,7 @@
               "fontWeight": "treatments.semantic-diagram.kicker.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2691,8 +2696,8 @@
           "kind": "element",
           "trackId": "visual-7",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "Train",
           "source": {
@@ -2713,7 +2718,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -2735,7 +2741,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2752,8 +2758,8 @@
           "kind": "element",
           "trackId": "visual-7",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "\"I hear your frustration\"",
           "source": {
@@ -2773,7 +2779,7 @@
             "z": 7,
             "opacity": 0.7,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "textAlign": "left",
@@ -2792,7 +2798,7 @@
             "groupOriginX": 403.6,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2841,8 +2847,8 @@
           "kind": "element",
           "trackId": "visual-8",
           "range": {
-            "startSec": 3.5,
-            "endSec": 7
+            "startSec": 4.437,
+            "endSec": 7.937
           },
           "label": "The 3 Therapy Patterns",
           "source": {
@@ -2863,7 +2869,8 @@
             "opacity": 1,
             "fontSize": 46,
             "fontWeight": 900,
-            "fontFamily": "Arial Black, Arial, sans-serif",
+            "fontFamily": "display",
+            "lineHeight": 1.4087,
             "color": "#ffffff",
             "textAlign": "left",
             "letterSpacing": -0.92,
@@ -2880,7 +2887,7 @@
               "fontWeight": "treatments.semantic-diagram.title.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2897,8 +2904,8 @@
           "kind": "element",
           "trackId": "visual-8",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "on human feedback",
           "source": {
@@ -2918,7 +2925,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -2935,7 +2942,7 @@
             "animDurationSec": 0.6,
             "startSec": 0,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -2952,8 +2959,8 @@
           "kind": "element",
           "trackId": "visual-8",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "compare",
           "source": {
@@ -2974,7 +2981,8 @@
             "opacity": 1,
             "fontSize": 17,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 3.06,
             "textAlign": "left",
@@ -2990,7 +2998,7 @@
               "fontWeight": "treatments.candidate-comparison.kicker.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3039,8 +3047,8 @@
           "kind": "element",
           "trackId": "visual-9",
           "range": {
-            "startSec": 3.7,
-            "endSec": 7
+            "startSec": 4.6370000000000005,
+            "endSec": 7.937
           },
           "label": "node-0-box",
           "source": {
@@ -3086,7 +3094,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3103,8 +3111,8 @@
           "kind": "element",
           "trackId": "visual-9",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "give a repeatable process",
           "source": {
@@ -3125,7 +3133,8 @@
             "opacity": 1,
             "fontSize": 17,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 3.06,
             "textAlign": "left",
@@ -3141,7 +3150,7 @@
               "fontWeight": "treatments.process-timeline.kicker.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3158,8 +3167,8 @@
           "kind": "element",
           "trackId": "visual-9",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "Same Scene, Two Voices",
           "source": {
@@ -3180,7 +3189,8 @@
             "opacity": 1,
             "fontSize": 44,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "display",
+            "lineHeight": 1.4222,
             "color": "#ffffff",
             "textAlign": "left",
             "textGradient": {
@@ -3200,7 +3210,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3249,8 +3259,8 @@
           "kind": "element",
           "trackId": "visual-10",
           "range": {
-            "startSec": 3.7,
-            "endSec": 7
+            "startSec": 4.6370000000000005,
+            "endSec": 7.937
           },
           "label": "Validation",
           "source": {
@@ -3271,9 +3281,10 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
+            "lineHeight": 1.44,
             "textAlign": "left",
             "color": "#ff6b35",
             "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
@@ -3298,7 +3309,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3315,8 +3326,8 @@
           "kind": "element",
           "trackId": "visual-10",
           "range": {
-            "startSec": 10.5,
-            "endSec": 14
+            "startSec": 11.631,
+            "endSec": 16.393
           },
           "label": "The RLHF Loop",
           "source": {
@@ -3337,7 +3348,8 @@
             "opacity": 1,
             "fontSize": 48,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "display",
+            "lineHeight": 1.4222,
             "color": "#ffffff",
             "textAlign": "left",
             "textGradient": {
@@ -3357,7 +3369,7 @@
               "textGradientEnd": "colors.gradientEnd"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3374,8 +3386,8 @@
           "kind": "element",
           "trackId": "visual-10",
           "range": {
-            "startSec": 14,
-            "endSec": 18.5
+            "startSec": 16.393,
+            "endSec": 27.749000000000002
           },
           "label": "Which sounds like fiction?",
           "source": {
@@ -3395,7 +3407,7 @@
             "z": 10,
             "opacity": 0.68,
             "fontSize": 18,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "fontWeight": 900,
             "textAlign": "left",
@@ -3408,7 +3420,7 @@
               "fontSize": "treatments.candidate-comparison.criteria.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3457,8 +3469,8 @@
           "kind": "element",
           "trackId": "visual-11",
           "range": {
-            "startSec": 3.7,
-            "endSec": 7
+            "startSec": 4.6370000000000005,
+            "endSec": 7.937
           },
           "label": "\"I hear you\"",
           "source": {
@@ -3478,7 +3490,7 @@
             "z": 11,
             "opacity": 0.78,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "fontWeight": 900,
@@ -3503,7 +3515,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3520,8 +3532,8 @@
           "kind": "element",
           "trackId": "visual-11",
           "range": {
-            "startSec": 10.68,
-            "endSec": 14
+            "startSec": 11.811,
+            "endSec": 16.393
           },
           "label": "step-1-dot",
           "source": {
@@ -3556,7 +3568,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.18,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3573,8 +3585,8 @@
           "kind": "element",
           "trackId": "visual-11",
           "range": {
-            "startSec": 14.22,
-            "endSec": 18.5
+            "startSec": 16.613,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-1-card",
           "source": {
@@ -3611,7 +3623,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3660,8 +3672,8 @@
           "kind": "element",
           "trackId": "visual-12",
           "range": {
-            "startSec": 3.7,
-            "endSec": 7
+            "startSec": 4.6370000000000005,
+            "endSec": 7.937
           },
           "label": "node-0-dot",
           "source": {
@@ -3699,7 +3711,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.2,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3716,8 +3728,8 @@
           "kind": "element",
           "trackId": "visual-12",
           "range": {
-            "startSec": 10.68,
-            "endSec": 14
+            "startSec": 11.811,
+            "endSec": 16.393
           },
           "label": "step-1-box",
           "source": {
@@ -3751,7 +3763,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.18,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3768,8 +3780,8 @@
           "kind": "element",
           "trackId": "visual-12",
           "range": {
-            "startSec": 14.22,
-            "endSec": 18.5
+            "startSec": 16.613,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-1-img-bg",
           "source": {
@@ -3802,7 +3814,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3851,8 +3863,8 @@
           "kind": "element",
           "trackId": "visual-13",
           "range": {
-            "startSec": 4.1,
-            "endSec": 7
+            "startSec": 5.037,
+            "endSec": 7.937
           },
           "label": "edge-0",
           "source": {
@@ -3898,7 +3910,7 @@
               "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3914,8 +3926,8 @@
           "kind": "element",
           "trackId": "visual-13",
           "range": {
-            "startSec": 10.68,
-            "endSec": 14
+            "startSec": 11.811,
+            "endSec": 16.393
           },
           "label": "Reward",
           "source": {
@@ -3936,7 +3948,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -3958,7 +3971,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -3975,8 +3988,8 @@
           "kind": "element",
           "trackId": "visual-13",
           "range": {
-            "startSec": 14.22,
-            "endSec": 18.5
+            "startSec": 16.613,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-1-img",
           "source": {
@@ -4011,7 +4024,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4060,8 +4073,8 @@
           "kind": "element",
           "trackId": "visual-14",
           "range": {
-            "startSec": 4.2,
-            "endSec": 7
+            "startSec": 5.1370000000000005,
+            "endSec": 7.937
           },
           "label": "character-presence",
           "source": {
@@ -4073,15 +4086,15 @@
           "metadata": {
             "id": "therapy-beat-02:character-presence",
             "type": "image",
-            "x": 0.7984375,
-            "y": 0.265,
+            "x": 0.6784374999999999,
+            "y": 0.06499999999999999,
             "w": 0.103125,
             "h": 0.35,
             "src": "isaacverse-final/character/poses/present.png",
             "z": 30,
             "opacity": 0.95,
             "fit": "cover",
-            "animIn": "p-pop",
+            "animIn": "p-slide-u",
             "animDurationSec": 0.6,
             "startSec": 0.7,
             "filter": "drop-shadow(0 6px 22px rgba(0,0,0,0.6)) drop-shadow(0 0 26px #ff6b3533)",
@@ -4090,7 +4103,7 @@
               "opacity": "treatments.semantic-diagram.characterPresence"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4107,8 +4120,8 @@
           "kind": "element",
           "trackId": "visual-14",
           "range": {
-            "startSec": 10.68,
-            "endSec": 14
+            "startSec": 11.811,
+            "endSec": 16.393
           },
           "label": "empathetic responses",
           "source": {
@@ -4128,7 +4141,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -4145,7 +4158,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.18,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4162,8 +4175,8 @@
           "kind": "element",
           "trackId": "visual-14",
           "range": {
-            "startSec": 14.22,
-            "endSec": 18.5
+            "startSec": 16.613,
+            "endSec": 27.749000000000002
           },
           "label": "selected",
           "source": {
@@ -4184,7 +4197,7 @@
             "opacity": 1,
             "fontSize": 13,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.56,
             "color": "#f2b84b",
@@ -4194,7 +4207,7 @@
             "startSec": 0.22,
             "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4243,8 +4256,8 @@
           "kind": "element",
           "trackId": "visual-15",
           "range": {
-            "startSec": 4.3,
-            "endSec": 7
+            "startSec": 5.237,
+            "endSec": 7.937
           },
           "label": "node-1-box",
           "source": {
@@ -4290,7 +4303,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4307,8 +4320,8 @@
           "kind": "element",
           "trackId": "visual-15",
           "range": {
-            "startSec": 10.85,
-            "endSec": 14
+            "startSec": 11.981,
+            "endSec": 16.393
           },
           "label": "progress-fill",
           "source": {
@@ -4349,7 +4362,7 @@
               "gradientStops": "treatments.process-timeline.progress"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4365,8 +4378,8 @@
           "kind": "element",
           "trackId": "visual-15",
           "range": {
-            "startSec": 14.22,
-            "endSec": 18.5
+            "startSec": 16.613,
+            "endSec": 27.749000000000002
           },
           "label": "Fiction",
           "source": {
@@ -4387,7 +4400,7 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "textAlign": "left",
             "color": "#f2b84b",
@@ -4409,7 +4422,7 @@
               "fontSize": "treatments.candidate-comparison.candidate.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4458,8 +4471,8 @@
           "kind": "element",
           "trackId": "visual-16",
           "range": {
-            "startSec": 4.3,
-            "endSec": 7
+            "startSec": 5.237,
+            "endSec": 7.937
           },
           "label": "Reflection",
           "source": {
@@ -4480,9 +4493,10 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
+            "lineHeight": 1.44,
             "textAlign": "left",
             "color": "#ff6b35",
             "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
@@ -4507,7 +4521,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4524,8 +4538,8 @@
           "kind": "element",
           "trackId": "visual-16",
           "range": {
-            "startSec": 10.86,
-            "endSec": 14
+            "startSec": 11.991,
+            "endSec": 16.393
           },
           "label": "step-2-dot",
           "source": {
@@ -4560,7 +4574,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.36,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4577,8 +4591,8 @@
           "kind": "element",
           "trackId": "visual-16",
           "range": {
-            "startSec": 14.22,
-            "endSec": 18.5
+            "startSec": 16.613,
+            "endSec": 27.749000000000002
           },
           "label": "\"You always do this\"",
           "source": {
@@ -4598,7 +4612,7 @@
             "z": 8,
             "opacity": 0.7,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "textAlign": "left",
@@ -4616,7 +4630,7 @@
             "groupOriginX": 960,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4665,8 +4679,8 @@
           "kind": "element",
           "trackId": "visual-17",
           "range": {
-            "startSec": 4.3,
-            "endSec": 7
+            "startSec": 5.237,
+            "endSec": 7.937
           },
           "label": "\"It sounds like\"",
           "source": {
@@ -4686,7 +4700,7 @@
             "z": 11,
             "opacity": 0.78,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "fontWeight": 900,
@@ -4711,7 +4725,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4728,8 +4742,8 @@
           "kind": "element",
           "trackId": "visual-17",
           "range": {
-            "startSec": 10.86,
-            "endSec": 14
+            "startSec": 11.991,
+            "endSec": 16.393
           },
           "label": "step-2-box",
           "source": {
@@ -4763,7 +4777,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.36,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4780,8 +4794,8 @@
           "kind": "element",
           "trackId": "visual-17",
           "range": {
-            "startSec": 14.44,
-            "endSec": 18.5
+            "startSec": 16.833000000000002,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-2-card",
           "source": {
@@ -4819,7 +4833,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4868,8 +4882,8 @@
           "kind": "element",
           "trackId": "visual-18",
           "range": {
-            "startSec": 4.3,
-            "endSec": 7
+            "startSec": 5.237,
+            "endSec": 7.937
           },
           "label": "node-1-dot",
           "source": {
@@ -4907,7 +4921,7 @@
             "animDurationSec": 0.75,
             "startSec": 0.8,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4924,8 +4938,8 @@
           "kind": "element",
           "trackId": "visual-18",
           "range": {
-            "startSec": 10.86,
-            "endSec": 14
+            "startSec": 11.991,
+            "endSec": 16.393
           },
           "label": "Default",
           "source": {
@@ -4946,7 +4960,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -4968,7 +4983,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -4985,8 +5000,8 @@
           "kind": "element",
           "trackId": "visual-18",
           "range": {
-            "startSec": 14.44,
-            "endSec": 18.5
+            "startSec": 16.833000000000002,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-2-img-bg",
           "source": {
@@ -5020,7 +5035,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5069,8 +5084,8 @@
           "kind": "element",
           "trackId": "visual-19",
           "range": {
-            "startSec": 4.7,
-            "endSec": 7
+            "startSec": 5.6370000000000005,
+            "endSec": 7.937
           },
           "label": "edge-1",
           "source": {
@@ -5116,7 +5131,7 @@
               "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5132,8 +5147,8 @@
           "kind": "element",
           "trackId": "visual-19",
           "range": {
-            "startSec": 10.86,
-            "endSec": 14
+            "startSec": 11.991,
+            "endSec": 16.393
           },
           "label": "to therapy speak",
           "source": {
@@ -5153,7 +5168,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -5170,7 +5185,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.36,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5187,8 +5202,8 @@
           "kind": "element",
           "trackId": "visual-19",
           "range": {
-            "startSec": 14.44,
-            "endSec": 18.5
+            "startSec": 16.833000000000002,
+            "endSec": 27.749000000000002
           },
           "label": "candidate-2-img",
           "source": {
@@ -5224,7 +5239,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5273,8 +5288,8 @@
           "kind": "element",
           "trackId": "visual-20",
           "range": {
-            "startSec": 4.9,
-            "endSec": 7
+            "startSec": 5.837,
+            "endSec": 7.937
           },
           "label": "node-2-box",
           "source": {
@@ -5320,7 +5335,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5337,8 +5352,8 @@
           "kind": "element",
           "trackId": "visual-20",
           "range": {
-            "startSec": 11.04,
-            "endSec": 14
+            "startSec": 12.171,
+            "endSec": 16.393
           },
           "label": "step-3-dot",
           "source": {
@@ -5373,7 +5388,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.54,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5390,8 +5405,8 @@
           "kind": "element",
           "trackId": "visual-20",
           "range": {
-            "startSec": 14.44,
-            "endSec": 18.5
+            "startSec": 16.833000000000002,
+            "endSec": 27.749000000000002
           },
           "label": "alternative",
           "source": {
@@ -5412,7 +5427,7 @@
             "opacity": 1,
             "fontSize": 13,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 1.56,
             "color": "#ffffff",
@@ -5422,7 +5437,7 @@
             "startSec": 0.44,
             "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5471,8 +5486,8 @@
           "kind": "element",
           "trackId": "visual-21",
           "range": {
-            "startSec": 4.9,
-            "endSec": 7
+            "startSec": 5.837,
+            "endSec": 7.937
           },
           "label": "Labeling",
           "source": {
@@ -5493,9 +5508,10 @@
             "opacity": 1,
             "fontSize": 20,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "letterSpacing": 0.8,
+            "lineHeight": 1.44,
             "textAlign": "left",
             "color": "#ff6b35",
             "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
@@ -5520,7 +5536,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5537,8 +5553,8 @@
           "kind": "element",
           "trackId": "visual-21",
           "range": {
-            "startSec": 11.04,
-            "endSec": 14
+            "startSec": 12.171,
+            "endSec": 16.393
           },
           "label": "step-3-box",
           "source": {
@@ -5572,7 +5588,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.54,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5589,8 +5605,8 @@
           "kind": "element",
           "trackId": "visual-21",
           "range": {
-            "startSec": 14.44,
-            "endSec": 18.5
+            "startSec": 16.833000000000002,
+            "endSec": 27.749000000000002
           },
           "label": "Fiction",
           "source": {
@@ -5611,7 +5627,7 @@
             "opacity": 1,
             "fontSize": 18,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "textTransform": "uppercase",
             "textAlign": "left",
             "color": "#61d7e8",
@@ -5634,7 +5650,7 @@
               "fontSize": "treatments.candidate-comparison.candidate.fontSize"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5683,8 +5699,8 @@
           "kind": "element",
           "trackId": "visual-22",
           "range": {
-            "startSec": 4.9,
-            "endSec": 7
+            "startSec": 5.837,
+            "endSec": 7.937
           },
           "label": "\"feeling sad\"",
           "source": {
@@ -5704,7 +5720,7 @@
             "z": 11,
             "opacity": 0.78,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "fontWeight": 900,
@@ -5729,7 +5745,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5746,8 +5762,8 @@
           "kind": "element",
           "trackId": "visual-22",
           "range": {
-            "startSec": 11.04,
-            "endSec": 14
+            "startSec": 12.171,
+            "endSec": 16.393
           },
           "label": "Break",
           "source": {
@@ -5768,7 +5784,8 @@
             "opacity": 1,
             "fontSize": 16,
             "fontWeight": 900,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
             "textTransform": "uppercase",
             "letterSpacing": 0.64,
             "textAlign": "center",
@@ -5790,7 +5807,7 @@
               "fontWeight": "treatments.process-timeline.step.fontWeight"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5807,8 +5824,8 @@
           "kind": "element",
           "trackId": "visual-22",
           "range": {
-            "startSec": 14.44,
-            "endSec": 18.5
+            "startSec": 16.833000000000002,
+            "endSec": 27.749000000000002
           },
           "label": "\"Prove it.\"",
           "source": {
@@ -5828,7 +5845,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 13,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.35,
             "textAlign": "left",
@@ -5847,7 +5864,7 @@
             "groupOriginX": 1516.4,
             "groupOriginY": 626.4000000000001,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5896,8 +5913,8 @@
           "kind": "element",
           "trackId": "visual-23",
           "range": {
-            "startSec": 4.9,
-            "endSec": 7
+            "startSec": 5.837,
+            "endSec": 7.937
           },
           "label": "node-2-dot",
           "source": {
@@ -5935,7 +5952,7 @@
             "animDurationSec": 0.75,
             "startSec": 1.4,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -5952,8 +5969,8 @@
           "kind": "element",
           "trackId": "visual-23",
           "range": {
-            "startSec": 11.04,
-            "endSec": 14
+            "startSec": 12.171,
+            "endSec": 16.393
           },
           "label": "the pattern",
           "source": {
@@ -5973,7 +5990,7 @@
             "z": 9,
             "opacity": 0.7,
             "fontSize": 12,
-            "fontFamily": "Arial, sans-serif",
+            "fontFamily": "body",
             "color": "#ffffff",
             "lineHeight": 1.3,
             "textAlign": "center",
@@ -5990,7 +6007,7 @@
             "animDurationSec": 0.6,
             "startSec": 0.54,
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -6039,8 +6056,8 @@
           "kind": "element",
           "trackId": "visual-24",
           "range": {
-            "startSec": 11.2,
-            "endSec": 14
+            "startSec": 12.331,
+            "endSec": 16.393
           },
           "label": "character-presence",
           "source": {
@@ -6052,15 +6069,15 @@
           "metadata": {
             "id": "therapy-beat-04:character-presence",
             "type": "image",
-            "x": 0.24083333333333337,
-            "y": 0.6599999999999999,
-            "w": 0.058333333333333334,
-            "h": 0.2,
+            "x": 0.44869791666666664,
+            "y": 0.6449999999999999,
+            "w": 0.10260416666666666,
+            "h": 0.35,
             "src": "isaacverse-final/character/poses/point-right.png",
             "z": 30,
             "opacity": 0.95,
             "fit": "cover",
-            "animIn": "p-peek",
+            "animIn": "p-slide-r",
             "animDurationSec": 0.6,
             "startSec": 0.7,
             "filter": "drop-shadow(0 6px 22px rgba(0,0,0,0.6)) drop-shadow(0 0 26px #ff6b3533)",
@@ -6069,7 +6086,7 @@
               "opacity": "treatments.process-timeline.characterPresence"
             },
             "styleResolvedAt": {
-              "storeVersion": 73,
+              "storeVersion": 74,
               "seed": "isaac-forensic-2026-08"
             },
             "rotation": 0,
@@ -6292,20 +6309,524 @@
       },
       "clips": [
         {
-          "id": "clip:voice:ai-dialogue-therapy:voice",
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-01",
           "kind": "voice",
           "trackId": "voice",
           "range": {
             "startSec": 0,
-            "endSec": 31
+            "endSec": 4.436999999999999
           },
           "label": "Voiceover",
-          "source": {},
+          "source": {
+            "beatId": "therapy-beat-01"
+          },
           "color": "cyan",
           "metadata": {
-            "src": "ai-dialogue-therapy/audio/voice.mp3",
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-01.wav",
             "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
-            "segmentId": "ai-dialogue-therapy:voice"
+            "sentenceText": "Ever noticed AI characters always sound like they're in a therapy session?",
+            "providerText": "Ever noticed AI characters always sound like they're in a therapy session?",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-01",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:20",
+              "durationSec": 4.086708,
+              "expectedSec": 4.087000000000001,
+              "peakDb": -1.5,
+              "meanDb": -16.8,
+              "lufs": -16.22,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "4.09s vs 4.09s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.22 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:20.641Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-02",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 4.437,
+            "endSec": 8.131
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "therapy-beat-02"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-02.wav",
+            "transcript": "I hear you saying that. That must be really hard.",
+            "sentenceText": "I hear you saying that. That must be really hard.",
+            "providerText": "I hear you saying that. That must be really hard.",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-02",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:24",
+              "durationSec": 3.343688,
+              "expectedSec": 3.15,
+              "peakDb": -1.6,
+              "meanDb": -16.7,
+              "lufs": -16.3,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.6 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "3.34s vs 3.15s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.3 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:24.552Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-03",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 7.937,
+            "endSec": 11.631
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "therapy-beat-03"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-03.wav",
+            "transcript": "This isn't a bug — it's RLHF's fingerprint.",
+            "sentenceText": "This isn't a bug — it's RLHF's fingerprint.",
+            "providerText": "This isn't a bug — it's RLHF's fingerprint.",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-03",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:28",
+              "durationSec": 3.343688,
+              "expectedSec": 3.344,
+              "peakDb": -1.5,
+              "meanDb": -16.9,
+              "lufs": -16.47,
+              "tailSilenceSec": 0.3311460000000004,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "3.34s vs 3.34s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.33s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.47 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:28.591Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-04",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 11.631,
+            "endSec": 16.393
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "therapy-beat-04"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-04.wav",
+            "transcript": "Models get rewarded for empathy, so every character becomes a counselor.",
+            "sentenceText": "Models get rewarded for empathy, so every character becomes a counselor.",
+            "providerText": "Models get rewarded for empathy, so every character becomes a counselor.",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-04",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:32",
+              "durationSec": 4.411792,
+              "expectedSec": 4.412000000000001,
+              "peakDb": -1.6,
+              "meanDb": -16.8,
+              "lufs": -16.58,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.6 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "4.41s vs 4.41s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.58 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:32.851Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-05",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 16.393,
+            "endSec": 26.913000000000004
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "therapy-beat-05"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-05.wav",
+            "transcript": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
+            "sentenceText": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
+            "providerText": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-05",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:37",
+              "durationSec": 10.170354,
+              "expectedSec": 11.005999999999998,
+              "peakDb": -1.5,
+              "meanDb": -16.8,
+              "lufs": -16.22,
+              "tailSilenceSec": 0.3142499999999995,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "10.17s vs 11.01s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.31s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.22 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:37.891Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-06",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 27.749,
+            "endSec": 30.56
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "therapy-beat-05"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-06.wav",
+            "transcript": "Great dialogue is conflict, not comfort.",
+            "sentenceText": "Great dialogue is conflict, not comfort.",
+            "providerText": "Great dialogue is conflict, not comfort.",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-06",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:41",
+              "durationSec": 2.461313,
+              "expectedSec": 3.65,
+              "peakDb": -1.7,
+              "meanDb": -17.1,
+              "lufs": -16.44,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.7 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "2.46s vs 3.65s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.44 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:42.193Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ai-dialogue-therapy:voice:therapy-beat-07",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 31.749,
+            "endSec": 36.836
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "therapy-beat-07"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-07.wav",
+            "transcript": "That's when AI dialogue starts sounding like fiction instead of a support group.",
+            "sentenceText": "That's when AI dialogue starts sounding like fiction instead of a support group.",
+            "providerText": "That's when AI dialogue starts sounding like fiction instead of a support group.",
+            "segmentId": "ai-dialogue-therapy:voice:therapy-beat-07",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-28T02:17:45",
+              "durationSec": 4.736875,
+              "expectedSec": 4.737,
+              "peakDb": -1.5,
+              "meanDb": -17,
+              "lufs": -16.55,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "4.74s vs 4.74s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness",
+                  "pass": true,
+                  "value": "-16.55 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "scribe-qc-pass",
+            "regeneratedAt": "2026-08-27T19:17:46.394Z",
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            }
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6321,7 +6842,7 @@
       "kind": "beat",
       "range": {
         "startSec": 0,
-        "endSec": 3.5
+        "endSec": 4.437
       },
       "label": "name the false solution",
       "source": {
@@ -6346,8 +6867,8 @@
       "id": "marker:beat:therapy-beat-02",
       "kind": "beat",
       "range": {
-        "startSec": 3.5,
-        "endSec": 7
+        "startSec": 4.437,
+        "endSec": 7.937
       },
       "label": "reframe the unit of editing",
       "source": {
@@ -6358,8 +6879,8 @@
       "id": "marker:motion:therapy-beat-02:phase-flow",
       "kind": "motion-phase",
       "range": {
-        "startSec": 3.7,
-        "endSec": 6.5
+        "startSec": 4.6370000000000005,
+        "endSec": 7.437
       },
       "label": "pattern reveal",
       "source": {
@@ -6372,8 +6893,8 @@
       "id": "marker:beat:therapy-beat-03",
       "kind": "beat",
       "range": {
-        "startSec": 7,
-        "endSec": 10.5
+        "startSec": 7.937,
+        "endSec": 11.631
       },
       "label": "show evidence in context",
       "source": {
@@ -6384,8 +6905,8 @@
       "id": "marker:motion:therapy-beat-03:phase-push",
       "kind": "motion-phase",
       "range": {
-        "startSec": 7,
-        "endSec": 10.5
+        "startSec": 7.937,
+        "endSec": 11.437000000000001
       },
       "label": "slow push",
       "source": {
@@ -6398,8 +6919,8 @@
       "id": "marker:beat:therapy-beat-04",
       "kind": "beat",
       "range": {
-        "startSec": 10.5,
-        "endSec": 14
+        "startSec": 11.631,
+        "endSec": 16.393
       },
       "label": "give a repeatable process",
       "source": {
@@ -6410,8 +6931,8 @@
       "id": "marker:motion:therapy-beat-04:phase-flow",
       "kind": "motion-phase",
       "range": {
-        "startSec": 10.7,
-        "endSec": 13.299999999999999
+        "startSec": 11.831,
+        "endSec": 14.431
       },
       "label": "workflow reveal",
       "source": {
@@ -6424,8 +6945,8 @@
       "id": "marker:beat:therapy-beat-05",
       "kind": "beat",
       "range": {
-        "startSec": 14,
-        "endSec": 18.5
+        "startSec": 16.393,
+        "endSec": 27.749000000000002
       },
       "label": "compare the meaningful choice",
       "source": {
@@ -6436,8 +6957,8 @@
       "id": "marker:motion:therapy-beat-05:phase-compare",
       "kind": "motion-phase",
       "range": {
-        "startSec": 14.3,
-        "endSec": 17.8
+        "startSec": 16.693,
+        "endSec": 20.193
       },
       "label": "side by side",
       "source": {
@@ -6450,8 +6971,8 @@
       "id": "marker:beat:therapy-beat-06",
       "kind": "beat",
       "range": {
-        "startSec": 18.5,
-        "endSec": 22.5
+        "startSec": 27.749,
+        "endSec": 31.749
       },
       "label": "name the failure mode",
       "source": {
@@ -6462,8 +6983,8 @@
       "id": "marker:motion:therapy-beat-06:phase-push",
       "kind": "motion-phase",
       "range": {
-        "startSec": 18.5,
-        "endSec": 22
+        "startSec": 27.749,
+        "endSec": 31.249
       },
       "label": "slow push",
       "source": {
@@ -6476,8 +6997,8 @@
       "id": "marker:beat:therapy-beat-07",
       "kind": "beat",
       "range": {
-        "startSec": 22.5,
-        "endSec": 26
+        "startSec": 31.749,
+        "endSec": 36.836
       },
       "label": "deliver the usable rule",
       "source": {
@@ -6488,8 +7009,8 @@
       "id": "marker:motion:therapy-beat-07:phase-push",
       "kind": "motion-phase",
       "range": {
-        "startSec": 22.5,
-        "endSec": 26
+        "startSec": 31.749,
+        "endSec": 35.248999999999995
       },
       "label": "final push",
       "source": {
@@ -6502,8 +7023,8 @@
       "id": "marker:beat:therapy-beat-08",
       "kind": "beat",
       "range": {
-        "startSec": 26,
-        "endSec": 31
+        "startSec": 36.836,
+        "endSec": 41.836
       },
       "label": "resolve with a memorable rule",
       "source": {
@@ -6627,8 +7148,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 6,
-    "updatedAt": "2026-08-26T19:44:51.164Z"
+    "revision": 15,
+    "updatedAt": "2026-08-27T19:17:46.395Z"
   },
   "schemaVersion": 3
 }

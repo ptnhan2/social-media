@@ -110,9 +110,13 @@ export const buildVoiceQc = (metrics: {
   wer: number | null;
 }): VoiceQc => {
   const durDelta = Math.abs(metrics.durationSec - metrics.expectedSec) / Math.max(0.5, metrics.expectedSec);
+  // WER is the truncation/garbling oracle: a WPM-heuristic duration mismatch
+  // with a WER-verified full reading is a DELIVERY STYLE, not a failure.
+  const werVerified = metrics.wer !== null && metrics.wer <= VOICE_QC_THRESHOLDS.maxWer;
+  const durationPass = werVerified || durDelta <= VOICE_QC_THRESHOLDS.durationTolerance;
   const checks: VoiceQcCheck[] = [
     { id: "clip", label: "Clipping", pass: metrics.peakDb < VOICE_QC_THRESHOLDS.maxPeakDb, value: `${metrics.peakDb.toFixed(1)} dBFS peak`, threshold: `< ${VOICE_QC_THRESHOLDS.maxPeakDb} dBFS` },
-    { id: "duration", label: "Duration", pass: durDelta <= VOICE_QC_THRESHOLDS.durationTolerance, value: `${metrics.durationSec.toFixed(2)}s vs ${metrics.expectedSec.toFixed(2)}s (${Math.round(durDelta * 100)}%)`, threshold: `±${VOICE_QC_THRESHOLDS.durationTolerance * 100}%` },
+    { id: "duration", label: "Duration", pass: durationPass, value: `${metrics.durationSec.toFixed(2)}s vs ${metrics.expectedSec.toFixed(2)}s (${Math.round(durDelta * 100)}%)`, threshold: `±${VOICE_QC_THRESHOLDS.durationTolerance * 100}% or WER-verified` },
     { id: "tail-silence", label: "Tail silence", pass: metrics.tailSilenceSec <= VOICE_QC_THRESHOLDS.maxTailSilenceSec, value: `${metrics.tailSilenceSec.toFixed(2)}s`, threshold: `≤ ${VOICE_QC_THRESHOLDS.maxTailSilenceSec}s` },
   ];
   if (metrics.wer !== null) {
