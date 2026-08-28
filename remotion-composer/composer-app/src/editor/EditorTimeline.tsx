@@ -479,6 +479,9 @@ export const EditorTimeline: React.FC<EditorTimelineProps> = (props) => {
                             />
                             <span className="editor-clip-label">{clip.label}</span>
                             <small className="editor-clip-meta">{clipMetaLabel(clip)}</small>
+                            {clip.kind === "voice" && (clip.metadata.qc as { pass?: boolean } | undefined)?.pass === false ? (
+                              <span className="editor-clip-qc fail" title="Voice QC FAIL — chọn clip và mở tab Audio để xem chi tiết">QC</span>
+                            ) : null}
                             {typeof clip.metadata.src === "string" && !clip.metadata.isTextClip ? <span className="editor-clip-img-preview" style={{ backgroundImage: `url(${clip.metadata.src})` }} /> : null}
                             {clip.metadata.elementType === "shape" && typeof clip.metadata.background === "string" ? <span className="editor-clip-shape-preview" style={{ background: clip.metadata.background }} /> : null}
                             {clip.kind === "voice" || clip.kind === "music" || clip.kind === "audio-event" ? <TimelineWaveform src={typeof clip.metadata.src === "string" ? clip.metadata.src : undefined} range={clip.range} /> : null}

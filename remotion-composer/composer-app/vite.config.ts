@@ -348,6 +348,86 @@ export default defineConfig({
         // override keeps user-edited providerText). Job pattern mirrors
         // /api/render: the UI and the agent call the SAME endpoint.
         const voiceJobs = new Map<string, { status: "regenerating" | "done" | "error"; startedAt: number; message?: string; result?: unknown }>();
+        // Stage F take switcher (M1b): the status poll is shared with regen —
+        // both jobs land in the same map, one endpoint to watch.
+        server.middlewares.use("/api/project/audio-take/status", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const jobId = url.searchParams.get("jobId") || "";
+          const job = voiceJobs.get(jobId);
+          if (!job) { sendJson(res, 404, { error: "Unknown voice job" }); return; }
+          sendJson(res, 200, {
+            status: job.status,
+            elapsedSec: Math.round((Date.now() - job.startedAt) / 1000),
+            message: job.message,
+            result: job.status === "done" ? job.result : undefined,
+          });
+        });
+        // Stage F: switch the clip to an EXISTING take (no new TTS calls) —
+        // re-run post-chain + QC on the take, apply via the same voice_apply
+        // bridge op. UI take switcher and agent tool call the SAME endpoint.
+        server.middlewares.use("/api/project/audio-take", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const clipId = String(body.clipId || "");
+              const takeId = String(body.takeId || "");
+              if (!projectId || !clipId || !takeId) throw new Error("projectId, clipId and takeId are required");
+              const snapshot = PROJECT_STORE.load(projectId);
+              const editorDoc = snapshot.editorDoc;
+              if (!editorDoc) throw new Error("Project has no editor document");
+              const clip = editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
+              if (!clip) throw new Error(`Unknown clip: ${clipId}`);
+              if (clip.kind !== "voice") throw new Error(`Clip ${clipId} is not a voice clip`);
+              const md = clip.metadata as Record<string, unknown>;
+              const breathPadSec = typeof body.breathPadSec === "number" ? body.breathPadSec : (typeof md.breathPadSec === "number" ? md.breathPadSec : undefined);
+              const payload = { projectId, clipId, takeId, ...(breathPadSec !== undefined ? { breathPadSec } : {}) };
+              const jobId = `voice-take-${Date.now()}`;
+              voiceJobs.set(jobId, { status: "regenerating", startedAt: Date.now() });
+              const child = spawn(PY, [resolve(WORKSPACE_ROOT, "tools/audio/voice_take.py")], {
+                cwd: WORKSPACE_ROOT, windowsHide: true,
+                stdio: ["pipe", "pipe", "pipe"],
+              });
+              let stdout = ""; let stderr = "";
+              child.stdout.on("data", (c: Buffer) => stdout += c.toString());
+              child.stderr.on("data", (c: Buffer) => stderr += c.toString());
+              child.stdin.write(JSON.stringify(payload));
+              child.stdin.end();
+              child.on("error", (error) => {
+                voiceJobs.set(jobId, { status: "error", startedAt: Date.now(), message: error.message });
+              });
+              child.on("exit", (code) => {
+                const job = voiceJobs.get(jobId);
+                if (!job) return;
+                if (code !== 0) {
+                  job.status = "error";
+                  job.message = `voice_take exited ${code}: ${(stderr || stdout).slice(0, 300)}`;
+                  return;
+                }
+                try {
+                  const jsonSpan = (text: string) => text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1);
+                  const result = JSON.parse(jsonSpan(stdout) || "{}");
+                  if (!result.ok) throw new Error(result.error || "voice_take reported failure");
+                  const apply = spawnSync(process.execPath, [
+                    "scripts/editor-ops.mjs", "--project", projectId, "--op", "voice_apply",
+                    "--clipId", clipId, "--result", JSON.stringify(result),
+                  ], { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
+                  if (apply.status !== 0) throw new Error(String(apply.stderr || apply.stdout).slice(0, 300));
+                  const publicSync = spawnSync(process.execPath, ["scripts/sync-project-public.mjs", projectId], { cwd: COMPOSER_ROOT, windowsHide: true, stdio: "ignore", timeout: 60000 });
+                  if (publicSync.status !== 0) throw new Error("stem applied but public sync failed — preview audio may be stale");
+                  job.status = "done";
+                  job.result = { ...result, applied: JSON.parse(jsonSpan(apply.stdout) || "{}") };
+                } catch (error) {
+                  job.status = "error";
+                  job.message = error instanceof Error ? error.message : String(error);
+                }
+              });
+              sendJson(res, 200, { jobId, clipId, takeId });
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
+          });
+        });
         server.middlewares.use("/api/project/audio-regen/status", (req, res) => {
           const url = new URL(req.url || "/", "http://composer.local");
           const jobId = url.searchParams.get("jobId") || "";

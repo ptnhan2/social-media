@@ -1003,6 +1003,28 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .ve-prop-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
 .ve-prop-delete { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
 .ve-prop-delete:hover { background: #991b1b; }
+/* M1b take switcher: one row per recorded take — name, pass badge, duration,
+   play + select. Rows are grid-aligned so columns never collide at any panel
+   width. */
+.ve-take-list { display: flex; flex-direction: column; gap: 4px; }
+.ve-take-row {
+  display: grid; grid-template-columns: minmax(24px, 1fr) 18px 38px 24px 52px;
+  align-items: center; gap: 4px; padding: 3px 6px; border-radius: 5px;
+  background: #111827; border: 1px solid #1f2937; font-size: 11px; color: #d8dee9;
+}
+.ve-take-row.current { border-color: #2dd4a0; background: #0d1f18; }
+.ve-take-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ve-take-badge { text-align: center; font-weight: 700; }
+.ve-take-badge.pass { color: #2dd4a0; }
+.ve-take-badge.fail { color: #ff9b9b; }
+.ve-take-duration { color: #6b7280; text-align: right; font-variant-numeric: tabular-nums; }
+.ve-take-play, .ve-take-select {
+  border: 1px solid #1f2937; background: #1f2937; color: #d8dee9;
+  border-radius: 4px; font-size: 10px; line-height: 1; padding: 4px 0; cursor: pointer;
+}
+.ve-take-play:hover:not(:disabled), .ve-take-select:hover:not(:disabled) { background: #374151; }
+.ve-take-play:disabled, .ve-take-select:disabled { opacity: 0.45; cursor: default; }
+.ve-take-row.current .ve-take-select { color: #2dd4a0; border-color: #14532d; background: #0d1f18; cursor: default; }
 .ve-timeline-resizer { height: 5px; cursor: row-resize; background: #1f2937; flex-shrink: 0; }
 .ve-timeline-resizer:hover { background: #374151; }
 .ve-timeline-dock { overflow: hidden; min-height: 0; }
@@ -1270,6 +1292,14 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .editor-clip-text-preview { display: none !important; }
 .editor-clip-img-preview { z-index: 0; }
 .editor-clip-shape-preview { position: absolute; top: 50%; right: 8px; z-index: 1; margin: 0; transform: translateY(-50%); pointer-events: none; }
+/* M1b QC badge: voice clip whose QC verdict failed gets a red flag at the
+   clip's top-right — visible even when the label collapses. */
+.editor-clip-qc {
+  position: absolute; top: 2px; right: 2px; z-index: 2;
+  padding: 1px 3px; border-radius: 3px; font: 700 8px/1.2 Inter, "Segoe UI", system-ui, sans-serif;
+  pointer-events: none; letter-spacing: .03em;
+}
+.editor-clip-qc.fail { background: #7f1d1d; color: #fecaca; border: 1px solid #b91c1c; }
 
 @container (min-width: 120px) {
   .editor-clip-label { font-size: 10px !important; }

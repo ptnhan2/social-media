@@ -225,11 +225,73 @@ export const setEditorClipMetadata = (editor: EditorDoc, clipId: string, changes
   };
 };
 
+/** Voice-first ripple (PIPELINE-PRODUCTION-SPEC v3, M1b stage H): stretch a
+ *  voice clip to `newEndSec`, and when that overflows the paired beat clip,
+ *  grow the beat + its end-aligned overlays and shift every downstream clip
+ *  forward so nothing overlaps. Machine op — shifted clips get NO userEdited
+ *  marks (a sync from the edit-doc plan may legitimately recompute them).
+ *  Only ever grows: audio shorter than the slot leaves the timeline alone
+ *  (shrinking is the user's trim, never a machine decision). Revision bump
+ *  is the CALLER's job (one bump per user-visible op, not per helper). */
+const rippleVoiceTiming = (editor: EditorDoc, voiceClipId: string, newEndSec: number): { editor: EditorDoc; rippleDeltaSec: number } => {
+  const location = locateClip(editor, voiceClipId);
+  const voiceClip = location.clip;
+  const beatId = voiceClip.source.beatId;
+  // The boundary this voice clip currently lives inside: the paired beat clip
+  // on the main track (fallback: the voice clip's own end).
+  const beatClip = beatId
+    ? editor.tracks.flatMap((track) => track.clips).find((clip) => clip.kind === "beat" && clip.source.beatId === beatId)
+    : undefined;
+  const boundary = Math.max(beatClip?.range.endSec ?? 0, voiceClip.range.endSec);
+  const epsilon = 0.001;
+  const delta = Math.max(0, newEndSec - boundary);
+  const stretchedVoiceEnd = Math.max(voiceClip.range.startSec + 0.5, newEndSec);
+
+  if (delta <= epsilon) {
+    // Fits inside the current beat — just stretch the voice clip.
+    if (Math.abs(voiceClip.range.endSec - stretchedVoiceEnd) <= epsilon) return { editor, rippleDeltaSec: 0 };
+    return {
+      editor: {
+        ...editor,
+        tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
+          ...track,
+          clips: track.clips.map((clip) => clip.id === voiceClipId ? { ...clip, range: { ...clip.range, endSec: stretchedVoiceEnd } } : clip),
+        }),
+      },
+      rippleDeltaSec: 0,
+    };
+  }
+
+  const tracks = editor.tracks.map((track) => ({
+    ...track,
+    clips: track.clips.map((clip) => {
+      if (clip.id === voiceClipId) return { ...clip, range: { ...clip.range, endSec: stretchedVoiceEnd } };
+      const endsAtBoundary = clip.range.endSec >= boundary - epsilon && clip.range.startSec < boundary - epsilon;
+      const belongsToBeat = Boolean(beatId) && clip.source.beatId === beatId;
+      if (belongsToBeat && endsAtBoundary) {
+        // The beat itself + its end-aligned overlays grow with the narration.
+        return { ...clip, range: { ...clip.range, endSec: clip.range.endSec + delta } };
+      }
+      if (clip.range.startSec >= boundary - epsilon) {
+        // Downstream clips (later beats, overlays, voice, sfx) shift forward.
+        return { ...clip, range: { startSec: clip.range.startSec + delta, endSec: clip.range.endSec + delta } };
+      }
+      return clip;
+    }),
+  }));
+  const durationSec = Math.max(0, ...tracks.flatMap((track) => track.clips.map((clip) => clip.range.endSec)));
+  return {
+    editor: { ...editor, tracks, durationSec: Math.max(editor.durationSec, durationSec) },
+    rippleDeltaSec: delta,
+  };
+};
+
 /** Voice pipeline stage F-H apply (PIPELINE-PRODUCTION-SPEC v3): write the
  *  regen result onto the voice clip — stem src, QC verdict, selected take —
- *  and stretch the clip to the measured stem duration (voice-first timing).
- *  Machine write: does NOT set userEdited, and the machine-owned fields are
- *  marked overridden so a later sync regenerates around them. providerText is
+ *  and stretch the clip to the measured stem duration (voice-first timing,
+ *  with ripple so downstream beats never get overlapped). Machine write:
+ *  does NOT set userEdited, and the machine-owned fields are marked
+ *  overridden so a later sync regenerates around them. providerText is
  *  deliberately untouched — the user's edit (if any) survives by design. */
 export const applyVoiceTake = (
   editor: EditorDoc,
@@ -240,16 +302,16 @@ export const applyVoiceTake = (
   const clip = location.clip;
   if (clip.kind !== "voice") throw new Error(`clip ${clipId} is not a voice clip`);
   if (!(result.stemDurationSec > 0)) throw new Error("stemDurationSec must be > 0");
-  const pad = result.breathPadSec ?? 0.3;
-  const newEnd = Math.max(clip.range.startSec + 0.5, clip.range.startSec + result.stemDurationSec + pad);
+  const pad = result.breathPadSec ?? (typeof clip.metadata.breathPadSec === "number" ? clip.metadata.breathPadSec : 0.3);
+  const { editor: rippled } = rippleVoiceTiming(editor, clipId, clip.range.startSec + result.stemDurationSec + pad);
   const machineFields = ["src", "qc", "takeId", "takes", "regeneratedAt"];
+  const target = locateClip(rippled, clipId);
   return {
-    ...editor,
-    tracks: editor.tracks.map((track, trackIndex) => trackIndex !== location.trackIndex ? track : {
+    ...rippled,
+    tracks: rippled.tracks.map((track, trackIndex) => trackIndex !== target.trackIndex ? track : {
       ...track,
       clips: track.clips.map((c) => c.id !== clipId ? c : {
         ...c,
-        range: { ...c.range, endSec: newEnd },
         metadata: {
           ...c.metadata,
           src: result.src,
@@ -257,6 +319,7 @@ export const applyVoiceTake = (
           takeId: result.takeId,
           ...(result.takes !== undefined ? { takes: result.takes } : {}),
           regeneratedAt: new Date().toISOString(),
+          ...(result.breathPadSec !== undefined ? { breathPadSec: result.breathPadSec } : {}),
           ...(result.providerText !== undefined && !(c.metadata.overridden as Record<string, boolean> | undefined)?.providerText
             ? { providerText: result.providerText }
             : {}),
@@ -266,7 +329,38 @@ export const applyVoiceTake = (
         },
       }),
     }),
-    revision: updateRevision(editor),
+    revision: updateRevision(rippled),
+  };
+};
+
+/** User-facing retime (M1b stage H): the user changes breathPadSec in the
+ *  Audio tab — the voice clip retimes to stemDuration + new pad immediately
+ *  (rippling downstream beats when the narration now overflows). The stem
+ *  duration comes from the last QC measurement; without one the current
+ *  range minus the old pad is the best estimate. */
+export const retimeVoiceClip = (editor: EditorDoc, clipId: string, breathPadSec: number): EditorDoc => {
+  const location = locateClip(editor, clipId);
+  const clip = location.clip;
+  if (clip.kind !== "voice") throw new Error(`clip ${clipId} is not a voice clip`);
+  const pad = Math.max(0, breathPadSec);
+  const qc = clip.metadata.qc as { durationSec?: number } | undefined;
+  const oldPad = typeof clip.metadata.breathPadSec === "number" ? clip.metadata.breathPadSec : 0.3;
+  const stemDuration = typeof qc?.durationSec === "number" && qc.durationSec > 0
+    ? qc.durationSec
+    : Math.max(0.5, clip.range.endSec - clip.range.startSec - oldPad);
+  const { editor: rippled } = rippleVoiceTiming(editor, clipId, clip.range.startSec + stemDuration + pad);
+  const target = locateClip(rippled, clipId);
+  return {
+    ...rippled,
+    tracks: rippled.tracks.map((track, trackIndex) => trackIndex !== target.trackIndex ? track : {
+      ...track,
+      clips: track.clips.map((c) => {
+        if (c.id !== clipId) return c;
+        const touched = userTouched(c, ["breathPadSec", "range"]);
+        return { ...touched, metadata: { ...touched.metadata, breathPadSec: pad } };
+      }),
+    }),
+    revision: updateRevision(rippled),
   };
 };
 

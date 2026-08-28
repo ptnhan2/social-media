@@ -27,6 +27,7 @@ import {
   moveClipKeyframe,
   removeClipKeyframe,
   renameEditorTrack,
+  retimeVoiceClip,
   rippleEditorDoc,
   setClipKeyframeEasing,
   setEditorClipAudioState,
@@ -938,6 +939,10 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
               onSetSpeed={(speed) => void handleSetSpeed(speed)}
               poseList={poseList}
               onAddPresence={handleAddPresence}
+              onRetimeVoice={(breathPadSec) => {
+                const next = retimeVoiceClip(editorDoc, selectedClip.id, breathPadSec);
+                void saveRevision(next, "Retimed voice clip");
+              }}
             />
           ) : (
             <div className="ve-project-panel">
