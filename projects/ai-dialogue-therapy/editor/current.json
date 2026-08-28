@@ -765,6 +765,13 @@
                 "url": "https://unsplash.com/photos/a-man-and-woman-looking-at-each-other-cYKM1FrPUnI"
               }
             ],
+            "imageProvenance": {
+              "selectedAt": "2026-08-28T18:12:35.128Z",
+              "source": "unsplash",
+              "photographer": "Vitaly Gariev",
+              "alt": "a man sitting at a table talking to a woman",
+              "url": "https://unsplash.com/photos/a-man-sitting-at-a-table-talking-to-a-woman-yrSta3T5GDs"
+            },
             "userEdited": true,
             "overridden": {
               "query": true,
@@ -773,13 +780,8 @@
               "src": true,
               "imageProvenance": true
             },
-            "imageProvenance": {
-              "selectedAt": "2026-08-28T18:12:35.128Z",
-              "source": "unsplash",
-              "photographer": "Vitaly Gariev",
-              "alt": "a man sitting at a table talking to a woman",
-              "url": "https://unsplash.com/photos/a-man-sitting-at-a-table-talking-to-a-woman-yrSta3T5GDs"
-            }
+            "stale": true,
+            "staleReason": "editdoc"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6443,7 +6445,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 0,
-            "endSec": 4.062
+            "endSec": 4.437
           },
           "label": "Voiceover",
           "source": {
@@ -6498,14 +6500,6 @@
               ]
             },
             "takeId": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-02",
-            "regeneratedAt": "2026-08-28T17:58:40.346Z",
-            "overridden": {
-              "src": true,
-              "qc": true,
-              "takeId": true,
-              "takes": true,
-              "regeneratedAt": true
-            },
             "takes": [
               {
                 "id": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-01",
@@ -6535,7 +6529,18 @@
                 "score": 20.6808,
                 "pass": false
               }
-            ]
+            ],
+            "regeneratedAt": "2026-08-28T17:58:40.346Z",
+            "userEdited": true,
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true
+            },
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6548,7 +6553,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 4.437,
-            "endSec": 8.131
+            "endSec": 7.937
           },
           "label": "Voiceover",
           "source": {
@@ -6604,13 +6609,16 @@
             },
             "takeId": "scribe-qc-pass",
             "regeneratedAt": "2026-08-27T19:17:24.552Z",
+            "userEdited": true,
             "overridden": {
               "src": true,
               "qc": true,
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6679,6 +6687,7 @@
             },
             "takeId": "scribe-qc-pass",
             "regeneratedAt": "2026-08-27T19:17:28.591Z",
+            "userEdited": true,
             "overridden": {
               "src": true,
               "qc": true,
@@ -6686,7 +6695,8 @@
               "takes": true,
               "regeneratedAt": true
             },
-            "userEdited": true
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6755,13 +6765,16 @@
             },
             "takeId": "scribe-qc-pass",
             "regeneratedAt": "2026-08-27T19:17:32.851Z",
+            "userEdited": true,
             "overridden": {
               "src": true,
               "qc": true,
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6774,7 +6787,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 16.393,
-            "endSec": 26.853
+            "endSec": 27.749
           },
           "label": "Voiceover",
           "source": {
@@ -6785,7 +6798,7 @@
             "src": "ai-dialogue-therapy/voice/stems/clip_voice_ai-dialogue-therapy_voice_therapy-beat-05.wav",
             "transcript": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
             "sentenceText": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
-            "providerText": "[assertive] The fix: STOP validating. STOP reflecting. STOP labeling. Give your characters PERMISSION to interrupt, DISAGREE, and LIE.",
+            "providerText": "[assertive] The fix: STOP validating. STOP reflecting. STOP labeling. Give your characters PERMISSION to interrupt, DISAGREE, and lie.",
             "segmentId": "ai-dialogue-therapy:voice:therapy-beat-05",
             "qc": {
               "pass": true,
@@ -6829,14 +6842,6 @@
               ]
             },
             "takeId": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-02",
-            "regeneratedAt": "2026-08-28T17:20:47.370Z",
-            "overridden": {
-              "src": true,
-              "qc": true,
-              "takeId": true,
-              "takes": true,
-              "regeneratedAt": true
-            },
             "takes": [
               {
                 "id": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-01",
@@ -6866,7 +6871,19 @@
                 "score": 15.72,
                 "pass": true
               }
-            ]
+            ],
+            "regeneratedAt": "2026-08-28T17:20:47.370Z",
+            "userEdited": true,
+            "overridden": {
+              "src": true,
+              "qc": true,
+              "takeId": true,
+              "takes": true,
+              "regeneratedAt": true,
+              "providerText": true
+            },
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6879,7 +6896,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 27.749,
-            "endSec": 30.56
+            "endSec": 31.749
           },
           "label": "Voiceover",
           "source": {
@@ -6935,13 +6952,16 @@
             },
             "takeId": "scribe-qc-pass",
             "regeneratedAt": "2026-08-27T19:17:42.193Z",
+            "userEdited": true,
             "overridden": {
               "src": true,
               "qc": true,
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -7010,13 +7030,16 @@
             },
             "takeId": "scribe-qc-pass",
             "regeneratedAt": "2026-08-27T19:17:46.394Z",
+            "userEdited": true,
             "overridden": {
               "src": true,
               "qc": true,
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "stale": true,
+            "staleReason": "style"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -7338,8 +7361,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 30,
-    "updatedAt": "2026-08-28T18:12:36.989Z"
+    "revision": 35,
+    "updatedAt": "2026-08-28T18:55:03.943Z"
   },
   "schemaVersion": 3
 }

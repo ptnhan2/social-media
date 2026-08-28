@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { EditPatch } from "../../../shared/isaacverse/schema";
 import type { IsaacVerseEditDoc } from "../../../shared/isaacverse/types";
 import { applyPatch } from "../../../shared/isaacverse/feedback";
-import { validateEditDoc, validateEditPatch } from "../../../shared/isaacverse/validate";
+import { validateEditDoc, validateEditDocTimeline, validateEditPatch } from "../../../shared/isaacverse/validate";
 
 const doc = (): IsaacVerseEditDoc => ({
   id: "final-edit-v001",
@@ -133,5 +133,49 @@ describe("canonical IsaacVerse contracts", () => {
 
     expect(after.beats.find((beat) => beat.id === "beat-02")?.startSec).toBe(3.5);
     expect(after.transitions?.[0].atSec).toBe(3.5);
+  });
+});
+
+describe("validateEditDocTimeline (M3 pre-flight semantics)", () => {
+  const timelineDoc = () => {
+    const base = doc();
+    base.beats[0].treatment = { id: "chapter-card", params: { title: "T" }, assets: [] };
+    base.beats.push({
+      ...base.beats[0], id: "beat-02", startSec: 4, sceneId: "scene-02", shotIds: [],
+      audioCues: [{ id: "beat-02:whoosh", atSec: 0.1, reason: "transition" }],
+    });
+    return base;
+  };
+
+  it("accepts a contiguous, well-formed timeline", () => {
+    expect(validateEditDocTimeline(timelineDoc())).toEqual([]);
+  });
+
+  it("flags a gap between beats (non-contiguous tiling)", () => {
+    const gap = timelineDoc();
+    gap.beats[1].startSec = 5;
+    const issues = validateEditDocTimeline(gap);
+    expect(issues.some((i) => i.message.includes("timeline gap/overlap"))).toBe(true);
+  });
+
+  it("flags an overlap between beats", () => {
+    const overlap = timelineDoc();
+    overlap.beats[1].startSec = 3.5;
+    expect(validateEditDocTimeline(overlap).some((i) => i.message.includes("timeline gap/overlap"))).toBe(true);
+  });
+
+  it("flags a first beat that does not start at zero", () => {
+    const late = timelineDoc();
+    late.beats[0].startSec = 0.5;
+    expect(validateEditDocTimeline(late).some((i) => i.message.includes("first beat must start at 0"))).toBe(true);
+  });
+
+  it("flags malformed audio cues and empty treatment params", () => {
+    const malformed = timelineDoc();
+    malformed.beats[1].audioCues = [{ id: "", atSec: 0.1 }];
+    malformed.beats[0].treatment = { id: "chapter-card", params: {}, assets: [] };
+    const issues = validateEditDocTimeline(malformed);
+    expect(issues.some((i) => i.path.includes("audioCues") && i.message.includes("id"))).toBe(true);
+    expect(issues.some((i) => i.path.includes("treatment.params") && i.message.includes("empty"))).toBe(true);
   });
 });

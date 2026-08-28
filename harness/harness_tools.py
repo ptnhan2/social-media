@@ -723,6 +723,76 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
 
 
 @tool
+def generate_timeline(project_slug: str, mode: str = "sync") -> str:
+    """Generate (or regenerate) the editor timeline from the edit-doc (M3 produce step).
+
+    Runs the SAME script the Composer Timeline-QA panel runs:
+    pre-flight validate (schema + contiguity + cues + params + asset
+    existence) -> generate-editor (ledger keeps user edits in sync mode) ->
+    post-check voice clips -> report at projects/<slug>/qa/timeline-report.json.
+
+    Blocking issues (timeline gaps/overlaps, missing assets) stop generation
+    and are returned; schema-discipline issues (e.g. empty transcript) are
+    warnings — the timeline still generates.
+
+    Args:
+        project_slug: Project folder name.
+        mode: 'sync' (merge, default — keeps user edits) or 'cold' (fresh).
+    """
+    if mode not in ("sync", "cold"):
+        return "GENERATE TIMELINE FAILED: mode must be 'sync' or 'cold'"
+    cmd = ["node", os.path.join(RENDERER_DIR, "scripts", "generate-timeline.mjs"),
+           "--project", project_slug, "--mode", mode]
+    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
+                            errors="replace", cwd=RENDERER_DIR, timeout=300)
+    out = (result.stdout or "").strip()
+    err = (result.stderr or "").strip()
+    # the script prints its result JSON on stdout (exit 0) or stderr (exit 1,
+    # blocked) — surface whichever carries the JSON
+    span = ""
+    for text in (out, err):
+        start = text.find("{")
+        end = text.rfind("}")
+        if start >= 0 and end > start:
+            span = text[start:end + 1]
+            break
+    if result.returncode != 0 and not span:
+        return f"GENERATE TIMELINE FAILED: {err or out or 'unknown error'}"
+    if not span:
+        return "GENERATE TIMELINE FAILED: no result JSON from the script"
+    try:
+        payload = json.loads(span)
+    except json.JSONDecodeError:
+        return f"GENERATE TIMELINE FAILED (unparseable): {span[:400]}"
+    if payload.get("blocking"):
+        return ("GENERATE TIMELINE BLOCKED — fix these first:\n"
+                + "\n".join(f"- {b}" for b in payload["blocking"][:12])
+                + f"\nFull report: {payload.get('report')}")
+    # the console summary carries ids only — the report file has labels +
+    # details. Read it when present (the UI panel reads the same file).
+    report_path = os.path.join(PROJECT_ROOT, "projects", project_slug, "qa",
+                               "timeline-report.json")
+    checks = payload.get("checks", [])
+    try:
+        with open(report_path, encoding="utf-8") as handle:
+            report = json.load(handle)
+        checks = report.get("checks", checks)
+    except OSError:
+        pass
+    lines = [f"GENERATE TIMELINE {'OK' if payload.get('ok') else 'GENERATED WITH WARNINGS'}",
+             f"style v{payload.get('styleVersion')} · mode {payload.get('mode')}"]
+    for check in checks:
+        label = check.get("label") or check.get("id") or "?"
+        detail = ("" if check.get("pass") else f" — {str(check.get('detail', [])[:3])[:200]}")
+        lines.append(f"  {'PASS' if check.get('pass') else 'FAIL'}  {label}{detail}")
+    for warning in payload.get("warnings", [])[:8]:
+        lines.append(f"  WARN  {warning}")
+    lines.append(f"report: {payload.get('report')}")
+    lines.append("next: render a window (render_window) or read the report for the fix cycle")
+    return "\n".join(lines)
+
+
+@tool
 def qa_gate(project_slug: str, start_sec: float, end_sec: float, video_before: str, render_path: str = "editor") -> str:
     """QA gate for treatment-code edits (protocol v5 step 5) — build+render+diff in one call.
 

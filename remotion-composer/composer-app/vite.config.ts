@@ -442,6 +442,73 @@ export default defineConfig({
             }
           });
         });
+        // ============ TIMELINE GENERATION (PIPELINE-PRODUCTION-SPEC v3, M3) ============
+        // generate_timeline: pre-flight validate + generate + report. The UI
+        // Timeline-QA tab and the agent's generate_timeline tool call the SAME
+        // script — the report file is the shared artifact both surfaces read.
+        const timelineJobs = new Map<string, { status: "generating" | "done" | "error"; startedAt: number; message?: string; result?: unknown }>();
+        server.middlewares.use("/api/project/generate-timeline/status", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const jobId = url.searchParams.get("jobId") || "";
+          const job = timelineJobs.get(jobId);
+          if (!job) { sendJson(res, 404, { error: "Unknown timeline job" }); return; }
+          sendJson(res, 200, { status: job.status, elapsedSec: Math.round((Date.now() - job.startedAt) / 1000), message: job.message, result: job.status === "done" ? job.result : undefined });
+        });
+        server.middlewares.use("/api/project/timeline-report", (req, res) => {
+          try {
+            const url = new URL(req.url || "/", "http://composer.local");
+            const projectId = url.searchParams.get("projectId") || "";
+            if (!projectId) { sendJson(res, 400, { error: "projectId required" }); return; }
+            const reportPath = resolve(PROJECT_STORE.projectDir(projectId), "qa", "timeline-report.json");
+            if (!existsSync(reportPath)) { sendJson(res, 404, { error: "No timeline report yet — generate first" }); return; }
+            sendJson(res, 200, JSON.parse(readFileSync(reportPath, "utf-8")));
+          } catch (error) {
+            sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+          }
+        });
+        server.middlewares.use("/api/project/generate-timeline", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              if (!projectId) throw new Error("projectId is required");
+              const mode = body.mode === "cold" ? "cold" : "sync";
+              const jobId = `timeline-${Date.now()}`;
+              timelineJobs.set(jobId, { status: "generating", startedAt: Date.now() });
+              const child = spawn(process.execPath, ["scripts/generate-timeline.mjs", "--project", projectId, "--mode", mode], {
+                cwd: COMPOSER_ROOT, windowsHide: true, stdio: ["ignore", "pipe", "pipe"],
+              });
+              let stdout = ""; let stderr = "";
+              child.stdout.on("data", (c: Buffer) => stdout += c.toString());
+              child.stderr.on("data", (c: Buffer) => stderr += c.toString());
+              child.on("error", (error) => {
+                timelineJobs.set(jobId, { status: "error", startedAt: Date.now(), message: error.message });
+              });
+              child.on("exit", (code) => {
+                const job = timelineJobs.get(jobId);
+                if (!job) return;
+                try {
+                  const jsonSpan = (text: string) => text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1);
+                  const result = JSON.parse(jsonSpan(stdout) || jsonSpan(stderr) || "{}");
+                  if (code !== 0 && !result.generated) {
+                    job.status = "error";
+                    job.message = result.blocking ? `blocked: ${result.blocking ?? "?"} issue(s) — see report` : `generate-timeline exited ${code}`;
+                    job.result = result;
+                    return;
+                  }
+                  job.status = "done";
+                  job.result = result;
+                } catch {
+                  job.status = "error";
+                  job.message = `unparseable output (exit ${code}): ${(stderr || stdout).slice(0, 200)}`;
+                }
+              });
+              sendJson(res, 200, { jobId, projectId, mode });
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
+          });
+        });
         // ============ VOICE PIPELINE (PIPELINE-PRODUCTION-SPEC v3) ============
         // Regen ONE voice clip: TTS takes + deterministic QC + post-chain +
         // apply onto the editor doc via the bridge (revision bump, per-field

@@ -1053,6 +1053,21 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 }
 .ve-img-upload:hover { border-color: #3b82f6; }
 .ve-img-upload input[type="file"] { font-size: 10px; color: #6b7280; max-width: 100%; }
+/* M3 timeline-QA panel: the generation report checklist. */
+.ve-timeline-qa { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 10px; }
+.ve-qa-checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.ve-qa-checks li { display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: #d8dee9; }
+.ve-qa-mark { width: 14px; text-align: center; flex-shrink: 0; font-weight: 700; }
+.ve-qa-checks li.pass .ve-qa-mark { color: #2dd4a0; }
+.ve-qa-checks li.fail .ve-qa-mark { color: #ff6b6b; }
+.ve-qa-checks li.fail .ve-qa-label { color: #ff9b9b; }
+.ve-qa-label { flex: 1; min-width: 0; }
+.ve-qa-detail { list-style: none; margin: 2px 0 0; padding-left: 4px; }
+.ve-qa-detail li { color: #b9bfcc; font-size: 10px; }
+.ve-qa-warnings { display: flex; flex-direction: column; gap: 4px; font-size: 11px; }
+.ve-qa-warnings > span { color: #f5b544; font-weight: 600; }
+.ve-qa-warnings ul { list-style: none; margin: 0; padding: 0; }
+.ve-qa-warnings li { color: #d8dee9; padding: 3px 6px; background: #1a1a10; border: 1px solid #4a3d10; border-radius: 4px; font-size: 10px; }
 .ve-timeline-resizer { height: 5px; cursor: row-resize; background: #1f2937; flex-shrink: 0; }
 .ve-timeline-resizer:hover { background: #374151; }
 .ve-timeline-dock { overflow: hidden; min-height: 0; }

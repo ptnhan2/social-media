@@ -98,17 +98,64 @@ export function validateEditDoc(value: unknown): ValidationIssue[] {
         if (typeof scene.id === "string") sceneIds.add(scene.id);
         if (!Array.isArray(scene.beatIds)) issues.push({ path: `${path}.beatIds`, message: "scene beatIds must be an array" });
         else scene.beatIds.forEach((beatId, beatIndex) => {
-          if (!isNonEmptyString(beatId) || !beatIds.has(beatId)) issues.push({ path: `${path}.beatIds[${beatIndex}]`, message: "scene references an unknown beat" });
+          if (!isNonEmptyString(beatId) || !beatIds.has(String(beatId))) issues.push({ path: `${path}.beatIds[${beatIndex}]`, message: "scene references an unknown beat" });
         });
         if (scene.shotIds !== undefined) {
           if (!Array.isArray(scene.shotIds)) issues.push({ path: `${path}.shotIds`, message: "scene shotIds must be an array" });
           else scene.shotIds.forEach((shotId, shotIndex) => {
-            if (!isNonEmptyString(shotId) || !shotIds.has(shotId)) issues.push({ path: `${path}.shotIds[${shotIndex}]`, message: "scene references an unknown shot" });
+            if (!isNonEmptyString(shotId) || !shotIds.has(String(shotId))) issues.push({ path: `${path}.shotIds[${shotIndex}]`, message: "scene references an unknown shot" });
           });
         }
       });
     }
   }
+  return issues;
+}
+
+/** Timeline pre-flight (PIPELINE-PRODUCTION-SPEC v3, M3 generate_timeline):
+ *  SEMANTIC checks beyond the schema — is this edit-doc actually generatable
+ *  into a coherent timeline? Contiguity (beats tile the timeline without
+ *  gaps/overlaps), well-formed audio cues, treatment params present, and
+ *  assets resolvable by path. Filesystem existence checks live in the
+ *  orchestrator script (this stays pure for the browser too). */
+export function validateEditDocTimeline(value: unknown): ValidationIssue[] {
+  if (!isObject(value) || !Array.isArray(value.beats)) return [{ path: "$.beats", message: "beats must be an array" }];
+  const issues: ValidationIssue[] = [];
+  const beats = (value.beats as Record<string, unknown>[]).filter(isObject);
+  // contiguity: sorted beats must tile — beat[i] ends where beat[i+1] starts
+  const ordered = [...beats].sort((a, b) => Number(a.startSec ?? 0) - Number(b.startSec ?? 0));
+  if (ordered.length && Number(ordered[0].startSec ?? 0) !== 0) {
+    issues.push({ path: "$.beats[0].startSec", message: `first beat must start at 0 (starts at ${ordered[0].startSec})` });
+  }
+  for (let i = 1; i < ordered.length; i += 1) {
+    const prevEnd = Number(ordered[i - 1].startSec ?? 0) + Number(ordered[i - 1].durationSec ?? 0);
+    const nextStart = Number(ordered[i].startSec ?? 0);
+    if (Math.abs(prevEnd - nextStart) > 0.01) {
+      issues.push({ path: `$.beats[${i}].startSec`, message: `timeline gap/overlap: previous beat ends at ${prevEnd.toFixed(3)}s but this starts at ${nextStart.toFixed(3)}s` });
+    }
+  }
+  // cues + params + assets (path form only — existence checked by the caller)
+  beats.forEach((beat, index) => {
+    const path = `$.beats[${index}]`;
+    const cues = Array.isArray(beat.audioCues) ? (beat.audioCues as Record<string, unknown>[]).filter(isObject) : [];
+    cues.forEach((cue, cueIndex) => {
+      if (!isNonEmptyString(cue.id)) issues.push({ path: `${path}.audioCues[${cueIndex}].id`, message: "audio cue id is required" });
+      if (!isNonEmptyString(cue.reason)) issues.push({ path: `${path}.audioCues[${cueIndex}].reason`, message: "audio cue reason is required" });
+    });
+    const treatment = beat.treatment;
+    if (isObject(treatment) && (!isObject(treatment.params) || Object.keys(treatment.params).length === 0)) {
+      issues.push({ path: `${path}.treatment.params`, message: "treatment params are empty — the generator has nothing to style" });
+    }
+    const elements = Array.isArray(beat.elements) ? (beat.elements as Record<string, unknown>[]).filter(isObject) : [];
+    elements.forEach((element, elIndex) => {
+      const src = element.src;
+      if (src !== undefined && !isNonEmptyString(src)) issues.push({ path: `${path}.elements[${elIndex}].src`, message: "element src must be a non-empty path" });
+    });
+  });
+  const assets = Array.isArray(value.assets) ? (value.assets as Record<string, unknown>[]).filter(isObject) : [];
+  assets.forEach((asset, index) => {
+    if (!isNonEmptyString(asset.src)) issues.push({ path: `$.assets[${index}].src`, message: "asset src is required" });
+  });
   return issues;
 }
 

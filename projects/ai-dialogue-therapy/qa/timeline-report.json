@@ -1,0 +1,53 @@
+{
+  "ok": false,
+  "projectId": "ai-dialogue-therapy",
+  "mode": "sync",
+  "generatedAt": "2026-08-28T18:55:00.975Z",
+  "styleVersion": 74,
+  "checks": [
+    {
+      "id": "schema",
+      "label": "Edit-doc schema",
+      "pass": false,
+      "detail": [
+        "$.beats[7].transcript: transcript is required"
+      ]
+    },
+    {
+      "id": "timeline",
+      "label": "Timeline semantics (contiguity, cues, params)",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "assets",
+      "label": "Assets exist on disk",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "generate",
+      "label": "Editor doc generated (sync)",
+      "pass": true,
+      "detail": [
+        "refreshed=109 keptUser=8 added=0 dropped=0"
+      ]
+    },
+    {
+      "id": "voice",
+      "label": "Voice clips have src + QC pass",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "warnings": [
+    "schema: $.beats[7].transcript: transcript is required"
+  ],
+  "blocking": [],
+  "stats": {
+    "refreshed": 109,
+    "keptUser": 8,
+    "added": 0,
+    "dropped": 0
+  }
+}

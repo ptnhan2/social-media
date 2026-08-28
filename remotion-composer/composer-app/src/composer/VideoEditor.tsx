@@ -9,6 +9,7 @@ import { EditorTimeline } from "../editor/EditorTimeline";
 import { InteractiveCanvas } from "../canvas/InteractiveCanvas";
 import { LeftRail, type LeftTab } from "./LeftRail";
 import { PropertiesPanel, type KeyframeTarget, type PropTab } from "./PropertiesPanel";
+import { TimelineQaPanel } from "./TimelineQaPanel";
 import { AgentPanel } from "../agent/AgentPanel";
 import {
   addClipKeyframe,
@@ -205,7 +206,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
   const localSaveGuard = React.useRef(false);
   const [leftPanelWidth, setLeftPanelWidth] = React.useState(220);
   const [rightPanelWidth, setRightPanelWidth] = React.useState(280);
-  const [rightPanelMode, setRightPanelMode] = React.useState<"properties" | "agent">("properties");
+  const [rightPanelMode, setRightPanelMode] = React.useState<"properties" | "agent" | "timeline">("properties");
   const [timeEditing, setTimeEditing] = React.useState(false);
   const [timeInput, setTimeInput] = React.useState("");
   const [exportOpen, setExportOpen] = React.useState(false);
@@ -906,11 +907,14 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
 
         <aside className="ve-right-panel" style={{ width: rightPanelWidth }}>
           <div className="ve-right-tabs">
-            <button className={`ve-right-tab ${rightPanelMode === "properties" ? "active" : ""}`} onClick={() => setRightPanelMode("properties")}>Properties</button>
-            <button className={`ve-right-tab ${rightPanelMode === "agent" ? "active" : ""}`} onClick={() => setRightPanelMode("agent")}>Agent</button>
+            <button aria-label="Properties panel" className={`ve-right-tab ${rightPanelMode === "properties" ? "active" : ""}`} onClick={() => setRightPanelMode("properties")}>Properties</button>
+            <button aria-label="Agent panel" className={`ve-right-tab ${rightPanelMode === "agent" ? "active" : ""}`} onClick={() => setRightPanelMode("agent")}>Agent</button>
+            <button aria-label="Timeline QA panel" className={`ve-right-tab ${rightPanelMode === "timeline" ? "active" : ""}`} onClick={() => setRightPanelMode("timeline")}>Timeline QA</button>
           </div>
           {rightPanelMode === "agent" ? (
             <AgentPanel projectId={projectId} currentSec={currentSec} />
+          ) : rightPanelMode === "timeline" ? (
+            <TimelineQaPanel projectId={projectId} />
           ) : selectedClip ? (
             <PropertiesPanel
               clip={selectedClip}
