@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, Component, ErrorInfo } from "react";
 import { useStream } from "@langchain/react";
 
-const LANGGRAPH_URL = "http://localhost:2024";
+// agent server port per .kilo/skills/server-lifecycle (langgraph dev --port 2025)
+const LANGGRAPH_URL = "http://localhost:2025";
 const ASSISTANT_ID = "agent";
 
 // --- Error Boundary ---

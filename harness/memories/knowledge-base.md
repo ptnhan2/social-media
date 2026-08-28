@@ -101,6 +101,37 @@ consistency, rollback test not restoring live editor doc, chain-smoke
 hardcoded value. Pattern: emit-lineHeight-when-DOM-pins-it keeps both paths
 byte-equivalent regardless of font.
 
+## SESSION 2026-08-29 overnight (autonomous 00:45-05:45) — M1b + M2 + M3 + zero-manual E2E
+
+### The produce loop is CLOSED (thesis milestone)
+- mini-loop-test: 3-beat 13.7s video produced with ZERO manual edits:
+  scaffold-voice-plan --regen -> generate-timeline -> render-window
+- generate_timeline = validate BEFORE + report AFTER; blocking = structural
+  (gap/overlap, missing assets); schema discipline = warnings surfaced, not
+  gates — generator is lenient by design, the report is the honesty layer
+- UI button + agent tool call the SAME script; report file = one artifact,
+  two surfaces (Timeline QA tab reads what the agent reads)
+
+### Parity pattern that works (3rd validation)
+- voice take switcher: UI rows + agent endpoint identical; take override =
+  strongest learning signal (stage F)
+- image query cards: query + candidates + provenance all live in clip
+  metadata; select = user edit (ledger marks src) -> survives sync
+- ripple semantics: machine grows (never shrinks — trimming is a human call);
+  shifted clips get NO userEdited marks (sync from plan may recompute them)
+
+### Gotchas hit tonight
+- render-window --output resolves against WORKSPACE root: "projects/x/y.mp4"
+  NOT "../projects/x/y.mp4" (that escapes the workspace)
+- New project needs manual Root.tsx composition registration (produce-loop
+  friction, TODO A2)
+- beat-05 demo providerText was machine-set -> legitimately refreshed by
+  sync (per-field ledger); restored as USER edit to survive future syncs
+- PowerShell 5.1: no ternary operator; JSON args with embedded quotes get
+  mangled -> pass JSON via file
+- AgentPanel hardcoded :2024 while the agent server runs :2025 (skill
+  command) -> fixed the UI constant
+
 ## SESSION 2026-08-28 (full day) — M1a completed in battle + v3 + enforcement architecture
 
 ### Voice pipeline hardened through real user usage

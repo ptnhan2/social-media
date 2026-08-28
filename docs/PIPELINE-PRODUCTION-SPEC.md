@@ -140,6 +140,26 @@ per-field override, migrations — không state song song nào để lệch.
 
 ## 9. PROGRESS LOG
 
+- **2026-08-29 03:15 (M3 SHIPPED + ZERO-MANUAL E2E — overnight autonomous
+  session)**: đóng timeline step của produce loop. (1) validateEditDocTimeline
+  (shared/validate.ts, pure): contiguity (beats tile không gap/overlap, start
+  tại 0), cue form (id+reason), treatment params, asset src shape. (2)
+  generate-timeline.mjs: pre-flight (schema + semantics + asset existence) →
+  generate-editor sync → voice post-check (src + QC) → report tại
+  projects/<slug>/qa/timeline-report.json + public sync. BLOCKING = vỡ cấu
+  trúc (gap/overlap, missing assets); schema discipline = WARNINGS (surfaced,
+  không nuốt, không chặn — generator vốn lenient theo thiết kế). (3) HTTP
+  /api/project/generate-timeline (+status, +timeline-report GET). (4) Timeline
+  QA tab trong Composer: checklist PASS/FAIL + warnings + style version +
+  Generate button — human surface của CÙNG report file agent đọc. (5) Harness
+  tool generate_timeline đăng ký trong Deep Agents. **E2E zero-manual PASSED**
+  (tiêu chí M3): projects/mini-loop-test — 3-beat 13.7s: scaffold-voice-plan
+  --regen (TTS v3, retime 12→13.69s, rewrite flag beat-02 surfaced) →
+  generate-timeline (5/5 PASS, 0 warnings) → render-window draft (mp4 919KB,
+  audio -16.5dB/peak -1.5dB, frames thật). Friction ghi nhận: composition
+  registration trong Root.tsx vẫn thủ công (→ TODO A2). Cùng đêm: M1b (take
+  switcher + QC badge + breathPad ripple) + M2 (image query cards) shipped
+  chi tiết trong commits 4fa02d0, a656e39, 48b55bb, ebc3363.
 - **2026-08-29 00:20 (M1a hoàn thiện + v3)**: session 28/08 cả ngày (nhiều
   chủ đề, docs update trễ — vi phạm discipline #2, đã cân đối lại trong
   TODO-NEXT). Hoàn thiện M1a thực chiến: (1) user bắt bug panel layout

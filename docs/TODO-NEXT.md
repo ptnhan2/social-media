@@ -1,100 +1,100 @@
-# TODO NEXT — Updated 2026-08-29 00:30 (sau session 28/08 toàn ngày)
+# TODO NEXT — Updated 2026-08-29 03:15 (sau overnight session 29/08)
 
-> Session 28/08 nhảy nhiều chủ đề (voice → UI audit → rules → agents → voice
-> direction → v3) mà TODO-NEXT không được update real-time — vi phạm workflow
-> discipline #2. File này là bản cân đối lại toàn bộ. **Đọc file này đầu
-> session mới.**
+> Overnight autonomous session (00:45–05:45, user ngủ): M1b + M2 + M3 +
+> zero-manual E2E — tất cả SHIPPED, verified (verify agent 8/8 PASS), CI xanh.
+> Đọc file này đầu session mới.
 
 ---
 
-## Trạng thái lõi (đã xong, verify xanh)
+## Trạng thái lõi (đêm 29/08)
 
-- **Voice pipeline M1a SHIPPED + vận hành thật**: per-beat clips, provider
-  text editing, Regenerate button (đã fix race text + stale public sync),
-  QC gates (WER qua ElevenLabs Scribe, clip/duration/tail/lufs), v3 migration
-  (audio tags + CAPS — user nghe ra khác biệt rõ, confirmed)
-- **UI audit tool**: `scripts/ui-audit.mjs` — 9 checks deterministic ×
-  multi-viewport + state navigation (--click) + dead-class detection
-- **Enforcement architecture**: agents `verify` + `ui-probe` (dispatch qua
-  Task tool, đã test thật), `/handoff` command, 5 skills trigger-bound
-- **AGENTS.md rules #17-20** (readiness, pre-verified checklists, background
-  process, UI verification matrix) + memory
-- 185/185 vitest, CI xanh, demo Composer mở tại
-  `localhost:5174/editor?project=ai-dialogue-therapy` (beat-05 đang giữ bản
-  `[assertive]` + CAPS)
+- **M1b SHIPPED**: take switcher (play + đổi take 1 click, voice_take.py +
+  /api/project/audio-take), QC badge đỏ trên timeline (qc.pass=false),
+  breathPadSec live retime + voice-first ripple (applyVoiceTake grows beat +
+  end-aligned overlays + shifts downstream; retimeVoiceClip cho user edits)
+- **M2 SHIPPED**: image query cards — Image tab trên image element clips:
+  query + Re-search (Unsplash, 12 candidates), candidate grid + select
+  (download + src swap + provenance), upload-own; manifest per beat;
+  endpoint /api/project/image-search|image-select (agent + UI chung)
+- **M3 SHIPPED**: generate_timeline — validateEditDocTimeline (contiguity,
+  cues, params — pure, shared), generate-timeline.mjs (pre-flight →
+  generate-editor sync → voice post-check → report), Timeline QA tab trong
+  Composer (checklist + warnings + Generate), harness tool
+  generate_timeline đăng ký trong Deep Agents tool list
+- **ZERO-MANUAL E2E PASSED (thesis test)**: projects/mini-loop-test — video
+  13.7s 3-beat sản xuất hoàn toàn bằng loop: scaffold-voice-plan --regen →
+  generate-timeline (5/5 PASS, 0 warnings) → render-window draft. Artifact:
+  renders/mini-loop-draft.mp4 (919KB, audio -16.5dB đúng target, frames thật)
+- 194/194 vitest + 5/5 node + 34/34 harness + 13/13 e2e + typecheck + ui-audit
+  0 critical (multi-viewport + state navigation) + verify agent 8/8 PASS
+- Fixes lẻ: keyframe-arm contrast 2.4→3:1 (WCAG 1.4.11, audit state mới bắt
+  được), AgentPanel URL :2024→:2025 (server thật), ui-audit --click hỗ trợ
+  `label#N` (nth element)
 
-## A. ~~Chờ USER quyết~~ → ĐÃ TỰ QUYẾT (29/08 00:35 — correction: test-vehicle content không phải user gate)
+## QUEUE TIẾP THEO
 
-> **Bài học (user correction)**: mình đang build HARNESS, không phải sản xuất
-> video. Content của test vehicle = agent tự quyết. User gates chỉ: roadmap,
-> taste principles cho learning loop, paid spend. Memory đã lưu.
-
-| # | Quyết định (agent) | Lý do |
-|---|---|---|
-| A1 | Giữ Rachel | Harness không cần casting |
-| A2 | Giữ beat-06 | Test content, text↔audio đã khớp — đổi chẳng test gì mới |
-| A3 | Chấp nhận 41.84s | Cơ chế retime chạy đúng mới là feature |
-| A4 | Giữ QC logic (±15% OR WER-verified) | Validated + có tests |
-| A5 | Skip directed pass | Audio tags confirmed; batch regen sẽ test đúng cách trong M3 |
-| A6 | Skip script restore | Chỉ liên quan production thật |
-
-## QUEUE THẬT (harness capability)
-
-## B. M1b — voice pipeline phần còn lại (spec đã duyệt)
+### A. Produce loop mở rộng (hướng chính — M3 đã đóng timeline step)
 
 | # | Việc | Chi tiết |
 |---|---|---|
-| B1 | Take switcher | Audio tab: play từng take, đổi take 1 click (takes đã lưu trên disk) |
-| B2 | QC badge trên timeline | Clip voice QC FAIL = badge đỏ trên clip |
-| B3 | breathPadSec per-beat + ripple | Field trong Audio tab; audio dài hơn → tự ripple beat sau (hiện clip chỉ giãn, đè nếu dài hơn nhiều) |
-| B4 | Per-field ledger cho trim/move/nudge | Hiện chỉ setEditorClipMetadata có per-field |
+| A1 | Produce flow hoàn chỉnh từ script | VideoDoc → edit-doc (agent viết beats) → scaffold-voice → generate-timeline → render. Hiện mini-loop edit-doc viết tay; agent cần tool viết edit-doc (hoặc dùng HTTP patch ops có sẵn) |
+| A2 | Auto-register compositions | Project mới cần sửa Root.tsx tay (friction đã ghi trong mini-loop E2E) — generate-timeline nên tự thêm composition |
+| A3 | Critique loop trên mini-loop | visual_critique + qa_gate chạy trên mini-loop-test → request_keep → learning loop THẬT (produce → critique → improve) |
+| A4 | Edit-doc ↔ editor-doc coupling | Voice retimes/direction sống trong editor doc; sync refresh từ edit-doc plan (per-field ledger). Produce flow phải viết edit-doc audioPlan + beat timing (scaffold đã làm) — đóng gap khi A1 |
 
-## C. M2-M4 roadmap (spec v3 đã duyệt — PIPELINE-PRODUCTION-SPEC.md)
+### B. M2 còn lại (image pipeline)
 
-| # | Milestone | Nội dung |
+| # | Việc | Chi tiết |
 |---|---|---|
-| C1 | M2 image sourcing | Query cards trong Image tab (CHAI 3-pass), re-search, candidate grid + provenance, upload own, VLM relevance QC |
-| C2 | M3 timeline + validate | generate_timeline wrap + validate_edit_doc + report panel trong Composer; E2E mini-video 10-15s zero-manual |
-| C3 | M4 mix-plan | Music/SFX clips + DuckZones + master LUFS emit (AudioMixer render đã hỗ trợ) |
+| B1 | VLM relevance QC | qcVerdict per image clip + badge (CHƯA research câu hỏi VLM — xem constraint `vlm.question_design_leverage_strengths`) |
+| B2 | Grade knob | Cohesion grade = style-store knob hiển thị trong Image tab |
+| B3 | Query build agent-side | Agent tự viết query từ beat narrative (CHAI 3-pass theo spec) |
 
-## D. Tech debt / bugs từ các session trước (chưa đóng)
+### C. M1b/M4 còn lại
+
+| # | Việc | Chi tiết |
+|---|---|---|
+| C1 | B4 per-field ledger cho trim/move/nudge | Hiện chỉ setEditorClipMetadata + retimeVoiceClip có per-field |
+| C2 | M4 mix-plan | Music/SFX clips + DuckZones + master LUFS emit |
+| C3 | Feedback.jsonl hooks | Take switch + image select + query edit → diff record (spec §7 learning hooks — increment nhỏ, làm cùng A3) |
+
+### D. Tech debt (từ các session trước — chưa đóng)
 
 | # | Việc | Nguồn |
 |---|---|---|
-| D1 | fonts→regen bridge | fonts.* knob đổi không trigger editor-doc regen (KB open item từ font A/B session) |
-| D2 | Compressor knob cho voice | Nếu audio tags vẫn bị flatten qua post-chain — nới compressor (style store knob) |
-| D3 | AGENTS.md slim-down | Phân loại 20 rules + "enforced by" từng rule — ĐÃ UNBLOCK (agents proven 28/08) |
-| D4 | PropertiesPanel font select | Hiện thị role strings thay vì friendly names (UI polish) |
-| D5 | Parity residuals | 4 treatments trên gate (chapter-card 2.28, cinematic 3.24, candidate 3.45, host-reflection 5.9-6.3) |
-| D6 | Pexels API key expired | Dùng Unsplash; renew key khi cần |
-| D7 | Playwright batch 3 | Marquee, guides, gen panel mock, recipes CRUD |
-| D8 | Stem naming inconsistency | clip_voice_* vs therapy-beat-* filenames (cosmetic, hoạt động đúng) |
+| D1 | fonts→regen bridge | fonts.* knob đổi không trigger editor-doc regen |
+| D2 | Compressor knob cho voice | style-store knob cho post-chain |
+| D3 | AGENTS.md slim-down | 20 rules phân loại + "enforced by" |
+| D4 | PropertiesPanel font select | friendly names thay role strings |
+| D5 | Parity residuals | 4 treatments trên gate |
+| D6 | Pexels API key expired | Unsplash đang dùng |
+| D7 | Playwright batch 3 | marquee, guides, recipes CRUD |
+| D8 | Stem naming | clip_voice_* vs therapy-beat-* (cosmetic) |
 
-## E. Blocked / deferred (user đã chốt)
+### E. Blocked / deferred (user đã chốt)
 
 - repurpose pipeline — "hệ thống còn chưa chất lượng"
-- Multi-doc Studio + anchor editor kéo thả
+- Multi-doc Studio + anchor editor
 - Auto-cut head (9+ approaches failed — docs/AUTO-CUT-ATTEMPT-LOG.md)
 
-## Quy tắc session mới
+## Quy tắc session
 
-1. **TODO-NEXT update real-time** — mỗi khi đổi chủ đề lớn, 1 dòng status
-   vào file này trước khi nhảy (bài học 28/08)
-2. **Test-vehicle content = agent tự quyết** — đừng biến content của demo
-   video thành user gates (bài học 29/08 00:35, memory
-   `harness_goal.test_content_not_user_gates`)
-3. Trước khi kết session: chạy doc-sync một vòng (TODO-NEXT + RECOVERY +
-   spec progress log)
-4. Queue mặc định: **M1b (B1-B3) → M2 → M3** — M3 đóng produce loop =
-   lần đầu test thesis harness end-to-end (agent tự produce → tự critique →
-   tự fix)
+1. **TODO-NEXT update real-time** — đổi chủ đề lớn = 1 dòng status trước khi nhảy
+2. **Test-vehicle content = agent tự quyết** (memory
+   `harness_goal.test_content_not_user_gates`) — user gates chỉ: roadmap,
+   taste principles, paid spend
+3. Trước khi kết session: doc-sync một vòng (TODO-NEXT + RECOVERY + spec log)
+4. Hướng mặc định: **A (produce loop mở rộng) → A3 critique loop = học thật**
 
 ## Vận hành
 
 ```powershell
-# Composer UI (persistent, đã chạy)
-# Agent :2025 (persistent, PYTHONUTF8=1)
-# Verify nhanh: dispatch verify agent (task tool, subagent_type "verify")
-# UI audit: node remotion-composer/scripts/ui-audit.mjs --url "http://localhost:5174/editor?project=ai-dialogue-therapy" --click "Voiceover"
-# Voice regen 1 beat: POST /api/project/audio-regen {projectId, clipId, providerText, voiceSettings:{modelId:"eleven_v3"}}
+# Composer UI (persistent, đang chạy :5174)
+# LangGraph agent (persistent, đang chạy :2025, PYTHONUTF8=1, /ok = 200)
+# Verify: dispatch verify agent (Task tool, subagent_type "verify")
+# UI audit: node remotion-composer/scripts/ui-audit.mjs --url "..." --click "label#N"
+# Take switch: POST /api/project/audio-take {projectId, clipId, takeId}
+# Image search: POST /api/project/image-search {projectId, clipId, query}
+# Generate timeline: POST /api/project/generate-timeline {projectId}
+# Agent tool: generate_timeline(project_slug, mode) — đăng ký trong agent.py
 ```

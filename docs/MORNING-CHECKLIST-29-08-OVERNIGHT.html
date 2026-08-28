@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Checklist — Overnight 29/08 (M1b+M2+M3+Zero-Manual E2E)</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px 24px; background: #0b0e14; color: #d8dee9; font: 14px/1.6 Inter, "Segoe UI", system-ui, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; color: #fff; }
+  h1 .tag { font-size: 12px; color: #2dd4a0; border: 1px solid #14532d; padding: 2px 8px; border-radius: 10px; vertical-align: middle; margin-left: 8px; }
+  .sub { color: #6b7280; font-size: 12px; margin-bottom: 24px; }
+  .evidence { background: #0d1520; border: 1px solid #1f2937; border-radius: 8px; padding: 12px 16px; margin-bottom: 28px; font-size: 12px; }
+  .evidence h2 { font-size: 13px; color: #f5b544; margin: 0 0 8px; }
+  .evidence ul { margin: 0; padding-left: 18px; columns: 2; column-gap: 32px; }
+  .evidence li { margin: 2px 0; color: #b9bfcc; break-inside: avoid; }
+  .evidence b { color: #2dd4a0; }
+  .item { background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 16px 20px; margin-bottom: 14px; }
+  .item label { display: flex; gap: 12px; cursor: pointer; font-size: 15px; color: #fff; }
+  .item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #2dd4a0; margin-top: 3px; flex-shrink: 0; }
+  .how { margin: 10px 0 0 30px; font-size: 13px; color: #b9bfcc; }
+  .how b { color: #61d7e8; }
+  .how code { background: #0d1520; padding: 1px 6px; border-radius: 4px; font-size: 12px; color: #f4e8cf; }
+  .verified { display: inline-block; font-size: 11px; color: #2dd4a0; border: 1px solid #14532d; border-radius: 8px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; }
+  .human { display: inline-block; font-size: 11px; color: #f5b544; border: 1px solid #4a3d10; border-radius: 8px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; }
+  a { color: #61d7e8; }
+  .footer { color: #6b7280; font-size: 11px; margin-top: 24px; border-top: 1px solid #1f2937; padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Morning Checklist <span class="tag">OVERNIGHT 29/08 · 00:45–05:45</span></h1>
+  <p class="sub">M1b (take switcher + QC badge + ripple) · M2 (image query cards) · M3 (generate_timeline) · ZERO-MANUAL E2E. Mọi mục đã được agent chạy + verify TRƯỚC KHI giao (rule #18) — bạn chỉ việc check. Servers đang chạy sẵn: Composer <code>:5174</code> · Agent <code>:2025</code>.</p>
+
+  <div class="evidence">
+    <h2>Pre-verified evidence (verify agent 8/8 PASS + tooling)</h2>
+    <ul>
+      <li><b>194/194</b> vitest (5 test mới: ripple ×3, retime ×2... cộng 5 timeline-validator)</li>
+      <li><b>34/34</b> harness unit tests</li>
+      <li><b>5/5</b> node tests · <b>13/13</b> Playwright E2E · typecheck sạch</li>
+      <li><b>ui-audit 0 critical</b> — 4 viewports × 4 states (voice selected, image selected, timeline QA, base)</li>
+      <li><b>Take-switch E2E thật</b>: 2 chiều trên beat-01, job ~16s, QC PASS, public synced</li>
+      <li><b>Image E2E thật</b>: Unsplash 12 candidates, select swap src + provenance + download 83KB</li>
+      <li><b>Mini-loop artifact</b>: 919KB mp4 · 13.7s · audio −16.5dB (target −16) · frames 37-42KB (không phải black)</li>
+      <li>Screenshots: <code>remotion-composer/ui-audit-shots/</code> (voice-take-switcher, image-query-card, timeline-qa, qc-badge-fail)</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <label><input type="checkbox"><span>1. Xem video zero-manual — LUẬN ĐIỂM HARNESS ĐÃ ĐÓNG</span><span class="human">HUMAN GATE (nhìn + nghe)</span></label>
+    <div class="how">
+      Tab <a href="http://localhost:5174/editor?project=mini-loop-test" target="_blank">Composer mini-loop-test</a> đã mở sẵn — bấm Play. Hoặc <a href="http://localhost:5174/api/project/artifact?projectId=mini-loop-test&path=renders%2Fmini-loop-draft.mp4" target="_blank">tải mp4 trực tiếp</a>.<br>
+      3 chapter-card (title đổi màu theo beat), VO đọc 3 câu: "This video was produced by an agent harness…" · "plan – validate – generate" · "the loop is closed".<br>
+      <b>Sản xuất 100% bằng loop</b>: TTS → validate → generate → render, không mở editor lần nào. Audio đo −16.5dB đúng chuẩn; frames có nội dung thật. Còn lại chỉ gu/taste — đó là phần của bạn.
+    </div>
+  </div>
+
+  <div class="item">
+    <label><input type="checkbox"><span>2. Take switcher — đổi take voice 1 click</span><span class="verified">E2E verified 2 chiều</span></label>
+    <div class="how">
+      Tab <a href="http://localhost:5174/editor?project=ai-dialogue-therapy" target="_blank">Composer ai-dialogue-therapy</a> → click 1 clip <b>Voiceover</b> trên track audio (Audio tab tự mở) → mục <b>Takes (2)</b>:<br>
+      · <b>▶</b> nghe từng take (mp3 thô) · <b>Dùng</b> đổi take (job ~16s: post-chain + QC + apply + sync; clip + timeline tự cập nhật qua SSE).<br>
+      · Field <b>Breath pad (s)</b> mới: đổi pad → clip retimes ngay + ripple beat sau nếu tràn.
+    </div>
+  </div>
+
+  <div class="item">
+    <label><input type="checkbox"><span>3. Image query cards — sửa query + đổi ảnh stock</span><span class="verified">E2E verified live Unsplash</span></label>
+    <div class="how">
+      Trong ai-dialogue-therapy: click mũi tên <b>▸</b> trên beat-06 (clip "name the failure mode", thứ 6 tính từ trái) để mở element section → click clip <b>bg-image</b> → tab <b>Image</b>:<br>
+      · Query "two people tense conversation argument" + grid <b>12 candidates</b> (đã search sẵn) — click ảnh nào đó để đổi + xem provenance cập nhật.<br>
+      · Sửa query → <b>Re-search</b> (Unsplash thật, ~2s). Nút <b>Upload ảnh riêng</b> cũng ở đó.
+    </div>
+  </div>
+
+  <div class="item">
+    <label><input type="checkbox"><span>4. Timeline QA tab — report generate + nút Generate</span><span class="verified">job verified qua HTTP</span></label>
+    <div class="how">
+      Right panel → tab <b>Timeline QA</b>: checklist 5 mục (đang <b>4 PASS + 1 FAIL</b> — schema beat-08 empty transcript, warning có chủ đích hiện ra, không bị nuốt) + style v74.<br>
+      · Bấm <b>Generate timeline</b> để chạy lại sync flow (validate → generate → voice check → report, ~10s). Đây là CÙNG script agent gọi bằng tool <code>generate_timeline</code>.
+    </div>
+  </div>
+
+  <div class="item">
+    <label><input type="checkbox"><span>5. QC badge đỏ trên timeline (đường FAIL)</span><span class="verified">probe verified flip→revert</span></label>
+    <div class="how">
+      Đã verify bằng probe: flip QC 1 clip → đúng 1 badge đỏ "QC" hiện trên clip; revert → biến mất (screenshot <code>qc-badge-fail-1920.png</code>). Trên demo hiện 0 badge vì 7/7 voice đang PASS — badge chỉ xuất hiện khi có QC FAIL thật.
+    </div>
+  </div>
+
+  <div class="item">
+    <label><input type="checkbox"><span>6. Agent panel — thử tool generate_timeline qua chat</span><span class="human">chưa chạy live turn đêm nay</span></label>
+    <div class="how">
+      Right panel → tab <b>Agent</b> (đã fix URL :2025 → khớp server). Gõ: <code>generate timeline for ai-dialogue-therapy</code> — agent sẽ gọi tool mới, trả checklist PASS/FAIL/WARN. Tool đã test trực tiếp (unit-level) nhưng chưa chạy full LLM turn.
+    </div>
+  </div>
+
+  <p class="footer">Commits đêm nay: 4fa02d0 (M1b) · a656e39 (M2) · 48b55bb (M3) · ebc3363 (mini-loop E2E) — pushed, CI xanh. Docs: TODO-NEXT (queue mới A/B/C/D) · spec progress log · HARNESS-RECOVERY · knowledge-base. Server Composer + Agent persistent, đừng tắt nếu muốn agent panel chạy.</p>
+</div>
+</body>
+</html>
