@@ -37,9 +37,9 @@
 
 | # | Việc | Chi tiết |
 |---|---|---|
+| ~~A2~~ | ~~Auto-register compositions~~ | **DONE (f2eeb25)**: generate-timeline tự append projects-manifest.json; Root.tsx map manifest → Composition. Đã verify bằng render lại mini-loop qua manifest path |
 | A1 | Produce flow hoàn chỉnh từ script | VideoDoc → edit-doc (agent viết beats) → scaffold-voice → generate-timeline → render. Hiện mini-loop edit-doc viết tay; agent cần tool viết edit-doc (hoặc dùng HTTP patch ops có sẵn) |
-| A2 | Auto-register compositions | Project mới cần sửa Root.tsx tay (friction đã ghi trong mini-loop E2E) — generate-timeline nên tự thêm composition |
-| A3 | Critique loop trên mini-loop | visual_critique + qa_gate chạy trên mini-loop-test → request_keep → learning loop THẬT (produce → critique → improve) |
+| A3 | Critique loop trên mini-loop | visual_critique ĐÃ chạy (VLM mô tả khớp thiết kế — qa/visual-critique-2026-08-29.md). Còn: qa_gate + request_keep + improve cycle → learning loop THẬT (produce → critique → improve) — KEEP gate chờ user |
 | A4 | Edit-doc ↔ editor-doc coupling | Voice retimes/direction sống trong editor doc; sync refresh từ edit-doc plan (per-field ledger). Produce flow phải viết edit-doc audioPlan + beat timing (scaffold đã làm) — đóng gap khi A1 |
 
 ### B. M2 còn lại (image pipeline)
