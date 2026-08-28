@@ -218,13 +218,17 @@ def main() -> int:
         wer = transcribe_wer(take_path, provider_text)
         score = score_take(mean_db, peak_db, duration, expected_sec)
         peak_pass = peak_db < -0.5
-        dur_pass = abs(duration - expected_sec) / max(0.5, expected_sec) <= 0.15
+        # WER is the truncation oracle: a WPM-heuristic duration mismatch with
+        # a WER-verified full reading is delivery style, not a take failure.
+        tail_pass = tail <= 1.5
+        wer_pass = wer is None or wer <= 0.05
+        dur_fail = abs(duration - expected_sec) / max(0.5, expected_sec) > 0.15
         takes.append({
             "id": f"{safe_clip}-take-{index + 1:02d}",
             "path": str(take_path),
             "metrics": {"durationSec": duration, "meanDb": mean_db, "peakDb": peak_db, "lufs": lufs, "tailSilenceSec": tail, "wer": wer},
             "score": score,
-            "pass": peak_pass and dur_pass and tail <= 1.5 and (wer is None or wer <= 0.05),
+            "pass": peak_pass and tail_pass and wer_pass and not (dur_fail and wer is None),
         })
 
     usable = [t for t in takes if "metrics" in t]
