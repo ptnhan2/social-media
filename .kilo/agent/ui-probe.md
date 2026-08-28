@@ -45,7 +45,16 @@ Chạy đúng bộ checks này và chỉ báo số đo được (mirror `scripts
 7. **Hit-test**: `elementFromPoint(center)` của interactive element trả element khác không liên quan → bị đè kín
 8. **Cursor**: button (không disabled) phải có `cursor: pointer`
 
-### Bước 4 — Chạy ui-audit.mjs (bộ deterministic chuẩn)
+### Bước 4 — Async-button state contract (mọi nút trigger AI/bridge/fetch)
+
+Mỗi nút async phải có 4 trạng thái, kiểm tra bằng click thật trên flow rẻ (search/import — KHÔNG click gen đắt tiền nếu có thay thế):
+1. **Idle**: nút enabled, label rõ hành động
+2. **Busy**: trong 500ms sau click — nút disabled HOẶC đổi label (⏳/spinner) TẠI CHỖ NÚT. Một chấm ● ở statusbar đáy màn hình KHÔNG tính — feedback phải nằm ở điểm hành động (user complaint: "nhấn nút xong nó trơ trơ")
+3. **Terminal success**: ✓ + kết quả hiển thị (ảnh vào grid, status ✓ gần chỗ thao tác)
+4. **Terminal error**: ❌ + thông báo lỗi đọc được
+Nút vi phạm contract → report ISSUES với tên nút + trạng thái thiếu.
+
+### Bước 5 — Chạy ui-audit.mjs (bộ deterministic chuẩn)
 `node scripts/ui-audit.mjs --url <deep-link> --shots ui-audit-shots` (workdir `remotion-composer`) — đọc `ui-audit.json` counts + screenshots paths làm evidence.
 
 ## Report format

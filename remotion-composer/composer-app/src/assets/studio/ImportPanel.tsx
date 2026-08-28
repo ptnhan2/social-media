@@ -57,6 +57,10 @@ export const ImportPanel: React.FC<{
   });
   const [newRecipeName, setNewRecipeName] = React.useState("");
   const [recipeSaving, setRecipeSaving] = React.useState(false);
+  // async-button state contract: every long op in this panel disables its
+  // trigger + swaps its label while in flight (feedback at the point of
+  // action — a statusbar dot alone reads as a dead button)
+  const [busy, setBusy] = React.useState(false);
   // gen call options (áp cho mọi chế độ generate)
   const [genAspect, setGenAspect] = React.useState("1:1");
   const [genSeed, setGenSeed] = React.useState("");
@@ -198,24 +202,17 @@ export const ImportPanel: React.FC<{
     })();
 
   const deletePreset = () =>
-    void (async () => {
+    void run("Đang xoá recipe…", async () => {
       const r = recipes[selectedRecipe];
       if (!r?.user) return;
       if (!window.confirm(`Xoá recipe "${r.label}"?`)) return;
-      onBusy(true);
-      try {
-        await bridge({ op: "delete-recipe", project: projectId, id: selectedRecipe });
-        const next = await refreshRecipes();
-        const first = Object.keys(next)[0] || "__custom__";
-        if (next[first]) selectRecipe(first, next);
-        else setSelectedRecipe("__custom__");
-        onStatus("✓ Đã xoá recipe");
-      } catch (e) {
-        onStatus(`❌ ${String((e as Error).message || e)}`);
-      } finally {
-        onBusy(false);
-      }
-    })();
+      await bridge({ op: "delete-recipe", project: projectId, id: selectedRecipe });
+      const next = await refreshRecipes();
+      const first = Object.keys(next)[0] || "__custom__";
+      if (next[first]) selectRecipe(first, next);
+      else setSelectedRecipe("__custom__");
+      onStatus("✓ Đã xoá recipe");
+    });
 
   const addOptionToField = (fieldName: string) => {
     const v = addOptionText.trim();
@@ -246,6 +243,7 @@ export const ImportPanel: React.FC<{
   }, [refreshPoses]);
 
   const run = async (label: string, fn: () => Promise<void>) => {
+    setBusy(true);
     onBusy(true);
     onStatus(label);
     try {
@@ -253,6 +251,7 @@ export const ImportPanel: React.FC<{
     } catch (e) {
       onStatus(`❌ ${String((e as Error).message || e)}`);
     } finally {
+      setBusy(false);
       onBusy(false);
     }
   };
@@ -335,6 +334,7 @@ export const ImportPanel: React.FC<{
           <div className="as4-presets">
             {SEARCH_PRESETS.map((p) => (
               <button key={p.label} type="button" className="as4-preset-btn" title={p.title}
+                disabled={busy}
                 onClick={() => void searchStock(p.query)}>
                 {p.label}
               </button>
@@ -345,7 +345,7 @@ export const ImportPanel: React.FC<{
             value={stockQuery}
             onChange={(e) => setStockQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && stockQuery.trim()) void searchStock(stockQuery.trim());
+              if (e.key === "Enter" && !busy && stockQuery.trim()) void searchStock(stockQuery.trim());
             }}
             placeholder="Tìm ảnh stock (Pexels + Unsplash)…"
           />
@@ -356,7 +356,8 @@ export const ImportPanel: React.FC<{
                 key={item.id}
                 type="button"
                 className="as4-stock-item"
-                title={`${item.alt} — ${item.photographer} (${item.source}) — click để thêm layer`}
+                title={busy ? "Đang xử lý…" : `${item.alt} — ${item.photographer} (${item.source}) — click để thêm layer`}
+                disabled={busy}
                 onClick={() => void importStock(item)}
               >
                 <img src={item.thumb} alt={item.alt} loading="lazy" />
@@ -537,7 +538,7 @@ export const ImportPanel: React.FC<{
                   </div>
 
                   {isUser && (
-                    <button type="button" className="as4-btn ghost wide danger" onClick={deletePreset}>
+                    <button type="button" className="as4-btn ghost wide danger" onClick={deletePreset} disabled={busy}>
                       🗑 Xoá recipe này
                     </button>
                   )}
@@ -547,8 +548,8 @@ export const ImportPanel: React.FC<{
           )}
 
           <button type="button" className="as4-btn primary wide" onClick={() => void doGenerate()}
-            disabled={!effectivePrompt.trim()}>
-            ✨ Generate
+            disabled={busy || !effectivePrompt.trim()}>
+            {busy ? "⏳ Đang generate…" : "✨ Generate"}
           </button>
 
           <div className="as4-gen-options">
