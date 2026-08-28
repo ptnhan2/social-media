@@ -34,12 +34,15 @@ Bạn là **UI-PROBE AGENT** — verifier UI độc lập. Bạn click qua UI TH
 - Flow cần click do prompt giao (vd: chọn clip → mở tab → sửa field → bấm nút → đợi kết quả)
 
 ### Bước 3 — L4 DOM geometry (evaluate_script)
-Chạy đúng bộ checks này và chỉ báo số đo được:
+Chạy đúng bộ checks này và chỉ báo số đo được (mirror `scripts/ui-audit.mjs`):
 1. **Text overflow**: element có text với `scrollWidth > clientWidth + 3` và `overflowX === "visible"` → tràn chữ thật; `overflowX === "hidden"` + `textOverflow !== "ellipsis"` → clippedText (data bị ẩn âm thầm)
 2. **Tiny targets**: button/input/select/textarea/[role=button] với rect `width < 10 || height < 12`
 3. **Overlap**: sibling rects giao nhau > 4px cả 2 chiều trong aside/header/.ve-prop containers (KHÔNG check timeline clips — absolute positioning là chủ đích)
-4. **Hover rules**: đếm CSS rules chứa `:hover` trong document.styleSheets (tool phán "có hiệu ứng" phải có số này)
-5. **Offscreen-in-flow**: elements trong flow layout tràn viewport (bỏ qua element trong scrollable container có scrollbar)
+4. **Hover rules**: đếm CSS rules chứa `:hover` trong document.styleSheets
+5. **Broken images**: `img.complete && img.naturalWidth === 0` → ảnh 404/vỡ
+6. **Low contrast**: WCAG luminance ratio text-vs-effective-bg < 3.0 (bỏ qua gradient/alpha thấp — threshold 3.0 chỉ bắt fail rõ rệt)
+7. **Hit-test**: `elementFromPoint(center)` của interactive element trả element khác không liên quan → bị đè kín
+8. **Cursor**: button (không disabled) phải có `cursor: pointer`
 
 ### Bước 4 — Chạy ui-audit.mjs (bộ deterministic chuẩn)
 `node scripts/ui-audit.mjs --url <deep-link> --shots ui-audit-shots` (workdir `remotion-composer`) — đọc `ui-audit.json` counts + screenshots paths làm evidence.
