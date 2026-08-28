@@ -23,16 +23,22 @@
   `localhost:5174/editor?project=ai-dialogue-therapy` (beat-05 đang giữ bản
   `[assertive]` + CAPS)
 
-## A. Chờ USER quyết (gates taste/content — không tự quyết)
+## A. ~~Chờ USER quyết~~ → ĐÃ TỰ QUYẾT (29/08 00:35 — correction: test-vehicle content không phải user gate)
 
-| # | Quyết định | Ngữ cảnh |
+> **Bài học (user correction)**: mình đang build HARNESS, không phải sản xuất
+> video. Content của test vehicle = agent tự quyết. User gates chỉ: roadmap,
+> taste principles cho learning loop, paid spend. Memory đã lưu.
+
+| # | Quyết định (agent) | Lý do |
 |---|---|---|
-| A1 | **D8 Voice identity** | Hiện dùng Rachel (default). Giữ hay casting audition? |
-| A2 | **Beat-06** | "Great dialogue is conflict, not comfort" là câu agent tự thêm (không có trong script gốc) — giữ hay bỏ? |
-| A3 | **Pacing** | Video giờ 41.84s (từ 31s gốc) do voice-first retiming. Chấp nhận? |
-| A4 | **QC duration gate** | Logic mới: "±15% HOẶC WER-verified" (đọc nhanh/chậm đủ từ = PASS). Đồng ý? |
-| A5 | **Directed pass 7 beats** | Chỉ đạo v3 tags cho cả video (mood mỗi beat) — làm không? Text per beat là quyết của user trước khi chạy |
-| A6 | **Script fidelity** | Transcripts hiện là bản lược của script gốc (beat-05 thiếu "break the three patterns", "emotions"). Demo thì đã khớp text↔audio; production có cần restore không? |
+| A1 | Giữ Rachel | Harness không cần casting |
+| A2 | Giữ beat-06 | Test content, text↔audio đã khớp — đổi chẳng test gì mới |
+| A3 | Chấp nhận 41.84s | Cơ chế retime chạy đúng mới là feature |
+| A4 | Giữ QC logic (±15% OR WER-verified) | Validated + có tests |
+| A5 | Skip directed pass | Audio tags confirmed; batch regen sẽ test đúng cách trong M3 |
+| A6 | Skip script restore | Chỉ liên quan production thật |
+
+## QUEUE THẬT (harness capability)
 
 ## B. M1b — voice pipeline phần còn lại (spec đã duyệt)
 
@@ -74,10 +80,14 @@
 
 1. **TODO-NEXT update real-time** — mỗi khi đổi chủ đề lớn, 1 dòng status
    vào file này trước khi nhảy (bài học 28/08)
-2. Trước khi kết session: chạy doc-sync một vòng (TODO-NEXT + RECOVERY +
+2. **Test-vehicle content = agent tự quyết** — đừng biến content của demo
+   video thành user gates (bài học 29/08 00:35, memory
+   `harness_goal.test_content_not_user_gates`)
+3. Trước khi kết session: chạy doc-sync một vòng (TODO-NEXT + RECOVERY +
    spec progress log)
-3. Queue mặc định sáng mai: **A1-A6 (quyết của bạn) → B1-B3 (M1b)** — C
-   chỉ chạy sau khi M1b đóng
+4. Queue mặc định: **M1b (B1-B3) → M2 → M3** — M3 đóng produce loop =
+   lần đầu test thesis harness end-to-end (agent tự produce → tự critique →
+   tự fix)
 
 ## Vận hành
 
