@@ -42,7 +42,7 @@ const viewports = viewportsArg.split(",").map((spec) => {
 mkdirSync(shotsDir, { recursive: true });
 
 const AUDIT_FN = () => {
-  const issues = { textOverflow: [], tinyTargets: [], overlap: [], clippedText: [], brokenImages: [], lowContrast: [], coveredInteractives: [], cursorMissing: [], viewportOverflow: [] };
+  const issues = { textOverflow: [], tinyTargets: [], overlap: [], clippedText: [], brokenImages: [], lowContrast: [], coveredInteractives: [], cursorMissing: [], viewportOverflow: [], deadClasses: [] };
   const vw = innerWidth, vh = innerHeight;
   // THE responsive failure signal: the page itself forces horizontal scroll.
   // (Inner scroll containers — the timeline scrolls by design — clip their
@@ -50,6 +50,29 @@ const AUDIT_FN = () => {
   const docOverflow = document.documentElement.scrollWidth - vw;
   if (docOverflow > 2) {
     issues.viewportOverflow.push({ px: Math.round(docOverflow), scrollWidth: document.documentElement.scrollWidth, viewportWidth: vw });
+  }
+  // Dead classes: a ve-* class on a rendered element that NO stylesheet rule
+  // defines. This is the EXACT signature of the voice-panel layout bug
+  // (a component shipped referencing .ve-prop-grid before the CSS existed —
+  // structure looked fine in the a11y tree, layout silently fell apart).
+  {
+    const defined = new Set();
+    for (const sheet of document.styleSheets) {
+      try {
+        for (const rule of sheet.cssRules) {
+          const sel = rule.selectorText || "";
+          for (const cls of sel.match(/\.([a-zA-Z0-9_-]+)/g) ?? []) defined.add(cls.slice(1));
+        }
+      } catch {}
+    }
+    const seen = new Set();
+    for (const el of document.querySelectorAll("[class]")) {
+      for (const cls of String(el.className).split(/\s+/)) {
+        if (!cls.startsWith("ve-") || seen.has(cls)) continue;
+        seen.add(cls);
+        if (!defined.has(cls)) issues.deadClasses.push({ cls, on: el.tagName.toLowerCase() });
+      }
+    }
   }
   const auditRoot = (el) => !!el.closest("header, aside, main, .ve-left-rail");
   const all = [...document.querySelectorAll("body *")].filter((el) => {
@@ -176,6 +199,18 @@ try {
   const page = await browser.newPage({ viewport: { width: viewports[0].w, height: viewports[0].h } });
   await page.goto(url, { waitUntil: "networkidle", timeout: 45000 });
   await page.waitForTimeout(2500);
+  // STATE NAVIGATION (process gap 2026-08-28): audit interaction states, not
+  // just the default page. --click takes comma-separated aria-label substrings;
+  // each is clicked before the FIRST viewport pass so stateful UI (properties
+  // panels, modals, tabs) gets audited too. A layout bug that only renders in
+  // a selected state is invisible to a load-only audit - exactly how the
+  // voice-panel grid bug shipped.
+  const clicks = String(args.click || "").split(",").map(s => s.trim()).filter(Boolean);
+  for (const label of clicks) {
+    const target = page.locator(`[aria-label*="${label}"]`).first();
+    await target.click({ timeout: 8000 });
+    await page.waitForTimeout(700);
+  }
   const results = [];
   for (const vp of viewports) {
     await page.setViewportSize({ width: vp.w, height: vp.h });

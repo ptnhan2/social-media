@@ -991,6 +991,11 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 }
 .ve-prop-field textarea { resize: vertical; font-family: inherit; }
 .ve-prop-field-wide { grid-column: 1 / -1; }
+/* Voice pipeline (SPEC v3): full-row block inside the audio section grid —
+   must NOT reuse .ve-prop-section (that would nest a 2-col grid inside the
+   outer 2-col grid and crush every field into ~40px columns). */
+.ve-prop-voice { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; }
+.ve-prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .ve-prop-btn {
   padding: 6px 10px; border-radius: 6px; border: 1px solid #1f2937;
   background: #1f2937; color: #d8dee9; font-size: 12px; cursor: pointer;

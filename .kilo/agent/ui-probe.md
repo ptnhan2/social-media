@@ -31,6 +31,7 @@ Bạn là **UI-PROBE AGENT** — verifier UI độc lập. Bạn click qua UI TH
 ### Bước 2 — L3 click-through (flow thật)
 - Snapshot → tìm element theo uid → click đúng thao tác user sẽ làm (vd click voice clip → Audio tab hiện fields)
 - Sau mỗi click: snapshot lại, đối chiếu element + giá trị hiện đúng chưa (label, value của input, số liệu QC, buttons tồn tại)
+- **SAU MỖI STATE CHANGE: chạy lại audit DOM (Bước 3) trong state mới** — bug layout thường chỉ render trong state tương tác (panel mở, tab chọn, modal hiện); audit lúc load KHÔNG thấy được. Đây chính là lỗ hổng từng để lọt bug voice-panel grid.
 - Flow cần click do prompt giao (vd: chọn clip → mở tab → sửa field → bấm nút → đợi kết quả)
 
 ### Bước 3 — L4 DOM geometry (evaluate_script)

@@ -89,13 +89,13 @@ const VoiceSection: React.FC<{
   };
 
   return (
-    <div className="ve-prop-section">
-      <label className="ve-prop-field">
+    <div className="ve-prop-voice">
+      <label className="ve-prop-field ve-prop-field-wide">
         <span>Sentence text</span>
         <textarea rows={2} value={draftSentence} onChange={(e) => setDraftSentence(e.target.value)}
           onBlur={() => { if (draftSentence !== sentenceText) onCommit({ sentenceText: draftSentence }); }} />
       </label>
-      <label className="ve-prop-field">
+      <label className="ve-prop-field ve-prop-field-wide">
         <span>Provider text (chuỗi gửi TTS)</span>
         <textarea rows={3} value={draftProvider} onChange={(e) => setDraftProvider(e.target.value)}
           onBlur={() => { if (draftProvider !== providerText) onCommit({ providerText: draftProvider }); }} />
@@ -106,7 +106,7 @@ const VoiceSection: React.FC<{
         <p className="ve-hint">[pause] qua dấu "…", nhấn bằng CAPS — không đổi từ.</p>
       )}
       <div className="ve-prop-grid">
-        <label className="ve-prop-field">
+        <label className="ve-prop-field ve-prop-field-wide">
           <span>Voice ID</span>
           <input type="text" value={String(voiceSettings.voiceId ?? "")} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, voiceId: e.target.value } })} />
         </label>
@@ -124,7 +124,7 @@ const VoiceSection: React.FC<{
         </label>
       </div>
       {qc ? (
-        <div className="ve-prop-field">
+        <div className="ve-prop-field ve-prop-field-wide">
           <span>QC {qc.pass === true ? <b style={{ color: "#2dd4a0" }}>PASS</b> : <b style={{ color: "#ff6b6b" }}>FAIL</b>}</span>
           <ul style={{ margin: "4px 0 0", paddingLeft: 16, fontSize: 12, color: "#b9bfcc" }}>
             {(qc.checks ?? []).map((check) => (
