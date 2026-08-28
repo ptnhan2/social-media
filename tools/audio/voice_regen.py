@@ -113,6 +113,7 @@ def transcribe_wer(path: Path, script: str) -> float | None:
     try:
         import requests
         script_words = re.sub(r"<[^>]+>", " ", script)
+        script_words = re.sub(r"\[[^\]]*\]", " ", script_words)  # v3 audio tags are direction, not speech
         script_words = re.sub(r"[^\w\s']", " ", script_words).lower().split()
         with open(path, "rb") as handle:
             response = requests.post(
