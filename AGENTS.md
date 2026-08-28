@@ -43,7 +43,7 @@
 | `repurpose` | Repurpose | transcript → X/blog/Reddit/shorts |
 | `tiếp tục` | Resume | read project state and current todo; continue without restarting |
 | `check` | Utility | list projects, renders, gates and current state |
-| `build harness` / `spec` | Harness | research → design a harness layer (memory / governance / MCP bridge / style knobs) → spec doc |
+| `build harness` / `spec` | Harness | research → design a harness layer (memory / governance / MCP bridge / style knobs) → **load `design-parity` skill, audit rule #16** → spec doc |
 | `integrate` | Harness | wire Deep Agents ↔ Remotion domain (MCP/CLI), run a PoC loop |
 | `tiến hoá` / `evolve` | Harness | feedback/tutorial → refine treatment/style → approve → persist → apply |
 
@@ -83,7 +83,7 @@ Enforced habits so progress stays durable across sessions:
 7. **Push**: commit and push to GitHub so work is never only local.
 8. **Lean discipline + RCA when fail** (chốt 2026-08-25): do NOT over-process — full SDD / 12-gate manager+worker flows kill shipping (a past project died this way: "made forever, went nowhere"). Ship small, measurable increments; keep the feedback loop short. Three lean gates only:
    - **Before push**: dispatch the **`verify`** subagent (`.kilo/agent/verify.md`) — deterministic evidence for the claim (typecheck + tests + ui-audit + CI + server liveness). Never claim done on self-confidence. For UI claims also dispatch **`ui-probe`** (click-through + DOM geometry, rule #20).
-   - **When diff is large** (>~200 lines, or touching treatment/editor core): load `requesting-code-review` + dispatch a reviewer subagent to read the diff cold (not framed by me). Skip for small diffs — lean.
+   - **When diff is large** (>~200 lines, or touching treatment/editor core): load `requesting-code-review` + dispatch a `general` subagent with a cold-diff review prompt (paste the diff, ask for MAJOR/MINOR/NIT with file:line, no framing from me). Skip for small diffs — lean.
    - **When test/CI fails**: NO blind revert. RCA → reproduce → isolate (exact line/step) → trace **root cause** (the last strange event is rarely the root cause — per AgentRx / causal-debugging) → fix the cause not the symptom → verify → record in `corrections.md` with root-cause + category so the bug class does not recur.
    - **Handoff / end of work with user deliverables**: run the `/handoff` procedure (`.kilo/command/handoff.md`): verify → open servers + deep-links → pre-verified checklist HTML (rules #17+#18).
 
