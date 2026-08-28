@@ -6314,7 +6314,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 0,
-            "endSec": 4.436999999999999
+            "endSec": 4.062
           },
           "label": "Voiceover",
           "source": {
@@ -6322,19 +6322,19 @@
           },
           "color": "cyan",
           "metadata": {
-            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-01.wav",
+            "src": "ai-dialogue-therapy/voice/stems/clip_voice_ai-dialogue-therapy_voice_therapy-beat-01.wav",
             "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
             "sentenceText": "Ever noticed AI characters always sound like they're in a therapy session?",
             "providerText": "Ever noticed AI characters always sound like they're in a therapy session?",
             "segmentId": "ai-dialogue-therapy:voice:therapy-beat-01",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-28T02:17:20",
-              "durationSec": 4.086708,
-              "expectedSec": 4.087000000000001,
+              "checkedAt": "2026-08-28T17:43:18",
+              "durationSec": 3.761646,
+              "expectedSec": 4.8,
               "peakDb": -1.5,
-              "meanDb": -16.8,
-              "lufs": -16.22,
+              "meanDb": -17,
+              "lufs": -16.29,
               "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
@@ -6349,7 +6349,7 @@
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "4.09s vs 4.09s",
+                  "value": "3.76s vs 4.80s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
@@ -6363,20 +6363,50 @@
                   "id": "lufs",
                   "label": "Loudness",
                   "pass": true,
-                  "value": "-16.22 LUFS",
+                  "value": "-16.29 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
             },
-            "takeId": "scribe-qc-pass",
-            "regeneratedAt": "2026-08-27T19:17:20.641Z",
+            "takeId": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-02",
+            "regeneratedAt": "2026-08-28T10:43:18.753Z",
             "overridden": {
               "src": true,
               "qc": true,
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "takes": [
+              {
+                "id": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-01",
+                "path": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\voice\\takes\\clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-01.mp3",
+                "metrics": {
+                  "durationSec": 4.040272,
+                  "meanDb": -25.5,
+                  "peakDb": -5.5,
+                  "lufs": -25.78,
+                  "tailSilenceSec": 0,
+                  "wer": 0
+                },
+                "score": 19.6201,
+                "pass": false
+              },
+              {
+                "id": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-02",
+                "path": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\voice\\takes\\clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-02.mp3",
+                "metrics": {
+                  "durationSec": 3.761633,
+                  "meanDb": -26.4,
+                  "peakDb": -5.2,
+                  "lufs": -26.48,
+                  "tailSilenceSec": 0,
+                  "wer": 0
+                },
+                "score": 20.6808,
+                "pass": false
+              }
+            ]
           },
           "linkedClipIds": [],
           "locked": false,
@@ -6614,7 +6644,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 16.393,
-            "endSec": 26.913000000000004
+            "endSec": 26.853
           },
           "label": "Voiceover",
           "source": {
@@ -6622,20 +6652,20 @@
           },
           "color": "cyan",
           "metadata": {
-            "src": "ai-dialogue-therapy/voice/stems/therapy-beat-05.wav",
+            "src": "ai-dialogue-therapy/voice/stems/clip_voice_ai-dialogue-therapy_voice_therapy-beat-05.wav",
             "transcript": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
             "sentenceText": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
-            "providerText": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
+            "providerText": "[assertive] The fix: STOP validating. STOP reflecting. STOP labeling. Give your characters PERMISSION to interrupt, DISAGREE, and LIE.",
             "segmentId": "ai-dialogue-therapy:voice:therapy-beat-05",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-28T02:17:37",
-              "durationSec": 10.170354,
-              "expectedSec": 11.005999999999998,
+              "checkedAt": "2026-08-29T00:20:46",
+              "durationSec": 10.16,
+              "expectedSec": 7.199999999999999,
               "peakDb": -1.5,
               "meanDb": -16.8,
-              "lufs": -16.22,
-              "tailSilenceSec": 0.3142499999999995,
+              "lufs": -15.82,
+              "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
                 {
@@ -6649,34 +6679,64 @@
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "10.17s vs 11.01s",
+                  "value": "10.16s vs 7.20s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
                   "id": "tail-silence",
                   "label": "Tail silence",
                   "pass": true,
-                  "value": "0.31s",
+                  "value": "0.00s",
                   "threshold": "≤ 1.5s"
                 },
                 {
                   "id": "lufs",
-                  "label": "Loudness",
+                  "label": "Loudness (post)",
                   "pass": true,
-                  "value": "-16.22 LUFS",
+                  "value": "-15.82 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
             },
-            "takeId": "scribe-qc-pass",
-            "regeneratedAt": "2026-08-27T19:17:37.891Z",
+            "takeId": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-02",
+            "regeneratedAt": "2026-08-28T17:20:47.370Z",
             "overridden": {
               "src": true,
               "qc": true,
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "takes": [
+              {
+                "id": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-01",
+                "path": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\voice\\takes\\clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-01.mp3",
+                "metrics": {
+                  "durationSec": 10.72,
+                  "meanDb": -18.2,
+                  "peakDb": -2.4,
+                  "lufs": -17.73,
+                  "tailSilenceSec": 0,
+                  "wer": 0
+                },
+                "score": 14.04,
+                "pass": true
+              },
+              {
+                "id": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-02",
+                "path": "C:\\DevWork\\social-media\\projects\\ai-dialogue-therapy\\voice\\takes\\clip_voice_ai-dialogue-therapy_voice_therapy-beat-05-take-02.mp3",
+                "metrics": {
+                  "durationSec": 10.16,
+                  "meanDb": -18.5,
+                  "peakDb": -1.3,
+                  "lufs": -17.83,
+                  "tailSilenceSec": 0,
+                  "wer": 0
+                },
+                "score": 15.72,
+                "pass": true
+              }
+            ]
           },
           "linkedClipIds": [],
           "locked": false,
@@ -7148,8 +7208,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 15,
-    "updatedAt": "2026-08-27T19:17:46.395Z"
+    "revision": 24,
+    "updatedAt": "2026-08-28T17:20:47.370Z"
   },
   "schemaVersion": 3
 }
