@@ -3,7 +3,7 @@ import type { EditorClip } from "../../../shared/isaacverse/editor";
 import { ANIM_PRESETS, EFFECT_PRESETS, FILTER_PRESETS, SPEED_PRESETS, TRANSITION_PRESETS } from "../../../shared/isaacverse/clipStyle";
 import { validateProviderTextEdit } from "../../../shared/isaacverse/voiceClip";
 
-export type PropTab = "transform" | "text" | "audio" | "animation" | "speed" | "color" | "transition" | "character" | "info";
+export type PropTab = "transform" | "text" | "audio" | "image" | "animation" | "speed" | "color" | "transition" | "character" | "info";
 
 export type CharacterPresenceOptions = {
   pose: string;
@@ -237,6 +237,135 @@ const VoiceSection: React.FC<{
 
 const PALETTE = ["#ffffff", "#000000", "#f2b84b", "#61d7e8", "#ec6a5e", "#2dd4a0", "#8f7bff", "#f4e8cf", "#ffe066", "#ff6b9d", "#4ecdc4", "#45b7d1"];
 
+/** Image clip parity surface (PIPELINE-PRODUCTION-SPEC v3, M2): query card —
+ *  the query that sourced this image (edit + Re-search through the SAME
+ *  endpoint the agent's requery tool calls), candidate grid from the last
+ *  search (click = select + download + provenance), and upload-own. */
+type ImageCandidate = {
+  id: string;
+  source: string;
+  thumb?: string;
+  large?: string;
+  alt?: string;
+  photographer?: string;
+  url?: string;
+};
+
+const ImageSection: React.FC<{
+  clip: EditorClip;
+  projectId?: string;
+  onCommit: (changes: Record<string, unknown>) => void;
+}> = ({ clip, projectId, onCommit }) => {
+  const md = clip.metadata as Record<string, unknown>;
+  const query = typeof md.query === "string" ? md.query : "";
+  const candidates = Array.isArray(md.candidates) ? (md.candidates as ImageCandidate[]) : [];
+  const provenance = md.imageProvenance as { source?: string; photographer?: string; alt?: string; url?: string; selectedAt?: string } | undefined;
+  const history = Array.isArray(md.queryHistory) ? (md.queryHistory as string[]) : [];
+  const [draftQuery, setDraftQuery] = React.useState(query);
+  React.useEffect(() => { setDraftQuery(query); }, [query]);
+  const [searchState, setSearchState] = React.useState<"idle" | "searching" | "error">("idle");
+  const [message, setMessage] = React.useState("");
+  const [selectingId, setSelectingId] = React.useState<string | null>(null);
+
+  const search = async () => {
+    if (!projectId) { setSearchState("error"); setMessage("projectId unavailable"); return; }
+    const q = draftQuery.trim();
+    if (!q) { setSearchState("error"); setMessage("Nhập query trước khi search"); return; }
+    setSearchState("searching"); setMessage("");
+    try {
+      const payload = await fetch("/api/project/image-search", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId, clipId: clip.id, query: q }),
+      }).then((r) => r.json());
+      if (!payload.ok) throw new Error(payload.error || "search failed");
+      setMessage(`${payload.candidateCount} kết quả cho "${q}"`);
+      setSearchState("idle");
+    } catch (error) {
+      setSearchState("error");
+      setMessage(error instanceof Error ? error.message : String(error));
+    }
+  };
+
+  const select = async (candidate: ImageCandidate) => {
+    if (!projectId) { setMessage("projectId unavailable"); return; }
+    setSelectingId(candidate.id); setMessage("");
+    try {
+      const payload = await fetch("/api/project/image-select", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId, clipId: clip.id, candidateId: candidate.id }),
+      }).then((r) => r.json());
+      if (!payload.ok) throw new Error(payload.error || "select failed");
+      setMessage(`Đã đổi ảnh (${payload.provenance?.source ?? "?"})`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setSelectingId(null);
+    }
+  };
+
+  const uploadOwn = async (file: File) => {
+    try {
+      const data = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(reader.error || new Error("Read failed"));
+        reader.readAsDataURL(file);
+      });
+      const payload = await fetch("/api/upload", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: file.name, data }) }).then((r) => r.json());
+      if (!payload.url) throw new Error(payload.error || "Upload failed");
+      onCommit({ src: payload.url, imageProvenance: { source: "user-upload", photographer: "", alt: file.name, url: "", selectedAt: new Date().toISOString() } });
+      setMessage(`Đã dùng ảnh upload: ${file.name}`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    }
+  };
+
+  return (
+    <div className="ve-prop-voice">
+      <label className="ve-prop-field ve-prop-field-wide">
+        <span>Query (chuỗi tìm ảnh)</span>
+        <textarea rows={2} value={draftQuery} onChange={(e) => setDraftQuery(e.target.value)}
+          onBlur={() => { if (draftQuery.trim() && draftQuery !== query) onCommit({ query: draftQuery.trim() }); }} />
+      </label>
+      <div className="ve-prop-section">
+        <button type="button" className="ve-prop-btn" disabled={searchState === "searching"} onClick={() => void search()}>
+          {searchState === "searching" ? "Searching…" : "Re-search (Unsplash)"}
+        </button>
+        <label className="ve-img-upload">
+          <input type="file" accept="image/*" aria-label="Upload own image" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadOwn(file); event.currentTarget.value = ""; }} />
+          <span>Upload ảnh riêng</span>
+        </label>
+      </div>
+      {history.length ? (
+        <p className="ve-hint">History: {history.slice(-4).join(" · ")}</p>
+      ) : null}
+      {candidates.length ? (
+        <div className="ve-prop-field ve-prop-field-wide">
+          <span>Candidates ({candidates.length}) — click để dùng</span>
+          <div className="ve-img-grid">
+            {candidates.map((candidate) => (
+              <button type="button" key={candidate.id} className="ve-img-candidate"
+                title={`${candidate.alt || "no description"} — ${candidate.photographer || "?"} (${candidate.source})`}
+                disabled={selectingId !== null}
+                onClick={() => void select(candidate)}>
+                <span className="ve-img-thumb" style={candidate.thumb ? { backgroundImage: `url(${candidate.thumb})` } : undefined} />
+                <span className="ve-img-meta">{candidate.photographer || candidate.source}</span>
+                {selectingId === candidate.id ? <span className="ve-img-busy">…</span> : null}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="ve-hint">Chưa có candidates — nhập query rồi Re-search.</p>
+      )}
+      {provenance ? (
+        <p className="ve-hint">Ảnh hiện tại: {provenance.source}{provenance.photographer ? ` · ${provenance.photographer}` : ""}{provenance.alt ? ` · ${provenance.alt.slice(0, 60)}` : ""}</p>
+      ) : null}
+      {message ? <p className="ve-hint">{message}</p> : null}
+    </div>
+  );
+};
+
 const ColorField: React.FC<{ label: string; value: string; onChange: (color: string) => void }> = ({ label, value, onChange }) => (
   <label className="ve-prop-field">
     <span>{label}</span>
@@ -263,11 +392,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const isAudio = clip.kind === "voice" || clip.kind === "music" || clip.kind === "audio-event";
   const isTransition = clip.kind === "transition";
   const isOverlay = (clip.kind === "element") || isText;
+  const isImage = clip.kind === "element" && !isText && typeof md.src === "string" && md.src !== "";
 
   const tabs: { id: PropTab; label: string; show: boolean }[] = [
     { id: "transform", label: "Transform", show: isOverlay },
     { id: "text", label: "Text", show: isText },
     { id: "audio", label: "Audio", show: isAudio },
+    { id: "image", label: "Image", show: isImage },
     { id: "animation", label: "Animation", show: isOverlay },
     { id: "speed", label: "Speed", show: isAudio || isOverlay },
     { id: "color", label: "Color", show: isOverlay },
@@ -465,6 +596,12 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <input type="number" step="0.01" min="0" value={num(md.fadeOutSec, 0)} onChange={(e) => onCommit({ fadeOutSec: Number(e.target.value) })} />
           </label>
           <button type="button" className={clip.muted ? "ve-prop-btn active" : "ve-prop-btn"} onClick={() => onCommit({ muted: !clip.muted })}>{clip.muted ? "Unmute" : "Mute"}</button>
+        </div>
+      ) : null}
+
+      {activeTab === "image" && isImage ? (
+        <div className="ve-prop-section">
+          <ImageSection clip={clip} projectId={projectId} onCommit={onCommit} />
         </div>
       ) : null}
 

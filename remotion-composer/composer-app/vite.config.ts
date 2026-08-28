@@ -342,6 +342,106 @@ export default defineConfig({
             outputUrl: job.status === "done" ? `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(job.outputPath)}` : undefined,
           });
         });
+        // ============ IMAGE SOURCING (PIPELINE-PRODUCTION-SPEC v3, M2) ============
+        // Query cards: one search = one query -> candidates recorded on the
+        // image clip (query + queryHistory + candidates metadata) AND in the
+        // per-beat manifest. The UI Image tab and the agent requery tool call
+        // the SAME endpoint — parity by construction.
+        const stockSearch = async (q: string): Promise<unknown[]> => {
+          const results: unknown[] = [];
+          try {
+            const us = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=12&orientation=landscape`, { headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` } });
+            if (us.ok) {
+              const data = await us.json() as any;
+              for (const p of data.results || []) results.push({ id: `unsplash-${p.id}`, source: "unsplash", thumb: p.urls?.small, large: p.urls?.regular, alt: p.alt_description || "", photographer: p.user?.name, url: p.links?.html });
+            }
+          } catch { /* provider down -> empty grid, error surfaced below */ }
+          return results;
+        };
+        server.middlewares.use("/api/project/image-search", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, async (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const clipId = String(body.clipId || "");
+              const query = String(body.query || "").trim();
+              if (!projectId || !clipId || !query) throw new Error("projectId, clipId and query are required");
+              const snapshot = PROJECT_STORE.load(projectId);
+              const editorDoc = snapshot.editorDoc;
+              if (!editorDoc) throw new Error("Project has no editor document");
+              const clip = editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
+              if (!clip) throw new Error(`Unknown clip: ${clipId}`);
+              if (clip.kind !== "element") throw new Error(`Clip ${clipId} is not an image element clip`);
+              const candidates = await stockSearch(query);
+              if (!candidates.length) throw new Error(`No results for "${query}" (provider down or empty query?)`);
+              // manifest: full search history per beat — provenance ledger on disk
+              const beatId = clip.source.beatId || "unassigned";
+              const manifestDir = resolve(WORKSPACE_ROOT, "projects", projectId, "assets", "images");
+              mkdirSync(manifestDir, { recursive: true });
+              const manifestPath = resolve(manifestDir, "manifest.json");
+              let manifest: Record<string, unknown> = {};
+              try { manifest = JSON.parse(readFileSync(manifestPath, "utf-8")); } catch { /* fresh */ }
+              const beats = (manifest.beats as Record<string, unknown[]>) || {};
+              beats[beatId] = [...(beats[beatId] || []), { query, searchedAt: new Date().toISOString(), candidates }].slice(-20);
+              manifest.beats = beats;
+              writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf-8");
+              // clip metadata: query + history + the fresh candidate set (the
+              // Image tab grid reads THIS — one source of truth for the UI)
+              const md = clip.metadata as Record<string, unknown>;
+              const history = [...((md.queryHistory as string[]) || []), (md.query as string) || query].filter(Boolean).slice(-20);
+              const apply = spawnSync(process.execPath, [
+                "scripts/editor-ops.mjs", "--project", projectId, "--op", "metadata",
+                "--clipId", clipId, "--changes", JSON.stringify({ query, queryHistory: history, candidates }),
+              ], { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
+              if (apply.status !== 0) throw new Error(String(apply.stderr || apply.stdout).slice(0, 300));
+              sendJson(res, 200, { ok: true, query, candidateCount: candidates.length, candidates });
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
+          });
+        });
+        // Select a candidate: download the image into the project, swap the
+        // clip src, record provenance. A human selection IS a user edit — the
+        // ledger marks src overridden so a later sync keeps the choice.
+        server.middlewares.use("/api/project/image-select", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, async (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const clipId = String(body.clipId || "");
+              const candidateId = String(body.candidateId || "");
+              if (!projectId || !clipId || !candidateId) throw new Error("projectId, clipId and candidateId are required");
+              const snapshot = PROJECT_STORE.load(projectId);
+              const editorDoc = snapshot.editorDoc;
+              if (!editorDoc) throw new Error("Project has no editor document");
+              const clip = editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
+              if (!clip) throw new Error(`Unknown clip: ${clipId}`);
+              const md = clip.metadata as Record<string, unknown>;
+              const candidates = (md.candidates as { id: string; source: string; thumb?: string; large?: string; alt?: string; photographer?: string; url?: string }[]) || [];
+              const candidate = candidates.find((c) => c.id === candidateId);
+              if (!candidate) throw new Error(`Candidate ${candidateId} not on clip — run a search first`);
+              if (!candidate.large) throw new Error("Candidate has no downloadable URL");
+              const imagesDir = resolve(WORKSPACE_ROOT, "projects", projectId, "assets", "images");
+              mkdirSync(imagesDir, { recursive: true });
+              const fileName = `${candidateId.replace(/[^a-zA-Z0-9._-]/g, "_")}.jpg`;
+              const resp = await fetch(candidate.large, { headers: { "User-Agent": STUDIO_UA } });
+              if (!resp.ok) throw new Error(`download failed: ${resp.status}`);
+              writeFileSync(resolve(imagesDir, fileName), Buffer.from(await resp.arrayBuffer()));
+              const src = `${projectId}/assets/images/${fileName}`;
+              const provenance = { selectedAt: new Date().toISOString(), source: candidate.source, photographer: candidate.photographer || "", alt: candidate.alt || "", url: candidate.url || "" };
+              const apply = spawnSync(process.execPath, [
+                "scripts/editor-ops.mjs", "--project", projectId, "--op", "metadata",
+                "--clipId", clipId, "--changes", JSON.stringify({ src, imageProvenance: provenance }),
+              ], { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
+              if (apply.status !== 0) throw new Error(String(apply.stderr || apply.stdout).slice(0, 300));
+              const publicSync = spawnSync(process.execPath, ["scripts/sync-project-public.mjs", projectId], { cwd: COMPOSER_ROOT, windowsHide: true, stdio: "ignore", timeout: 60000 });
+              if (publicSync.status !== 0) throw new Error("image applied but public sync failed — preview may be stale");
+              sendJson(res, 200, { ok: true, src, provenance });
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
+          });
+        });
         // ============ VOICE PIPELINE (PIPELINE-PRODUCTION-SPEC v3) ============
         // Regen ONE voice clip: TTS takes + deterministic QC + post-chain +
         // apply onto the editor doc via the bridge (revision bump, per-field

@@ -1025,6 +1025,34 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .ve-take-play:hover:not(:disabled), .ve-take-select:hover:not(:disabled) { background: #374151; }
 .ve-take-play:disabled, .ve-take-select:disabled { opacity: 0.45; cursor: default; }
 .ve-take-row.current .ve-take-select { color: #2dd4a0; border-color: #14532d; background: #0d1f18; cursor: default; }
+/* M2 image query card: candidate grid — 3 thumbs per row, fixed aspect, the
+   photographer credit sits INSIDE the thumb (no overlap with neighbors). */
+.ve-img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.ve-img-candidate {
+  position: relative; display: flex; flex-direction: column; gap: 2px;
+  padding: 0; border: 1px solid #1f2937; border-radius: 5px; overflow: hidden;
+  background: #111827; cursor: pointer; min-width: 0;
+}
+.ve-img-candidate:hover:not(:disabled) { border-color: #3b82f6; }
+.ve-img-candidate:disabled { opacity: 0.55; cursor: default; }
+.ve-img-thumb {
+  display: block; width: 100%; aspect-ratio: 4 / 3; background-size: cover;
+  background-position: center; background-color: #1f2937; flex-shrink: 0;
+}
+.ve-img-meta {
+  font: 9px/1.2 Inter, "Segoe UI", system-ui, sans-serif; color: #6b7280;
+  padding: 2px 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ve-img-busy {
+  position: absolute; top: 2px; right: 2px; padding: 1px 4px; border-radius: 3px;
+  background: #1d4ed8; color: #fff; font: 700 9px/1.2 Inter, sans-serif;
+}
+.ve-img-upload {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: #d8dee9;
+  border: 1px dashed #374151; border-radius: 5px; padding: 6px 8px; cursor: pointer;
+}
+.ve-img-upload:hover { border-color: #3b82f6; }
+.ve-img-upload input[type="file"] { font-size: 10px; color: #6b7280; max-width: 100%; }
 .ve-timeline-resizer { height: 5px; cursor: row-resize; background: #1f2937; flex-shrink: 0; }
 .ve-timeline-resizer:hover { background: #374151; }
 .ve-timeline-dock { overflow: hidden; min-height: 0; }
@@ -1196,10 +1224,11 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 }
 .ve-prop-toggles button.active { background: #2563eb; border-color: #2563eb; }
 .ve-kf-arm {
-  width: 16px; height: 16px; border: 1px solid #4b5563; background: transparent; color: #4b5563;
+  width: 16px; height: 16px; border: 1px solid #7c8aa0; background: transparent; color: #9fb0c8;
   font-size: 9px; line-height: 1; cursor: pointer; border-radius: 2px; padding: 0; transform: rotate(45deg);
   display: inline-flex; align-items: center; justify-content: center;
 }
+.ve-kf-arm:hover { border-color: #c3d1e4; color: #d4e0ef; }
 .ve-kf-arm.armed { background: #ecb84b; border-color: #ecb84b; color: #111; }
 .ve-kf-easing { align-items: center; }
 .ve-kf-easing select { background: #111827; color: #d8dee9; border: 1px solid #1f2937; border-radius: 5px; padding: 5px 7px; font-size: 12px; }

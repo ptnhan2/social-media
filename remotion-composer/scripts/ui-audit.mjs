@@ -207,7 +207,11 @@ try {
   // voice-panel grid bug shipped.
   const clicks = String(args.click || "").split(",").map(s => s.trim()).filter(Boolean);
   for (const label of clicks) {
-    const target = page.locator(`[aria-label*="${label}"]`).first();
+    // "aria-label text" or "aria-label text#3" — the #N suffix selects the
+    // Nth match (0-based) when several elements share a label (e.g. eight
+    // "Expand beat elements" toggles, one per beat).
+    const [text, index] = label.split("#");
+    const target = page.locator(`[aria-label*="${text}"]`).nth(Number(index || 0));
     await target.click({ timeout: 8000 });
     await page.waitForTimeout(700);
   }

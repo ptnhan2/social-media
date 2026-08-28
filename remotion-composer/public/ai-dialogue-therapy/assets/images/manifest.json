@@ -1,0 +1,120 @@
+{
+  "beats": {
+    "therapy-beat-06": [
+      {
+        "query": "two people tense conversation argument",
+        "searchedAt": "2026-08-28T18:11:43.837Z",
+        "candidates": [
+          {
+            "id": "unsplash-yrSta3T5GDs",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1713942590288-1468a2d88ee4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MXx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1713942590288-1468a2d88ee4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MXx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man sitting at a table talking to a woman",
+            "photographer": "Vitaly Gariev",
+            "url": "https://unsplash.com/photos/a-man-sitting-at-a-table-talking-to-a-woman-yrSta3T5GDs"
+          },
+          {
+            "id": "unsplash-mv38TB_Ljj8",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1626447269096-f8665509589c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8Mnx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1626447269096-f8665509589c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8Mnx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "A man and a woman in grey shirts pointing fingers at each other",
+            "photographer": "Afif Ramdhasuma",
+            "url": "https://unsplash.com/photos/man-and-woman-pointing-fingers-mv38TB_Ljj8"
+          },
+          {
+            "id": "unsplash-rjzW_IIjBJc",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1708201597035-60691c4152cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8M3x8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1708201597035-60691c4152cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8M3x8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "A man and a woman standing next to each other",
+            "photographer": "Matheus Câmara da Silva",
+            "url": "https://unsplash.com/photos/a-man-and-a-woman-standing-next-to-each-other-rjzW_IIjBJc"
+          },
+          {
+            "id": "unsplash-AslctIHnC2E",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1758524944669-8194fae9813e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8NHx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1758524944669-8194fae9813e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8NHx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "Couple arguing while sitting on a couch",
+            "photographer": "Vitaly Gariev",
+            "url": "https://unsplash.com/photos/couple-arguing-while-sitting-on-a-couch-AslctIHnC2E"
+          },
+          {
+            "id": "unsplash-VZQAo20ArSA",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1713942590288-cd74f53b42d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8NXx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1713942590288-cd74f53b42d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8NXx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man sitting at a table talking to a woman",
+            "photographer": "Vitaly Gariev",
+            "url": "https://unsplash.com/photos/a-man-sitting-at-a-table-talking-to-a-woman-VZQAo20ArSA"
+          },
+          {
+            "id": "unsplash-mkQsoiskWSg",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1552345387-67b2f85f25c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8Nnx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1552345387-67b2f85f25c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8Nnx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "man wearing black suit jacket",
+            "photographer": "Sebastian Herrmann",
+            "url": "https://unsplash.com/photos/man-wearing-black-suit-jacket-mkQsoiskWSg"
+          },
+          {
+            "id": "unsplash-U7zb_4mTVPQ",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1655720355810-fcdfd7a742b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8N3x8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1655720355810-fcdfd7a742b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8N3x8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man and a woman sitting on a couch",
+            "photographer": "Iwaria Inc.",
+            "url": "https://unsplash.com/photos/a-man-and-a-woman-sitting-on-a-couch-U7zb_4mTVPQ"
+          },
+          {
+            "id": "unsplash-DVoh8VY4NTQ",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1753351058013-995eed991252?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8OHx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1753351058013-995eed991252?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8OHx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "Two women converse at a cafe",
+            "photographer": "Vitaly Gariev",
+            "url": "https://unsplash.com/photos/two-women-converse-at-a-cafe-DVoh8VY4NTQ"
+          },
+          {
+            "id": "unsplash-wWpNyj0HVQg",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1670272501077-c72d2d42f362?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8OXx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1670272501077-c72d2d42f362?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8OXx8dHdvJTIwcGVvcGxlJTIwdGVuc2UlMjBjb252ZXJzYXRpb24lMjBhcmd1bWVudHxlbnwwfDB8fHwxNzg3OTQwNzYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man and woman looking at a phone",
+            "photographer": "Samsung UK",
+            "url": "https://unsplash.com/photos/a-man-and-woman-looking-at-a-phone-wWpNyj0HVQg"
+          },
+          {
+            "id": "unsplash-VijD0iAIy7s",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1659352786566-fd1c165b3260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MTB8fHR3byUyMHBlb3BsZSUyMHRlbnNlJTIwY29udmVyc2F0aW9uJTIwYXJndW1lbnR8ZW58MHwwfHx8MTc4Nzk0MDc2MHww&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1659352786566-fd1c165b3260?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MTB8fHR3byUyMHBlb3BsZSUyMHRlbnNlJTIwY29udmVyc2F0aW9uJTIwYXJndW1lbnR8ZW58MHwwfHx8MTc4Nzk0MDc2MHww&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man and woman looking at each other",
+            "photographer": "Fotos",
+            "url": "https://unsplash.com/photos/a-man-and-woman-looking-at-each-other-VijD0iAIy7s"
+          },
+          {
+            "id": "unsplash-g6jQA81jP3I",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1659356874017-f29470e95009?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MTF8fHR3byUyMHBlb3BsZSUyMHRlbnNlJTIwY29udmVyc2F0aW9uJTIwYXJndW1lbnR8ZW58MHwwfHx8MTc4Nzk0MDc2MHww&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1659356874017-f29470e95009?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MTF8fHR3byUyMHBlb3BsZSUyMHRlbnNlJTIwY29udmVyc2F0aW9uJTIwYXJndW1lbnR8ZW58MHwwfHx8MTc4Nzk0MDc2MHww&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man and woman posing for a picture",
+            "photographer": "Fotos",
+            "url": "https://unsplash.com/photos/a-man-and-woman-posing-for-a-picture-g6jQA81jP3I"
+          },
+          {
+            "id": "unsplash-cYKM1FrPUnI",
+            "source": "unsplash",
+            "thumb": "https://images.unsplash.com/photo-1659356874545-bac91517e85e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MTJ8fHR3byUyMHBlb3BsZSUyMHRlbnNlJTIwY29udmVyc2F0aW9uJTIwYXJndW1lbnR8ZW58MHwwfHx8MTc4Nzk0MDc2MHww&ixlib=rb-4.1.0&q=80&w=400",
+            "large": "https://images.unsplash.com/photo-1659356874545-bac91517e85e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDEzNzc2fDB8MXxzZWFyY2h8MTJ8fHR3byUyMHBlb3BsZSUyMHRlbnNlJTIwY29udmVyc2F0aW9uJTIwYXJndW1lbnR8ZW58MHwwfHx8MTc4Nzk0MDc2MHww&ixlib=rb-4.1.0&q=80&w=1080",
+            "alt": "a man and woman looking at each other",
+            "photographer": "Fotos",
+            "url": "https://unsplash.com/photos/a-man-and-woman-looking-at-each-other-cYKM1FrPUnI"
+          }
+        ]
+      }
+    ]
+  }
+}
