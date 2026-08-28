@@ -1,6 +1,6 @@
 ﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch, appendFileSync } from "fs";
 import { resolve, sep } from "path";
 import { fileURLToPath } from "url";
 import { spawn, spawnSync } from "child_process";
@@ -343,6 +343,15 @@ export default defineConfig({
           });
         });
         // ============ IMAGE SOURCING (PIPELINE-PRODUCTION-SPEC v3, M2) ============
+        // Learning hooks (spec §7): every human override on a clip IS a
+        // training signal — append to harness/memories/feedback.jsonl (the
+        // file pattern_extractor mines for principle candidates). Same shape
+        // as the KEEP-gate verdicts: { ts, kind, knob, from, to, projectId }.
+        const appendFeedback = (record: Record<string, unknown>) => {
+          try {
+            appendFileSync(resolve(WORKSPACE_ROOT, "harness", "memories", "feedback.jsonl"), `${JSON.stringify({ ts: new Date().toISOString(), kind: "clip_edit", ...record })}\n`, "utf-8");
+          } catch { /* feedback logging must never break the pipeline */ }
+        };
         // Query cards: one search = one query -> candidates recorded on the
         // image clip (query + queryHistory + candidates metadata) AND in the
         // per-beat manifest. The UI Image tab and the agent requery tool call
@@ -389,6 +398,11 @@ export default defineConfig({
               // Image tab grid reads THIS — one source of truth for the UI)
               const md = clip.metadata as Record<string, unknown>;
               const history = [...((md.queryHistory as string[]) || []), (md.query as string) || query].filter(Boolean).slice(-20);
+              // learning hook: a REWORDING of the query is the demonstration
+              // (ILF) — record only when the query actually changed
+              if (typeof md.query === "string" && md.query && md.query !== query) {
+                appendFeedback({ knob: `image.${clipId}.query`, from: md.query, to: query, projectId });
+              }
               const apply = spawnSync(process.execPath, [
                 "scripts/editor-ops.mjs", "--project", projectId, "--op", "metadata",
                 "--clipId", clipId, "--changes", JSON.stringify({ query, queryHistory: history, candidates }),
@@ -429,6 +443,7 @@ export default defineConfig({
               writeFileSync(resolve(imagesDir, fileName), Buffer.from(await resp.arrayBuffer()));
               const src = `${projectId}/assets/images/${fileName}`;
               const provenance = { selectedAt: new Date().toISOString(), source: candidate.source, photographer: candidate.photographer || "", alt: candidate.alt || "", url: candidate.url || "" };
+              appendFeedback({ knob: `image.${clipId}.src`, from: String(md.src ?? ""), to: src, projectId, provenance: `${candidate.source}/${candidate.photographer || "?"}` });
               const apply = spawnSync(process.execPath, [
                 "scripts/editor-ops.mjs", "--project", projectId, "--op", "metadata",
                 "--clipId", clipId, "--changes", JSON.stringify({ src, imageProvenance: provenance }),
@@ -549,6 +564,9 @@ export default defineConfig({
               const md = clip.metadata as Record<string, unknown>;
               const breathPadSec = typeof body.breathPadSec === "number" ? body.breathPadSec : (typeof md.breathPadSec === "number" ? md.breathPadSec : undefined);
               const payload = { projectId, clipId, takeId, ...(breathPadSec !== undefined ? { breathPadSec } : {}) };
+              // learning hook (spec §7): a human take override is the
+              // STRONGEST voice signal — record the swap for the extractor
+              appendFeedback({ knob: `voice.${clipId}.takeId`, from: String(md.takeId ?? ""), to: takeId, projectId });
               const jobId = `voice-take-${Date.now()}`;
               voiceJobs.set(jobId, { status: "regenerating", startedAt: Date.now() });
               const child = spawn(PY, [resolve(WORKSPACE_ROOT, "tools/audio/voice_take.py")], {
