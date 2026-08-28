@@ -27,18 +27,20 @@ const voiceClip = (extra: Record<string, unknown> = {}): EditorClip => ({
   metadata: { src: "proj/voice.mp3", transcript: "A cut is a decision", sentenceText: "A cut is a decision", providerText: "A cut is a DECISION", segmentId: "seg-1", ...extra },
 } as unknown as EditorClip);
 
-describe("buildProviderText (stage B text prep)", () => {
-  it("converts ellipsis to a capped number of break tags", () => {
-    const out = buildProviderText("wait... really... maybe... yes");
-    expect(out.match(/<break time="0.4s"\/>/g)?.length).toBe(2);
-    expect(out).toContain("maybe… yes");
-  });
-  it("never changes words — only punctuation-level transforms", () => {
-    const text = "The timeline is NOT the edit.";
-    expect(buildProviderText(text).replace(/<[^>]+>/g, " ")).toMatch(/timeline is NOT the edit/);
-  });
-  it("collapses whitespace and trims", () => {
+describe("buildProviderText (stage B text prep, v3-safe)", () => {
+  it("collapses whitespace and trims — nothing else changes", () => {
     expect(buildProviderText("  hello   world  ")).toBe("hello world");
+  });
+  it("keeps ellipsis verbatim (v3 pauses come from punctuation, not break tags)", () => {
+    expect(buildProviderText("wait... really... maybe... yes")).toBe("wait... really... maybe... yes");
+  });
+  it("passes CAPS and audio tags through untouched (user direction is verbatim)", () => {
+    const text = "make it PUNCHY [pause] [excited] now";
+    expect(buildProviderText(text)).toBe(text);
+  });
+  it("never changes words — verbatim passthrough", () => {
+    const text = "The timeline is NOT the edit.";
+    expect(buildProviderText(text)).toBe(text);
   });
 });
 
@@ -120,11 +122,11 @@ describe("voice clip projection (direction fields from generation)", () => {
     const voiceClip = editor.tracks.flatMap((t) => t.clips).find((c) => c.kind === "voice");
     expect(voiceClip).toBeDefined();
     expect(voiceClip?.metadata.sentenceText).toBe("make it punchy... now");
-    expect(voiceClip?.metadata.providerText).toContain('<break time="0.4s"/>');
+    expect(voiceClip?.metadata.providerText).toBe("make it punchy... now");
     expect(voiceClip?.source.beatId).toBe("beat-1");
   });
-  it("defaults voice settings exist for the UI", () => {
-    expect(VOICE_SETTINGS_DEFAULTS.modelId).toBe("eleven_multilingual_v2");
+  it("defaults voice settings exist for the UI (eleven_v3 is the standard)", () => {
+    expect(VOICE_SETTINGS_DEFAULTS.modelId).toBe("eleven_v3");
     expect(VOICE_SETTINGS_DEFAULTS.stability).toBe(0.35);
   });
 });

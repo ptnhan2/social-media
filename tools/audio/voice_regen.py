@@ -142,7 +142,7 @@ def tts_take(text: str, settings: dict, out_path: Path) -> None:
         raise RuntimeError("No ELEVENLABS_API_KEY")
     payload = {
         "text": text,
-        "model_id": settings.get("modelId", "eleven_multilingual_v2"),
+        "model_id": settings.get("modelId", "eleven_v3"),
         "voice_settings": {
             "stability": settings.get("stability", 0.35),
             "similarity_boost": settings.get("similarityBoost", 0.75),

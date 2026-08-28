@@ -106,7 +106,7 @@ const VoiceSection: React.FC<{
       {!wordCheck.ok ? (
         <p className="ve-hint">⚠ Từ đã đổi ({wordCheck.changedWords.slice(0, 6).join(", ")}) — tags/CAPS thoải mái, nhưng đổi từ sẽ lệch script.</p>
       ) : (
-        <p className="ve-hint">[pause] qua dấu "…", nhấn bằng CAPS — không đổi từ.</p>
+        <p className="ve-hint">v3: nhấn từ = VIẾT HOA · pause = "…" hoặc [pause] · cảm xúc = [excited] [whisper] [sarcastic]... · không đổi từ.</p>
       )}
       <div className="ve-prop-grid">
         <label className="ve-prop-field ve-prop-field-wide">

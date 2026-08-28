@@ -18,7 +18,7 @@ export type VoiceSettings = {
 
 export const VOICE_SETTINGS_DEFAULTS: VoiceSettings = {
   voiceId: "21m00Tcm4TlvDq8ikWAM",
-  modelId: "eleven_multilingual_v2",
+  modelId: "eleven_v3",
   stability: 0.35,
   similarityBoost: 0.75,
   style: 0.35,
@@ -59,20 +59,15 @@ export const VOICE_QC_THRESHOLDS = {
   lraTarget: 11,
 } as const;
 
-/** ElevenLabs v2-safe text prep (stage B direction). Iron rule: NEVER add,
- *  remove or reword — only punctuation-level transforms. v3-only constructs
- *  (audio tags) are avoided so the default multilingual_v2 path stays valid. */
-export const buildProviderText = (
-  sentenceText: string,
-  opts: { maxBreaks?: number } = {},
-): string => {
-  const maxBreaks = opts.maxBreaks ?? 2;
-  let text = sentenceText.replace(/\s+/g, " ").trim();
-  // "..." → explicit pause; cap the count — too many breaks destabilize v2
-  let breaks = 0;
-  text = text.replace(/\.\.\./g, () => (breaks < maxBreaks ? (breaks += 1, `<break time="0.4s"/>`) : "…"));
-  return text;
-};
+/** ElevenLabs text prep (stage B direction), v3-safe. Iron rule: NEVER add,
+ *  remove or reword — only whitespace collapsing. eleven_v3 (the standard
+ *  since 2026-08-28) does NOT support SSML break tags — pauses come from
+ *  punctuation (ellipses) and audio tags ([pause], [excited], [whispers]...),
+ *  emphasis from CAPS; all pass through verbatim for the user to direct.
+ *  (The old v2 path converted "..." to <break time="0.4s"/> — v3 rejects
+ *  break tags, so the conversion is retired.) */
+export const buildProviderText = (sentenceText: string): string =>
+  sentenceText.replace(/\s+/g, " ").trim();
 
 /** Soft validation for user edits of providerText: words must match the
  *  sentence (tags/CAPS/punctuation may change). Returns the changed words so
