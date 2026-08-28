@@ -54,9 +54,9 @@
 
 | # | Việc | Chi tiết |
 |---|---|---|
+| ~~C3~~ | ~~Feedback.jsonl hooks~~ | **DONE (22f2def)**: take switch + image select + query reword đều ghi vào harness/memories/feedback.jsonl (verified live, 7→10 records) |
 | C1 | B4 per-field ledger cho trim/move/nudge | Hiện chỉ setEditorClipMetadata + retimeVoiceClip có per-field |
 | C2 | M4 mix-plan | Music/SFX clips + DuckZones + master LUFS emit |
-| C3 | Feedback.jsonl hooks | Take switch + image select + query edit → diff record (spec §7 learning hooks — increment nhỏ, làm cùng A3) |
 
 ### D. Tech debt (từ các session trước — chưa đóng)
 
