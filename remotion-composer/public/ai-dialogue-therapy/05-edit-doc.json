@@ -14,7 +14,7 @@
       ],
       "journeySlot": "status_quo",
       "startSec": 0,
-      "durationSec": 3.5,
+      "durationSec": 4.437,
       "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
       "narrativeFunction": "name the false solution",
       "treatment": {
@@ -53,7 +53,7 @@
         "therapy-beat-02:shot-01"
       ],
       "journeySlot": "call",
-      "startSec": 3.5,
+      "startSec": 4.437,
       "durationSec": 3.5,
       "transcript": "I hear you saying that. That must be really hard.",
       "narrativeFunction": "reframe the unit of editing",
@@ -131,8 +131,8 @@
         "therapy-beat-03:shot-01"
       ],
       "journeySlot": "trials",
-      "startSec": 7,
-      "durationSec": 3.5,
+      "startSec": 7.937,
+      "durationSec": 3.694,
       "transcript": "This isn't a bug — it's RLHF's fingerprint.",
       "narrativeFunction": "show evidence in context",
       "treatment": {
@@ -175,8 +175,8 @@
         "therapy-beat-04:shot-01"
       ],
       "journeySlot": "approach",
-      "startSec": 10.5,
-      "durationSec": 3.5,
+      "startSec": 11.631,
+      "durationSec": 4.762,
       "transcript": "Models get rewarded for empathy, so every character becomes a counselor.",
       "narrativeFunction": "give a repeatable process",
       "treatment": {
@@ -228,8 +228,8 @@
         "therapy-beat-05:shot-01"
       ],
       "journeySlot": "crisis",
-      "startSec": 14,
-      "durationSec": 4.5,
+      "startSec": 16.393,
+      "durationSec": 11.356,
       "transcript": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
       "narrativeFunction": "compare the meaningful choice",
       "treatment": {
@@ -287,7 +287,7 @@
       "audioCues": [
         {
           "id": "therapy-beat-05:impact",
-          "atSec": 2.0,
+          "atSec": 2,
           "durationSec": 0.5,
           "src": "sfx/impact.mp3",
           "reason": "selection moment"
@@ -301,7 +301,7 @@
         "therapy-beat-06:shot-01"
       ],
       "journeySlot": "reward",
-      "startSec": 18.5,
+      "startSec": 27.749,
       "durationSec": 4,
       "transcript": "Great dialogue is conflict, not comfort.",
       "narrativeFunction": "name the failure mode",
@@ -338,8 +338,8 @@
         "therapy-beat-07:shot-01"
       ],
       "journeySlot": "return",
-      "startSec": 22.5,
-      "durationSec": 3.5,
+      "startSec": 31.749,
+      "durationSec": 5.087,
       "transcript": "That's when AI dialogue starts sounding like fiction instead of a support group.",
       "narrativeFunction": "deliver the usable rule",
       "treatment": {
@@ -374,7 +374,7 @@
         "therapy-beat-08:shot-01"
       ],
       "journeySlot": "resolution",
-      "startSec": 26,
+      "startSec": 36.836,
       "durationSec": 5,
       "transcript": "",
       "narrativeFunction": "resolve with a memorable rule",
@@ -424,12 +424,53 @@
   "audioPlan": {
     "voice": [
       {
-        "id": "ai-dialogue-therapy:voice",
-        "src": "ai-dialogue-therapy/audio/voice.mp3",
+        "id": "ai-dialogue-therapy:voice:therapy-beat-01",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-01.wav",
         "startSec": 0,
-        "endSec": 31,
-        "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
-        "gainDb": 0
+        "endSec": 4.437,
+        "transcript": "Ever noticed AI characters always sound like they're in a therapy session?"
+      },
+      {
+        "id": "ai-dialogue-therapy:voice:therapy-beat-02",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-02.wav",
+        "startSec": 4.437,
+        "endSec": 7.937,
+        "transcript": "I hear you saying that. That must be really hard."
+      },
+      {
+        "id": "ai-dialogue-therapy:voice:therapy-beat-03",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-03.wav",
+        "startSec": 7.937,
+        "endSec": 11.631,
+        "transcript": "This isn't a bug — it's RLHF's fingerprint."
+      },
+      {
+        "id": "ai-dialogue-therapy:voice:therapy-beat-04",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-04.wav",
+        "startSec": 11.631,
+        "endSec": 16.393,
+        "transcript": "Models get rewarded for empathy, so every character becomes a counselor."
+      },
+      {
+        "id": "ai-dialogue-therapy:voice:therapy-beat-05",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-05.wav",
+        "startSec": 16.393,
+        "endSec": 27.749,
+        "transcript": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie."
+      },
+      {
+        "id": "ai-dialogue-therapy:voice:therapy-beat-06",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-06.wav",
+        "startSec": 27.749,
+        "endSec": 31.749,
+        "transcript": "Great dialogue is conflict, not comfort."
+      },
+      {
+        "id": "ai-dialogue-therapy:voice:therapy-beat-07",
+        "src": "ai-dialogue-therapy/voice/stems/therapy-beat-07.wav",
+        "startSec": 31.749,
+        "endSec": 36.836,
+        "transcript": "That's when AI dialogue starts sounding like fiction instead of a support group."
       }
     ],
     "music": [

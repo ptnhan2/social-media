@@ -6329,7 +6329,7 @@
             "segmentId": "ai-dialogue-therapy:voice:therapy-beat-01",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-28T17:43:18",
+              "checkedAt": "2026-08-29T00:58:39",
               "durationSec": 3.761646,
               "expectedSec": 4.8,
               "peakDb": -1.5,
@@ -6361,7 +6361,7 @@
                 },
                 {
                   "id": "lufs",
-                  "label": "Loudness",
+                  "label": "Loudness (post)",
                   "pass": true,
                   "value": "-16.29 LUFS",
                   "threshold": "-16 ±1.5"
@@ -6369,7 +6369,7 @@
               ]
             },
             "takeId": "clip_voice_ai-dialogue-therapy_voice_therapy-beat-01-take-02",
-            "regeneratedAt": "2026-08-28T10:43:18.753Z",
+            "regeneratedAt": "2026-08-28T17:58:40.346Z",
             "overridden": {
               "src": true,
               "qc": true,
@@ -6556,7 +6556,8 @@
               "takeId": true,
               "takes": true,
               "regeneratedAt": true
-            }
+            },
+            "userEdited": true
           },
           "linkedClipIds": [],
           "locked": false,
@@ -7208,8 +7209,8 @@
   ],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 24,
-    "updatedAt": "2026-08-28T17:20:47.370Z"
+    "revision": 28,
+    "updatedAt": "2026-08-28T18:02:49.876Z"
   },
   "schemaVersion": 3
 }
