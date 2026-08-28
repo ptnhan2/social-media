@@ -422,6 +422,11 @@ export default defineConfig({
                     "--clipId", clipId, "--result", JSON.stringify(result),
                   ], { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
                   if (apply.status !== 0) throw new Error(String(apply.stderr || apply.stdout).slice(0, 300));
+                  // Sync the fresh stem + docs into public/ — the preview
+                  // fetches audio from the vite public dir; without this the
+                  // browser keeps playing the STALE stem after a regen.
+                  const publicSync = spawnSync(process.execPath, ["scripts/sync-project-public.mjs", projectId], { cwd: COMPOSER_ROOT, windowsHide: true, stdio: "ignore", timeout: 60000 });
+                  if (publicSync.status !== 0) throw new Error("stem synced to editor doc but public sync failed — preview audio may be stale");
                   job.status = "done";
                   job.result = { ...result, applied: JSON.parse(jsonSpan(apply.stdout) || "{}") };
                 } catch (error) {

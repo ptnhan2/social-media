@@ -65,10 +65,13 @@ const VoiceSection: React.FC<{
     if (!projectId) { setRegenState("error"); setRegenMessage("projectId unavailable"); return; }
     setRegenState("running"); setRegenMessage("");
     try {
+      // Send the CURRENT field value explicitly — the server-side clip
+      // metadata may be stale (the onBlur commit is async and races this
+      // POST). The user must hear exactly the text on screen.
       const start = await fetch("/api/project/audio-regen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId, clipId: clip.id, takes: 2 }),
+        body: JSON.stringify({ projectId, clipId: clip.id, takes: 2, providerText: draftProvider.trim() || undefined }),
       }).then((r) => r.json());
       if (!start.jobId) throw new Error(start.error || "regen failed to start");
       for (let i = 0; i < 90; i += 1) {
