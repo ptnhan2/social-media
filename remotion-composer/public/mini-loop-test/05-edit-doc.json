@@ -1,0 +1,115 @@
+{
+  "id": "mini-loop-edit-v001",
+  "videoId": "mini-loop-test",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationSec": 13.69,
+  "beats": [
+    {
+      "id": "mini-beat-01",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 0,
+      "durationSec": 4.03,
+      "transcript": "This video was produced by an agent harness, end to end.",
+      "narrativeFunction": "hook",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "MADE BY THE LOOP",
+          "subtitle": "zero manual edits",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "mini-beat-02",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "struggle",
+      "startSec": 4.03,
+      "durationSec": 5.55,
+      "transcript": "The agent plans, validates, and generates the timeline without a single manual edit.",
+      "narrativeFunction": "show the process",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "PLAN - VALIDATE - GENERATE",
+          "subtitle": "the produce step, closed",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "mini-beat-03",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "resolution",
+      "startSec": 9.58,
+      "durationSec": 4.11,
+      "transcript": "That is the loop: produce, critique, improve.",
+      "narrativeFunction": "resolution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "THE LOOP IS CLOSED",
+          "subtitle": "produce - critique - improve",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [
+      {
+        "id": "mini-loop-test:voice:mini-beat-01",
+        "src": "mini-loop-test/voice/stems/mini-beat-01.wav",
+        "startSec": 0,
+        "endSec": 4.03,
+        "transcript": "This video was produced by an agent harness, end to end."
+      },
+      {
+        "id": "mini-loop-test:voice:mini-beat-02",
+        "src": "mini-loop-test/voice/stems/mini-beat-02.wav",
+        "startSec": 4.03,
+        "endSec": 9.58,
+        "transcript": "The agent plans, validates, and generates the timeline without a single manual edit."
+      },
+      {
+        "id": "mini-loop-test:voice:mini-beat-03",
+        "src": "mini-loop-test/voice/stems/mini-beat-03.wav",
+        "startSec": 9.58,
+        "endSec": 13.69,
+        "transcript": "That is the loop: produce, critique, improve."
+      }
+    ],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {}
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  }
+}
