@@ -1,101 +1,90 @@
-# TODO NEXT — SESSION 2026-08-27 — PHASE 1 SHIPPED, PHASE 2 SPEC READY
+# TODO NEXT — Updated 2026-08-29 00:30 (sau session 28/08 toàn ngày)
 
-> **Phase 1 (lấp nền) HOÀN TẤT 27/08**: typography foundation live — Anton/
-> Inter/Lora thay 47 chỗ hardcode. Font là KNOB (store v74). Parity PASS +
-> cải thiện. **Font A/B chạy qua agent loop LẦN ĐẦU** (run_task.py, KEEP gate
-> thật): Anton giữ, agent tự diagnose candidate-B confound → rule mới trong KB.
->
-> **Phase 2 SPEC VIẾT XONG chiều 27/08**: `docs/PIPELINE-PRODUCTION-SPEC.md`
-> (DRAFT v1) — 5 production pipelines dạng stages + QC gates + provenance +
-> learning hooks (không phải 1-hàm-1-tool — user correction). Chờ user duyệt
-> spec → implement M1 (voice core) trước vì VO là đồng hồ của video.
+> Session 28/08 nhảy nhiều chủ đề (voice → UI audit → rules → agents → voice
+> direction → v3) mà TODO-NEXT không được update real-time — vi phạm workflow
+> discipline #2. File này là bản cân đối lại toàn bộ. **Đọc file này đầu
+> session mới.**
 
 ---
 
-## 🚨 BÀI HỌC CHỐT (từ user, 27/08)
+## Trạng thái lõi (đã xong, verify xanh)
 
-1. **Tự đặt mình vào user position**: trước khi đề xuất user làm gì thủ công,
-   tự hỏi "hệ thống có tool tự động việc này chưa?"
-2. **User feedback = raw material cho learning loop, KHÔNG phải QA step**
-3. **Đừng hỏi permission những thứ đã có gate pass**
-4. **Nền phải đẹp trước khi improve** — video #1 "TỆ" vì nền xấu (Arial +
-   CSS glow + stock), không phải vì thiếu critique loop
-5. **Harness = refinement-only** (11 tool critique/fix, zero tool produce) —
-   video #1 do Kilo làm tay. Phase 2 = lấp production capability.
+- **Voice pipeline M1a SHIPPED + vận hành thật**: per-beat clips, provider
+  text editing, Regenerate button (đã fix race text + stale public sync),
+  QC gates (WER qua ElevenLabs Scribe, clip/duration/tail/lufs), v3 migration
+  (audio tags + CAPS — user nghe ra khác biệt rõ, confirmed)
+- **UI audit tool**: `scripts/ui-audit.mjs` — 9 checks deterministic ×
+  multi-viewport + state navigation (--click) + dead-class detection
+- **Enforcement architecture**: agents `verify` + `ui-probe` (dispatch qua
+  Task tool, đã test thật), `/handoff` command, 5 skills trigger-bound
+- **AGENTS.md rules #17-20** (readiness, pre-verified checklists, background
+  process, UI verification matrix) + memory
+- 185/185 vitest, CI xanh, demo Composer mở tại
+  `localhost:5174/editor?project=ai-dialogue-therapy` (beat-05 đang giữ bản
+  `[assertive]` + CAPS)
 
-## Đã ship — Phase 1 foundation (27/08 chiều)
+## A. Chờ USER quyết (gates taste/content — không tự quyết)
 
-| Việc | Bằng chứng |
-|---|---|
-| Font files (OFL): Anton, Inter variable, Lora italic | `remotion-composer/public/fonts/` |
-| `fontFaces.ts` — @font-face + FontFaces (delayRender) + fontStack/resolveFontFamily | role-based: display/body/editorial |
-| 47 chỗ Arial/Georgia → role fonts (2 render paths) | treatments.tsx + treatmentElements.ts |
-| Fonts là KNOB: `fonts.display/body/editorial` + charEm calibration | style store v74 + snapshot |
-| Legacy clip metadata live-adopt new fonts (không cần regenerate) | resolveFontFamily map "Arial..." → role |
-| Explicit lineHeight mọi top-anchored stacks (font-independent layout) | kicker 1.4222, title 1.4087/1.4222, label 1.44... |
-| Parity gates | sd 1.064 PASS (baseline 1.222), pt 0.964 PASS (baseline 1.266) |
-| Fonts proven loading | Anton vs Archivo render diff 17.98 |
-| VLM verify | "condensed, bold, legible, punchy" trên video #1 |
-| **FIX test_unit.py destructive restore** | tests dùng `git checkout` đã WIPE store chưa commit → giờ byte-exact restore, verified non-destructive |
-| Reviewer subagent | 1 MAJOR (BeatElementOverlay raw font) + 6 MINOR — ALL fixed |
+| # | Quyết định | Ngữ cảnh |
+|---|---|---|
+| A1 | **D8 Voice identity** | Hiện dùng Rachel (default). Giữ hay casting audition? |
+| A2 | **Beat-06** | "Great dialogue is conflict, not comfort" là câu agent tự thêm (không có trong script gốc) — giữ hay bỏ? |
+| A3 | **Pacing** | Video giờ 41.84s (từ 31s gốc) do voice-first retiming. Chấp nhận? |
+| A4 | **QC duration gate** | Logic mới: "±15% HOẶC WER-verified" (đọc nhanh/chậm đủ từ = PASS). Đồng ý? |
+| A5 | **Directed pass 7 beats** | Chỉ đạo v3 tags cho cả video (mood mỗi beat) — làm không? Text per beat là quyết của user trước khi chạy |
+| A6 | **Script fidelity** | Transcripts hiện là bản lược của script gốc (beat-05 thiếu "break the three patterns", "emotions"). Demo thì đã khớp text↔audio; production có cần restore không? |
 
-**Video #1 re-render với nền mới**: `projects/ai-dialogue-therapy/renders/draft_v3_fonts.mp4`
-**Font candidates cho user taste gate**: `projects/isaacverse-final/renders/windows/font-candidate-{anton,archivo}.mp4`
+## B. M1b — voice pipeline phần còn lại (spec đã duyệt)
 
-## VIỆC TIẾP THEO
+| # | Việc | Chi tiết |
+|---|---|---|
+| B1 | Take switcher | Audio tab: play từng take, đổi take 1 click (takes đã lưu trên disk) |
+| B2 | QC badge trên timeline | Clip voice QC FAIL = badge đỏ trên clip |
+| B3 | breathPadSec per-beat + ripple | Field trong Audio tab; audio dài hơn → tự ripple beat sau (hiện clip chỉ giãn, đè nếu dài hơn nhiều) |
+| B4 | Per-field ledger cho trim/move/nudge | Hiện chỉ setEditorClipMetadata có per-field |
 
-### 0. Phase 2 — duyệt spec + implement
-Spec: `docs/PIPELINE-PRODUCTION-SPEC.md` (DRAFT v1, có progress log traceability).
-- M1 voice pipeline (batch-per-beat, direction→text-prep, sample gate,
-  QC WER/clip/duration, timing coupling, post 2-pass loudnorm)
-- M2 image sourcing → M3 timeline/validate/scaffold → M4 mix-plan
-- Phát hiện: `tools/audio/isaacverse_voice.py` TỒN TẠI (plan/generate/
-  assemble/score) — spec EXTEND, không rebuild. Bugs: directive extract
-  nhưng KHÔNG áp vào text; batch không theo beat; thiếu QC/timestamps/
-  timing-coupling.
+## C. M2-M4 roadmap (spec v3 đã duyệt — PIPELINE-PRODUCTION-SPEC.md)
 
-### 1. User taste gate (MỘT lần duy nhất — legitimate)
-User xem 2 candidates (Anton vs Archivo Black) → chốt display font.
-Anton là default hiện tại. Nếu đổi: update `fonts.display` knob + recalibrate
-`fonts.displayCharEm` (Anton 0.56, Archivo ~0.68) + parity re-run chapter-card.
+| # | Milestone | Nội dung |
+|---|---|---|
+| C1 | M2 image sourcing | Query cards trong Image tab (CHAI 3-pass), re-search, candidate grid + provenance, upload own, VLM relevance QC |
+| C2 | M3 timeline + validate | generate_timeline wrap + validate_edit_doc + report panel trong Composer; E2E mini-video 10-15s zero-manual |
+| C3 | M4 mix-plan | Music/SFX clips + DuckZones + master LUFS emit (AudioMixer render đã hỗ trợ) |
 
-### 2. Phase 1 phần còn lại (design tokens + asset cohesion)
-- Type scale / spacing tokens hoá (nếu cần)
-- Unified grade cho stock images (một hệ filter duy nhất)
-- Backlog: PropertiesPanel font select hiển thị role strings (UI polish)
+## D. Tech debt / bugs từ các session trước (chưa đóng)
 
-### 3. Phase 2 — Production capability (session tiếp)
-Tools mới vào harness_tools.py: `new_project`, `source_image` (Unsplash +
-provenance), `generate_voice` (ElevenLabs), `generate_timeline` (wrap
-generate-editor cold), `validate_edit_doc`. Protocol v5 thêm production loop.
-Acceptance: agent produce mini video 10-15s từ topic prompt, zero bước tay.
+| # | Việc | Nguồn |
+|---|---|---|
+| D1 | fonts→regen bridge | fonts.* knob đổi không trigger editor-doc regen (KB open item từ font A/B session) |
+| D2 | Compressor knob cho voice | Nếu audio tags vẫn bị flatten qua post-chain — nới compressor (style store knob) |
+| D3 | AGENTS.md slim-down | Phân loại 20 rules + "enforced by" từng rule — ĐÃ UNBLOCK (agents proven 28/08) |
+| D4 | PropertiesPanel font select | Hiện thị role strings thay vì friendly names (UI polish) |
+| D5 | Parity residuals | 4 treatments trên gate (chapter-card 2.28, cinematic 3.24, candidate 3.45, host-reflection 5.9-6.3) |
+| D6 | Pexels API key expired | Dùng Unsplash; renew key khi cần |
+| D7 | Playwright batch 3 | Marquee, guides, gen panel mock, recipes CRUD |
+| D8 | Stem naming inconsistency | clip_voice_* vs therapy-beat-* filenames (cosmetic, hoạt động đúng) |
 
-### 4. Phase 3 — Loop thật
-Agent tự produce video từ zero trên nền mới → tự critique → tự fix → iterate
-→ user review MỘT lần. Video #1 cũ thành throwaway bootstrap.
+## E. Blocked / deferred (user đã chốt)
 
-## Backlog
+- repurpose pipeline — "hệ thống còn chưa chất lượng"
+- Multi-doc Studio + anchor editor kéo thả
+- Auto-cut head (9+ approaches failed — docs/AUTO-CUT-ATTEMPT-LOG.md)
 
-- Parity residuals (host-reflection 6.3 — pre-existing, mixBlendMode class)
-- Per-field ledger cho trim/move/nudge
-- PropertiesPanel fontFamily select (role-aware)
-- repurpose pipeline, Multi-doc Studio — sau Phase 2-3
+## Quy tắc session mới
 
-## Vận hành mới
+1. **TODO-NEXT update real-time** — mỗi khi đổi chủ đề lớn, 1 dòng status
+   vào file này trước khi nhảy (bài học 28/08)
+2. Trước khi kết session: chạy doc-sync một vòng (TODO-NEXT + RECOVERY +
+   spec progress log)
+3. Queue mặc định sáng mai: **A1-A6 (quyết của bạn) → B1-B3 (M1b)** — C
+   chỉ chạy sau khi M1b đóng
+
+## Vận hành
 
 ```powershell
-# Đổi display font (knob, live-propagate mọi project):
-#   update_style "fonts.display" "'Archivo Black', sans-serif"
-#   + recalibrate fonts.displayCharEm + parity chapter-card re-run
-
-# Font candidates đã render:
-#   projects/isaacverse-final/renders/windows/font-candidate-anton.mp4
-#   projects/isaacverse-final/renders/windows/font-candidate-archivo.mp4
-
-# Video #1 với nền mới:
-#   projects/ai-dialogue-therapy/renders/draft_v3_fonts.mp4
+# Composer UI (persistent, đã chạy)
+# Agent :2025 (persistent, PYTHONUTF8=1)
+# Verify nhanh: dispatch verify agent (task tool, subagent_type "verify")
+# UI audit: node remotion-composer/scripts/ui-audit.mjs --url "http://localhost:5174/editor?project=ai-dialogue-therapy" --click "Voiceover"
+# Voice regen 1 beat: POST /api/project/audio-regen {projectId, clipId, providerText, voiceSettings:{modelId:"eleven_v3"}}
 ```
-
-## Servers
-- Composer UI: http://localhost:5174 (persistent)
-- LangGraph agent: port 2025 (persistent)

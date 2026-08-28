@@ -140,6 +140,17 @@ per-field override, migrations — không state song song nào để lệch.
 
 ## 9. PROGRESS LOG
 
+- **2026-08-29 00:20 (M1a hoàn thiện + v3)**: session 28/08 cả ngày (nhiều
+  chủ đề, docs update trễ — vi phạm discipline #2, đã cân đối lại trong
+  TODO-NEXT). Hoàn thiện M1a thực chiến: (1) user bắt bug panel layout
+  grid-in-grid → fix `.ve-prop-voice`; (2) async-button contract (busy
+  disable + label đổi tại nút); (3) regen race fix (UI gửi draftProvider
+  trong POST); (4) stale public sync fix (endpoint sync sau apply); (5)
+  **v3 migration theo user directive** — eleven_v3 là chuẩn (v2 fossil từ
+  SDK language-kwarg bug cũ), break tags retired (v3 từ chối), audio tags +
+  CAPS passthrough, WER normalizer strip [tags]; (6) demo A/B user-confirmed:
+  `[assertive]` + CAPS nghe khác biệt rõ. Remaining M1a polish → M1b (xem
+  TODO-NEXT B1-B3).
 - **2026-08-28 ~01:20 (M1a SHIPPED)**: voice parity loop live end-to-end.
   Shipped: `voiceClip.ts` (buildProviderText + validate + QC builder),
   projection sinh sentenceText/providerText cho voice clips, Audio tab

@@ -1,80 +1,62 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-27 ~18:00. Phase 1 (foundation) SHIPPED — fonts live.
-> **CRITICAL DIRECTION (sáng 27/08): produce → TỰ critique → TỰ fix → TỰ
-> re-render → lặp → CHỈ show user khi quality ổn. User KHÔNG phải QA.**
-> Chi tiết: `docs/TODO-NEXT.md` (file này đọc sau TODO-NEXT).
+> Updated 2026-08-29 00:30 (sau session 28/08 toàn ngày). Master list công
+> việc: `docs/TODO-NEXT.md` — đọc file ĐÓ trước, file này chỉ là bối cảnh +
+> gotchas vận hành.
 
 ---
 
-## 🌅 VIỆC TIẾP THEO (session sau)
+## 🌅 VIỆC TIẾP THEO (session mới)
 
-1. **User taste gate fonts**: user xem font-candidate-anton vs -archivo →
-   chốt display font (Anton là default). Nếu đổi → update knob + recalibrate
-   displayCharEm + parity chapter-card.
-2. **Phase 1残余**: asset cohesion (unified grade), type tokens nếu cần.
-3. **Phase 2 — production tools** (xem TODO-NEXT §3): new_project,
-   source_image, generate_voice, generate_timeline, validate_edit_doc.
-4. **Phase 3 — loop thật**: agent tự produce từ zero → tự critique → tự fix
-   → user review MỘT lần.
+1. **Đọc `docs/TODO-NEXT.md`** — đầy đủ inventory: 6 quyết user (A1-A6),
+   M1b (B1-B3), M2-M4 (C), tech debt (D)
+2. Queue mặc định: user quyết A1-A6 → làm M1b (take switcher + QC badge +
+   breathPad/ripple)
+3. AGENTS.md slim-down đã unblocked (agents verify/ui-probe proven) — D3
 
-## 🌙 TÓM TẮT 27/08
+## 🌙 TÓM TẮT SESSION 28/08 (cả ngày — nhiều chủ đề)
 
-- **Sáng — 2 corrections từ user**: (1) flow "produce → nhường user QA" SAI;
-    tự critique bằng harness tools. (2) Đừng hỏi permission cho decisions đã
-    có gate. Video #1 "TỆ" vì nền xấu (Arial + glow + stock).
-- **Trưa — phân tích nền**: 47 chỗ font hardcode, không fonts section trong
-    store, CSS-glow idiom, stock dán full-frame. Harness = refinement-only
-    (zero production tools) — video #1 do Kilo làm tay.
-- **Chiều — Phase 1 SHIPPED**: Anton/Inter/Lora qua `fontFaces.ts` role-based
-    (display/body/editorial = knobs, store v74). Legacy clip metadata live-adopt.
-    Explicit lineHeight mọi top-anchored stacks. Parity PASS + cải thiện
-    (sd 1.064, pt 0.964). Fonts proven loading. VLM verify "punchy".
-- **Incident + fix**: test_unit.py restore bằng `git checkout` WIPE store chưa
-    commit (v74 fonts biến mất giữa session) → root cause: tests chạy trên
-    state thật + git-checkout restore. FIX: byte-exact save/restore + snapshot
-    cleanup; verified non-destructive (34/34, files+snapshots unchanged).
-- **Reviewer subagent**: 1 MAJOR (BeatElementOverlay raw fontFamily — canvas
-    override path) + 6 MINOR — all fixed (lineHeight emission, Lora weight
-    range 100 900, charEm 0.63 consistency, rollback test editor-doc restore).
+**Sáng**: máy restart → mở lại servers (langgraph cần PYTHONUTF8=1, crash
+emoji logging). Rule #19 (background process). Thành thật về checklist
+"PRE-VERIFIED" chưa verify UI → chrome-devtools click-through thật.
 
-## 🔧 VẬN HÀNH
+**Chiều**: UI verification layers (L0-L5) → rule #20 (DOM oracle, không VLM
+cho thứ DOM đo được). ui-audit.mjs (9 checks + multi-viewport + state
+navigation + dead-class — từng bắt: marker 2×9px, clip label tràn, Asset
+Studio button, contrast hint, transport overflow 768px). Rules #17-18.
+Custom agents verify + ui-probe + /handoff + 5 skills. Design-parity skill
+(đóng gap rule #16 không trigger). Verify agent dispatch test PASS.
 
-```powershell
-# Composer UI (:5174 — persistent)
-cd remotion-composer\composer-app; npx vite --port 5174 --strictPort
+**Tối**: user bắt bug voice panel layout (grid-in-grid) → fix + audit state
+gaps. Async-button contract (ImportPanel busy states). Text↔audio consistency
+(7/7 match word-level). User regen không nghe khác → điều tra tìm 2 bug:
+regen race (text field không gửi đi) + stale public sync → fix cả hai.
+**v3 migration** (user directive: v3 là chuẩn, v2 là fossil từ SDK language
+kworg bug cũ) — break tags retired, audio tags + CAPS passthrough, WER
+normalizer strip tags. Demo A/B: user confirmed "[assertive] + CAPS nghe ra
+khác biệt rõ".
 
-# LangGraph agent (:2025 — persistent)
-harness\.venv\Scripts\python.exe -m langgraph_cli dev --port 2025 --host 127.0.0.1
+## ⚠️ GOTCHAS TÍCH LUỸ (quan trọng nhất)
 
-# Render (default editor path)
-node remotion-composer\scripts\render-window.mjs --project ai-dialogue-therapy --start 0 --end 31 --quality draft
-
-# Parity measurement (windows chuẩn: sd 3.5-7, pt 10.5-14)
-node remotion-composer\scripts\parity-measure.mjs --project isaacverse-final --start 3.5 --end 7 --label semantic-diagram
-```
-
-## ⚠️ GOTCHAS MỚI
-
-1. **Fonts là knobs**: đổi font qua `update_style "fonts.display" ...` —
-   KHÔNG sửa code. Đổi display font ⇒ recalibrate `fonts.displayCharEm`
-   (Anton 0.56 / Archivo ~0.68 / Arial Black 0.65) + parity re-run.
-2. **⚠️ KHÔNG BAO GIỜ restore bằng `git checkout` trong tests/scripts** khi
-   working tree có thể dirty — đã wipe store v74 một lần (27/08). Dùng
-   byte-exact save/restore.
-3. **DeepSeek VLM**: trả EMPTY trên complex JSON prompts — SHORT natural
-   language prompts.
-4. **7-10.5 window là host-reflection** (label "process-timeline" sai từ
-   trước) — residual 5.9-6.3 pre-existing, không phải regression.
-5. **`--output` relative**: resolve workspaceRoot — KHÔNG dùng `../`.
-6. **Vite publicDir = remotion-composer/public** (không phải composer-app/
-   public) — fonts/styles serve từ đó trong preview.
-7. **Pexels API 401** — dùng Unsplash. **eleven_v3 SDK** thiếu language kwarg
-   — dùng multilingual_v2.
+1. **ElevenLabs v3 là chuẩn** — v2 chỉ khi user yêu cầu. v3 KHÔNG hỗ trợ
+   break tags; pause = "..." hoặc [pause]; CAPS nhẹ, **audio tags mạnh**
+   ([whisper] [assertive] [excited]...). WER normalizer phải strip [tags].
+2. **Regen flow**: UI gửi draftProvider trong POST body (fix race); endpoint
+   sync public sau apply (fix stale audio). Luôn verify public mtime.
+3. **LangGraph trên Windows**: cần env PYTHONUTF8=1 (crash emoji logging).
+4. **Skills/agents mới cần reload window** mới vào registry (hot-load báo
+   "No context found for instance" — quirk, không phải lỗi file).
+5. **Audit UI phải cover STATE**: dùng --click "<aria-label>" — bug layout
+   thường chỉ render trong state tương tác (bài học voice panel).
+6. **Vite publicDir = remotion-composer/public** — preview fetch mọi media
+   từ đó; audio/voice/assets sync qua sync-project-public.mjs.
+7. **Scribe transcribe không đọc punctuation** — so sánh word-level sau khi
+   strip (norm) nếu không muốn false mismatch.
 
 ## 📌 GHI NHỚ
 
-- Check CI sau MỖI push
-- Style store v74 (fonts section), schemaVersion 3, E6 PASS 7/7
-- Parity chuẩn: sd 1.064 / pt 0.964 / host-reflection 6.3 (pre-existing)
-- Video #1 nền mới: `projects/ai-dialogue-therapy/renders/draft_v3_fonts.mp4`
+- Check CI sau MỖI push (đang xanh trên b389a52)
+- Ma trận verify V1-V8 nằm trong agent `.kilo/agent/verify.md`
+- Style store v74 (fonts Anton/Inter/Lora), editor doc rev cao (voice regens)
+- Beat-05 đang giữ bản [assertive] + CAPS trên timeline (demo state)
+- Composer: http://localhost:5174/editor?project=ai-dialogue-therapy

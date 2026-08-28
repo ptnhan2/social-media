@@ -101,6 +101,37 @@ consistency, rollback test not restoring live editor doc, chain-smoke
 hardcoded value. Pattern: emit-lineHeight-when-DOM-pins-it keeps both paths
 byte-equivalent regardless of font.
 
+## SESSION 2026-08-28 (full day) — M1a completed in battle + v3 + enforcement architecture
+
+### Voice pipeline hardened through real user usage
+- User found panel layout bug (grid-in-grid: .ve-prop-section nested inside
+  .ve-prop-section crushed fields to 40-80px columns) -> fix: .ve-prop-voice
+  full-row block; lesson: REUSE of grid classes needs container awareness
+- User reported regen "sounds identical" after CAPS edit -> TWO stacked bugs:
+  (1) regen POST didn't carry the field draft (race with async onBlur commit)
+  -> fix: send draftProvider in request body; (2) endpoint didn't sync fresh
+  stem to public/ (preview played 6h-old audio) -> fix: sync after apply
+- Text-audio consistency verified 7/7 beats word-level (Scribe); naive
+  comparison counts punctuation as words -> normalize before diffing
+
+### eleven_v3 is the standard (user directive)
+- v2 default was a fossil: old "v3 SDK rejects language kwarg" fallback got
+  baked in though our direct-API path never sends language
+- v3 REJECTS SSML break tags -> buildProviderText is now verbatim passthrough
+- CAPS (even v3) is MILD emphasis; AUDIO TAGS are the real direction tool:
+  [whisper] [assertive] [excited]... User-confirmed audible difference with
+  [assertive] + CAPS combination
+- WER normalizer must strip [square-bracket tags] (they're direction, not speech)
+
+### UI verification architecture (rules 17-20 + tools)
+- ui-audit.mjs: 9 deterministic checks x multi-viewport + --click state
+  navigation + dead-class detection (caught real bugs every run: 2x9px
+  markers, clip label overflow, transport overflow at 768px, contrast)
+- Custom agents verify + ui-probe (edit-DENIED, Task tool dispatch, tested
+  live) + /handoff command + 5 trigger skills
+- Lessons: audit must cover INTERACTION STATES (bugs render only in selected
+  state); a11y tree is blind to layout; a statusbar dot is NOT button feedback
+
 ## SESSION 2026-08-27 morning — CRITICAL FLOW CORRECTION (user 2 corrections)
 
 ### Correction 1: Self-critique before user review
