@@ -967,7 +967,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
   padding: 2px 5px; border-radius: 3px; background: #1f2937; color: #60a5fa;
 }
 .ve-asset-name { font-size: 12px; color: #cbd8df; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ve-hint { font-size: 11px; color: #4b5563; padding: 8px 0; }
+.ve-hint { font-size: 11px; color: #7c8797; padding: 8px 0; }
 .ve-preview {
   display: flex; align-items: center; justify-content: center;
   background: #07090d; overflow: hidden; padding: 12px; min-width: 0;
@@ -1115,7 +1115,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 /* ===== Transport bar ===== */
 .ve-preview { flex-direction: column; gap: 8px; }
 .ve-transport {
-  display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: #0d1520;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 12px; background: #0d1520;
   border: 1px solid #1f2937; border-radius: 8px; flex-shrink: 0; width: 100%; max-width: 720px;
 }
 .ve-transport button {

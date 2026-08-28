@@ -30,12 +30,28 @@ const args = Object.fromEntries(process.argv.slice(2).map((arg, index, all) => {
 const url = args.url || "http://localhost:5174";
 const shotsDir = args.shots || path.join("ui-audit-shots");
 const failOn = Number(args.failOn ?? 0);
+// Responsive coverage: the full audit runs at EVERY viewport — layout bugs
+// that only appear at a breakpoint (overflow, cramped targets, overlaps)
+// surface per size. Doc-level horizontal overflow is the core responsive
+// failure signal. Default set: desktop → laptop → small laptop → tablet.
+const viewportsArg = String(args.viewports || "1920x1080,1366x768,1024x768,768x1024");
+const viewports = viewportsArg.split(",").map((spec) => {
+  const [w, h] = spec.trim().toLowerCase().split("x").map(Number);
+  return { w, h, label: `${w}x${h}` };
+}).filter((vp) => vp.w > 200 && vp.h > 200);
 mkdirSync(shotsDir, { recursive: true });
 
 const AUDIT_FN = () => {
-  const issues = { textOverflow: [], tinyTargets: [], overlap: [], clippedText: [], brokenImages: [], lowContrast: [], coveredInteractives: [], cursorMissing: [] };
+  const issues = { textOverflow: [], tinyTargets: [], overlap: [], clippedText: [], brokenImages: [], lowContrast: [], coveredInteractives: [], cursorMissing: [], viewportOverflow: [] };
   const vw = innerWidth, vh = innerHeight;
-  const auditRoot = (el) => !!el.closest("header, aside, main");
+  // THE responsive failure signal: the page itself forces horizontal scroll.
+  // (Inner scroll containers — the timeline scrolls by design — clip their
+  // content, so doc-level scrollWidth only grows on genuine page breakage.)
+  const docOverflow = document.documentElement.scrollWidth - vw;
+  if (docOverflow > 2) {
+    issues.viewportOverflow.push({ px: Math.round(docOverflow), scrollWidth: document.documentElement.scrollWidth, viewportWidth: vw });
+  }
+  const auditRoot = (el) => !!el.closest("header, aside, main, .ve-left-rail");
   const all = [...document.querySelectorAll("body *")].filter((el) => {
     const r = el.getBoundingClientRect();
     return r.width > 0 && r.height > 0 && auditRoot(el);
@@ -108,12 +124,30 @@ const AUDIT_FN = () => {
     const ratio = (Math.max(luminance(fg), luminance(bg)) + 0.05) / (Math.min(luminance(fg), luminance(bg)) + 0.05);
     if (ratio < 3.0) issues.lowContrast.push({ text: el.textContent.trim().slice(0, 36), ratio: Math.round(ratio * 10) / 10, color: cs.color, bg: `rgb(${bg.r},${bg.g},${bg.b})` });
   }
-  // hit-test: interactive element whose center is covered by an unrelated element
+  // hit-test: interactive element whose center is covered by an unrelated element.
+  // Elements clipped by an overflow ancestor are SKIPPED — if the ancestor
+  // scrolls they are scroll-reachable (not covered); if hidden they are
+  // invisible and elementFromPoint would report the covering layer, a false
+  // positive (the left-rail media list below its scroll fold).
+  const clippedByAncestor = (el, cx, cy) => {
+    let node = el.parentElement;
+    while (node && node !== document.body) {
+      const cs = getComputedStyle(node);
+      if (cs.overflowX !== "visible" || cs.overflowY !== "visible") {
+        const r = node.getBoundingClientRect();
+        if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) return true;
+      }
+      node = node.parentElement;
+    }
+    return false;
+  };
   for (const el of interactives) {
     const r = el.getBoundingClientRect();
     if (r.width === 0 || r.height === 0) continue;
     if (r.top < 0 || r.left < 0 || r.bottom > vh || r.right > vw) continue; // outside viewport — scroll case
-    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    if (clippedByAncestor(el, cx, cy)) continue;
+    const hit = document.elementFromPoint(cx, cy);
     if (hit && hit !== el && !el.contains(hit) && !hit.contains(el)) {
       issues.coveredInteractives.push({ text: (el.textContent || el.getAttribute("aria-label") || el.tagName).trim().slice(0, 28), coveredBy: String(hit.className || hit.tagName).slice(0, 32) });
     }
@@ -139,16 +173,29 @@ const AUDIT_FN = () => {
 
 const browser = await chromium.launch();
 try {
-  const page = await browser.newPage({ viewport: { width: 1680, height: 950 } });
+  const page = await browser.newPage({ viewport: { width: viewports[0].w, height: viewports[0].h } });
   await page.goto(url, { waitUntil: "networkidle", timeout: 45000 });
   await page.waitForTimeout(2500);
-  const report = await page.evaluate(AUDIT_FN);
-  const fullPage = path.join(shotsDir, "fullpage.png");
-  await page.screenshot({ path: fullPage, fullPage: false });
-  const critical = Object.values(report.counts).reduce((a, b) => a + b, 0);
-  writeFileSync(args.out || "ui-audit.json", JSON.stringify(report, null, 2));
-  console.log(JSON.stringify({ url, screenshots: [fullPage], counts: report.counts, scanned: report.scanned, critical, pass: critical <= failOn }, null, 2));
-  process.exit(critical <= failOn ? 0 : 1);
+  const results = [];
+  for (const vp of viewports) {
+    await page.setViewportSize({ width: vp.w, height: vp.h });
+    // let React re-render settle (ResizeObservers, container queries, fit zoom)
+    await page.waitForTimeout(800);
+    const report = await page.evaluate(AUDIT_FN);
+    const shot = path.join(shotsDir, `viewport-${vp.label}.png`);
+    await page.screenshot({ path: shot, fullPage: false });
+    results.push({ viewport: vp.label, ...report, screenshot: shot });
+  }
+  const totalCritical = results.reduce((sum, r) => sum + Object.values(r.counts).reduce((a, b) => a + b, 0), 0);
+  const summary = {
+    url,
+    viewports: results.map((r) => ({ viewport: r.viewport, counts: r.counts, scanned: r.scanned, fontsStatus: r.fontsStatus, screenshot: r.screenshot })),
+    totalCritical,
+    pass: totalCritical <= failOn,
+  };
+  writeFileSync(args.out || "ui-audit.json", JSON.stringify({ ...summary, details: results }, null, 2));
+  console.log(JSON.stringify(summary, null, 2));
+  process.exit(summary.pass ? 0 : 1);
 } finally {
   await browser.close();
 }
