@@ -38,6 +38,10 @@
 <p class="sub">Mọi mục dưới đây ĐÃ được chạy và verify bởi agent trong đêm (rule #18) — evidence kèm từng mục. Việc của bạn: nhìn, nghe, và quyết định.
 <span class="badge verified">PRE-VERIFIED</span><span class="badge date">28/08 ~05:30 · commits 34dae68, 121df64, +overnight</span></p>
 
+<div class="callout" style="border-left-color:#00d4ff">
+<b>Update 28/08 chiều — UI verification hoàn tất (thành thật):</b> bản "PRE-VERIFIED" đầu tiên verify backend/data nhưng <b>chưa từng mở UI click qua</b> — vi phạm đúng tinh thần rule #18. Chiều nay đã chạy browser thật (chrome-devtools) thực hiện CHÍNH XÁC các bước dưới: click voice clip → Audio tab render đủ fields (sentence/provider/settings/QC readout) → <b>bấm nút Regenerate thật</b> → job chạy, doc tự sync qua SSE, QC panel cập nhật → DOM-inspect 12/12 audio clips có waveform decode thật (không còn khối vuông). Phát hiện thêm 1 bug khi test UI (take-pass dùng logic duration cũ → FAIL badge trên checks xanh) — đã fix commit <code>46b2d15</code>. Checklist dưới đây giờ mới xứng đáng chữ PRE-VERIFIED.
+</div>
+
 <div class="callout">
 <b>Đêm nay làm gì:</b> M1a voice pipeline (đã duyệt) + xử lý 2 issue bạn bắt trước khi ngủ:
 <span class="num">①</span> sóng âm thành khối vuông → <b>đã fix</b> (RMS peaks, bins theo độ dài, bars mảnh, cache decode);
