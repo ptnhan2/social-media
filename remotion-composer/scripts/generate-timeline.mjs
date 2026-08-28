@@ -149,10 +149,28 @@ if (!dryRun) {
   }
 }
 
-// ok = generated + nothing needs attention; warnings keep exit 0 (the
-// timeline IS generated — the agent/human reads warnings for the next fix
-// cycle) while blocking issues exited earlier with code 1.
 report.ok = report.warnings.length === 0 && report.checks.every((check) => check.pass) && report.blocking.length === 0;
+
+// AUTO-REGISTER COMPOSITIONS (TODO A2 closed — was manual Root.tsx friction):
+// append the project to the compositions manifest; Root.tsx maps manifest
+// entries to <Composition> at bundle time (render-window bundles fresh per
+// render, so the next render picks the new project up).
+if (!dryRun) {
+  try {
+    const manifestPath = path.join(COMPOSER, "projects", "isaacverse-final", "projects-manifest.json");
+    let manifest = { projects: [] };
+    try { manifest = JSON.parse(readFileSync(manifestPath, "utf-8")); } catch { /* fresh */ }
+    if (!Array.isArray(manifest.projects)) manifest.projects = [];
+    if (!manifest.projects.some((entry) => entry && entry.slug === slug)) {
+      manifest.projects.push({ slug, registeredAt: new Date().toISOString() });
+      writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf-8");
+      report.checks.push({ id: "composition", label: "Composition registered (auto)", pass: true, detail: [`${slug}-30s + ${slug}-30s-editor via projects-manifest.json`] });
+    }
+  } catch (error) {
+    report.warnings.push(`composition auto-register failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 const reportPath = path.join(projectDir, "qa", "timeline-report.json");
 mkdirSync(path.dirname(reportPath), { recursive: true });
 if (!dryRun) writeFileSync(reportPath, JSON.stringify(report, null, 2), "utf-8");

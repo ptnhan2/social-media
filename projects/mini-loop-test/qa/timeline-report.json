@@ -2,7 +2,7 @@
   "ok": true,
   "projectId": "mini-loop-test",
   "mode": "sync",
-  "generatedAt": "2026-08-28T19:02:35.670Z",
+  "generatedAt": "2026-08-28T19:25:44.327Z",
   "styleVersion": 74,
   "checks": [
     {
@@ -28,7 +28,7 @@
       "label": "Editor doc generated (sync)",
       "pass": true,
       "detail": [
-        "refreshed=? keptUser=? added=? dropped=?"
+        "refreshed=21 keptUser=0 added=0 dropped=0"
       ]
     },
     {
@@ -40,5 +40,10 @@
   ],
   "warnings": [],
   "blocking": [],
-  "stats": {}
+  "stats": {
+    "refreshed": 21,
+    "keptUser": 0,
+    "added": 0,
+    "dropped": 0
+  }
 }
