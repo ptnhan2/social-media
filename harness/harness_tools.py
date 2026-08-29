@@ -725,6 +725,87 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
 
 
 @tool
+def draft_story(project_slug: str, idea: str, story: str) -> str:
+    """Draft the STORY for a video idea (Creation Flow step 1 — CONTENT-STUDIO-SPEC §5).
+
+    YOU compose the story (you are the creative here — use your storytelling
+    craft); this tool writes it to the studio's story review checkpoint
+    through the SAME endpoint the user edits with. The human reviews/edits
+    the story in the Content Studio BEFORE you write the script.
+
+    Args:
+        project_slug: Project folder name.
+        idea: The user's original idea, VERBATIM from their ask (recorded as
+              the journey's origin + later becomes the script's instruction).
+        story: JSON string you composed: {idea, surfaceProblem,
+              deeperProblem, thumbnailPromise, commonGoal: {viewer, creator}}
+              — one or two sentences per field, concrete, no filler.
+    """
+    try:
+        story_obj = json.loads(story)
+    except json.JSONDecodeError as exc:
+        return f"DRAFT STORY FAILED: `story` must be valid JSON — {exc}"
+    required = ["idea", "surfaceProblem", "deeperProblem", "thumbnailPromise"]
+    missing = [key for key in required if not str(story_obj.get(key, "")).strip()]
+    if missing:
+        return f"DRAFT STORY FAILED: story.{', story.'.join(missing)} are required and non-empty"
+    payload = json.dumps({"projectId": project_slug, "status": "pending", "originalIdea": idea, "story": story_obj}).encode()
+    req = urllib.request.Request(
+        "http://localhost:5174/api/project/story-draft",
+        data=payload, method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:  # noqa: BLE001 — surface, don't crash the loop
+        return f"DRAFT STORY FAILED: {exc} (is the composer server up on :5174?)"
+    if not body.get("ok"):
+        return f"DRAFT STORY FAILED: {body.get('error', 'unknown')}"
+    return ("DRAFT STORY OK — status PENDING, the story card is now in the Content Studio.\n"
+            f"Original idea recorded: {idea}\n"
+            "STOP and tell the human to review the story (edit fields inline, then Duyệt story). "
+            "After approval, write the script with write_edit_doc using the approved story as "
+            "the `story` input and the original idea as `instruction`.")
+
+
+@tool
+def check_story_review(project_slug: str) -> str:
+    """Read the story review verdict from the Content Studio (Creation Flow).
+
+    Returns: none (no draft yet), pending (human has not decided — wait,
+    do NOT write the script), approved (proceed: write_edit_doc with the
+    approved story + the original idea as instruction), or
+    changes_requested (revise the story per the note, then re-draft).
+
+    Args:
+        project_slug: Project folder name.
+    """
+    path = os.path.join(PROJECT_ROOT, "projects", project_slug, "qa", "story-draft.json")
+    if not os.path.exists(path):
+        return f"STORY: none — no story drafted yet for {project_slug}. Call draft_story first."
+    try:
+        with open(path, encoding="utf-8") as handle:
+            draft = json.load(handle)
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"STORY READ FAILED: {exc}"
+    status = draft.get("status", "none")
+    lines = [f"STORY: {status} (updated {draft.get('updatedAt', '?')})",
+             f"  idea: {draft.get('idea', '')}"]
+    note = draft.get("note") or ""
+    if note:
+        lines.append(f"  human note: {note}")
+    if status == "pending":
+        lines.append("  -> the human has not decided. Do NOT write the script yet.")
+    elif status == "approved":
+        lines.append("  -> approved. Write the script NOW: write_edit_doc with this story as `story` "
+                     f"and '{draft.get('originalIdea', '')}' as `instruction`, then STOP for script review.")
+    elif status == "changes_requested":
+        lines.append("  -> revise the story exactly as the note says, call draft_story again.")
+    return "\n".join(lines)
+
+
+@tool
 def write_edit_doc(project_slug: str, story: str, beats: str, instruction: str = "", overwrite_confirm: bool = False) -> str:
     """Write the edit-doc from YOUR beat plan (A1 — the produce flow's first mile).
 
