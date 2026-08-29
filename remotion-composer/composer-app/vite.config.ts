@@ -564,6 +564,44 @@ export default defineConfig({
             }
           });
         });
+        // CONTENT STUDIO write-path (2026-08-29): the studio edits voice-clip
+        // fields (script text, direction, voice settings) through the SAME
+        // editor-ops bridge the agent uses — one sanctioned write-path, the
+        // editor doc stays the single truth. Audio regen/takes keep their
+        // existing endpoints.
+        server.middlewares.use("/api/project/clip-metadata", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const clipId = String(body.clipId || "");
+              const changes = body.changes;
+              if (!projectId || !clipId || !changes || typeof changes !== "object" || Array.isArray(changes)) throw new Error("projectId, clipId and changes (object) are required");
+              const allowed = new Set(["sentenceText", "providerText", "voiceSettings", "transcript"]);
+              for (const key of Object.keys(changes)) if (!allowed.has(key)) throw new Error(`field "${key}" is not studio-editable (allowed: ${[...allowed].join(", ")})`);
+              const snapshot = PROJECT_STORE.load(projectId);
+              const clip = snapshot.editorDoc?.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
+              if (!clip) throw new Error(`Unknown clip: ${clipId}`);
+              if (clip.kind !== "voice") throw new Error(`Clip ${clipId} is not a voice clip`);
+              const apply = spawnSync(process.execPath, [
+                "scripts/editor-ops.mjs", "--project", projectId, "--op", "metadata",
+                "--clipId", clipId, "--changes", JSON.stringify(changes),
+              ], { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
+              if (apply.status !== 0) throw new Error(String(apply.stderr || apply.stdout).slice(0, 300));
+              // learning hooks (parity audit gap, CONTENT-STUDIO-SPEC §2): a
+              // human edit of the script text or voice direction IS a
+              // training signal — same jsonl shape as take-switch hooks
+              for (const field of ["sentenceText", "providerText"]) {
+                if (typeof changes[field] === "string" && changes[field] !== (clip.metadata as Record<string, unknown>)[field]) {
+                  appendFeedback({ knob: `voice.${clipId}.${field}`, from: String((clip.metadata as Record<string, unknown>)[field] ?? ""), to: changes[field], projectId });
+                }
+              }
+              sendJson(res, 200, { ok: true, clipId, changes });
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
+          });
+        });
         // ============ TIMELINE GENERATION (PIPELINE-PRODUCTION-SPEC v3, M3) ============
         // generate_timeline: pre-flight validate + generate + report. The UI
         // Timeline-QA tab and the agent's generate_timeline tool call the SAME
