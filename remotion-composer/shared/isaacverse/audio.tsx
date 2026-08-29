@@ -14,6 +14,12 @@ export type VoiceSegment = {
   transcript: string;
   pauseBeforeSec?: number;
   emphasisWords?: string[];
+  /** Provenance from the voice pipeline (scaffold-voice-plan --regen): the
+   *  deterministic QC verdict + the selected take flow through the projection
+   *  onto the voice clips — the QC badge + project page read them. */
+  qc?: Record<string, unknown>;
+  takeId?: string;
+  takes?: unknown[];
 };
 
 export type MusicBed = {

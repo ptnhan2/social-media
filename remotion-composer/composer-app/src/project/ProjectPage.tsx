@@ -4,13 +4,19 @@ import type { IsaacVerseEditDoc, EditorClip } from "../../../shared/isaacverse/e
 import type { VideoDoc } from "../../../shared/isaacverse/schema";
 
 /**
- * PROJECT PAGE (PIPELINE-PRODUCTION-SPEC v3 — stage-surface, researched from
- * Fliki/Pictory single-surface + HeyGen blueprint-first + Lovable Plan view):
- * the PRESENTATION & APPROVAL surface of one video project. The editor remains
- * the only EDITING surface — this page composes the same files the agent reads
- * (rule #16 parity): editor doc (truth: real ranges, voice QC), timeline
- * report, renders, video doc story, approval gate.
+ * PROJECT PAGE (PIPELINE-PRODUCTION-SPEC v3 — stage-surface): the PRESENTATION
+ * & APPROVAL surface of one video project. The page's SPINE is the PROCESS —
+ * "how this video was made" (idea → plan → voice → timeline → render →
+ * approval), recorded live by every pipeline stage into
+ * qa/pipeline-log.jsonl. The editor remains the only EDITING surface.
  */
+
+type TraceEvent = {
+  ts: string;
+  stage: "plan" | "voice" | "timeline" | "render" | "approval" | "note";
+  title: string;
+  data?: Record<string, unknown>;
+};
 
 type TimelineReportShape = {
   ok?: boolean;
@@ -21,6 +27,115 @@ type TimelineReportShape = {
 };
 
 const formatBytes = (bytes: number) => (bytes > 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`);
+const shortTime = (iso: string) => iso.slice(5, 16).replace("T", " ");
+
+const STAGE_META: Record<TraceEvent["stage"], { icon: string; label: string }> = {
+  plan: { icon: "📝", label: "Plan" },
+  voice: { icon: "🎙️", label: "Voice" },
+  timeline: { icon: "🎞️", label: "Timeline" },
+  render: { icon: "🎬", label: "Render" },
+  approval: { icon: "🚦", label: "Approval" },
+  note: { icon: "📌", label: "Note" },
+};
+
+/** The process spine: chronological events of how this video was made.
+ *  Renders whatever the stages recorded — idea inputs, the beats the agent
+ *  authored, TTS takes + QC numbers, validation gates, renders, approvals. */
+const ProcessTimeline: React.FC<{ projectId: string }> = ({ projectId }) => {
+  const [events, setEvents] = React.useState<TraceEvent[] | null>(null);
+  const [open, setOpen] = React.useState<number | null>(null);
+  React.useEffect(() => {
+    fetch(`/api/project/trace?projectId=${encodeURIComponent(projectId)}`)
+      .then((r) => r.json())
+      .then((payload) => setEvents(Array.isArray(payload.events) ? payload.events : []))
+      .catch(() => setEvents([]));
+  }, [projectId]);
+
+  if (events === null) return <div className="pp-card"><div className="pp-card-title">Tiến trình</div><p className="pp-hint">Loading…</p></div>;
+  return (
+    <div className="pp-card">
+      <div className="pp-card-title">Tiến trình thực tế — video này được làm ra như thế nào {events.length ? <small>{events.length} bước</small> : null}</div>
+      {events.length === 0 ? (
+        <p className="pp-hint">Chưa có ghi nhớ tiến trình (trace bắt đầu được ghi từ 29/08 — chạy lại produce flow để có).</p>
+      ) : (
+        <ol className="pp-trace">
+          {events.map((event, index) => {
+            const meta = STAGE_META[event.stage] ?? STAGE_META.note;
+            const details = event.data ?? {};
+            return (
+              <li key={index} className={`pp-trace-item stage-${event.stage}`}>
+                <button type="button" className="pp-trace-head" aria-expanded={open === index} onClick={() => setOpen(open === index ? null : index)}>
+                  <span className="pp-trace-icon">{meta.icon}</span>
+                  <span className="pp-trace-stage">{meta.label}</span>
+                  <span className="pp-trace-title">{event.title}</span>
+                  <span className="pp-trace-ts">{shortTime(event.ts)}</span>
+                  <span className="pp-trace-caret">{open === index ? "▾" : "▸"}</span>
+                </button>
+                {open === index ? <div className="pp-trace-body"><TraceDetails stage={event.stage} data={details} /></div> : null}
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </div>
+  );
+};
+
+const KV: React.FC<{ k: string; v: React.ReactNode }> = ({ k, v }) => (
+  <div className="pp-kv"><span>{k}</span><b>{v}</b></div>
+);
+
+const TraceDetails: React.FC<{ stage: string; data: Record<string, unknown> }> = ({ stage, data }) => {
+  if (stage === "plan") {
+    const beats = Array.isArray(data.beats) ? (data.beats as Record<string, unknown>[]) : [];
+    const gates = (data.gates ?? {}) as Record<string, unknown>;
+    return (
+      <>
+        {typeof data.idea === "string" && data.idea ? <p className="pp-transcript">💡 {data.idea}</p> : null}
+        {beats.map((beat, i) => (
+          <div key={i} className="pp-trace-beat">
+            <span className="pp-treatment">{String(beat.treatment ?? "?")}</span>
+            <span className="pp-trace-text">{String(beat.transcript ?? "")}</span>
+            <small>{String(beat.plannedDurationSec ?? "?")}s</small>
+          </div>
+        ))}
+        <KV k="Gates" v={`schema ${gates.schemaIssues ?? 0} · timeline ${gates.timelineIssues ?? 0} issues`} />
+      </>
+    );
+  }
+  if (stage === "voice") {
+    const takes = Array.isArray(data.takes) ? (data.takes as Record<string, unknown>[]) : [];
+    const qc = (data.qc ?? {}) as { pass?: boolean; checks?: string[] };
+    return (
+      <>
+        {typeof data.providerText === "string" ? <p className="pp-trace-text">"{data.providerText}"</p> : null}
+        <div className="pp-kv-row">
+          {takes.map((take, i) => (
+            <KV key={i} k={`take ${String(take.id ?? i).split("-take-").pop()}${take.pass ? " ✓" : " ✗"}`} v={`${take.durationSec ?? "?"}s`} />
+          ))}
+        </div>
+        <ul className="pp-trace-qc">{(qc.checks ?? []).map((check, i) => <li key={i}>{check}</li>)}</ul>
+      </>
+    );
+  }
+  if (stage === "timeline") {
+    const gates = Array.isArray(data.gates) ? (data.gates as Record<string, unknown>[]) : [];
+    return (
+      <>
+        {gates.map((gate, i) => (
+          <KV key={i} k={String(gate.label ?? gate.id ?? "?")} v={gate.pass ? "✓" : `✗ ${(gate.detail as string[] | undefined)?.join("; ") || ""}`} />
+        ))}
+      </>
+    );
+  }
+  if (stage === "render") {
+    return <><KV k="Output" v={String(data.output ?? "?")} /><KV k="Quality" v={String(data.quality ?? "?")} /><KV k="Window" v={`${data.window && typeof data.window === "object" ? (data.window as Record<string, unknown>).startSec : "?"}–${data.window && typeof data.window === "object" ? (data.window as Record<string, unknown>).endSec : "?"}s`} /></>;
+  }
+  if (stage === "approval") {
+    return <><KV k="Status" v={String(data.status ?? "?")} />{typeof data.note === "string" && data.note ? <p className="pp-trace-text">"{data.note}"</p> : null}{typeof data.summary === "string" && data.summary ? <p className="pp-hint">{data.summary}</p> : null}</>;
+  }
+  return <pre className="pp-trace-raw">{JSON.stringify(data, null, 1)}</pre>;
+};
 
 const PipelineCard: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [report, setReport] = React.useState<TimelineReportShape | null>(null);
@@ -175,6 +290,8 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
         <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗</button>
       </header>
 
+      <ProcessTimeline projectId={projectId} />
+
       <div className="pp-grid-top">
         <div className="pp-card pp-player">
           <div className="pp-card-title">Draft mới nhất</div>
@@ -190,7 +307,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
             </details>
           ) : null}
         </div>
-        <PipelineCard projectId={projectId} />
+        <ApprovalCard projectId={projectId} approval={approval} onChanged={refresh} />
       </div>
 
       {videoDoc ? (
@@ -207,7 +324,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
 
       <BeatCards editorDoc={snapshot.editorDoc as IsaacVerseEditDoc} />
 
-      <ApprovalCard projectId={projectId} approval={approval} onChanged={refresh} />
+      <PipelineCard projectId={projectId} />
     </div>
   );
 };

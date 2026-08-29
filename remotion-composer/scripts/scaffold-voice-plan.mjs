@@ -24,6 +24,7 @@ import { pathToFileURL } from "node:url";
 const ROOT = path.resolve(import.meta.dirname, "..", "..");
 const COMPOSER = path.resolve(import.meta.dirname, "..");
 const PY = path.join(ROOT, "harness", ".venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+const { appendTrace } = await import(pathToFileURL(path.resolve(COMPOSER, "scripts", "lib", "trace.mjs")).href);
 
 const args = Object.fromEntries(process.argv.slice(2).map((arg, index, all) => {
   if (!arg.startsWith("--")) return [];
@@ -85,6 +86,13 @@ if (doRegen) {
     // otherwise validated QC data dies inside this script.
     segment.qc = result.qc;
     segment.takeId = result.takeId;
+    appendTrace(ROOT, slug, "voice", `Voice: ${segment.beatId}`, {
+      providerText: segment.providerText,
+      takes: (result.takes ?? []).map((take) => ({ id: take.id, pass: take.pass, durationSec: take.metrics?.durationSec?.toFixed?.(2) })),
+      selectedTake: result.takeId,
+      qc: { pass: result.qc?.pass, checks: (result.qc?.checks ?? []).map((check) => `${check.pass ? "✓" : "✗"} ${check.label}: ${check.value}`) },
+      stemDurationSec: result.stemDurationSec,
+    });
     console.log(`  ${segment.beatId}: ${result.stemDurationSec?.toFixed(2)}s (take ${result.takeId}, QC ${result.qc?.pass ? "PASS" : "FAIL"})`);
   }
 }

@@ -12,7 +12,7 @@
       "shotIds": [],
       "journeySlot": "status_quo",
       "startSec": 0,
-      "durationSec": 4.75,
+      "durationSec": 4.59,
       "transcript": "Every cut looks right. So why does the edit feel wrong?",
       "narrativeFunction": "name the false solution",
       "treatment": {
@@ -33,8 +33,8 @@
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "call",
-      "startSec": 4.75,
-      "durationSec": 6.43,
+      "startSec": 4.59,
+      "durationSec": 5.79,
       "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
       "narrativeFunction": "reframe the unit of editing",
       "treatment": {
@@ -55,8 +55,8 @@
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "resolution",
-      "startSec": 11.18,
-      "durationSec": 6.99,
+      "startSec": 10.38,
+      "durationSec": 7.07,
       "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
       "narrativeFunction": "resolve with a memorable rule",
       "treatment": {
@@ -83,16 +83,16 @@
         "id": "agent-loop-test:voice:agent-loop-beat-01",
         "src": "agent-loop-test/voice/stems/agent-loop-beat-01.wav",
         "startSec": 0,
-        "endSec": 4.75,
+        "endSec": 4.59,
         "transcript": "Every cut looks right. So why does the edit feel wrong?",
         "qc": {
           "pass": true,
-          "checkedAt": "2026-08-29T17:21:06",
-          "durationSec": 4.32,
+          "checkedAt": "2026-08-29T18:32:22",
+          "durationSec": 4.24,
           "expectedSec": 4.4,
           "peakDb": -1.5,
-          "meanDb": -15.9,
-          "lufs": -14.88,
+          "meanDb": -15.7,
+          "lufs": -14.29,
           "tailSilenceSec": 0,
           "wer": 0,
           "checks": [
@@ -107,7 +107,7 @@
               "id": "duration",
               "label": "Duration",
               "pass": true,
-              "value": "4.32s vs 4.40s",
+              "value": "4.24s vs 4.40s",
               "threshold": "±15% or WER-verified"
             },
             {
@@ -120,28 +120,28 @@
             {
               "id": "lufs",
               "label": "Loudness (post)",
-              "pass": true,
-              "value": "-14.88 LUFS",
+              "pass": false,
+              "value": "-14.29 LUFS",
               "threshold": "-16 ±1.5"
             }
           ]
         },
-        "takeId": "agent-loop-beat-01-take-01"
+        "takeId": "agent-loop-beat-01-take-02"
       },
       {
         "id": "agent-loop-test:voice:agent-loop-beat-02",
         "src": "agent-loop-test/voice/stems/agent-loop-beat-02.wav",
-        "startSec": 4.75,
-        "endSec": 11.18,
+        "startSec": 4.59,
+        "endSec": 10.38,
         "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
         "qc": {
           "pass": true,
-          "checkedAt": "2026-08-29T17:21:55",
-          "durationSec": 6.08,
+          "checkedAt": "2026-08-29T18:32:58",
+          "durationSec": 5.44,
           "expectedSec": 6.8,
-          "peakDb": -2.4,
-          "meanDb": -16.8,
-          "lufs": -16.51,
+          "peakDb": -2.5,
+          "meanDb": -16.5,
+          "lufs": -16.23,
           "tailSilenceSec": 0,
           "wer": 0,
           "checks": [
@@ -149,14 +149,14 @@
               "id": "clip",
               "label": "Clipping",
               "pass": true,
-              "value": "-2.4 dBFS peak",
+              "value": "-2.5 dBFS peak",
               "threshold": "< -0.5 dBFS"
             },
             {
               "id": "duration",
               "label": "Duration",
               "pass": true,
-              "value": "6.08s vs 6.80s",
+              "value": "5.44s vs 6.80s",
               "threshold": "±15% or WER-verified"
             },
             {
@@ -170,27 +170,27 @@
               "id": "lufs",
               "label": "Loudness (post)",
               "pass": true,
-              "value": "-16.51 LUFS",
+              "value": "-16.23 LUFS",
               "threshold": "-16 ±1.5"
             }
           ]
         },
-        "takeId": "agent-loop-beat-02-take-02"
+        "takeId": "agent-loop-beat-02-take-01"
       },
       {
         "id": "agent-loop-test:voice:agent-loop-beat-03",
         "src": "agent-loop-test/voice/stems/agent-loop-beat-03.wav",
-        "startSec": 11.18,
-        "endSec": 18.17,
+        "startSec": 10.38,
+        "endSec": 17.45,
         "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
         "qc": {
           "pass": true,
-          "checkedAt": "2026-08-29T17:22:44",
-          "durationSec": 6.08,
+          "checkedAt": "2026-08-29T18:33:34",
+          "durationSec": 6.72,
           "expectedSec": 7.6000000000000005,
-          "peakDb": -2.3,
-          "meanDb": -16.8,
-          "lufs": -15.81,
+          "peakDb": -1.6,
+          "meanDb": -16.9,
+          "lufs": -15.64,
           "tailSilenceSec": 0,
           "wer": 0,
           "checks": [
@@ -198,14 +198,14 @@
               "id": "clip",
               "label": "Clipping",
               "pass": true,
-              "value": "-2.3 dBFS peak",
+              "value": "-1.6 dBFS peak",
               "threshold": "< -0.5 dBFS"
             },
             {
               "id": "duration",
               "label": "Duration",
               "pass": true,
-              "value": "6.08s vs 7.60s",
+              "value": "6.72s vs 7.60s",
               "threshold": "±15% or WER-verified"
             },
             {
@@ -219,7 +219,7 @@
               "id": "lufs",
               "label": "Loudness (post)",
               "pass": true,
-              "value": "-15.81 LUFS",
+              "value": "-15.64 LUFS",
               "threshold": "-16 ±1.5"
             }
           ]

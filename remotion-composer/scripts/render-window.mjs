@@ -4,6 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { appendTrace } from "./lib/trace.mjs";
 import { preset } from "./render-presets.mjs";
 
 const composerRoot = path.resolve(import.meta.dirname, "..");
@@ -275,6 +276,17 @@ export function buildWindowRender({ slug, composition, entry, editDocPath, edito
       fs.writeFileSync(`${outputPath}.render-report.json`, JSON.stringify(renderReport, null, 2), "utf-8");
     } catch {
       /* sidecar is best-effort — the render itself already succeeded */
+    }
+    try {
+      // process trace (the project page renders "how this video was made")
+      appendTrace(workspaceRoot, slug, "render", "Render draft", {
+        output: path.relative(workspaceRoot, outputPath).replace(/\\/g, "/"),
+        quality,
+        window: { startSec: window.startSec, endSec: window.endSec },
+        composition: composition || `${slug}-30s`,
+      });
+    } catch {
+      /* trace is best-effort */
     }
   }
   return { ...window, outputPath, bundleDir, command, args, renderReport };

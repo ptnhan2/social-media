@@ -69,6 +69,7 @@ const report = {
 };
 
 const validator = await bundleModule("validate.ts", "gentl-val");
+const { appendTrace } = await import(pathToFileURL(path.resolve(COMPOSER, "scripts", "lib", "trace.mjs")).href);
 const schemaIssues = validator.validateEditDoc(editDoc);
 const timelineIssues = validator.validateEditDocTimeline(editDoc);
 report.checks.push({ id: "schema", label: "Edit-doc schema", pass: schemaIssues.length === 0, detail: schemaIssues.map((i) => `${i.path}: ${i.message}`) });
@@ -191,4 +192,12 @@ console.log(JSON.stringify({
   warnings: report.warnings,
   report: dryRun ? undefined : path.relative(ROOT, reportPath),
 }, null, 2));
+
+if (!dryRun) {
+  appendTrace(ROOT, slug, "timeline", `Timeline generated (${mode})`, {
+    styleVersion: report.styleVersion,
+    gates: report.checks.map((check) => ({ id: check.id, pass: check.pass, label: check.label, detail: (check.detail ?? []).slice(0, 3) })),
+    warnings: report.warnings,
+  });
+}
 process.exit(0);

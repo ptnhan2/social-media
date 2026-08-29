@@ -76,6 +76,10 @@ async function bundleModule(relPathFromShared, prefix) {
 const validator = await bundleModule("validate.ts", "wed-val");
 const storeModule = await bundleModule("store.ts", "wed-store");
 
+// trace the plan stage (the process view reads this — idea input, the script
+// the agent authored, the treatment rules applied per beat)
+const { appendTrace } = await import(pathToFileURL(path.resolve(COMPOSER, "scripts", "lib", "trace.mjs")).href);
+
 // ---- build the docs from the agent's plan ----
 let cursor = 0;
 const editBeats = beats.map((beat, index) => {
@@ -152,6 +156,21 @@ if (existsSync(editDocPath)) {
 // ---- write through the store's sanctioned path ----
 const store = storeModule.createProjectStore(path.join(ROOT, "projects"), path.join(COMPOSER, "public"));
 store.saveSourceDocs(slug, videoDoc, editDoc);
+appendTrace(ROOT, slug, "plan", "Agent viết edit-doc (story + beat plan)", {
+  idea: videoDoc.idea,
+  beats: editBeats.map((beat) => ({
+    id: beat.id,
+    treatment: beat.treatment.id,
+    params: beat.treatment.params,
+    transcript: beat.transcript,
+    plannedDurationSec: beat.durationSec,
+  })),
+  gates: {
+    schemaIssues: editIssues.length,
+    timelineIssues: timelineIssues.length,
+    warnings: timelineIssues.map((issue) => `${issue.path}: ${issue.message}`),
+  },
+});
 
 console.log(JSON.stringify({
   ok: true,

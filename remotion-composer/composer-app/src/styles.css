@@ -1400,6 +1400,40 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 }
 .ve-back-btn:hover { background: #1f2937; border-color: #2563eb; }
 
+/* Process timeline — the page's spine (chronological "how this was made") */
+.pp-trace { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.pp-trace-item { border-left: 2px solid #1f2937; margin-left: 14px; }
+.pp-trace-item:first-child { border-left-color: #2563eb; }
+.pp-trace-head {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: none; border: none; cursor: pointer; text-align: left;
+  padding: 6px 10px 6px 14px; margin-left: -2px; color: #d8dee9; font-size: 12px;
+  border-radius: 6px;
+}
+.pp-trace-head:hover { background: #0d1520; }
+.pp-trace-icon { width: 20px; text-align: center; flex-shrink: 0; }
+.pp-trace-stage {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: 1px 7px; border-radius: 8px; flex-shrink: 0;
+  background: #17203a; color: #8ab4ff;
+}
+.pp-trace-item.stage-voice .pp-trace-stage { background: #0d2b24; color: #5fd6b0; }
+.pp-trace-item.stage-render .pp-trace-stage { background: #2b1f0d; color: #f5b544; }
+.pp-trace-item.stage-approval .pp-trace-stage { background: #2b0d1a; color: #ff9bc2; }
+.pp-trace-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-trace-ts { color: #6b7280; font-size: 10px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.pp-trace-caret { color: #6b7280; flex-shrink: 0; }
+.pp-trace-body { padding: 2px 12px 12px 36px; display: flex; flex-direction: column; gap: 6px; }
+.pp-trace-text { margin: 0; font-size: 12px; color: #d8dee9; }
+.pp-trace-beat { display: flex; align-items: baseline; gap: 6px; font-size: 11px; }
+.pp-trace-beat .pp-trace-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-trace-beat small { color: #6b7280; flex-shrink: 0; }
+.pp-kv { display: flex; justify-content: space-between; gap: 12px; font-size: 11px; color: #8d96a3; }
+.pp-kv b { color: #d8dee9; font-weight: 500; text-align: right; }
+.pp-kv-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.pp-trace-qc { list-style: none; margin: 0; padding: 0; font-size: 11px; color: #8d96a3; display: flex; flex-direction: column; gap: 1px; }
+.pp-trace-raw { margin: 0; font-size: 10px; color: #6b7280; overflow-x: auto; }
+
 /* ===== Agent Panel ===== */
 .ap-root { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 

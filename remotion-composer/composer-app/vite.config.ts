@@ -371,6 +371,23 @@ export default defineConfig({
         // pattern: pending -> changes_requested -> approved) and every
         // transition lands in feedback.jsonl as a learning signal.
         const APPROVAL_STATUSES = new Set(["pending", "changes_requested", "approved"]);
+        server.middlewares.use("/api/project/trace", (req, res) => {
+          try {
+            const url = new URL(req.url || "/", "http://composer.local");
+            const projectId = url.searchParams.get("projectId") || "";
+            if (!projectId) { sendJson(res, 400, { error: "projectId required" }); return; }
+            const traceFile = resolve(PROJECT_STORE.projectDir(projectId), "qa", "pipeline-log.jsonl");
+            const events: unknown[] = [];
+            if (existsSync(traceFile)) {
+              for (const line of readFileSync(traceFile, "utf-8").split(/\r?\n/)) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+                try { events.push(JSON.parse(trimmed)); } catch { /* skip torn line */ }
+              }
+            }
+            sendJson(res, 200, { events });
+          } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+        });
         server.middlewares.use("/api/project/approval", (req, res) => {
           const url = new URL(req.url || "/", "http://composer.local");
           const projectId = url.searchParams.get("projectId") || "";
@@ -398,6 +415,12 @@ export default defineConfig({
               mkdirSync(pathDirname(approvalPath), { recursive: true });
               writeFileSync(approvalPath, JSON.stringify(approval, null, 2), "utf-8");
               appendFeedback({ knob: "approval", from: "", to: status, projectId, note, summary });
+              // process trace — the page's "how this video was made" timeline
+              try {
+                const traceFile = resolve(PROJECT_STORE.projectDir(projectId), "qa", "pipeline-log.jsonl");
+                mkdirSync(pathDirname(traceFile), { recursive: true });
+                appendFileSync(traceFile, `${JSON.stringify({ ts: new Date().toISOString(), stage: "approval", title: `Approval: ${status}`, data: { status, note, summary } })}\n`, "utf-8");
+              } catch { /* trace is best-effort */ }
               sendJson(res, 200, { ok: true, approval });
             } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
           });
