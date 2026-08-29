@@ -55,7 +55,11 @@ if (timeline.status !== 0) {
 
 // ---- step 3: draft render (full duration from the fresh edit-doc) ----
 const editDoc = JSON.parse(readFileSync(editDocPath, "utf-8"));
-const durationSec = Math.max(...editDoc.beats.map((beat) => beat.startSec + beat.durationSec), 0.1);
+const beatEnds = (editDoc.beats ?? [])
+  .filter((beat) => Number.isFinite(beat.startSec) && Number.isFinite(beat.durationSec))
+  .map((beat) => beat.startSec + beat.durationSec);
+if (!beatEnds.length) { console.error(JSON.stringify({ ok: false, error: "edit-doc has no valid beats (startSec/durationSec)" })); process.exit(1); }
+const durationSec = Math.max(...beatEnds, 0.1);
 const renderName = `auto-${new Date().toISOString().replace(/[:.]/g, "-")}.mp4`;
 const outputPath = path.join(ROOT, "projects", slug, "renders", renderName);
 const render = run("render", ["scripts/render-window.mjs", "--project", slug, "--start", "0", "--end", String(durationSec + 0.2), "--quality", "draft", "--padding", "0", "--output", path.relative(ROOT, outputPath).replace(/\\/g, "/")]);

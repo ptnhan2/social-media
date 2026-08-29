@@ -329,33 +329,47 @@ const CreateCard: React.FC<{ onSendIdea: (idea: string) => void }> = ({ onSendId
 };
 
 /** STORY CHECKPOINT: the first review gate — edit fields inline, approve. */
-const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; onChanged: () => void }> = ({ projectId, draft, onChanged }) => {
+const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; hasScript: boolean; onChanged: () => void }> = ({ projectId, draft, hasScript, onChanged }) => {
   const agent = useAgentUi();
   const [fields, setFields] = React.useState({
     idea: draft.idea ?? "", surfaceProblem: draft.surfaceProblem ?? "",
     deeperProblem: draft.deeperProblem ?? "", thumbnailPromise: draft.thumbnailPromise ?? "",
+    viewer: draft.commonGoal?.viewer ?? "", creator: draft.commonGoal?.creator ?? "",
   });
   React.useEffect(() => {
-    setFields({ idea: draft.idea ?? "", surfaceProblem: draft.surfaceProblem ?? "", deeperProblem: draft.deeperProblem ?? "", thumbnailPromise: draft.thumbnailPromise ?? "" });
-  }, [draft.idea, draft.surfaceProblem, draft.deeperProblem, draft.thumbnailPromise]);
+    setFields({
+      idea: draft.idea ?? "", surfaceProblem: draft.surfaceProblem ?? "",
+      deeperProblem: draft.deeperProblem ?? "", thumbnailPromise: draft.thumbnailPromise ?? "",
+      viewer: draft.commonGoal?.viewer ?? "", creator: draft.commonGoal?.creator ?? "",
+    });
+    setNote("");
+  }, [draft.idea, draft.surfaceProblem, draft.deeperProblem, draft.thumbnailPromise, draft.commonGoal?.viewer, draft.commonGoal?.creator]);
+  const [note, setNote] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const [message, setMessage] = React.useState("");
 
-  const save = async (status: "pending" | "approved") => {
+  const storyPayload = () => ({
+    idea: fields.idea, surfaceProblem: fields.surfaceProblem,
+    deeperProblem: fields.deeperProblem, thumbnailPromise: fields.thumbnailPromise,
+    commonGoal: { viewer: fields.viewer, creator: fields.creator },
+  });
+
+  const save = async (status: "pending" | "approved" | "changes_requested") => {
     setBusy(true); setMessage("");
     try {
-      await setStoryDraft(projectId, { status, story: fields, originalIdea: draft.originalIdea });
-      setMessage(status === "approved" ? "Story đã duyệt ✓" : "Đã lưu ✓");
+      await setStoryDraft(projectId, { status, story: storyPayload(), originalIdea: draft.originalIdea, note: status === "changes_requested" ? note : undefined });
+      setMessage(status === "approved" ? "Story đã duyệt ✓" : status === "changes_requested" ? "Đã gửi yêu cầu sửa cho agent ✓" : "Đã lưu ✓");
       onChanged();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     } finally { setBusy(false); }
   };
 
-  const dirty = fields.idea !== (draft.idea ?? "") || fields.surfaceProblem !== (draft.surfaceProblem ?? "") || fields.deeperProblem !== (draft.deeperProblem ?? "") || fields.thumbnailPromise !== (draft.thumbnailPromise ?? "");
+  const dirty = fields.idea !== (draft.idea ?? "") || fields.surfaceProblem !== (draft.surfaceProblem ?? "") || fields.deeperProblem !== (draft.deeperProblem ?? "") || fields.thumbnailPromise !== (draft.thumbnailPromise ?? "") || fields.viewer !== (draft.commonGoal?.viewer ?? "") || fields.creator !== (draft.commonGoal?.creator ?? "");
+  const canApprove = fields.idea.trim().length > 0 && fields.deeperProblem.trim().length > 0;
   return (
     <section className="pp-card">
-      <div className="pp-card-title">Story <small>{draft.status === "approved" ? "— đã duyệt" : draft.status === "pending" ? "— chờ bạn duyệt" : ""}</small></div>
+      <div className="pp-card-title">Story <small>{draft.status === "approved" ? "— đã duyệt" : draft.status === "pending" ? "— chờ bạn duyệt" : draft.status === "changes_requested" ? "— đã yêu cầu sửa" : ""}</small></div>
       {draft.originalIdea ? <p className="ve-hint">💡 Ý tưởng gốc: {draft.originalIdea}</p> : null}
       <label className="ve-prop-field ve-prop-field-wide"><span>Idea</span>
         <textarea rows={1} value={fields.idea} aria-label="Story idea" disabled={draft.status === "approved"}
@@ -369,18 +383,35 @@ const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; onChanged: () 
       <label className="ve-prop-field ve-prop-field-wide"><span>Thumbnail promise</span>
         <textarea rows={1} value={fields.thumbnailPromise} aria-label="Story thumbnail promise" disabled={draft.status === "approved"}
           onChange={(e) => setFields((f) => ({ ...f, thumbnailPromise: e.target.value }))} /></label>
+      <div className="ve-prop-section">
+        <label className="ve-prop-field"><span>Viewer goal</span>
+          <input type="text" value={fields.viewer} aria-label="Viewer goal" disabled={draft.status === "approved"}
+            onChange={(e) => setFields((f) => ({ ...f, viewer: e.target.value }))} /></label>
+        <label className="ve-prop-field"><span>Creator goal</span>
+          <input type="text" value={fields.creator} aria-label="Creator goal" disabled={draft.status === "approved"}
+            onChange={(e) => setFields((f) => ({ ...f, creator: e.target.value }))} /></label>
+      </div>
       {draft.status !== "approved" ? (
-        <div className="pp-story-actions">
-          {dirty ? <button type="button" className="ve-btn" disabled={busy} onClick={() => void save("pending")}>Lưu sửa</button> : null}
-          <button type="button" className="ve-btn pp-keep" disabled={busy} onClick={() => void save("approved")}>✓ Duyệt story</button>
-        </div>
+        <>
+          <div className="pp-story-actions">
+            {dirty ? <button type="button" className="ve-btn" disabled={busy} onClick={() => void save("pending")}>Lưu sửa</button> : null}
+            <button type="button" className="ve-btn pp-keep" disabled={busy || !canApprove} title={canApprove ? "" : "Idea + deeper problem không được để trống"} onClick={() => void save("approved")}>✓ Duyệt story</button>
+          </div>
+          <details className="pp-request-changes">
+            <summary>yêu cầu agent sửa story</summary>
+            <input className="pp-note-input" aria-label="Story revision note" placeholder="cần sửa gì? (agent đọc note này rồi re-draft)" value={note} onChange={(e) => setNote(e.target.value)} />
+            <button type="button" className="ve-btn pp-redo" disabled={busy || !note.trim()} onClick={() => { void save("changes_requested"); agent.setDraftPrompt(`Story của project ${projectId} bị yêu cầu sửa (xem qa/story-draft.json note). Đọc check_story_review, sửa story theo note rồi draft_story lại.`); agent.setOpen(true); }}>↻ Gửi yêu cầu sửa</button>
+          </details>
+        </>
       ) : null}
       {message ? <p className="ve-hint">{message}</p> : null}
-      {draft.status === "approved" ? (
+      {draft.status === "approved" && !hasScript ? (
         <div>
           <button type="button" className="ve-btn primary" onClick={() => { agent.setDraftPrompt(`Story đã duyệt (project ${projectId}). Viết script từ story đã duyệt: gọi write_edit_doc với story ở qa/story-draft.json làm input, instruction = ý tưởng gốc. Sau đó dừng để tôi duyệt script.`); agent.setOpen(true); }}>📝 Viết script →</button>
           <p className="ve-hint">Agent viết script từ story này — bạn duyệt và sửa trong studio như thường lệ.</p>
         </div>
+      ) : draft.status === "approved" ? (
+        <p className="ve-hint">Script đã tồn tại — sửa trực tiếp trong phần Script phía dưới.</p>
       ) : (
         <p className="ve-hint">Duyệt story để agent tiến sang viết script — hoặc sửa trực tiếp các trường phía trên rồi Lưu.</p>
       )}
@@ -466,7 +497,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
   const [storyDraft, setStoryDraftState] = React.useState<StoryDraft | null>(null);
 
   const refresh = React.useCallback(() => {
-    loadProject(projectId).then(setSnapshot).catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
+    loadProject(projectId).then((payload) => { setSnapshot(payload); setError(null); }).catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
     fetchRenders(projectId).then((payload) => setRenders(payload.renders)).catch(() => setRenders([]));
     fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
     fetchStoryDraft(projectId).then(setStoryDraftState).catch(() => setStoryDraftState(null));
@@ -483,9 +514,21 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
   const editDoc = snapshot.editDoc as IsaacVerseEditDoc | undefined;
   const editorDoc = snapshot.editorDoc as IsaacVerseEditDoc | undefined;
   const allClips = editorDoc?.tracks.flatMap((track) => track.clips) ?? [];
-  const beatClips = (editorDoc?.tracks.find((track) => track.id === "video-main")?.clips ?? [])
-    .slice()
-    .sort((a, b) => a.range.startSec - b.range.startSec);
+  // SCRIPT TRUTH (cold-diff review MAJOR #1): the script checkpoint reads the
+  // EDIT-DOC beats — they exist right after write_edit_doc, BEFORE the
+  // timeline projection. The editor doc only enriches with voice metadata.
+  const editorBeats = (editorDoc?.tracks.find((track) => track.id === "video-main")?.clips ?? [])
+    .slice().sort((a, b) => a.range.startSec - b.range.startSec);
+  const editBeats = (editDoc?.beats ?? []).map((beat) => ({
+    id: `beat:${beat.id}`,
+    kind: "beat" as const,
+    trackId: "video-main",
+    range: { startSec: beat.startSec, endSec: beat.startSec + beat.durationSec },
+    label: beat.narrativeFunction ?? beat.id,
+    source: { beatId: beat.id },
+    metadata: { transcript: beat.transcript, treatmentId: beat.treatment?.id } as Record<string, unknown>,
+  }));
+  const beatClips = editorBeats.length ? editorBeats : editBeats;
   const latest = renders[0];
   const stage = deriveStage(snapshot, storyDraft, renders.length, approval);
   const hasScript = (editDoc?.beats ?? []).some((beat) => String(beat.transcript ?? "").trim());
@@ -509,7 +552,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
       {stage === "idea" ? <CreateCard onSendIdea={sendIdeaToAgent} /> : null}
 
       {storyDraft && storyDraft.status !== "none" ? (
-        <StoryCard projectId={projectId} draft={storyDraft} onChanged={refresh} />
+        <StoryCard projectId={projectId} draft={storyDraft} hasScript={hasScript} onChanged={refresh} />
       ) : null}
 
       <PromptCard instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />

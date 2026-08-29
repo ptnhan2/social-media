@@ -77,6 +77,7 @@ const ProjectRoute: React.FC = () => {
 const NewIdeaRoute: React.FC<{ mode?: string | null; navigate: (path: string) => void }> = ({ mode, navigate }) => {
   const [slug, setSlug] = React.useState("");
   const [creating, setCreating] = React.useState(false);
+  const [createError, setCreateError] = React.useState<string | null>(null);
   const [created, setCreated] = React.useState<string | null>(null);
   React.useEffect(() => {
     if (created) navigate(`/project?project=${encodeURIComponent(created)}`);
@@ -88,9 +89,12 @@ const NewIdeaRoute: React.FC<{ mode?: string | null; navigate: (path: string) =>
     const id = slug.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "-").replace(/^-+|-+$/g, "");
     if (!id) return;
     setCreating(true);
+    setCreateError(null);
     try {
       await createProject(id);
       setCreated(id);
+    } catch (e) {
+      setCreateError(e instanceof Error ? e.message : String(e));
     } finally {
       setCreating(false);
     }
@@ -113,6 +117,7 @@ const NewIdeaRoute: React.FC<{ mode?: string | null; navigate: (path: string) =>
             {creating ? "Đang tạo…" : "Tạo & bắt đầu →"}
           </button>
         </div>
+        {createError ? <p className="ve-hint" style={{ color: "#ff9b9b" }}>{createError}</p> : null}
       </section>
     </div>
   );
