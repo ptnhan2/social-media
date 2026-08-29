@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, Component, ErrorInfo } from "react";
 import { useStream } from "@langchain/react";
+import { useAgentUi } from "./AgentDrawer";
 
 // agent server port per .kilo/skills/server-lifecycle (langgraph dev --port 2025)
 const LANGGRAPH_URL = "http://localhost:2025";
@@ -305,6 +306,12 @@ function KeepGate({ gate, onDecide, busy }: { gate: any; onDecide: (type: "keep"
 export function AgentPanel({ projectId, currentSec }: { projectId?: string; currentSec: number }) {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // prompt-layer bridge: the studio's re-run drops the script's generating
+  // instruction here — prefill the input once, user tweaks + sends
+  const { draftPrompt, setDraftPrompt } = useAgentUi();
+  useEffect(() => {
+    if (draftPrompt) { setInput(draftPrompt); setDraftPrompt(undefined); }
+  }, [draftPrompt, setDraftPrompt]);
 
   const stream = useStream({
     apiUrl: LANGGRAPH_URL,

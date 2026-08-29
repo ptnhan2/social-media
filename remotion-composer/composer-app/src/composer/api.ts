@@ -56,6 +56,10 @@ export const fetchApproval = (projectId: string) => requestJson<ProjectApproval>
 
 export const setApproval = (projectId: string, status: "pending" | "changes_requested" | "approved", note = "") => requestJson<{ ok: true; approval: ProjectApproval }>(`/api/project/approval`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, status, note }) });
 
+export type ClipMetadataChanges = { sentenceText?: string; providerText?: string; voiceSettings?: Record<string, unknown>; transcript?: string };
+
+export const setClipMetadata = (projectId: string, clipId: string, changes: ClipMetadataChanges) => requestJson<{ ok: true; clipId: string }>(`/api/project/clip-metadata`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, clipId, changes }) });
+
 export const saveReviewQueue = (projectId: string, entries: ReviewQueueEntry[]) => requestJson<ReviewQueue>("/api/project/review-queue", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, entries }) });
 
 export type ProjectListItem = {

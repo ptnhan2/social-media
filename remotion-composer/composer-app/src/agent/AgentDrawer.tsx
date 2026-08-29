@@ -38,6 +38,11 @@ export type AgentUiContextValue = {
   setProjectId: (projectId?: string) => void;
   view: AgentView;
   setView: (view: AgentView) => void;
+  /** Prompt-layer bridge: the studio's re-run button drops the script's
+   *  generating instruction here — the drawer opens with it prefilled so the
+   *  user can tweak the prompt and send it to the agent. */
+  draftPrompt?: string;
+  setDraftPrompt: (prompt?: string) => void;
 };
 
 const AgentUiContext = React.createContext<AgentUiContextValue | null>(null);
@@ -52,9 +57,10 @@ export const AgentProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [open, setOpen] = React.useState(false);
   const [projectId, setProjectId] = React.useState<string | undefined>(undefined);
   const [view, setView] = React.useState<AgentView>("picker");
+  const [draftPrompt, setDraftPrompt] = React.useState<string | undefined>(undefined);
   const value = React.useMemo<AgentUiContextValue>(
-    () => ({ open, setOpen, toggle: () => setOpen((v) => !v), projectId, setProjectId, view, setView }),
-    [open, projectId, view],
+    () => ({ open, setOpen, toggle: () => setOpen((v) => !v), projectId, setProjectId, view, setView, draftPrompt, setDraftPrompt }),
+    [open, projectId, view, draftPrompt],
   );
   return <AgentUiContext.Provider value={value}>{children}</AgentUiContext.Provider>;
 };

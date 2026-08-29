@@ -1434,6 +1434,35 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .pp-trace-qc { list-style: none; margin: 0; padding: 0; font-size: 11px; color: #8d96a3; display: flex; flex-direction: column; gap: 1px; }
 .pp-trace-raw { margin: 0; font-size: 10px; color: #6b7280; overflow-x: auto; }
 
+/* Content Studio — beat editor + prompt bar (script-centric working surface) */
+.pp-promptbar { flex-direction: row; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pp-prompt-label { font-weight: 700; color: #f5b544; font-size: 12px; flex-shrink: 0; }
+.pp-prompt-text { margin: 0; flex: 1; min-width: 200px; font-size: 12px; color: #d8dee9; font-style: italic; }
+.pp-rerun { background: #17203a; color: #8ab4ff; border-color: #2563eb; }
+.pp-rerun:hover { background: #1d2a52; }
+.pp-beatlist { display: flex; flex-direction: column; gap: 12px; }
+.pp-beatedit { border: 1px solid #1f2937; border-radius: 8px; padding: 10px 12px; background: #0d1520; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pp-field { display: flex; flex-direction: column; gap: 3px; }
+.pp-field > span { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: .04em; }
+.pp-field > span small { text-transform: none; letter-spacing: 0; }
+.pp-field textarea { background: #111827; border: 1px solid #1f2937; border-radius: 6px; color: #e6edf6; padding: 6px 8px; font-size: 13px; resize: vertical; font-family: inherit; }
+.pp-field textarea:focus { border-color: #2563eb; outline: none; }
+.pp-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
+.pp-settings label { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pp-settings span { font-size: 9px; color: #6b7280; text-transform: uppercase; }
+.pp-settings input { background: #111827; border: 1px solid #1f2937; border-radius: 5px; color: #d8dee9; padding: 4px 6px; font-size: 11px; min-width: 0; }
+.pp-beat-actions { display: flex; gap: 8px; align-items: center; }
+.pp-regen { background: #0d2b24; color: #5fd6b0; border-color: #14532d; }
+.pp-regen:hover:not(:disabled) { background: #14532d; }
+.pp-takes { display: flex; gap: 6px; flex-wrap: wrap; }
+.pp-take-chip { display: inline-flex; align-items: center; gap: 5px; border: 1px solid #1f2937; border-radius: 6px; padding: 2px 6px; background: #111827; }
+.pp-take-chip.current { border-color: #14532d; background: #0d1f18; }
+.pp-take-chip small { color: #8d96a3; font-size: 10px; }
+.pp-collapse { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 10px 16px; }
+.pp-collapse summary { cursor: pointer; font-weight: 600; color: #d8dee9; font-size: 13px; }
+.pp-collapse[open] { padding-bottom: 12px; }
+.pp-collapse .pp-story, .pp-collapse .pp-trace { margin-top: 10px; }
+
 /* ===== Agent Panel ===== */
 .ap-root { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 
