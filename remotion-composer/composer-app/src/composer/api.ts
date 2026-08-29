@@ -1,4 +1,4 @@
-import type { EditPatch, FeedbackRecord } from "../../../shared/isaacverse/schema";
+import type { EditPatch, FeedbackRecord, VideoDoc } from "../../../shared/isaacverse/schema";
 import type { OperationRequest, OperationResult } from "../../../shared/isaacverse/operations";
 import type { IsaacVerseEditDoc } from "../../../shared/isaacverse/types";
 import type { EditorDoc } from "../../../shared/isaacverse/editor";
@@ -7,6 +7,7 @@ import type { FeedbackRequest, ReviewQueue, ReviewQueueEntry } from "../../../sh
 export type ProjectSnapshot = {
   projectId: string;
   state: { currentVersion: string; [key: string]: unknown };
+  videoDoc?: VideoDoc;
   editDoc?: IsaacVerseEditDoc;
   editorDoc?: EditorDoc;
   feedback: FeedbackRecord[];
@@ -14,6 +15,9 @@ export type ProjectSnapshot = {
   qaReports: unknown[];
   versions: { version: string; editDoc: IsaacVerseEditDoc }[];
 };
+
+export type ProjectRender = { path: string; name: string; sizeBytes: number; mtimeIso: string };
+export type ProjectApproval = { status: "none" | "pending" | "changes_requested" | "approved"; note?: string; summary?: string; updatedAt?: string };
 
 const requestJson = async <T>(url: string, init?: RequestInit): Promise<T> => {
   const response = await fetch(url, init);
@@ -45,6 +49,12 @@ export const loadKiloInbox = (projectId: string) => requestJson<FeedbackRequest[
 export const artifactUrl = (projectId: string, relativePath: string) => `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(relativePath.replace(/\\/g, "/"))}`;
 
 export const loadReviewQueue = (projectId: string) => requestJson<ReviewQueue>(`/api/project/review-queue?projectId=${encodeURIComponent(projectId)}`);
+
+export const fetchRenders = (projectId: string) => requestJson<{ renders: ProjectRender[] }>(`/api/project/renders?projectId=${encodeURIComponent(projectId)}`);
+
+export const fetchApproval = (projectId: string) => requestJson<ProjectApproval>(`/api/project/approval?projectId=${encodeURIComponent(projectId)}`);
+
+export const setApproval = (projectId: string, status: "pending" | "changes_requested" | "approved", note = "") => requestJson<{ ok: true; approval: ProjectApproval }>(`/api/project/approval`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, status, note }) });
 
 export const saveReviewQueue = (projectId: string, entries: ReviewQueueEntry[]) => requestJson<ReviewQueue>("/api/project/review-queue", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, entries }) });
 

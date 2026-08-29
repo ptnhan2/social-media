@@ -1,7 +1,7 @@
 ﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch, appendFileSync } from "fs";
-import { resolve, sep } from "path";
+import { resolve, sep, join as pathJoin, dirname as pathDirname } from "path";
 import { fileURLToPath } from "url";
 import { spawn, spawnSync } from "child_process";
 import { createProjectStore } from "../shared/isaacverse/store";
@@ -363,6 +363,68 @@ export default defineConfig({
             message: job.message,
             outputUrl: job.status === "done" ? `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(job.outputPath)}` : undefined,
           });
+        });
+        // ============ PROJECT PAGE (stage-surface, PIPELINE-PRODUCTION-SPEC v3) ============
+        // The presentation/approval surface reads the SAME files the agent
+        // reads (rule #16 parity): renders listing, timeline report, and the
+        // approval gate. Approval status is a first-class artifact (HeyGen
+        // pattern: pending -> changes_requested -> approved) and every
+        // transition lands in feedback.jsonl as a learning signal.
+        const APPROVAL_STATUSES = new Set(["pending", "changes_requested", "approved"]);
+        server.middlewares.use("/api/project/approval", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const projectId = url.searchParams.get("projectId") || "";
+          if (req.method === "GET") {
+            try {
+              if (!projectId) { sendJson(res, 400, { error: "projectId required" }); return; }
+              const approvalPath = resolve(PROJECT_STORE.projectDir(projectId), "qa", "approval.json");
+              if (!existsSync(approvalPath)) { sendJson(res, 200, { status: "none" }); return; }
+              sendJson(res, 200, JSON.parse(readFileSync(approvalPath, "utf-8")));
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+            return;
+          }
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const status = String(body.status || "");
+              const note = String(body.note || "").trim();
+              const summary = String(body.summary || "").trim();
+              if (!projectId) throw new Error("projectId required");
+              if (!APPROVAL_STATUSES.has(status)) throw new Error(`status must be one of ${[...APPROVAL_STATUSES].join(", ")}`);
+              if (status === "changes_requested" && !note) throw new Error("changes_requested requires a note (what to fix)");
+              const approval = { status, note, summary, updatedAt: new Date().toISOString() };
+              const approvalPath = resolve(PROJECT_STORE.projectDir(projectId), "qa", "approval.json");
+              mkdirSync(pathDirname(approvalPath), { recursive: true });
+              writeFileSync(approvalPath, JSON.stringify(approval, null, 2), "utf-8");
+              appendFeedback({ knob: "approval", from: "", to: status, projectId, note, summary });
+              sendJson(res, 200, { ok: true, approval });
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        server.middlewares.use("/api/project/renders", (req, res) => {
+          try {
+            const url = new URL(req.url || "/", "http://composer.local");
+            const projectId = url.searchParams.get("projectId") || "";
+            if (!projectId) { sendJson(res, 400, { error: "projectId required" }); return; }
+            const rendersDir = resolve(PROJECT_STORE.projectDir(projectId), "renders");
+            const renders: { path: string; name: string; sizeBytes: number; mtimeIso: string }[] = [];
+            const scan = (dir: string, prefix: string) => {
+              if (!existsSync(dir)) return;
+              for (const entry of readdirSync(dir, { withFileTypes: true })) {
+                if (entry.name.startsWith(".")) continue;
+                const full = pathJoin(dir, entry.name);
+                if (entry.isDirectory()) scan(full, `${prefix}${entry.name}/`);
+                else if (entry.name.toLowerCase().endsWith(".mp4")) {
+                  const stat = statSync(full);
+                  renders.push({ path: `renders/${prefix}${entry.name}`, name: entry.name, sizeBytes: stat.size, mtimeIso: stat.mtime.toISOString() });
+                }
+              }
+            };
+            scan(rendersDir, "");
+            renders.sort((a, b) => b.mtimeIso.localeCompare(a.mtimeIso));
+            sendJson(res, 200, { renders });
+          } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
         });
         // ============ IMAGE SOURCING (PIPELINE-PRODUCTION-SPEC v3, M2) ============
         // Learning hooks (spec §7): every human override on a clip IS a

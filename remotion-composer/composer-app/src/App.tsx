@@ -3,13 +3,14 @@ import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from "reac
 import { VideoEditor } from "./composer/VideoEditor";
 import { ProjectPicker } from "./composer/ProjectPicker";
 import { AssetStudio } from "./assets/AssetStudio";
+import { ProjectPage } from "./project/ProjectPage";
 import { AgentDrawer, AgentProvider, useAgentUi } from "./agent/AgentDrawer";
 import "./styles.css";
 
 /** Routes feed the app-level agent context: which project is open, which
  *  pipeline surface the user is standing on. The drawer itself lives above
  *  the router so the conversation survives navigation. */
-const RouteContextReporter: React.FC<{ view: "picker" | "editor" | "studio"; projectId?: string }> = ({ view, projectId }) => {
+const RouteContextReporter: React.FC<{ view: "picker" | "editor" | "studio" | "project"; projectId?: string }> = ({ view, projectId }) => {
   const agent = useAgentUi();
   React.useEffect(() => { agent.setView(view); }, [agent, view]);
   React.useEffect(() => { agent.setProjectId(projectId); }, [agent, projectId]);
@@ -22,7 +23,7 @@ const EditorRoute: React.FC = () => {
   const projectId = params.get("project");
   if (!projectId) return <>
     <RouteContextReporter view="picker" />
-    <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} />
+    <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)} />
   </>;
   return (
     <>
@@ -31,6 +32,7 @@ const EditorRoute: React.FC = () => {
         projectId={projectId}
         onExit={() => navigate("/")}
         onOpenStudio={() => navigate(`/assets?project=${encodeURIComponent(projectId)}`)}
+        onOpenPage={() => navigate(`/project?project=${encodeURIComponent(projectId)}`)}
       />
     </>
   );
@@ -48,6 +50,22 @@ const StudioRoute: React.FC = () => {
   );
 };
 
+const ProjectRoute: React.FC = () => {
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const projectId = params.get("project");
+  if (!projectId) return <>
+    <RouteContextReporter view="picker" />
+    <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)} />
+  </>;
+  return (
+    <>
+      <RouteContextReporter view="project" projectId={projectId} />
+      <ProjectPage projectId={projectId} onOpenEditor={() => navigate(`/editor?project=${encodeURIComponent(projectId)}`)} />
+    </>
+  );
+};
+
 const PickerRoute: React.FC = () => {
   const navigate = useNavigate();
   // CLIENT-SIDE navigation: the agent drawer (and its conversation) must
@@ -55,7 +73,7 @@ const PickerRoute: React.FC = () => {
   return (
     <>
       <RouteContextReporter view="picker" />
-      <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} />
+      <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)} />
     </>
   );
 };
@@ -68,6 +86,7 @@ export function App() {
           <Route path="/" element={<PickerRoute />} />
           <Route path="/editor" element={<EditorRoute />} />
           <Route path="/assets" element={<StudioRoute />} />
+          <Route path="/project" element={<ProjectRoute />} />
         </Routes>
         <AgentDrawer />
       </AgentProvider>

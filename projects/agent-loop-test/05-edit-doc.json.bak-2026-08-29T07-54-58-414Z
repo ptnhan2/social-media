@@ -1,0 +1,68 @@
+{
+  "id": "agent-loop-test-edit",
+  "videoId": "agent-loop-test",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "agent-loop-test-beat-01",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 0,
+      "durationSec": 4,
+      "transcript": "Every cut looks right. So why does the edit feel wrong?",
+      "narrativeFunction": "hook",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "RIGHT CUTS, WRONG FEEL"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "agent-loop-test-beat-02",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 4,
+      "durationSec": 4,
+      "transcript": "Because rhythm is decided before the timeline.",
+      "narrativeFunction": "reframe",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "CLOCK, NOT BREATH"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  }
+}

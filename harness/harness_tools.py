@@ -19,6 +19,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import urllib.request
 
 from langchain.tools import tool
 
@@ -872,6 +873,81 @@ def generate_timeline(project_slug: str, mode: str = "sync") -> str:
         lines.append(f"  WARN  {warning}")
     lines.append(f"report: {payload.get('report')}")
     lines.append("next: render a window (render_window) or read the report for the fix cycle")
+    return "\n".join(lines)
+
+
+@tool
+def request_approval(project_slug: str, summary: str) -> str:
+    """Hand a finished draft to the human for review (A3 gate — you STOP here).
+
+    Call this when a produce/improve cycle ends and the draft needs a human
+    taste decision. It sets the project approval to PENDING with your summary;
+    the human decides on the project page (Keep / Redo + note). Read the
+    decision next cycle with check_approval — do NOT keep iterating past this
+    gate: the human's verdict is the loop's steering signal.
+
+    Args:
+        project_slug: Project folder name.
+        summary: One or two sentences — what changed this cycle and what you
+              want the human to judge (e.g. "beat-02 re-voiced with assertive
+              direction; judge the new pacing").
+    """
+    if not summary.strip():
+        return "REQUEST APPROVAL FAILED: summary is required (what should the human judge?)"
+    payload = json.dumps({"projectId": project_slug, "status": "pending", "summary": summary.strip()}).encode()
+    req = urllib.request.Request(
+        "http://localhost:5174/api/project/approval",
+        data=payload, method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:  # noqa: BLE001 — surface, don't crash the loop
+        return f"REQUEST APPROVAL FAILED: {exc} (is the composer server up on :5174?)"
+    if not body.get("ok"):
+        return f"REQUEST APPROVAL FAILED: {body.get('error', 'unknown')}"
+    return (f"APPROVAL REQUESTED for {project_slug} — status PENDING.\n"
+            f"Summary shown to the human: {summary.strip()}\n"
+            "STOP this cycle now. Next cycle, call check_approval first: "
+            "approved = build on it; changes_requested = fix exactly what the note says.")
+
+
+@tool
+def check_approval(project_slug: str) -> str:
+    """Read the human's verdict from the project page approval gate (A3 loop).
+
+    Returns the current approval status: none (never requested), pending
+    (human has not decided yet — do nothing, wait), changes_requested (fix
+    exactly what the note says, then re-render + re-request), or approved
+    (the human kept it — build on this state).
+
+    Args:
+        project_slug: Project folder name.
+    """
+    approval_path = os.path.join(PROJECT_ROOT, "projects", project_slug, "qa", "approval.json")
+    if not os.path.exists(approval_path):
+        return f"APPROVAL: none — no gate requested yet for {project_slug}. Call request_approval when a draft is ready."
+    try:
+        with open(approval_path, encoding="utf-8") as handle:
+            approval = json.load(handle)
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"APPROVAL READ FAILED: {exc}"
+    status = approval.get("status", "none")
+    note = approval.get("note") or ""
+    summary = approval.get("summary") or ""
+    updated = approval.get("updatedAt", "?")
+    lines = [f"APPROVAL: {status} (updated {updated})"]
+    if summary:
+        lines.append(f"  what was asked: {summary}")
+    if note:
+        lines.append(f"  human note: {note}")
+    if status == "pending":
+        lines.append("  -> the human has not decided. Do NOT iterate; wait.")
+    elif status == "changes_requested":
+        lines.append("  -> fix EXACTLY what the note says, re-render, then request_approval again.")
+    elif status == "approved":
+        lines.append("  -> the human kept this draft. Build on it (next improvement cycle or publish prep).")
     return "\n".join(lines)
 
 

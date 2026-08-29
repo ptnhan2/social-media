@@ -2,7 +2,7 @@
   "ok": true,
   "projectId": "agent-loop-test",
   "mode": "sync",
-  "generatedAt": "2026-08-29T07:57:09.036Z",
+  "generatedAt": "2026-08-29T10:22:49.294Z",
   "styleVersion": 74,
   "checks": [
     {
@@ -28,7 +28,7 @@
       "label": "Editor doc generated (sync)",
       "pass": true,
       "detail": [
-        "refreshed=? keptUser=? added=? dropped=?"
+        "refreshed=21 keptUser=0 added=0 dropped=0"
       ]
     },
     {
@@ -36,17 +36,14 @@
       "label": "Voice clips have src + QC pass",
       "pass": true,
       "detail": []
-    },
-    {
-      "id": "composition",
-      "label": "Composition registered (auto)",
-      "pass": true,
-      "detail": [
-        "agent-loop-test-30s + agent-loop-test-30s-editor via projects-manifest.json"
-      ]
     }
   ],
   "warnings": [],
   "blocking": [],
-  "stats": {}
+  "stats": {
+    "refreshed": 21,
+    "keptUser": 0,
+    "added": 0,
+    "dropped": 0
+  }
 }

@@ -163,7 +163,7 @@ const ExportDialog: React.FC<{
   );
 };
 
-export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; onOpenStudio?: () => void }> = ({ projectId = "isaacverse-final", onExit, onOpenStudio }) => {
+export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; onOpenStudio?: () => void; onOpenPage?: () => void }> = ({ projectId = "isaacverse-final", onExit, onOpenStudio, onOpenPage }) => {
   const playerRef = React.useRef<PlayerRef>(null);
   const stageWrapRef = React.useRef<HTMLDivElement>(null);
   const [doc, setDoc] = React.useState<IsaacVerseEditDoc | null>(null);
@@ -835,6 +835,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
           <small>{projectId} · {doc.version ?? "v001"} · 1920×1080 · {fps} fps</small>
         </div>
         <div className="ve-header-right">
+          {onOpenPage ? <button className="ve-btn ve-page-btn" type="button" onClick={onOpenPage} title="Trang trình bày & duyệt project">📄 Project</button> : null}
           {onOpenStudio ? <button className="ve-btn ve-studio-btn" type="button" onClick={onOpenStudio} title="Mở Asset Studio — tạo poses cho character">🎨 Asset Studio</button> : null}
           <button onClick={handleUndo} disabled={!editorUndo.length} aria-label="Undo" title={`Undo (${editorUndo.length})`}>↶{editorUndo.length ? <sup>{editorUndo.length}</sup> : null}</button>
           <button onClick={handleRedo} disabled={!editorRedo.length} aria-label="Redo" title={`Redo (${editorRedo.length})`}>↷{editorRedo.length ? <sup>{editorRedo.length}</sup> : null}</button>

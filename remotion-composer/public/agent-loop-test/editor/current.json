@@ -4,7 +4,7 @@
   "width": 1920,
   "height": 1080,
   "fps": 30,
-  "durationSec": 17.05,
+  "durationSec": 18.17,
   "tracks": [
     {
       "id": "video-main",
@@ -41,7 +41,7 @@
           "trackId": "video-main",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "name the false solution",
           "source": {
@@ -62,8 +62,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "reframe the unit of editing",
           "source": {
@@ -84,8 +84,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "resolve with a memorable rule",
           "source": {
@@ -107,7 +107,7 @@
       "id": "visual-1",
       "kind": "overlay",
       "name": "Overlay 1",
-      "order": 4,
+      "order": 1,
       "locked": false,
       "muted": false,
       "solo": false,
@@ -139,7 +139,7 @@
           "trackId": "visual-1",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "bg",
           "source": {
@@ -177,8 +177,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "bg",
           "source": {
@@ -216,8 +216,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "bg",
           "source": {
@@ -256,7 +256,7 @@
       "id": "visual-2",
       "kind": "overlay",
       "name": "Overlay 2",
-      "order": 5,
+      "order": 2,
       "locked": false,
       "muted": false,
       "solo": false,
@@ -288,7 +288,7 @@
           "trackId": "visual-2",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "bg-glow",
           "source": {
@@ -329,8 +329,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "bg-glow",
           "source": {
@@ -371,8 +371,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "bg-glow",
           "source": {
@@ -414,7 +414,7 @@
       "id": "visual-3",
       "kind": "overlay",
       "name": "Overlay 3",
-      "order": 6,
+      "order": 3,
       "locked": false,
       "muted": false,
       "solo": false,
@@ -446,7 +446,7 @@
           "trackId": "visual-3",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "accent-line",
           "source": {
@@ -496,8 +496,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "accent-line",
           "source": {
@@ -547,8 +547,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "accent-line",
           "source": {
@@ -599,7 +599,7 @@
       "id": "visual-4",
       "kind": "overlay",
       "name": "Overlay 4",
-      "order": 7,
+      "order": 4,
       "locked": false,
       "muted": false,
       "solo": false,
@@ -631,7 +631,7 @@
           "trackId": "visual-4",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "the rhythm problem",
           "source": {
@@ -683,8 +683,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "where rhythm actually lives",
           "source": {
@@ -736,8 +736,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "produce - critique - improve",
           "source": {
@@ -790,7 +790,7 @@
       "id": "visual-5",
       "kind": "overlay",
       "name": "Overlay 5",
-      "order": 8,
+      "order": 5,
       "locked": false,
       "muted": false,
       "solo": false,
@@ -822,7 +822,7 @@
           "trackId": "visual-5",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "RIGHT CUTS, WRONG\nFEEL",
           "source": {
@@ -883,8 +883,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "CLOCK, NOT\nBREATH",
           "source": {
@@ -945,8 +945,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "VOICE DECIDES THE\nCUT",
           "source": {
@@ -1008,7 +1008,7 @@
       "id": "voice",
       "kind": "voice",
       "name": "Audio 1",
-      "order": 1,
+      "order": 6,
       "locked": false,
       "muted": false,
       "solo": false,
@@ -1038,7 +1038,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 0,
-            "endSec": 4.19
+            "endSec": 4.75
           },
           "label": "Voiceover",
           "source": {
@@ -1050,7 +1050,49 @@
             "transcript": "Every cut looks right. So why does the edit feel wrong?",
             "sentenceText": "Every cut looks right. So why does the edit feel wrong?",
             "providerText": "Every cut looks right. So why does the edit feel wrong?",
-            "segmentId": "agent-loop-test:voice:agent-loop-beat-01"
+            "segmentId": "agent-loop-test:voice:agent-loop-beat-01",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-29T17:21:06",
+              "durationSec": 4.32,
+              "expectedSec": 4.4,
+              "peakDb": -1.5,
+              "meanDb": -15.9,
+              "lufs": -14.88,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "4.32s vs 4.40s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-14.88 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "agent-loop-beat-01-take-01"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1062,8 +1104,8 @@
           "kind": "voice",
           "trackId": "voice",
           "range": {
-            "startSec": 4.19,
-            "endSec": 10.22
+            "startSec": 4.75,
+            "endSec": 11.18
           },
           "label": "Voiceover",
           "source": {
@@ -1075,7 +1117,49 @@
             "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
             "sentenceText": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
             "providerText": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
-            "segmentId": "agent-loop-test:voice:agent-loop-beat-02"
+            "segmentId": "agent-loop-test:voice:agent-loop-beat-02",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-29T17:21:55",
+              "durationSec": 6.08,
+              "expectedSec": 6.8,
+              "peakDb": -2.4,
+              "meanDb": -16.8,
+              "lufs": -16.51,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-2.4 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "6.08s vs 6.80s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-16.51 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "agent-loop-beat-02-take-02"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1087,8 +1171,8 @@
           "kind": "voice",
           "trackId": "voice",
           "range": {
-            "startSec": 10.22,
-            "endSec": 17.05
+            "startSec": 11.18,
+            "endSec": 18.17
           },
           "label": "Voiceover",
           "source": {
@@ -1100,7 +1184,49 @@
             "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
             "sentenceText": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
             "providerText": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
-            "segmentId": "agent-loop-test:voice:agent-loop-beat-03"
+            "segmentId": "agent-loop-test:voice:agent-loop-beat-03",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-29T17:22:44",
+              "durationSec": 6.08,
+              "expectedSec": 7.6000000000000005,
+              "peakDb": -2.3,
+              "meanDb": -16.8,
+              "lufs": -15.81,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-2.3 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "6.08s vs 7.60s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-15.81 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "agent-loop-beat-03-take-02"
           },
           "linkedClipIds": [],
           "locked": false,
@@ -1116,7 +1242,7 @@
       "kind": "beat",
       "range": {
         "startSec": 0,
-        "endSec": 4.19
+        "endSec": 4.75
       },
       "label": "name the false solution",
       "source": {
@@ -1127,8 +1253,8 @@
       "id": "marker:beat:agent-loop-beat-02",
       "kind": "beat",
       "range": {
-        "startSec": 4.19,
-        "endSec": 10.22
+        "startSec": 4.75,
+        "endSec": 11.18
       },
       "label": "reframe the unit of editing",
       "source": {
@@ -1139,8 +1265,8 @@
       "id": "marker:beat:agent-loop-beat-03",
       "kind": "beat",
       "range": {
-        "startSec": 10.22,
-        "endSec": 17.05
+        "startSec": 11.18,
+        "endSec": 18.17
       },
       "label": "resolve with a memorable rule",
       "source": {
@@ -1151,8 +1277,8 @@
   "assets": [],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 0,
-    "updatedAt": "2026-08-29T07:57:16.684Z"
+    "revision": 2,
+    "updatedAt": "2026-08-29T10:22:59.178Z"
   },
   "schemaVersion": 3
 }

@@ -1403,6 +1403,60 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 /* ===== Agent Panel ===== */
 .ap-root { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 
+/* ===== Project Page (stage-surface: present + approve, never edit) ===== */
+.pp-page { min-height: 100dvh; padding: 28px clamp(16px, 4vw, 56px); background: #0b0e14; color: #d8dee9; display: flex; flex-direction: column; gap: 14px; }
+.pp-loading { padding: 60px 0; text-align: center; color: #6b7280; }
+.pp-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.pp-header h1 { font-size: 20px; margin: 0 0 4px; color: #fff; }
+.pp-header small { color: #6b7280; }
+.pp-grid-top { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); gap: 14px; }
+@media (max-width: 860px) { .pp-grid-top { grid-template-columns: 1fr; } }
+.pp-card { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pp-card-title { font-weight: 700; color: #fff; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.pp-card-title small { color: #6b7280; font-weight: 400; }
+.pp-video { width: 100%; border-radius: 8px; background: #000; aspect-ratio: 16 / 9; }
+.pp-hint { color: #8d96a3; font-size: 12px; margin: 0; }
+.pp-ok { color: #2dd4a0; } .pp-bad { color: #ff6b6b; } .pp-warn { color: #f5b544; } .pp-muted { color: #6b7280; }
+.pp-checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 12px; }
+.pp-checks li { display: flex; gap: 6px; }
+.pp-checks li span { width: 14px; text-align: center; }
+.pp-checks li.pass { color: #d8dee9; } .pp-checks li.pass span { color: #2dd4a0; }
+.pp-checks li.fail { color: #ff9b9b; } .pp-checks li.fail span { color: #ff6b6b; }
+.pp-warnings { display: flex; flex-direction: column; gap: 2px; font-size: 11px; color: #f5b544; }
+.pp-meta { color: #6b7280; font-size: 11px; }
+.pp-story { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px; }
+.pp-story b { color: #61d7e8; display: block; margin-bottom: 2px; }
+.pp-story p { margin: 0; color: #d8dee9; }
+.pp-beats { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.pp-beat { border: 1px solid #1f2937; border-radius: 8px; padding: 8px 10px; background: #0d1520; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.pp-beat-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pp-beat-num { color: #6b7280; font-weight: 700; font-size: 12px; }
+.pp-treatment { font-size: 10px; padding: 1px 6px; border-radius: 8px; background: #17203a; color: #8ab4ff; }
+.pp-range { font-size: 11px; color: #b9bfcc; font-variant-numeric: tabular-nums; margin-left: auto; }
+.pp-qc { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px; }
+.pp-qc.pass { color: #2dd4a0; border: 1px solid #14532d; } .pp-qc.fail { color: #ff6b6b; border: 1px solid #7f1d1d; } .pp-qc.none { color: #6b7280; border: 1px solid #1f2937; }
+.pp-transcript { margin: 0; font-size: 12px; color: #d8dee9; }
+.pp-beat-meta { display: flex; align-items: center; gap: 8px; color: #6b7280; font-size: 11px; }
+.pp-mini { border: 1px solid #1f2937; background: #1f2937; color: #d8dee9; border-radius: 4px; font-size: 10px; padding: 2px 8px; cursor: pointer; }
+.pp-mini:hover { background: #374151; }
+.pp-renders summary { cursor: pointer; color: #8d96a3; font-size: 11px; }
+.pp-renders ul { margin: 6px 0 0; padding-left: 16px; font-size: 11px; color: #8d96a3; }
+.pp-note { width: 100%; background: #111827; border: 1px solid #1f2937; border-radius: 6px; color: #d8dee9; padding: 6px 8px; font-size: 12px; resize: vertical; }
+.pp-actions { display: flex; gap: 8px; }
+.pp-btn { padding: 7px 14px; border-radius: 6px; border: 1px solid #1f2937; cursor: pointer; font-size: 12px; font-weight: 600; }
+.pp-btn:disabled { opacity: 0.45; cursor: default; }
+.pp-keep { background: #0d1f18; color: #2dd4a0; border-color: #14532d; }
+.pp-keep:hover:not(:disabled) { background: #14532d; }
+.pp-redo { background: #1f2937; color: #ff9b9b; }
+.pp-redo:hover:not(:disabled) { background: #374151; }
+.project-card-wrap { position: relative; }
+.project-card-page {
+  position: absolute; top: 10px; right: 10px; width: 30px; height: 30px;
+  border-radius: 6px; border: 1px solid #1f2937; background: #0d1520;
+  font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.project-card-page:hover { border-color: #3b82f6; background: #17203a; }
+
 /* App-level agent drawer (2026-08-29): the agent accompanies the whole
    pipeline, not just the editor — a floating toggle on every route, the
    conversation persists across navigation (mounted above the router). */

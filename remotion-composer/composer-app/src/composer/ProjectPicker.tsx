@@ -16,7 +16,7 @@ const stageColor: Record<string, string> = {
   unknown: "#6b7280",
 };
 
-export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void }> = ({ onOpen }) => {
+export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOpenPage?: (projectId: string) => void }> = ({ onOpen, onOpenPage }) => {
   const [projects, setProjects] = React.useState<ProjectListItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -84,22 +84,26 @@ export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void }> = 
       ) : (
         <div className="project-picker-grid">
           {projects.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              className="project-card"
-              onClick={() => onOpen(p.id)}
-              disabled={!p.hasEditDoc}
-            >
-              <div className="project-card-title">{p.title}</div>
-              <div className="project-card-id">{p.id}</div>
-              <div className="project-card-meta">
-                <span className="project-card-stage" style={{ color: stageColor[p.stage] || stageColor.unknown }}>{p.stage}</span>
-                <span>{p.version}</span>
-                <span>{p.hasEditDoc ? `${p.hasVideoDoc ? "Video + Edit" : "Edit only"}` : "No edit doc"}</span>
-                <span>{formatDate(p.updatedAt)}</span>
-              </div>
-            </button>
+            <div key={p.id} className="project-card-wrap">
+              <button
+                type="button"
+                className="project-card"
+                onClick={() => onOpen(p.id)}
+                disabled={!p.hasEditDoc}
+              >
+                <div className="project-card-title">{p.title}</div>
+                <div className="project-card-id">{p.id}</div>
+                <div className="project-card-meta">
+                  <span className="project-card-stage" style={{ color: stageColor[p.stage] || stageColor.unknown }}>{p.stage}</span>
+                  <span>{p.version}</span>
+                  <span>{p.hasEditDoc ? `${p.hasVideoDoc ? "Video + Edit" : "Edit only"}` : "No edit doc"}</span>
+                  <span>{formatDate(p.updatedAt)}</span>
+                </div>
+              </button>
+              {onOpenPage && p.hasEditDoc ? (
+                <button type="button" className="project-card-page" aria-label={`Open project page for ${p.id}`} title="Trang trình bày & duyệt" onClick={() => onOpenPage(p.id)}>📄</button>
+              ) : null}
+            </div>
           ))}
         </div>
       )}

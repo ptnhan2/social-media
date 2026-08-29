@@ -80,6 +80,11 @@ if (doRegen) {
     const result = JSON.parse(proc.stdout.slice(proc.stdout.indexOf("{"), proc.stdout.lastIndexOf("}") + 1));
     segment.stemDurationSec = result.stemDurationSec;
     segment.qcPass = result.qc?.pass === true;
+    // QC + take provenance flow into the audioPlan so the projection carries
+    // them onto the voice clips (the QC badge + beat cards read these) —
+    // otherwise validated QC data dies inside this script.
+    segment.qc = result.qc;
+    segment.takeId = result.takeId;
     console.log(`  ${segment.beatId}: ${result.stemDurationSec?.toFixed(2)}s (take ${result.takeId}, QC ${result.qc?.pass ? "PASS" : "FAIL"})`);
   }
 }
@@ -106,6 +111,9 @@ const voiceSegments = planned.map((segment) => {
     id: segment.id, src: segment.src,
     startSec: beat.startSec, endSec: Number((beat.startSec + beat.durationSec).toFixed(3)),
     transcript: segment.transcript,
+    // QC + take provenance survive the mapping (beat cards + QC badge read them)
+    ...(segment.qc ? { qc: segment.qc } : {}),
+    ...(segment.takeId ? { takeId: segment.takeId } : {}),
   };
 });
 doc.audioPlan = doc.audioPlan ?? {};

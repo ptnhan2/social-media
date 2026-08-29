@@ -1,0 +1,94 @@
+{
+  "id": "agent-loop-test-edit",
+  "videoId": "agent-loop-test",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "agent-loop-beat-01",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "status_quo",
+      "startSec": 0,
+      "durationSec": 4,
+      "transcript": "Every cut looks right. So why does the edit feel wrong?",
+      "narrativeFunction": "name the false solution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "RIGHT CUTS, WRONG FEEL",
+          "subtitle": "the rhythm problem",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "agent-loop-beat-02",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 4,
+      "durationSec": 5,
+      "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
+      "narrativeFunction": "reframe the unit of editing",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "CLOCK, NOT BREATH",
+          "subtitle": "where rhythm actually lives",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "agent-loop-beat-03",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "resolution",
+      "startSec": 9,
+      "durationSec": 4,
+      "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
+      "narrativeFunction": "resolve with a memorable rule",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "VOICE DECIDES THE CUT",
+          "subtitle": "produce - critique - improve",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  }
+}
