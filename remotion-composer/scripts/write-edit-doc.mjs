@@ -13,12 +13,16 @@
  *
  * Usage:
  *   node scripts/write-edit-doc.mjs --project <slug> --story <story.json> \
- *     --beats <beats.json> [--overwrite-confirm]
+ *     --beats <beats.json> [--instruction <text>] [--overwrite-confirm]
  *
  * story.json:  { idea, surfaceProblem, deeperProblem, thumbnailPromise,
  *                commonGoal: { viewer, creator } }
  * beats.json:  [ { id?, journeySlot?, durationSec?, transcript,
  *                  narrativeFunction, treatment: { id, params } } ]
+ * instruction: THE PROMPT that generated this script version (the studio's
+ *              prompt layer shows it next to the script + re-run affordance
+ *              — artifact and its generating recipe are one thing).
+ *              Optional (blank = no prompt recorded, e.g. hand-authored).
  *              startSec is COMPUTED cumulatively (voice-first retiming will
  *              adjust it again downstream — order + durations are what the
  *              agent decides).
@@ -104,6 +108,11 @@ const editBeats = beats.map((beat, index) => {
   };
 });
 
+// resolve the instruction ONCE (text arg or file) — the edit-doc root field
+// and the trace event both carry it (the studio prompt bar reads the doc,
+// the history timeline reads the trace)
+const instruction = args.instruction || (args["instruction-file"] ? readFileSync(path.resolve(args["instruction-file"]), "utf-8").trim() : "");
+
 const editDoc = {
   id: `${slug}-edit`,
   videoId: slug,
@@ -119,6 +128,9 @@ const editDoc = {
   audioPlan: { voice: [], music: [], ambience: [], beats: [], master: { limiter: true } },
   transitions: [],
   colorGrade: { preset: "warm", intensity: 0.4 },
+  // the prompt layer: the instruction that generated this script version —
+  // the studio shows it next to the script (re-run affordance reads this)
+  ...(instruction ? { instruction } : {}),
 };
 
 const videoDoc = {
@@ -157,6 +169,7 @@ if (existsSync(editDocPath)) {
 const store = storeModule.createProjectStore(path.join(ROOT, "projects"), path.join(COMPOSER, "public"));
 store.saveSourceDocs(slug, videoDoc, editDoc);
 appendTrace(ROOT, slug, "plan", "Agent viết edit-doc (story + beat plan)", {
+  instruction,
   idea: videoDoc.idea,
   beats: editBeats.map((beat) => ({
     id: beat.id,

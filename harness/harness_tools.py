@@ -725,7 +725,7 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
 
 
 @tool
-def write_edit_doc(project_slug: str, story: str, beats: str, overwrite_confirm: bool = False) -> str:
+def write_edit_doc(project_slug: str, story: str, beats: str, instruction: str = "", overwrite_confirm: bool = False) -> str:
     """Write the edit-doc from YOUR beat plan (A1 — the produce flow's first mile).
 
     You (the agent) design the beats; this tool is the VALIDATED write-path.
@@ -750,14 +750,29 @@ def write_edit_doc(project_slug: str, story: str, beats: str, overwrite_confirm:
               (subtitle, lightSide), cinematic-metaphor (subtitle, label,
               mode). Param shapes: remotion-composer/shared/isaacverse/
               EditVideo.tsx + the style store.
+        instruction: THE PROMPT behind this script version — the user's ask
+              or your creative intent, in one or two sentences ("beat 2
+              punchy hơn — câu ngắn, meta clock/breath"). The Content Studio
+              shows it next to the script with a re-run affordance: the
+              script and its generating recipe travel together. Always
+              include it when you author or re-plan a script.
         overwrite_confirm: MUST be true to replace an existing edit doc
               (a backup is kept). Without it the tool refuses.
 
     Rule: transcript = exact spoken words (tags/CAPS allowed later in the
-    Audio tab — the words themselves never change). 3-6s per beat.
+    studio beat editor — the words themselves never change). 3-6s per beat.
     """
     cmd = ["node", os.path.join(RENDERER_DIR, "scripts", "write-edit-doc.mjs"),
            "--project", project_slug]
+    payload_files = []
+    if instruction.strip():
+        # free text via file — Windows arg quoting mangles long strings
+        handle = tempfile.NamedTemporaryFile("w", suffix="-instruction.txt",
+                                             delete=False, encoding="utf-8")
+        handle.write(instruction.strip())
+        handle.close()
+        payload_files.append(handle.name)
+        cmd += ["--instruction-file", handle.name]
     payload_files = []
     try:
         for name, payload in (("story", story), ("beats", beats)):

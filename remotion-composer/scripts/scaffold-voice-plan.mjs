@@ -86,6 +86,10 @@ if (doRegen) {
     // otherwise validated QC data dies inside this script.
     segment.qc = result.qc;
     segment.takeId = result.takeId;
+    // takes (lean: id + pass + duration) — the studio's take list reads them
+    segment.takes = (result.takes ?? [])
+      .filter((take) => take && take.id)
+      .map((take) => ({ id: take.id, pass: take.pass === true, durationSec: take.metrics?.durationSec }));
     appendTrace(ROOT, slug, "voice", `Voice: ${segment.beatId}`, {
       providerText: segment.providerText,
       takes: (result.takes ?? []).map((take) => ({ id: take.id, pass: take.pass, durationSec: take.metrics?.durationSec?.toFixed?.(2) })),
@@ -122,6 +126,7 @@ const voiceSegments = planned.map((segment) => {
     // QC + take provenance survive the mapping (beat cards + QC badge read them)
     ...(segment.qc ? { qc: segment.qc } : {}),
     ...(segment.takeId ? { takeId: segment.takeId } : {}),
+    ...(segment.takes ? { takes: segment.takes } : {}),
   };
 });
 doc.audioPlan = doc.audioPlan ?? {};
