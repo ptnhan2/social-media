@@ -4,6 +4,7 @@ import { VideoEditor } from "./composer/VideoEditor";
 import { ProjectPicker } from "./composer/ProjectPicker";
 import { AssetStudio } from "./assets/AssetStudio";
 import { ProjectPage } from "./project/ProjectPage";
+import { createProject } from "./composer/api";
 import { AgentDrawer, AgentProvider, useAgentUi } from "./agent/AgentDrawer";
 import "./styles.css";
 
@@ -54,15 +55,66 @@ const ProjectRoute: React.FC = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const projectId = params.get("project");
+  const mode = params.get("mode");
   if (!projectId) return <>
     <RouteContextReporter view="picker" />
     <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)} />
   </>;
+  // Creation Flow: "new" is a virtual slug — create the blank project on
+  // entry so draft_story/write_edit_doc have a home, then land in the studio
+  // create mode (idea input first, never a dead blank page)
+  if (projectId === "new") {
+    return <NewIdeaRoute mode={mode} navigate={navigate} />;
+  }
   return (
     <>
       <RouteContextReporter view="project" projectId={projectId} />
       <ProjectPage projectId={projectId} onOpenEditor={() => navigate(`/editor?project=${encodeURIComponent(projectId)}`)} />
     </>
+  );
+};
+
+const NewIdeaRoute: React.FC<{ mode?: string | null; navigate: (path: string) => void }> = ({ mode, navigate }) => {
+  const [slug, setSlug] = React.useState("");
+  const [creating, setCreating] = React.useState(false);
+  const [created, setCreated] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (created) navigate(`/project?project=${encodeURIComponent(created)}`);
+  }, [created, navigate]);
+  if (mode !== "create") {
+    return <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)} />;
+  }
+  const create = async () => {
+    const id = slug.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "-").replace(/^-+|-+$/g, "");
+    if (!id) return;
+    setCreating(true);
+    try {
+      await createProject(id);
+      setCreated(id);
+    } finally {
+      setCreating(false);
+    }
+  };
+  return (
+    <div className="pp-page">
+      <header className="pp-appbar">
+        <div>
+          <h1>🎬 Video mới từ ý tưởng</h1>
+          <small>đặt tên project — rồi nhập ý tưởng trong studio</small>
+        </div>
+      </header>
+      <section className="pp-card pp-create">
+        <div className="pp-card-title">Tên project <small>— slug, vd: rhythm-editing</small></div>
+        <div className="pp-slug-row">
+          <input type="text" placeholder="my-video-slug" value={slug} aria-label="New project slug"
+            onChange={(e) => setSlug(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") void create(); }} />
+          <button type="button" className="ve-btn primary" disabled={creating || !slug.trim()} onClick={() => void create()}>
+            {creating ? "Đang tạo…" : "Tạo & bắt đầu →"}
+          </button>
+        </div>
+      </section>
+    </div>
   );
 };
 
@@ -73,7 +125,11 @@ const PickerRoute: React.FC = () => {
   return (
     <>
       <RouteContextReporter view="picker" />
-      <ProjectPicker onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)} onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)} />
+      <ProjectPicker
+        onOpen={(id) => navigate(`/editor?project=${encodeURIComponent(id)}`)}
+        onOpenPage={(id) => navigate(`/project?project=${encodeURIComponent(id)}`)}
+        onNewIdea={() => navigate("/project?project=new&mode=create")}
+      />
     </>
   );
 };

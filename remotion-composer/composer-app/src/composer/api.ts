@@ -60,6 +60,12 @@ export type ClipMetadataChanges = { sentenceText?: string; providerText?: string
 
 export const setClipMetadata = (projectId: string, clipId: string, changes: ClipMetadataChanges) => requestJson<{ ok: true; clipId: string }>(`/api/project/clip-metadata`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, clipId, changes }) });
 
+export type StoryDraft = { status: "none" | "pending" | "approved" | "changes_requested"; idea?: string; surfaceProblem?: string; deeperProblem?: string; thumbnailPromise?: string; commonGoal?: { viewer?: string; creator?: string }; originalIdea?: string; note?: string; updatedAt?: string };
+
+export const fetchStoryDraft = (projectId: string) => requestJson<StoryDraft>(`/api/project/story-draft?projectId=${encodeURIComponent(projectId)}`);
+
+export const setStoryDraft = (projectId: string, payload: { status: "pending" | "approved" | "changes_requested"; story?: Record<string, unknown>; originalIdea?: string; note?: string }) => requestJson<{ ok: true; draft: StoryDraft }>(`/api/project/story-draft`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, ...payload }) });
+
 export const saveReviewQueue = (projectId: string, entries: ReviewQueueEntry[]) => requestJson<ReviewQueue>("/api/project/review-queue", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, entries }) });
 
 export type ProjectListItem = {

@@ -16,7 +16,7 @@ const stageColor: Record<string, string> = {
   unknown: "#6b7280",
 };
 
-export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOpenPage?: (projectId: string) => void }> = ({ onOpen, onOpenPage }) => {
+export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOpenPage?: (projectId: string) => void; onNewIdea?: () => void }> = ({ onOpen, onOpenPage, onNewIdea }) => {
   const [projects, setProjects] = React.useState<ProjectListItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -61,6 +61,9 @@ export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOp
           <p>Select a project to edit, or create a new one.</p>
         </div>
         <div className="project-picker-create">
+          {onNewIdea ? (
+            <button type="button" className="ve-btn primary pp-newidea-btn" onClick={onNewIdea}>🎬 Video mới từ ý tưởng</button>
+          ) : null}
           <input
             type="text"
             placeholder="new-project-slug"

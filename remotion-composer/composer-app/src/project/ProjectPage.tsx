@@ -1,17 +1,15 @@
 import React from "react";
-import { fetchApproval, fetchRenders, loadProject, setApproval, setClipMetadata, artifactUrl, type ProjectApproval, type ProjectRender, type ClipMetadataChanges } from "../composer/api";
+import { fetchApproval, fetchRenders, loadProject, setApproval, setClipMetadata, artifactUrl, fetchStoryDraft, setStoryDraft, subscribeToChanges, type ProjectApproval, type ProjectRender, type ClipMetadataChanges, type StoryDraft } from "../composer/api";
 import type { IsaacVerseEditDoc, EditorClip } from "../../../shared/isaacverse/editor";
 import type { VideoDoc } from "../../../shared/isaacverse/schema";
 import { useAgentUi } from "../agent/AgentDrawer";
 
 /**
- * CONTENT STUDIO (CONTENT-STUDIO-SPEC — script-centric working surface).
- * VISUAL LANGUAGE: the app's own (user directive 30/08 — "làm như video
- * editor + asset studio"): #0d1520 cards with ve-panel-style headers,
- * ve-prop-fields, ve-buttons. One intentional deviation: the script text
- * reads as a document (serif) — inside a proper field frame. Structure per
- * spec: script hero, voice birth on demand, NO embedded video (candidate on
- * demand in the approval card), prompt + history as their own cards.
+ * CONTENT STUDIO (CONTENT-STUDIO-SPEC — script-centric working surface +
+ * Creation Flow §5). The JOURNEY is the spine: idea -> story (checkpoint) ->
+ * script (checkpoint) -> voice -> video -> approved. Stages derive from
+ * artifacts (no redundant state). The studio refreshes LIVE via SSE when the
+ * agent writes files — the user watches the journey advance.
  */
 
 type VoiceTake = { id?: string; path?: string; pass?: boolean; durationSec?: number };
@@ -276,7 +274,159 @@ const ApprovalCard: React.FC<{ projectId: string; approval: ProjectApproval | nu
   );
 };
 
-type TraceEvent = { ts: string; stage: "plan" | "voice" | "timeline" | "render" | "approval" | "note"; title: string; data?: Record<string, unknown> };
+type TraceEvent = { ts: string; stage: "idea" | "story" | "plan" | "voice" | "timeline" | "render" | "approval" | "note"; title: string; data?: Record<string, unknown> };
+
+type JourneyStage = "idea" | "story" | "script" | "voice" | "video" | "approved";
+
+/** Derived journey stage — artifacts tell the truth, no stored state. */
+const deriveStage = (snapshot: { editDoc?: unknown; videoDoc?: unknown }, storyDraft: StoryDraft | null, rendersCount: number, approval: ProjectApproval | null): JourneyStage => {
+  if (approval?.status === "approved") return "approved";
+  if (rendersCount > 0) return "video";
+  const editDoc = snapshot.editDoc as IsaacVerseEditDoc | undefined;
+  const hasVoice = (editDoc?.audioPlan as { voice?: unknown[] } | undefined)?.voice?.length;
+  if (editDoc?.beats?.some((beat) => String(beat.transcript ?? "").trim()) || hasVoice) return hasVoice ? "voice" : "script";
+  if (storyDraft && storyDraft.status !== "none") return "story";
+  return "idea";
+};
+
+const STAGE_LABELS: { id: JourneyStage; label: string; icon: string }[] = [
+  { id: "idea", label: "Ý tưởng", icon: "💡" },
+  { id: "story", label: "Story", icon: "📖" },
+  { id: "script", label: "Script", icon: "📝" },
+  { id: "voice", label: "Voice", icon: "🎙️" },
+  { id: "video", label: "Video", icon: "🎬" },
+  { id: "approved", label: "Duyệt", icon: "🚦" },
+];
+
+const JourneyStepper: React.FC<{ stage: JourneyStage }> = ({ stage }) => {
+  const currentIndex = STAGE_LABELS.findIndex((s) => s.id === stage);
+  return (
+    <nav className="pp-stepper" aria-label="Journey stage">
+      {STAGE_LABELS.map((entry, index) => (
+        <span key={entry.id} className={`pp-step ${index < currentIndex ? "done" : index === currentIndex ? "current" : ""}`}>
+          <span className="pp-step-icon">{index < currentIndex ? "✓" : entry.icon}</span>
+          <span className="pp-step-label">{entry.label}</span>
+          {index < STAGE_LABELS.length - 1 ? <span className="pp-step-line" /> : null}
+        </span>
+      ))}
+    </nav>
+  );
+};
+
+/** CREATE MODE: the journey's front door — "Video của bạn về gì?" */
+const CreateCard: React.FC<{ onSendIdea: (idea: string) => void }> = ({ onSendIdea }) => {
+  const [idea, setIdea] = React.useState("");
+  return (
+    <section className="pp-card pp-create">
+      <div className="pp-card-title">Bắt đầu <small>— video của bạn về gì?</small></div>
+      <textarea className="pp-idea-input" rows={3} aria-label="Video idea" placeholder="Mô tả ý tưởng video của bạn... (chủ đề, góc nhìn, đối tượng xem)" value={idea} onChange={(e) => setIdea(e.target.value)} />
+      <div>
+        <button type="button" className="ve-btn primary" disabled={!idea.trim()} onClick={() => onSendIdea(idea.trim())}>🚀 Bắt đầu với agent</button>
+        <p className="ve-hint">Agent sẽ research + đề xuất STORY để bạn duyệt — rồi mới viết script. Bạn chỉnh được mọi thứ ở từng bước.</p>
+      </div>
+    </section>
+  );
+};
+
+/** STORY CHECKPOINT: the first review gate — edit fields inline, approve. */
+const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; onChanged: () => void }> = ({ projectId, draft, onChanged }) => {
+  const agent = useAgentUi();
+  const [fields, setFields] = React.useState({
+    idea: draft.idea ?? "", surfaceProblem: draft.surfaceProblem ?? "",
+    deeperProblem: draft.deeperProblem ?? "", thumbnailPromise: draft.thumbnailPromise ?? "",
+  });
+  React.useEffect(() => {
+    setFields({ idea: draft.idea ?? "", surfaceProblem: draft.surfaceProblem ?? "", deeperProblem: draft.deeperProblem ?? "", thumbnailPromise: draft.thumbnailPromise ?? "" });
+  }, [draft.idea, draft.surfaceProblem, draft.deeperProblem, draft.thumbnailPromise]);
+  const [busy, setBusy] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+
+  const save = async (status: "pending" | "approved") => {
+    setBusy(true); setMessage("");
+    try {
+      await setStoryDraft(projectId, { status, story: fields, originalIdea: draft.originalIdea });
+      setMessage(status === "approved" ? "Story đã duyệt ✓" : "Đã lưu ✓");
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally { setBusy(false); }
+  };
+
+  const dirty = fields.idea !== (draft.idea ?? "") || fields.surfaceProblem !== (draft.surfaceProblem ?? "") || fields.deeperProblem !== (draft.deeperProblem ?? "") || fields.thumbnailPromise !== (draft.thumbnailPromise ?? "");
+  return (
+    <section className="pp-card">
+      <div className="pp-card-title">Story <small>{draft.status === "approved" ? "— đã duyệt" : draft.status === "pending" ? "— chờ bạn duyệt" : ""}</small></div>
+      {draft.originalIdea ? <p className="ve-hint">💡 Ý tưởng gốc: {draft.originalIdea}</p> : null}
+      <label className="ve-prop-field ve-prop-field-wide"><span>Idea</span>
+        <textarea rows={1} value={fields.idea} aria-label="Story idea" disabled={draft.status === "approved"}
+          onChange={(e) => setFields((f) => ({ ...f, idea: e.target.value }))} /></label>
+      <label className="ve-prop-field ve-prop-field-wide"><span>Surface problem</span>
+        <textarea rows={1} value={fields.surfaceProblem} aria-label="Story surface problem" disabled={draft.status === "approved"}
+          onChange={(e) => setFields((f) => ({ ...f, surfaceProblem: e.target.value }))} /></label>
+      <label className="ve-prop-field ve-prop-field-wide"><span>Deeper problem</span>
+        <textarea rows={1} value={fields.deeperProblem} aria-label="Story deeper problem" disabled={draft.status === "approved"}
+          onChange={(e) => setFields((f) => ({ ...f, deeperProblem: e.target.value }))} /></label>
+      <label className="ve-prop-field ve-prop-field-wide"><span>Thumbnail promise</span>
+        <textarea rows={1} value={fields.thumbnailPromise} aria-label="Story thumbnail promise" disabled={draft.status === "approved"}
+          onChange={(e) => setFields((f) => ({ ...f, thumbnailPromise: e.target.value }))} /></label>
+      {draft.status !== "approved" ? (
+        <div className="pp-story-actions">
+          {dirty ? <button type="button" className="ve-btn" disabled={busy} onClick={() => void save("pending")}>Lưu sửa</button> : null}
+          <button type="button" className="ve-btn pp-keep" disabled={busy} onClick={() => void save("approved")}>✓ Duyệt story</button>
+        </div>
+      ) : null}
+      {message ? <p className="ve-hint">{message}</p> : null}
+      {draft.status === "approved" ? (
+        <div>
+          <button type="button" className="ve-btn primary" onClick={() => { agent.setDraftPrompt(`Story đã duyệt (project ${projectId}). Viết script từ story đã duyệt: gọi write_edit_doc với story ở qa/story-draft.json làm input, instruction = ý tưởng gốc. Sau đó dừng để tôi duyệt script.`); agent.setOpen(true); }}>📝 Viết script →</button>
+          <p className="ve-hint">Agent viết script từ story này — bạn duyệt và sửa trong studio như thường lệ.</p>
+        </div>
+      ) : (
+        <p className="ve-hint">Duyệt story để agent tiến sang viết script — hoặc sửa trực tiếp các trường phía trên rồi Lưu.</p>
+      )}
+    </section>
+  );
+};
+
+/** GENERATE: the deterministic back-half as ONE button + progress. */
+const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; onDone: () => void }> = ({ projectId, hasScript, onDone }) => {
+  const [busy, setBusy] = React.useState(false);
+  const [step, setStep] = React.useState("");
+  const [message, setMessage] = React.useState("");
+  const generate = async () => {
+    setBusy(true); setStep("voice"); setMessage("");
+    try {
+      const start = await fetch("/api/project/produce", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId }) }).then((r) => r.json());
+      if (!start.jobId) throw new Error(start.error || "produce failed to start");
+      for (let i = 0; i < 180; i += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        const status = await fetch(`/api/project/produce/status?jobId=${encodeURIComponent(start.jobId)}`).then((r) => r.json());
+        if (status.step) setStep(status.step);
+        if (status.status === "done") {
+          setMessage(`Video draft xong ✓ — ${status.result?.durationSec ?? "?"}s, timeline ${status.result?.timelineOk ? "OK" : "có warnings"}`);
+          onDone();
+          return;
+        }
+        if (status.status === "error") throw new Error(status.message || "produce error");
+      }
+      throw new Error("produce timed out");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally { setBusy(false); }
+  };
+  return (
+    <section className="pp-card">
+      <div className="pp-card-title">Generate <small>— voice + timeline + draft render</small></div>
+      <div>
+        <button type="button" className="ve-btn primary" disabled={busy || !hasScript} onClick={() => void generate()}>
+          {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : "🎬 Generate video"}
+        </button>
+        {!hasScript ? <p className="ve-hint">Cần script (beats có transcript) trước khi generate.</p> : null}
+      </div>
+      {message ? <p className="ve-hint">{message}</p> : null}
+    </section>
+  );
+};
 
 const HistoryCard: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [events, setEvents] = React.useState<TraceEvent[] | null>(null);
@@ -308,17 +458,23 @@ const HistoryCard: React.FC<{ projectId: string }> = ({ projectId }) => {
 };
 
 export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void }> = ({ projectId, onOpenEditor }) => {
+  const agent = useAgentUi();
   const [snapshot, setSnapshot] = React.useState<Awaited<ReturnType<typeof loadProject>> | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [renders, setRenders] = React.useState<ProjectRender[]>([]);
   const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
+  const [storyDraft, setStoryDraftState] = React.useState<StoryDraft | null>(null);
 
   const refresh = React.useCallback(() => {
     loadProject(projectId).then(setSnapshot).catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
     fetchRenders(projectId).then((payload) => setRenders(payload.renders)).catch(() => setRenders([]));
     fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
+    fetchStoryDraft(projectId).then(setStoryDraftState).catch(() => setStoryDraftState(null));
   }, [projectId]);
   React.useEffect(() => { refresh(); }, [refresh]);
+  // LIVE journey: the agent writes files -> SSE fires -> the studio reflects
+  // the new artifact without the user touching anything
+  React.useEffect(() => subscribeToChanges((changedId) => { if (changedId === projectId) refresh(); }), [projectId, refresh]);
 
   if (error) return <div className="pp-page"><div className="pp-loading">Load error: {error}</div></div>;
   if (!snapshot) return <div className="pp-page"><div className="pp-loading">Loading project…</div></div>;
@@ -331,6 +487,12 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
     .slice()
     .sort((a, b) => a.range.startSec - b.range.startSec);
   const latest = renders[0];
+  const stage = deriveStage(snapshot, storyDraft, renders.length, approval);
+  const hasScript = (editDoc?.beats ?? []).some((beat) => String(beat.transcript ?? "").trim());
+  const sendIdeaToAgent = (idea: string) => {
+    agent.setDraftPrompt(`Tôi muốn làm video: "${idea}". Hãy dùng tool draft_story (project ${projectId}, idea verbatim, story bạn compose) để đề xuất story — rồi dừng chờ tôi duyệt trong Content Studio.`);
+    agent.setOpen(true);
+  };
 
   return (
     <div className="pp-page">
@@ -342,23 +504,35 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
         <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗</button>
       </header>
 
+      <JourneyStepper stage={stage} />
+
+      {stage === "idea" ? <CreateCard onSendIdea={sendIdeaToAgent} /> : null}
+
+      {storyDraft && storyDraft.status !== "none" ? (
+        <StoryCard projectId={projectId} draft={storyDraft} onChanged={refresh} />
+      ) : null}
+
       <PromptCard instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
 
-      <section className="pp-card">
-        <div className="pp-card-title">Script <small>— {beatClips.length} beats, sửa trực tiếp</small></div>
-        <div className="pp-beats">
-          {beatClips.map((beat, index) => {
-            const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
-            return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
-          })}
-        </div>
-      </section>
+      {hasScript ? (
+        <section className="pp-card">
+          <div className="pp-card-title">Script <small>— {beatClips.length} beats, sửa trực tiếp</small></div>
+          <div className="pp-beats">
+            {beatClips.map((beat, index) => {
+              const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
+              return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {hasScript ? <GenerateCard projectId={projectId} hasScript={hasScript} onDone={refresh} /> : null}
 
       <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
 
       {videoDoc ? (
         <details className="pp-card pp-collapse">
-          <summary className="pp-card-title">Story</summary>
+          <summary className="pp-card-title">Story (final)</summary>
           <div className="pp-story">
             <p><b>Idea.</b> {videoDoc.idea}</p>
             <p><b>Surface problem.</b> {videoDoc.surfaceProblem}</p>
