@@ -91,6 +91,7 @@ export const AgentDrawer: React.FC = () => {
           onClick={() => setOpen(true)}
         >🤖</button>
       ) : null}
+      {open ? <div className="ap-drawer-backdrop" aria-hidden="true" onClick={() => setOpen(false)} /> : null}
       <aside className={`ap-drawer ${open ? "" : "ap-drawer-closed"}`} aria-label="Agent drawer" aria-hidden={!open}>
         <div className="ap-drawer-header">
           <strong>Agent</strong>

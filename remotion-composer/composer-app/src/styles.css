@@ -1424,6 +1424,9 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 /* AgentPanel stays mounted for the app's lifetime (no useStream churn) —
    closed = display:none, purely a CSS toggle. */
 .ap-drawer-closed { display: none; }
+/* Backdrop: click outside closes the drawer (standard drawer UX). Transparent
+   — the editor behind stays fully visible; only the click-outside gesture. */
+.ap-drawer-backdrop { position: fixed; inset: 0; z-index: 85; background: transparent; cursor: default; }
 .ap-drawer-header {
   display: flex; align-items: center; gap: 8px; padding: 10px 14px;
   border-bottom: 1px solid #1f2937; flex-shrink: 0; color: #fff; font-size: 13px;
