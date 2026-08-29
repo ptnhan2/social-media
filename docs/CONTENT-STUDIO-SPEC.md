@@ -157,6 +157,20 @@ idea → story (review checkpoint #1) → script (checkpoint #2, sửa trực ti
 
 ## 4. PROGRESS LOG
 
+- **2026-08-30 05:10 — CREATION FLOW SHIPPED (bd6b567..017ccc7, T1-T7)**:
+  journey có mặt từ đầu đến cuối. JourneyStepper (stage DERIVED từ artifacts:
+  idea → story → script → voice → video → approved); Create mode ("Video của
+  bạn về gì?" → prefill drawer → draft_story); Story checkpoint card (sửa
+  inline + Duyệt + yêu cầu sửa có note — commonGoal fields đầy đủ);
+  GenerateCard (1 nút → /api/project/produce job: voice → timeline → render,
+  live step progress); SSE refresh (studio tự cập nhật khi agent viết file);
+  picker entry [🎬 Video mới từ ý tưởng]. Backend: story-draft endpoint (một
+  write-path agent + user, feedback hooks cho human story edits) + produce
+  endpoint (job chain + in-flight guard per project). Harness tools:
+  draft_story + check_story_review. Verify agent 8/8 PASS + cold-diff review
+  độc lập (3 MAJOR + 10 MINOR → fix các mục actionable: script checkpoint đọc
+  edit-doc truth, in-flight guard, commonGoal fields, changes_requested loop,
+  produce validates transcripts, sticky error, create catch).
 - **2026-08-29 22:40 — SHIPPED (T1-T6 hoàn tất, 566450c)**: Content Studio
   live theo đúng 3 tầng. T1: `/api/project/clip-metadata` write-path + feedback
   hooks (parity gaps đóng). T2: prompt layer — `instruction` đi cùng script

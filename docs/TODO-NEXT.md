@@ -1,26 +1,25 @@
-# TODO NEXT — Updated 2026-08-29 22:45 (CONTENT STUDIO SHIPPED)
+# TODO NEXT — Updated 2026-08-30 05:15 (CREATION FLOW SHIPPED)
 
-> Chain thesis: produce ✅ · approve ✅ (gate) · **content-studio ✅ (script
-> là trung tâm)** · fix 🟡 · learn 🟡. Đọc file này đầu session mới.
+> Chain thesis: produce ✅ · approve ✅ · content-studio ✅ · **creation-flow ✅
+> (idea → story → script → generate → approve)** · fix 🟡 · learn 🟡
 
 ---
 
-## Trạng thái lõi (29/08)
+## Trạng thái lõi (30/08 sáng)
 
-- **CONTENT STUDIO SHIPPED (T1-T6, 8514d43..566450c)**: kiến trúc 3 tầng theo
-  spec `docs/CONTENT-STUDIO-SPEC.md` (parity audit trước implement — đúng
-  quy trình sau user correction). Studio `/project`: beat editors đầy đủ
-  (script + direction + voice settings + takes + regen + QC — sửa tại chỗ,
-  agent cùng sửa), prompt layer (instruction đi cùng script + re-run prefill
-  drawer), approval gate (candidate mp4 chỉ khi pending), history trace;
-  KHÔNG player trong edit loop (xem = editor). Editor Audio tab slim: chỉ
-  timing/mix. Cold-diff review độc lập: 1 MAJOR + 4 MINOR fixed
-- **PROCESS TRACE SHIPPED (91d19d1)**: mọi stage tự record vào
-  `qa/pipeline-log.jsonl`; page show tiến trình thật
-- **A1/A2 ĐÓNG**: write_edit_doc (qua saveSourceDocs) + auto-register
-- **AGENT LÊN CẤP APP**: drawer mọi trang + fixes
-- **M1b + M2 + M3 SHIPPED** (đêm 29/08) · **ZERO-MANUAL E2E × 2**
-- 194/194 vitest · 34/34 harness · typecheck · ui-audit 0 · verify agent 8/8
+- **CREATION FLOW SHIPPED (bd6b567..017ccc7)**: user journey từ đầu đến cuối
+  — [🎬 Video mới từ ý tưởng] trên picker → slug → studio create mode ("Video
+  của bạn về gì?") → agent draft_story → STORY checkpoint (sửa inline + Duyệt
+  + yêu cầu sửa có note) → [Viết script] → agent write_edit_doc → SCRIPT
+  checkpoint (sửa trực tiếp) → [🎬 Generate] (produce job: voice → timeline →
+  render, live progress) → Approval gate. JourneyStepper hiển thị stage
+  (DERIVED từ artifacts — không state thừa). SSE refresh: studio tự cập nhật
+  khi agent viết file. Cold-diff review độc lập đã fix 3 MAJOR + key MINORs.
+- **CONTENT STUDIO SHIPPED (8514d43..704915c)**: 3 tầng kiến trúc + writing
+  surface v4 (app visual language) + token discipline (design-audit.mjs)
+- **PROCESS TRACE + prompt layer + A1/A2 + agent app-level + M1b/M2/M3 +
+  zero-manual E2E ×2** (xem log các ngày trước)
+- 194/194 vitest · 34/34 harness · verify agent 8/8 · ui-audit 0
 
 ## QUEUE TIẾP THEO
 

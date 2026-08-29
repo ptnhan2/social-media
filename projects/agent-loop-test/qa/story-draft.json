@@ -1,14 +1,14 @@
 {
   "status": "approved",
-  "idea": "Rhythm decides before the timeline",
-  "surfaceProblem": "Cuts look right but feel wrong",
-  "deeperProblem": "Cutting to the clock, not the breath",
-  "thumbnailPromise": "Same edit, before and after rhythm fix",
+  "idea": "Why your edits feel off even when every cut is technically right",
+  "surfaceProblem": "Cuts look correct one by one but the whole feels wrong",
+  "deeperProblem": "You cut to the clock, not to the breath — rhythm was decided before the timeline",
+  "thumbnailPromise": "The same edit, before and after fixing its rhythm",
   "commonGoal": {
-    "viewer": "edit by feel",
-    "creator": "own the niche"
+    "viewer": "make edits that feel right",
+    "creator": "own the craft-of-rhythm niche"
   },
-  "originalIdea": "video v? rhythm editing",
+  "originalIdea": "video về rhythm editing",
   "note": "",
-  "updatedAt": "2026-08-29T20:34:19.747Z"
+  "updatedAt": "2026-08-29T21:17:41.497Z"
 }
