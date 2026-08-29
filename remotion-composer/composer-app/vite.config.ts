@@ -364,6 +364,132 @@ export default defineConfig({
             outputUrl: job.status === "done" ? `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(job.outputPath)}` : undefined,
           });
         });
+        // ============ CREATION FLOW (CONTENT-STUDIO-SPEC §5) ============
+        // Story draft: the FIRST artifact of the journey (idea -> story review
+        // -> script). ONE write-path (this endpoint) for agent (draft_story
+        // tool) AND user (inline edits + approve); human story edits land in
+        // feedback.jsonl like every other override.
+        server.middlewares.use("/api/project/story-draft", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const projectId = url.searchParams.get("projectId") || "";
+          if (req.method === "GET") {
+            try {
+              if (!projectId) { sendJson(res, 400, { error: "projectId required" }); return; }
+              const draftPath = resolve(PROJECT_STORE.projectDir(projectId), "qa", "story-draft.json");
+              if (!existsSync(draftPath)) { sendJson(res, 200, { status: "none" }); return; }
+              sendJson(res, 200, JSON.parse(readFileSync(draftPath, "utf-8")));
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+            return;
+          }
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const pid = String(body.projectId || projectId || "");
+              if (!pid) throw new Error("projectId required");
+              const status = String(body.status || "");
+              if (!["pending", "approved", "changes_requested"].includes(status)) throw new Error("status must be pending | approved | changes_requested");
+              const story = body.story as Record<string, unknown> | undefined;
+              if (status === "pending" && (!story || typeof story !== "object")) throw new Error("story object required when drafting");
+              for (const key of ["idea", "surfaceProblem", "deeperProblem", "thumbnailPromise"]) {
+                if (story && key in story && typeof story[key] !== "string") throw new Error(`story.${key} must be a string`);
+              }
+              const draftPath = resolve(PROJECT_STORE.projectDir(pid), "qa", "story-draft.json");
+              let previous: Record<string, unknown> = { status: "none" };
+              try { previous = JSON.parse(readFileSync(draftPath, "utf-8")); } catch { /* first draft */ }
+              const draft = {
+                status,
+                idea: String(story?.idea ?? previous.idea ?? ""),
+                surfaceProblem: String(story?.surfaceProblem ?? previous.surfaceProblem ?? ""),
+                deeperProblem: String(story?.deeperProblem ?? previous.deeperProblem ?? ""),
+                thumbnailPromise: String(story?.thumbnailPromise ?? previous.thumbnailPromise ?? ""),
+                commonGoal: (story?.commonGoal as Record<string, unknown>) ?? (previous.commonGoal as Record<string, unknown>) ?? {},
+                originalIdea: String(body.originalIdea ?? previous.originalIdea ?? ""),
+                note: String(body.note ?? ""),
+                updatedAt: new Date().toISOString(),
+              };
+              mkdirSync(pathDirname(draftPath), { recursive: true });
+              writeFileSync(draftPath, JSON.stringify(draft, null, 2), "utf-8");
+              // learning hook: human story edits are training signals
+              if (story && previous.status !== "none") {
+                for (const key of ["idea", "surfaceProblem", "deeperProblem", "thumbnailPromise"]) {
+                  if (typeof story[key] === "string" && story[key] !== previous[key]) {
+                    appendFeedback({ knob: `story.${pid}.${key}`, from: String(previous[key] ?? ""), to: story[key], projectId: pid });
+                  }
+                }
+              }
+              try {
+                const traceFile = resolve(PROJECT_STORE.projectDir(pid), "qa", "pipeline-log.jsonl");
+                mkdirSync(pathDirname(traceFile), { recursive: true });
+                appendFileSync(traceFile, `${JSON.stringify({ ts: new Date().toISOString(), stage: "story", title: `Story ${status === "approved" ? "approved" : status === "pending" ? "drafted — chờ duyệt" : status}`, data: { status, originalIdea: draft.originalIdea } })}\n`, "utf-8");
+              } catch { /* trace is best-effort */ }
+              sendJson(res, 200, { ok: true, draft });
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
+        // Produce: the deterministic back-half in ONE job — voice (TTS takes +
+        // QC + retime) -> timeline (validate + generate) -> draft render. The
+        // studio's [Generate] button and any agent flow call the SAME job.
+        const produceJobs = new Map<string, { status: "producing" | "done" | "error"; startedAt: number; step?: string; message?: string; result?: unknown }>();
+        server.middlewares.use("/api/project/produce/status", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const job = produceJobs.get(url.searchParams.get("jobId") || "");
+          if (!job) { sendJson(res, 404, { error: "Unknown produce job" }); return; }
+          sendJson(res, 200, { status: job.status, step: job.step, elapsedSec: Math.round((Date.now() - job.startedAt) / 1000), message: job.message, result: job.status === "done" ? job.result : undefined });
+        });
+        server.middlewares.use("/api/project/produce", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              if (!projectId) throw new Error("projectId required");
+              const snapshot = PROJECT_STORE.load(projectId);
+              if (!snapshot.editDoc) throw new Error("Project has no edit document — write a script first");
+              const jobId = `produce-${Date.now()}`;
+              produceJobs.set(jobId, { status: "producing", startedAt: Date.now(), step: "voice" });
+              const child = spawn(process.execPath, ["scripts/produce.mjs", "--project", projectId], {
+                cwd: COMPOSER_ROOT, windowsHide: true, stdio: ["ignore", "pipe", "pipe"],
+              });
+              let stdout = ""; let stderr = "";
+              child.stdout.on("data", (c: Buffer) => {
+                stdout += c.toString();
+                // live step progress: produce.mjs prints {"step":...} lines
+                const job = produceJobs.get(jobId);
+                if (job) {
+                  for (const line of c.toString().split(/\r?\n/)) {
+                    try { const parsed = JSON.parse(line.trim()); if (parsed.step) job.step = parsed.step; } catch { /* not a step line */ }
+                  }
+                }
+              });
+              child.stderr.on("data", (c: Buffer) => { stderr += c.toString(); });
+              child.on("error", (error) => { produceJobs.set(jobId, { status: "error", startedAt: Date.now(), message: error.message }); });
+              child.on("exit", (code) => {
+                const job = produceJobs.get(jobId);
+                if (!job) return;
+                try {
+                  // produce emits ONE JSON LINE PER STEP + a final result —
+                  // take the LAST parseable line (the result), not a span
+                  const lines = stdout.split(/\r?\n/).filter((line) => line.trim().startsWith("{"));
+                  let result = null;
+                  for (const line of lines) {
+                    try { const parsed = JSON.parse(line.trim()); if (parsed && typeof parsed === "object") result = parsed; } catch { /* skip */ }
+                  }
+                  if (!result) throw new Error("no JSON result line in output");
+                  if (code !== 0 && !result.ok) {
+                    job.status = "error";
+                    job.message = result.error || `produce exited ${code}: ${(stderr || stdout).slice(0, 300)}`;
+                    return;
+                  }
+                  job.status = "done";
+                  job.result = result;
+                } catch {
+                  job.status = "error";
+                  job.message = `unparseable produce output (exit ${code}): ${(stderr || stdout).slice(0, 200)}`;
+                }
+              });
+              sendJson(res, 200, { jobId, projectId });
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
         // ============ PROJECT PAGE (stage-surface, PIPELINE-PRODUCTION-SPEC v3) ============
         // The presentation/approval surface reads the SAME files the agent
         // reads (rule #16 parity): renders listing, timeline report, and the
