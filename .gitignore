@@ -73,3 +73,6 @@ remotion-composer/composer-app/test-results/
 remotion-composer/composer-app/playwright-report/
 test-results/
 projects/*/renders/**/*.render-report.json
+
+# pipeline backup files (write-edit-doc / editor-ops / scaffold)
+*.bak-20*

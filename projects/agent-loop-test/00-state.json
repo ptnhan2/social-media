@@ -1,9 +1,0 @@
-{
-  "projectId": "agent-loop-test",
-  "pipelineVersion": "2026-08-11-isaacverse-v1",
-  "stage": "scaffold",
-  "status": "in_progress",
-  "completedStages": [],
-  "currentVersion": "v000",
-  "nextAction": "Create the source VideoDoc and EditDoc."
-}

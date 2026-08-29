@@ -86,10 +86,11 @@ if (doRegen) {
     // otherwise validated QC data dies inside this script.
     segment.qc = result.qc;
     segment.takeId = result.takeId;
-    // takes (lean: id + pass + duration) — the studio's take list reads them
+    // takes (lean) — the studio's take list reads them; `path` keeps the
+    // play button alive for scaffold-produced projects (cold-diff MINOR #6)
     segment.takes = (result.takes ?? [])
       .filter((take) => take && take.id)
-      .map((take) => ({ id: take.id, pass: take.pass === true, durationSec: take.metrics?.durationSec }));
+      .map((take) => ({ id: take.id, pass: take.pass === true, durationSec: take.metrics?.durationSec, path: take.path }));
     appendTrace(ROOT, slug, "voice", `Voice: ${segment.beatId}`, {
       providerText: segment.providerText,
       takes: (result.takes ?? []).map((take) => ({ id: take.id, pass: take.pass, durationSec: take.metrics?.durationSec?.toFixed?.(2) })),

@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import type { EditorClip } from "../../../shared/isaacverse/editor";
 import { ANIM_PRESETS, EFFECT_PRESETS, FILTER_PRESETS, SPEED_PRESETS, TRANSITION_PRESETS } from "../../../shared/isaacverse/clipStyle";
 

@@ -76,7 +76,38 @@ const BeatEditor: React.FC<{
 
   const [draftScript, setDraftScript] = React.useState(sentenceText);
   const [draftDirection, setDraftDirection] = React.useState(providerText);
-  React.useEffect(() => { setDraftScript(sentenceText); setDraftDirection(providerText); }, [sentenceText, providerText]);
+  // settings use LOCAL DRAFTS + onBlur commit (cold-diff review MAJOR #1:
+  // committing per keystroke fought the async refresh and could persist
+  // intermediate numeric states like Number("0.") -> 0)
+  const [draftSettings, setDraftSettings] = React.useState({
+    voiceId: String(settings.voiceId ?? ""),
+    modelId: String(settings.modelId ?? "eleven_v3"),
+    speed: String(num(settings.speed, 1)),
+    stability: String(num(settings.stability, 0.35)),
+  });
+  React.useEffect(() => {
+    setDraftScript(sentenceText);
+    setDraftDirection(providerText);
+    setDraftSettings({
+      voiceId: String(settings.voiceId ?? ""),
+      modelId: String(settings.modelId ?? "eleven_v3"),
+      speed: String(num(settings.speed, 1)),
+      stability: String(num(settings.stability, 0.35)),
+    });
+  }, [sentenceText, providerText, settings.voiceId, settings.modelId, settings.speed, settings.stability]);
+
+  const commitSetting = (key: "voiceId" | "modelId" | "speed" | "stability") => {
+    const raw = draftSettings[key];
+    if (key === "speed" || key === "stability") {
+      const parsed = Number(raw);
+      if (!Number.isFinite(parsed)) { setMessage(`${key}: giá trị số không hợp lệ`); return; }
+      if (Math.abs(parsed - num(settings[key], key === "speed" ? 1 : 0.35)) < 0.0001) return;
+      void save({ voiceSettings: { ...settings, [key]: parsed } }, key);
+    } else {
+      if (raw === String(settings[key] ?? (key === "modelId" ? "eleven_v3" : ""))) return;
+      void save({ voiceSettings: { ...settings, [key]: raw } }, key);
+    }
+  };
 
   const [message, setMessage] = React.useState("");
   const [busy, setBusy] = React.useState<"none" | "saving" | "regen" | `take:${string}`>("none");
@@ -100,6 +131,12 @@ const BeatEditor: React.FC<{
     if (!projectId || !voice) return;
     setBusy("regen"); setMessage("");
     try {
+      // commit any un-committed direction FIRST (cold-diff review MINOR #3:
+      // regen must speak exactly what's on screen, and the stored
+      // providerText must match the audio it produced)
+      if (draftDirection !== providerText) {
+        await setClipMetadata(projectId, voice.id, { providerText: draftDirection });
+      }
       const status = await pollJob("/api/project/audio-regen", { projectId, clipId: voice.id, takes: 2, providerText: draftDirection.trim() || undefined }, (jobId) => `/api/project/audio-regen/status?jobId=${encodeURIComponent(jobId)}`);
       setMessage(`Regen ✓ — QC ${status.result?.qc?.pass === true ? "PASS" : "FAIL"}, ${status.result?.stemDurationSec ?? "?"}s`);
       onChanged();
@@ -144,27 +181,29 @@ const BeatEditor: React.FC<{
 
       <label className="pp-field">
         <span>Script <small>(từ — sửa được)</small></span>
-        <textarea rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`}
+        <textarea rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`} disabled={!voice}
           onChange={(e) => setDraftScript(e.target.value)}
           onBlur={() => { if (draftScript !== sentenceText && draftScript.trim()) void save({ sentenceText: draftScript.trim() }, "Script"); }} />
       </label>
 
       <label className="pp-field">
         <span>Direction <small>(providerText gửi TTS — tags/CAPS)</small></span>
-        <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`}
+        <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`} disabled={!voice}
           onChange={(e) => setDraftDirection(e.target.value)}
           onBlur={() => { if (draftDirection !== providerText) void save({ providerText: draftDirection }, "Direction"); }} />
       </label>
 
+      {!voice ? <p className="pp-hint">Beat chưa có voice clip — chạy generate (agent / scaffold) trước khi chỉnh ở đây.</p> : null}
+
       <div className="pp-settings">
-        <label><span>voice</span><input type="text" value={String(settings.voiceId ?? "")} aria-label={`Voice ID beat ${index + 1}`}
-          onChange={(e) => void save({ voiceSettings: { ...settings, voiceId: e.target.value } }, "Voice")} /></label>
-        <label><span>model</span><input type="text" value={String(settings.modelId ?? "eleven_v3")} aria-label={`Model beat ${index + 1}`}
-          onChange={(e) => void save({ voiceSettings: { ...settings, modelId: e.target.value } }, "Model")} /></label>
-        <label><span>speed</span><input type="number" step="0.05" min="0.7" max="1.2" value={num(settings.speed, 1)} aria-label={`Speed beat ${index + 1}`}
-          onChange={(e) => void save({ voiceSettings: { ...settings, speed: Number(e.target.value) } }, "Speed")} /></label>
-        <label><span>stability</span><input type="number" step="0.05" min="0" max="1" value={num(settings.stability, 0.35)} aria-label={`Stability beat ${index + 1}`}
-          onChange={(e) => void save({ voiceSettings: { ...settings, stability: Number(e.target.value) } }, "Stability")} /></label>
+        <label><span>voice</span><input type="text" value={draftSettings.voiceId} aria-label={`Voice ID beat ${index + 1}`} disabled={!voice}
+          onChange={(e) => setDraftSettings((s) => ({ ...s, voiceId: e.target.value }))} onBlur={() => commitSetting("voiceId")} /></label>
+        <label><span>model</span><input type="text" value={draftSettings.modelId} aria-label={`Model beat ${index + 1}`} disabled={!voice}
+          onChange={(e) => setDraftSettings((s) => ({ ...s, modelId: e.target.value }))} onBlur={() => commitSetting("modelId")} /></label>
+        <label><span>speed</span><input type="number" step="0.05" min="0.7" max="1.2" value={draftSettings.speed} aria-label={`Speed beat ${index + 1}`} disabled={!voice}
+          onChange={(e) => setDraftSettings((s) => ({ ...s, speed: e.target.value }))} onBlur={() => commitSetting("speed")} /></label>
+        <label><span>stability</span><input type="number" step="0.05" min="0" max="1" value={draftSettings.stability} aria-label={`Stability beat ${index + 1}`} disabled={!voice}
+          onChange={(e) => setDraftSettings((s) => ({ ...s, stability: e.target.value }))} onBlur={() => commitSetting("stability")} /></label>
       </div>
 
       <div className="pp-beat-actions">

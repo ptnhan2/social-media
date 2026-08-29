@@ -765,16 +765,15 @@ def write_edit_doc(project_slug: str, story: str, beats: str, instruction: str =
     cmd = ["node", os.path.join(RENDERER_DIR, "scripts", "write-edit-doc.mjs"),
            "--project", project_slug]
     payload_files = []
-    if instruction.strip():
-        # free text via file — Windows arg quoting mangles long strings
-        handle = tempfile.NamedTemporaryFile("w", suffix="-instruction.txt",
-                                             delete=False, encoding="utf-8")
-        handle.write(instruction.strip())
-        handle.close()
-        payload_files.append(handle.name)
-        cmd += ["--instruction-file", handle.name]
-    payload_files = []
     try:
+        if instruction.strip():
+            # free text via file — Windows arg quoting mangles long strings
+            handle = tempfile.NamedTemporaryFile("w", suffix="-instruction.txt",
+                                                 delete=False, encoding="utf-8")
+            handle.write(instruction.strip())
+            handle.close()
+            payload_files.append(handle.name)
+            cmd += ["--instruction-file", handle.name]
         for name, payload in (("story", story), ("beats", beats)):
             handle = tempfile.NamedTemporaryFile("w", suffix=f"-{name}.json",
                                                  delete=False, encoding="utf-8")

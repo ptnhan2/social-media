@@ -579,6 +579,19 @@ export default defineConfig({
               if (!projectId || !clipId || !changes || typeof changes !== "object" || Array.isArray(changes)) throw new Error("projectId, clipId and changes (object) are required");
               const allowed = new Set(["sentenceText", "providerText", "voiceSettings", "transcript"]);
               for (const key of Object.keys(changes)) if (!allowed.has(key)) throw new Error(`field "${key}" is not studio-editable (allowed: ${[...allowed].join(", ")})`);
+              // value-type gates (cold-diff review MINOR #2: a malformed POST
+              // must never corrupt the single-truth editor doc)
+              for (const key of ["sentenceText", "providerText", "transcript"]) {
+                if (key in changes && typeof changes[key] !== "string") throw new Error(`${key} must be a string`);
+              }
+              if ("voiceSettings" in changes) {
+                const vs = changes.voiceSettings;
+                if (typeof vs !== "object" || vs === null || Array.isArray(vs)) throw new Error("voiceSettings must be an object");
+                for (const [key, value] of Object.entries(vs as Record<string, unknown>)) {
+                  if (["stability", "style", "speed", "similarityBoost"].includes(key) && typeof value !== "number") throw new Error(`voiceSettings.${key} must be a number`);
+                  if (["voiceId", "modelId"].includes(key) && typeof value !== "string") throw new Error(`voiceSettings.${key} must be a string`);
+                }
+              }
               const snapshot = PROJECT_STORE.load(projectId);
               const clip = snapshot.editorDoc?.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
               if (!clip) throw new Error(`Unknown clip: ${clipId}`);
