@@ -1,32 +1,26 @@
-# TODO NEXT — Updated 2026-08-29 19:05 (PROCESS TRACE shipped)
+# TODO NEXT — Updated 2026-08-29 22:45 (CONTENT STUDIO SHIPPED)
 
-> Chain thesis: produce ✅ (zero-manual ×2) → approve ✅ (Project Page gate)
-> → fix 🟡 → learn 🟡. Đọc file này đầu session mới.
+> Chain thesis: produce ✅ · approve ✅ (gate) · **content-studio ✅ (script
+> là trung tâm)** · fix 🟡 · learn 🟡. Đọc file này đầu session mới.
 
 ---
 
 ## Trạng thái lõi (29/08)
 
-- **PROCESS TRACE SHIPPED (91d19d1)**: user correction — trang cần show TIẾN
-  TRÌNH (idea → script → rules → từng bước agent dưới nền), không chỉ kết quả.
-  Tiến trình trước đó KHÔNG được ghi. Giờ: `scripts/lib/trace.mjs` — mọi stage
-  tự record vào `qa/pipeline-log.jsonl` (plan: idea+beats+treatment
-  rules+gates · voice: providerText+takes+QC per beat · timeline: gates+style
-  · render: output/quality · approval: transitions). GET /api/project/trace.
-  ProjectPage rework: **Process Timeline là xương sống** (accordion tuần tự),
-  player/approval/story/beats theo sau. Verified: 6 events đúng thứ tự trên
-  agent-loop-test (chạy pipeline lại hoàn chỉnh)
-- **PROJECT PAGE SHIPPED (8caab94, phase 1+2)**: stage-surface trình bày +
-  duyệt (Fliki/HeyGen/Lovable patterns). Beat cards từ EDITOR-DOC TRUTH, QC
-  badge, draft player, approval gate (pending/changes_requested/approved +
-  feedback.jsonl hook), harness tools request_approval/check_approval
-- **Data-flow fix (8caab94)**: scaffold-voice-plan giờ chảy QC/takeId vào
-  audioPlan → projection → clips
-- **A1 ĐÓNG (0260c34)**: write_edit_doc qua saveSourceDocs; E2E
-  agent-loop-test. A2 (f2eeb25) + cache fix
-- **AGENT LÊN CẤP APP (522afa6...)**: AgentDrawer mọi trang + fixes
+- **CONTENT STUDIO SHIPPED (T1-T6, 8514d43..566450c)**: kiến trúc 3 tầng theo
+  spec `docs/CONTENT-STUDIO-SPEC.md` (parity audit trước implement — đúng
+  quy trình sau user correction). Studio `/project`: beat editors đầy đủ
+  (script + direction + voice settings + takes + regen + QC — sửa tại chỗ,
+  agent cùng sửa), prompt layer (instruction đi cùng script + re-run prefill
+  drawer), approval gate (candidate mp4 chỉ khi pending), history trace;
+  KHÔNG player trong edit loop (xem = editor). Editor Audio tab slim: chỉ
+  timing/mix. Cold-diff review độc lập: 1 MAJOR + 4 MINOR fixed
+- **PROCESS TRACE SHIPPED (91d19d1)**: mọi stage tự record vào
+  `qa/pipeline-log.jsonl`; page show tiến trình thật
+- **A1/A2 ĐÓNG**: write_edit_doc (qua saveSourceDocs) + auto-register
+- **AGENT LÊN CẤP APP**: drawer mọi trang + fixes
 - **M1b + M2 + M3 SHIPPED** (đêm 29/08) · **ZERO-MANUAL E2E × 2**
-- 194/194 vitest · 34/34 harness · typecheck · ui-audit 0 critical
+- 194/194 vitest · 34/34 harness · typecheck · ui-audit 0 · verify agent 8/8
 
 ## QUEUE TIẾP THEO
 

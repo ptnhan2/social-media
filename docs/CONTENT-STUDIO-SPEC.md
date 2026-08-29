@@ -113,6 +113,17 @@ test/commit — gộp vào Task 1-2, hoàn thiện theo TDD.
 
 ## 4. PROGRESS LOG
 
+- **2026-08-29 22:40 — SHIPPED (T1-T6 hoàn tất, 566450c)**: Content Studio
+  live theo đúng 3 tầng. T1: `/api/project/clip-metadata` write-path + feedback
+  hooks (parity gaps đóng). T2: prompt layer — `instruction` đi cùng script
+  version (edit-doc root + trace), scaffold ghi takes kèm path. T3: beat
+  editors đầy đủ (script + direction + settings + takes + regen + QC), prompt
+  bar + re-run prefill drawer, KHÔNG player trong edit loop. T4: editor Audio
+  tab slim — chỉ timing/mix. T5: verify agent 8/8 (V8 PARTIAL = files chưa
+  commit, đã xử lý) + cold-diff review độc lập → fix 1 MAJOR (settings
+  per-keystroke commit) + 4 MINOR (type validation, regen commit direction
+  trước, no-VO guard, temp leak) + takes path + BOM. .bak sweep guard vào
+  .gitignore. 194/194 vitest, probe studio + editor slim xanh, ui-audit 0.
 - 2026-08-29 21:10: spec + parity audit viết xong (sau user correction về
   quy trình — bỏ qua design-parity + plan là sai). Code B1/B2 đang dở trong
   working tree, hoàn thiện theo Task 1-2.
