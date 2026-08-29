@@ -1,39 +1,31 @@
-# TODO NEXT — Updated 2026-08-29 17:45 (Project Page phase 1+2 SHIPPED)
+# TODO NEXT — Updated 2026-08-29 19:05 (PROCESS TRACE shipped)
 
-> Chain thesis: produce ✅ (zero-manual ×2) → **approve ✅ (Project Page
-> gate)** → fix 🟡 → learn 🟡. Đọc file này đầu session mới.
+> Chain thesis: produce ✅ (zero-manual ×2) → approve ✅ (Project Page gate)
+> → fix 🟡 → learn 🟡. Đọc file này đầu session mới.
 
 ---
 
 ## Trạng thái lõi (29/08)
 
-- **PROJECT PAGE SHIPPED (8caab94, phase 1+2)**: `/project?project=<slug>` —
-  stage-surface trình bày + duyệt (research-informed: Fliki/Pictory
-  single-surface, HeyGen blueprint-first + `reviewing` checkpoint, Lovable
-  Plan view). Phase 1: beat cards từ EDITOR-DOC TRUTH (range thật,
-  transcript, treatment, QC badge + play voice + take/pad), pipeline card,
-  story card, draft player (mới: /api/project/renders), entry từ picker (📄)
-  + editor header (Project). Phase 2: approval gate — qa/approval.json
-  (pending/changes_requested/approved), Keep/Redo+note UI, transition ghi
-  feedback.jsonl; harness tools `request_approval` (agent DỪNG cycle) +
-  `check_approval` (đọc verdict) → vòng A3 có human gate thật
-- **Data-flow fix**: scaffold-voice-plan drop QC/takeId khi map regen result
-  vào audioPlan (validated QC chết trong script) — giờ chảy plan → projection
-  → clips; QC badge hoạt động cho video sản xuất bằng scaffold
-- **A1 ĐÓNG (0260c34)**: write_edit_doc — agent TỰ viết edit-doc qua
-  saveSourceDocs (schema gates + overwrite guard + backup). E2E
-  agent-loop-test 17.07s (-16.8dB). A2 (f2eeb25) + fix cache hole
-- **AGENT LÊN CẤP APP (522afa6 + b6917e7 + 19cef2a)**: AgentDrawer mount
-  trên router — 🤖 mọi trang, conversation sống qua navigation, context tự
-  truyền; FAB ẩn khi mở (bug bị drawer đè); AgentPanel always-mounted;
-  /api/assets/poses native (bridge spawnSync từng đóng băng API 20s);
-  click-outside đóng
-- **reviews/ convention (7f882e6)**: HTML user-facing chỉ ở `reviews/`
-- **M1b + M2 + M3 SHIPPED** (đêm 29/08): take switcher + QC badge +
-  breathPad ripple · image query cards · generate_timeline + validate +
-  Timeline QA tab + harness tools (generate_timeline, write_edit_doc)
-- **ZERO-MANUAL E2E × 2**: mini-loop-test (13.7s) + agent-loop-test (17.07s,
-  edit-doc từ tool)
+- **PROCESS TRACE SHIPPED (91d19d1)**: user correction — trang cần show TIẾN
+  TRÌNH (idea → script → rules → từng bước agent dưới nền), không chỉ kết quả.
+  Tiến trình trước đó KHÔNG được ghi. Giờ: `scripts/lib/trace.mjs` — mọi stage
+  tự record vào `qa/pipeline-log.jsonl` (plan: idea+beats+treatment
+  rules+gates · voice: providerText+takes+QC per beat · timeline: gates+style
+  · render: output/quality · approval: transitions). GET /api/project/trace.
+  ProjectPage rework: **Process Timeline là xương sống** (accordion tuần tự),
+  player/approval/story/beats theo sau. Verified: 6 events đúng thứ tự trên
+  agent-loop-test (chạy pipeline lại hoàn chỉnh)
+- **PROJECT PAGE SHIPPED (8caab94, phase 1+2)**: stage-surface trình bày +
+  duyệt (Fliki/HeyGen/Lovable patterns). Beat cards từ EDITOR-DOC TRUTH, QC
+  badge, draft player, approval gate (pending/changes_requested/approved +
+  feedback.jsonl hook), harness tools request_approval/check_approval
+- **Data-flow fix (8caab94)**: scaffold-voice-plan giờ chảy QC/takeId vào
+  audioPlan → projection → clips
+- **A1 ĐÓNG (0260c34)**: write_edit_doc qua saveSourceDocs; E2E
+  agent-loop-test. A2 (f2eeb25) + cache fix
+- **AGENT LÊN CẤP APP (522afa6...)**: AgentDrawer mọi trang + fixes
+- **M1b + M2 + M3 SHIPPED** (đêm 29/08) · **ZERO-MANUAL E2E × 2**
 - 194/194 vitest · 34/34 harness · typecheck · ui-audit 0 critical
 
 ## QUEUE TIẾP THEO
