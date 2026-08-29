@@ -140,6 +140,18 @@ per-field override, migrations — không state song song nào để lệch.
 
 ## 9. PROGRESS LOG
 
+- **2026-08-29 15:00 (A1 ĐÓNG — agent tự viết edit-doc)**: mắt xích đầu tiên
+  của produce flow giờ là agent capability. `write_edit_doc` (harness tool +
+  scripts/write-edit-doc.mjs bridge qua saveSourceDocs — write-path chuẩn của
+  store, không nhân bản contract): agent thiết kế story + beats, bridge xây
+  CẢ 04-video-doc + 05-edit-doc, startSec tính cộng dồn (order + duration là
+  quyết của agent; voice-first retime sẽ điều chỉnh lại). Gates: timeline
+  semantics REFUSE (gap/overlap/start≠0), schema WARN, overwrite guard +
+  backup. E2E agent-loop-test: 3-beat → TTS (rewrite flags surfaced) →
+  generate-timeline (0 warnings) → render 17.07s (-16.8dB). Fix theo: render
+  bundle cache key giờ gồm projects-manifest.json (A2 hole — composition mới
+  vô hình đến khi source .tsx đổi). Chain: produce ĐỦ capacity từ story đến
+  render; còn A3 (critique→fix→KEEP vòng tròn) để kiểm chứng trọn vòng.
 - **2026-08-29 03:15 (M3 SHIPPED + ZERO-MANUAL E2E — overnight autonomous
   session)**: đóng timeline step của produce loop. (1) validateEditDocTimeline
   (shared/validate.ts, pure): contiguity (beats tile không gap/overlap, start
