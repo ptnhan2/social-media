@@ -111,6 +111,50 @@ test/commit — gộp vào Task 1-2, hoàn thiện theo TDD.
 - [ ] Push + CI check
 - [ ] Mở studio deep-link cho user
 
+## 5. Creation Flow — "Video mới từ ý tưởng" (CHỐT 30/08 03:23)
+
+> User correction gốc: app là bộ công cụ power-user, không phải HÀNH TRÌNH
+> user. Pipeline `lên content` (research → audience → deeper problem → hero
+> journey → script) đã có trong AGENTS.md từ đầu — UI mới bắt đầu giữa chừng.
+
+### Journey (stage derived từ artifacts, không lưu state thừa)
+
+```
+idea → story (review checkpoint #1) → script (checkpoint #2, sửa trực tiếp)
+     → voice → video → approved (gate cuối)
+```
+
+- **idea**: chưa có story-draft, chưa có edit-doc beats
+- **story**: `qa/story-draft.json` tồn tại (pending = chờ duyệt, approved = xong)
+- **script**: edit-doc có beats
+- **voice**: audioPlan.voice không rỗng
+- **video**: có render
+- **approved**: approval.json status = approved
+
+### Flow chi tiết (v1 — agent làm phần sáng tạo, UI làm phần deterministic)
+
+1. Picker: [🎬 Video mới từ ý tưởng] → studio create mode → "Video của bạn
+   về gì?" input + context tuỳ chọn
+2. [Bắt đầu] → prefill agent drawer: idea + yêu cầu draft_story
+3. Agent `draft_story(slug, idea, context)` → POST /api/project/story-draft
+   (status pending) → studio refresh (SSE) → STORY card hiện
+4. User sửa story fields inline (cùng endpoint) → [Duyệt story] → approved →
+   [Viết script] prefill drawer → agent `write_edit_doc` (story đã duyệt làm
+   input, instruction = idea)
+5. Script hiện trong studio (sửa trực tiếp như đã có)
+6. [🎬 Generate] → POST /api/project/produce (job: scaffold-voice --regen →
+   generate-timeline → render draft) — deterministic, không cần agent
+7. Approval gate (đã có)
+
+### Parity audit — stages mới (rule #16)
+
+| Stage | Agent làm gì | User XEM | User SỬA | Learning hook |
+|---|---|---|---|---|
+| Story draft | draft_story (POST story-draft, status pending) | STORY card trong studio | sửa fields inline (cùng endpoint) + duyệt | **user sửa story fields → feedback.jsonl (gap phải đóng, như clip-metadata)** |
+| Story gate | check_story_review (đọc status ở cycle sau) | status trên card + stepper | [Duyệt story] / sửa rồi duyệt | duyệt = signal (trace event) |
+| Produce | tools riêng (nếu chạy agent-side) | progress job + stepper | [Generate] button = CÙNG endpoint | — (deterministic) |
+| Stage stepper | — (derived) | journey stage luôn thấy | — | — |
+
 ## 4. PROGRESS LOG
 
 - **2026-08-29 22:40 — SHIPPED (T1-T6 hoàn tất, 566450c)**: Content Studio
