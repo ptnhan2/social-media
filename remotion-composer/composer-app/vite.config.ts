@@ -305,6 +305,28 @@ export default defineConfig({
           });
         });
 
+        // Pose list — NATIVE readdir (no python spawn). The python bridge
+        // (spawnSync) blocks the whole event loop ~20s per cold call, which
+        // froze every API request — including the editor's project load —
+        // whenever the editor mounted. Light ops must never hit the bridge.
+        server.middlewares.use("/api/assets/poses", (req, res) => {
+          try {
+            const url = new URL(req.url || "/", "http://composer.local");
+            const project = url.searchParams.get("project") || "isaacverse-final";
+            const posesDir = resolve(PUBLIC_DIR, project, "character", "poses");
+            const poses: { name: string; anchor: Record<string, unknown> }[] = [];
+            if (existsSync(posesDir)) {
+              for (const file of readdirSync(posesDir).filter((f) => f.toLowerCase().endsWith(".png")).sort()) {
+                const anchorPath = resolve(posesDir, file.replace(/\.png$/i, ".json"));
+                let anchor: Record<string, unknown> = {};
+                try { anchor = JSON.parse(readFileSync(anchorPath, "utf-8")); } catch { /* pose without anchor */ }
+                poses.push({ name: file.replace(/\.png$/i, ""), anchor });
+              }
+            }
+            sendJson(res, 200, { ok: true, poses });
+          } catch (error) { sendJson(res, 500, { error: error instanceof Error ? error.message : String(error) }); }
+        });
+
         // Python processing bridge: forwards {op, ...} to tools/assets/asset_api.py
         server.middlewares.use("/api/assets/bridge", (req, res) => {
           if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }

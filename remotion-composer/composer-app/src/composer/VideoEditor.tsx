@@ -10,7 +10,7 @@ import { InteractiveCanvas } from "../canvas/InteractiveCanvas";
 import { LeftRail, type LeftTab } from "./LeftRail";
 import { PropertiesPanel, type KeyframeTarget, type PropTab } from "./PropertiesPanel";
 import { TimelineQaPanel } from "./TimelineQaPanel";
-import { AgentPanel } from "../agent/AgentPanel";
+import { useAgentUi } from "../agent/AgentDrawer";
 import {
   addClipKeyframe,
   addClipToTrack,
@@ -166,6 +166,9 @@ const ExportDialog: React.FC<{
 export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; onOpenStudio?: () => void }> = ({ projectId = "isaacverse-final", onExit, onOpenStudio }) => {
   const playerRef = React.useRef<PlayerRef>(null);
   const stageWrapRef = React.useRef<HTMLDivElement>(null);
+  // app-level agent drawer context — playhead feeds through the ref below
+  // (mutation per render: no context re-render at 30fps)
+  const agentUi = useAgentUi();
   const [doc, setDoc] = React.useState<IsaacVerseEditDoc | null>(null);
   const [editorDoc, setEditorDoc] = React.useState<EditorDoc | null>(null);
   const [loadError, setLoadError] = React.useState<string | null>(null);
@@ -181,7 +184,9 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
   const [poseList, setPoseList] = React.useState<string[]>(["present", "think", "point-right", "celebrate"]);
   React.useEffect(() => {
     let cancelled = false;
-    fetch("/api/assets/bridge", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "list-poses", project: projectId }) })
+    // native readdir endpoint — the python bridge (spawnSync) freezes the
+    // whole API for ~20s per cold call, stalling the editor's own load
+    fetch(`/api/assets/poses?project=${encodeURIComponent(projectId)}`)
       .then((r) => r.json())
       .then((data) => {
         if (!cancelled && Array.isArray(data?.poses)) {
@@ -206,7 +211,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
   const localSaveGuard = React.useRef(false);
   const [leftPanelWidth, setLeftPanelWidth] = React.useState(220);
   const [rightPanelWidth, setRightPanelWidth] = React.useState(280);
-  const [rightPanelMode, setRightPanelMode] = React.useState<"properties" | "agent" | "timeline">("properties");
+  const [rightPanelMode, setRightPanelMode] = React.useState<"properties" | "timeline">("properties");
   const [timeEditing, setTimeEditing] = React.useState(false);
   const [timeInput, setTimeInput] = React.useState("");
   const [exportOpen, setExportOpen] = React.useState(false);
@@ -327,6 +332,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
   const fps = doc.fps;
   const durationSec = Math.max(documentDuration(doc), editorDoc.durationSec);
   const currentSec = currentFrame / fps;
+  agentUi.currentSecRef.current = currentSec;
   const selectedClip = selectedClipIds.length === 1 ? editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === selectedClipIds[0]) : undefined;
   const selectedTrack = selectedClip ? editorDoc.tracks.find((t) => t.id === selectedClip.trackId) : undefined;
   const canDelete = Boolean(selectedClip) && selectedTrack?.id !== "video-main";
@@ -908,12 +914,9 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
         <aside className="ve-right-panel" style={{ width: rightPanelWidth }}>
           <div className="ve-right-tabs">
             <button aria-label="Properties panel" className={`ve-right-tab ${rightPanelMode === "properties" ? "active" : ""}`} onClick={() => setRightPanelMode("properties")}>Properties</button>
-            <button aria-label="Agent panel" className={`ve-right-tab ${rightPanelMode === "agent" ? "active" : ""}`} onClick={() => setRightPanelMode("agent")}>Agent</button>
             <button aria-label="Timeline QA panel" className={`ve-right-tab ${rightPanelMode === "timeline" ? "active" : ""}`} onClick={() => setRightPanelMode("timeline")}>Timeline QA</button>
           </div>
-          {rightPanelMode === "agent" ? (
-            <AgentPanel projectId={projectId} currentSec={currentSec} />
-          ) : rightPanelMode === "timeline" ? (
+          {rightPanelMode === "timeline" ? (
             <TimelineQaPanel projectId={projectId} />
           ) : selectedClip ? (
             <PropertiesPanel

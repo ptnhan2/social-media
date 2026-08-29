@@ -172,6 +172,11 @@ const AUDIT_FN = () => {
     if (clippedByAncestor(el, cx, cy)) continue;
     const hit = document.elementFromPoint(cx, cy);
     if (hit && hit !== el && !el.contains(hit) && !hit.contains(el)) {
+      // An element covered by an OPEN OVERLAY CONTAINER (drawer/dialog/modal)
+      // is intentional design, not an overlap bug — the user closes the
+      // overlay to reach it. Only accidental coverage counts.
+      const overlay = hit.closest(".ap-drawer, dialog, [role='dialog'], [role='menu'], [aria-modal='true']");
+      if (overlay && !overlay.contains(el)) continue;
       issues.coveredInteractives.push({ text: (el.textContent || el.getAttribute("aria-label") || el.tagName).trim().slice(0, 28), coveredBy: String(hit.className || hit.tagName).slice(0, 32) });
     }
   }

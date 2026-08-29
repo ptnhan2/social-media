@@ -298,7 +298,11 @@ function KeepGate({ gate, onDecide, busy }: { gate: any; onDecide: (type: "keep"
 }
 
 // --- Main AgentPanel ---
-export function AgentPanel({ projectId, currentSec }: { projectId: string; currentSec: number }) {
+// The agent is an APP-LEVEL citizen (not an editor tab): it accompanies the
+// whole pipeline — idea → research → script → produce → critique → evolve.
+// projectId is OPTIONAL: on the project picker there is no active project;
+// project-bound quick actions disable themselves until one is opened.
+export function AgentPanel({ projectId, currentSec }: { projectId?: string; currentSec: number }) {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -389,15 +393,16 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
         <div className="ap-quick-actions">
           <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send("list style knobs")}>Knobs</button>
           <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send("read the style store")}>Read Style</button>
-          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} ${Math.max(0, currentSec - 2).toFixed(1)} to ${(currentSec + 2).toFixed(1)} draft`)}>Render ±2s</button>
-          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} 0 to 4 draft then use the critic subagent to critique the result`)}>Critique</button>
-          <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} 0 to 4 draft, critique it, then improve the weakest aspect`)}>Improve</button>
+          {projectId ? <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`generate timeline for ${projectId}`)}>Timeline</button> : null}
+          {projectId ? <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} ${Math.max(0, currentSec - 2).toFixed(1)} to ${(currentSec + 2).toFixed(1)} draft`)}>Render ±2s</button> : null}
+          {projectId ? <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} 0 to 4 draft then use the critic subagent to critique the result`)}>Critique</button> : null}
+          {projectId ? <button className="ap-qa-btn" disabled={isBusy || !!interrupt} onClick={() => send(`render ${projectId} 0 to 4 draft, critique it, then improve the weakest aspect`)}>Improve</button> : null}
         </div>
 
         {/* Context bar */}
         <div className="ap-context">
-          <span className="ap-ctx-item">📁 {projectId}</span>
-          <span className="ap-ctx-item">⏱ {currentSec.toFixed(1)}s</span>
+          <span className="ap-ctx-item">{projectId ? `📁 ${projectId}` : "📁 no project"}</span>
+          {projectId ? <span className="ap-ctx-item">⏱ {currentSec.toFixed(1)}s</span> : null}
           <span className={`ap-ctx-status ${isBusy ? "busy" : interrupt ? "waiting" : "idle"}`}>
             {isBusy ? "working" : interrupt ? "approval" : "idle"}
           </span>
@@ -419,7 +424,7 @@ export function AgentPanel({ projectId, currentSec }: { projectId: string; curre
           {messages.length === 0 && subagentList.length === 0 && (
             <div className="ap-msg ap-msg-agent">
               <div className="ap-msg-content">
-                <strong>Agent ready.</strong> Ask me to render, critique, or change style knobs.
+                <strong>Agent ready.</strong> Ask me to research, plan a video, generate timelines, render, critique, or change style knobs.
               </div>
             </div>
           )}
