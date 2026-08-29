@@ -1421,6 +1421,9 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
   background: #0b0e14; border-left: 1px solid #1f2937;
   box-shadow: -8px 0 24px rgba(0, 0, 0, .5);
 }
+/* AgentPanel stays mounted for the app's lifetime (no useStream churn) —
+   closed = display:none, purely a CSS toggle. */
+.ap-drawer-closed { display: none; }
 .ap-drawer-header {
   display: flex; align-items: center; gap: 8px; padding: 10px 14px;
   border-bottom: 1px solid #1f2937; flex-shrink: 0; color: #fff; font-size: 13px;

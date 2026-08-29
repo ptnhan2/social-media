@@ -11,10 +11,22 @@ import { AgentPanel } from "./AgentPanel";
  * start talking on the project picker (research/script stage), keep the
  * thread while reviewing the timeline, continue in the asset studio.
  *
- * Context: routes feed the provider (project, view); the editor feeds the
- * playhead through a MUTABLE REF (a context value per frame would re-render
- * the whole drawer at 30fps — the ref is polled at 500ms while open).
+ * Lifecycle rules (learned from the toggle-stall bug, 2026-08-29):
+ * 1. AgentPanel is mounted ONCE for the app's lifetime — open/close only
+ *    toggles a CSS class. Unmount/remount per toggle churned the
+ *    useStream connection (mount -> abort -> mount...) and lost input /
+ *    scroll state.
+ * 2. The FAB hides while the drawer is open — the drawer (z-index above
+ *    the FAB) covered it, so "click FAB to close" silently clicked the
+ *    drawer body instead. Closing is the header ✕ (standard drawer UX).
+ * 3. The editor playhead flows through the MODULE-LEVEL singleton ref
+ *    below (NOT through context): a context value would re-render every
+ *    consumer — including the 1000-line VideoEditor — on every toggle.
+ *    The drawer polls the ref at 2Hz while open.
  */
+
+/** Editor playhead — written by VideoEditor every render (plain mutation). */
+export const agentPlayheadRef: { current: number } = { current: 0 };
 
 export type AgentView = "picker" | "editor" | "studio";
 
@@ -26,8 +38,6 @@ export type AgentUiContextValue = {
   setProjectId: (projectId?: string) => void;
   view: AgentView;
   setView: (view: AgentView) => void;
-  /** Editor playhead — written by VideoEditor every render (ref mutation, no re-render). */
-  currentSecRef: React.MutableRefObject<number>;
 };
 
 const AgentUiContext = React.createContext<AgentUiContextValue | null>(null);
@@ -42,26 +52,25 @@ export const AgentProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [open, setOpen] = React.useState(false);
   const [projectId, setProjectId] = React.useState<string | undefined>(undefined);
   const [view, setView] = React.useState<AgentView>("picker");
-  const currentSecRef = React.useRef(0);
   const value = React.useMemo<AgentUiContextValue>(
-    () => ({ open, setOpen, toggle: () => setOpen((v) => !v), projectId, setProjectId, view, setView, currentSecRef }),
+    () => ({ open, setOpen, toggle: () => setOpen((v) => !v), projectId, setProjectId, view, setView }),
     [open, projectId, view],
   );
   return <AgentUiContext.Provider value={value}>{children}</AgentUiContext.Provider>;
 };
 
 export const AgentDrawer: React.FC = () => {
-  const { open, setOpen, projectId, view, currentSecRef } = useAgentUi();
+  const { open, setOpen, projectId, view } = useAgentUi();
   const [currentSec, setCurrentSec] = React.useState(0);
 
-  // Poll the editor playhead ref while the drawer is open — cheap (2Hz) and
+  // Poll the playhead ref while the drawer is open — cheap (2Hz) and
   // decoupled from the editor's 30fps render loop.
   React.useEffect(() => {
     if (!open) return;
-    setCurrentSec(currentSecRef.current);
-    const timer = window.setInterval(() => setCurrentSec(currentSecRef.current), 500);
+    setCurrentSec(agentPlayheadRef.current);
+    const timer = window.setInterval(() => setCurrentSec(agentPlayheadRef.current), 500);
     return () => window.clearInterval(timer);
-  }, [open, currentSecRef]);
+  }, [open]);
 
   // Escape closes the drawer (typing focus returns to the page).
   React.useEffect(() => {
@@ -73,25 +82,25 @@ export const AgentDrawer: React.FC = () => {
 
   return (
     <>
-      <button
-        type="button"
-        className="ap-fab"
-        aria-label={open ? "Close agent drawer" : "Open agent drawer"}
-        title="Agent — đồng hành toàn pipeline (idea → research → script → produce → critique)"
-        onClick={() => setOpen(!open)}
-      >{open ? "✕" : "🤖"}</button>
-      {open ? (
-        <aside className="ap-drawer" aria-label="Agent drawer">
-          <div className="ap-drawer-header">
-            <strong>Agent</strong>
-            <small>{view === "editor" ? (projectId ?? "editor") : view === "studio" ? `studio · ${projectId ?? ""}` : "no project"}</small>
-            <button type="button" aria-label="Close agent drawer" className="ap-drawer-close" onClick={() => setOpen(false)}>✕</button>
-          </div>
-          <div className="ap-drawer-body">
-            <AgentPanel projectId={projectId} currentSec={currentSec} />
-          </div>
-        </aside>
+      {!open ? (
+        <button
+          type="button"
+          className="ap-fab"
+          aria-label="Open agent drawer"
+          title="Agent — đồng hành toàn pipeline (idea → research → script → produce → critique)"
+          onClick={() => setOpen(true)}
+        >🤖</button>
       ) : null}
+      <aside className={`ap-drawer ${open ? "" : "ap-drawer-closed"}`} aria-label="Agent drawer" aria-hidden={!open}>
+        <div className="ap-drawer-header">
+          <strong>Agent</strong>
+          <small>{view === "editor" ? (projectId ?? "editor") : view === "studio" ? `studio · ${projectId ?? ""}` : "no project"}</small>
+          <button type="button" aria-label="Close agent drawer" className="ap-drawer-close" onClick={() => setOpen(false)}>✕</button>
+        </div>
+        <div className="ap-drawer-body">
+          <AgentPanel projectId={projectId} currentSec={currentSec} />
+        </div>
+      </aside>
     </>
   );
 };

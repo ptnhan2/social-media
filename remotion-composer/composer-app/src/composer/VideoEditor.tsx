@@ -10,7 +10,7 @@ import { InteractiveCanvas } from "../canvas/InteractiveCanvas";
 import { LeftRail, type LeftTab } from "./LeftRail";
 import { PropertiesPanel, type KeyframeTarget, type PropTab } from "./PropertiesPanel";
 import { TimelineQaPanel } from "./TimelineQaPanel";
-import { useAgentUi } from "../agent/AgentDrawer";
+import { agentPlayheadRef } from "../agent/AgentDrawer";
 import {
   addClipKeyframe,
   addClipToTrack,
@@ -166,9 +166,6 @@ const ExportDialog: React.FC<{
 export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; onOpenStudio?: () => void }> = ({ projectId = "isaacverse-final", onExit, onOpenStudio }) => {
   const playerRef = React.useRef<PlayerRef>(null);
   const stageWrapRef = React.useRef<HTMLDivElement>(null);
-  // app-level agent drawer context — playhead feeds through the ref below
-  // (mutation per render: no context re-render at 30fps)
-  const agentUi = useAgentUi();
   const [doc, setDoc] = React.useState<IsaacVerseEditDoc | null>(null);
   const [editorDoc, setEditorDoc] = React.useState<EditorDoc | null>(null);
   const [loadError, setLoadError] = React.useState<string | null>(null);
@@ -332,7 +329,7 @@ export const VideoEditor: React.FC<{ projectId?: string; onExit?: () => void; on
   const fps = doc.fps;
   const durationSec = Math.max(documentDuration(doc), editorDoc.durationSec);
   const currentSec = currentFrame / fps;
-  agentUi.currentSecRef.current = currentSec;
+  agentPlayheadRef.current = currentSec;
   const selectedClip = selectedClipIds.length === 1 ? editorDoc.tracks.flatMap((t) => t.clips).find((c) => c.id === selectedClipIds[0]) : undefined;
   const selectedTrack = selectedClip ? editorDoc.tracks.find((t) => t.id === selectedClip.trackId) : undefined;
   const canDelete = Boolean(selectedClip) && selectedTrack?.id !== "video-main";
