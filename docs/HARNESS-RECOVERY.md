@@ -1,22 +1,43 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-29 03:20 (sau overnight autonomous session). Master list
-> công việc: `docs/TODO-NEXT.md` — đọc file ĐÓ trước, file này chỉ là bối
-> cảnh + gotchas vận hành.
+> Updated 2026-08-29 14:20 (sau session ban ngày 29/08). Master list công
+> việc: `docs/TODO-NEXT.md` — đọc file ĐÓ trước, file này chỉ là bối cảnh +
+> gotchas vận hành.
 
 ---
 
 ## 🌅 VIỆC TIẾP THEO (session mới)
 
-1. **Đọc `docs/TODO-NEXT.md`** — overnight 29/08 shipped M1b+M2+M3+zero-manual
-   E2E (verify 8/8). Queue: A (produce loop mở rộng: A1 agent viết edit-doc,
-   A2 auto-register compositions, A3 critique loop trên mini-loop = learning
-   thật)
-2. **Morning checklist**: `reviews/2026-08-29-morning-checklist.html` —
-   mọi mục đã pre-verified (rule #18), user chỉ việc check.
-   (HTML review user-facing giờ nằm ở `reviews/` — xem AGENTS.md Document
-   Hygiene; `reviews/archive/` chứa cái cũ)
-3. Deep-links sẵn: Composer mini-loop-test + ai-dialogue-therapy (đã mở tab)
+1. **Đọc `docs/TODO-NEXT.md`** — queue A: A1 (agent TỰ viết edit-doc từ
+   script — mắt xích đầu tiên còn thiếu của produce flow) → A3 (critique →
+   fix → KEEP = vòng learning THẬT). A2 auto-register ĐÃ XONG (f2eeb25)
+2. **Chain thesis**: produce ✅ PROVEN (mini-loop zero-manual) · critique 🟡
+   tool có, chưa thành vòng · fix 🟡 tool proven riêng lẻ · learn 🟡 signals
+   đang chảy (feedback.jsonl hooks)
+3. Checklist user-facing: `reviews/2026-08-29-morning-checklist.html` (KHÔNG
+   còn ở docs/ — convention reviews/ từ 7f882e6)
+
+## 🌙 SESSION BAN NGÀY 29/08 (09:19–14:17)
+
+- **reviews/ convention** (user yêu cầu): HTML user-facing chỉ ở `reviews/`
+  (YYYY-MM-DD-<kebab>.html), cũ → `reviews/archive/`; rule trong AGENTS.md
+  Document Hygiene + handoff step 3
+- **Agent lên cấp app** (user chỉ ra agent bị nhốt trong editor trong khi
+  vai trò là idea→research→script→produce→critique): AgentDrawer mount trên
+  router, FAB 🤖 mọi trang, conversation sống qua navigation, context tự
+  truyền; tab Agent trong editor đã tháo; picker→editor chuyển client-side
+- **Bugs bắt được qua probe**: (1) drawer toggle stall — FAB bị drawer đè,
+  close không bao giờ ăn → FAB ẩn khi mở + AgentPanel always-mounted (CSS
+  toggle) + playhead qua module ref; (2) editor kẹt loading ~20s — python
+  bridge spawnSync đóng băng API → /api/assets/poses native (19.3s→35ms);
+  (3) click-outside đóng drawer (backdrop)
+- **Ops RCA**: langgraph boot 80s (memory cũ "PYTHONUTF8 crash" SAI — logging
+  errors là noise); server "degraded" trưa nay thực ra là MÁY 100% CPU/90%
+  RAM (League client + Edge) — đo hệ thống trước khi đổ lỗi code
+- CI xanh toàn bộ: 522afa6 (drawer) · b6917e7 (toggle fix) · 19cef2a
+  (backdrop) · 7f882e6 (reviews/)
+
+---
 
 ## 🌙 TÓM TẮT OVERNIGHT 29/08 (00:45–05:45, user ngủ, full autonomy)
 
@@ -49,8 +70,19 @@ target, frames thật (37-42KB không phải black).
 3. **Project mới cần đăng ký composition trong Root.tsx tay** (TODO A2)
 4. **Sync refresh providerText nếu machine-set** — user edits (qua UI/metadata
    op) mới override-marked; restore demo state phải đi đường USER
-5. **LangGraph Windows cần PYTHONUTF8=1**; agent server :2025 (AgentPanel đã
-   fix từ :2024)
+5. **LangGraph boot ~80s** — graph import chậm, probe phải đợi 90-120s trước
+   khi kết luận chết; các `UnicodeEncodeError` emoji trong log là NOISE không
+   fatal (memory cũ "PYTHONUTF8=1 crash" là chẩn đoán sai). Agent server :2025
+   (AgentPanel đã fix từ :2024)
+5b. **spawnSync python bridge ĐÓNG BĂNG toàn bộ vite API** trong lúc chạy
+   (list-poses từng 19.3s → editor kẹt loading). Op nhẹ (readdir) phải làm
+   native JS endpoint — `/api/assets/poses`; không route qua bridge
+5c. **Drawer conversation sống chỉ khi navigation là CLIENT-SIDE** —
+   `window.location.assign` = full reload = mất thread; picker đã sửa dùng
+   `navigate()`
+5d. **Máy quá tải ≠ code bug**: đo CPU/RAM toàn hệ thống trước khi đi tìm
+   lỗi trong code (trưa 29/08: 100% CPU + 90% RAM vì League client + Edge —
+   mọi request chậm 50-100×, probe dưới load vẫn 100% chức năng)
 6. **PowerShell 5.1**: không ternary; JSON args có quote nhúng bị mangle →
    truyền JSON qua file
 7. **Vite publicDir** = remotion-composer/public — media fetch từ đó;
