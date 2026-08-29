@@ -91,9 +91,11 @@
   </div>
 
   <div class="item">
-    <label><input type="checkbox"><span>6. Agent panel — thử tool generate_timeline qua chat</span><span class="human">chưa chạy live turn đêm nay</span></label>
+    <label><input type="checkbox"><span>6. Agent drawer — chat với agent ở MỌI trang (không còn nhốt trong editor)</span><span class="verified">probe verified persistence</span></label>
     <div class="how">
-      Right panel → tab <b>Agent</b> (đã fix URL :2025 → khớp server). Gõ: <code>generate timeline for ai-dialogue-therapy</code> — agent sẽ gọi tool mới, trả checklist PASS/FAIL/WARN. Tool đã test trực tiếp (unit-level) nhưng chưa chạy full LLM turn.
+      Nút <b>🤖</b> nổi góc phải-dưới ở mọi trang (picker/editor/studio). Mở trên project picker (context "no project") → gõ gì đó (chưa gửi) → click 1 project → drawer vẫn mở, context tự chuyển sang project, text còn nguyên (conversation sống qua navigation).<br>
+      Trong editor: tab Agent bên phải đã bị THÁO — thay bằng drawer này (1 agent, 1 cuộc trò chuyện, mọi surface). Quick action mới: <b>Timeline</b> (gọi tool generate_timeline).<br>
+      <b>Fix kèm theo</b>: editor từng treo ~20s lúc load do python bridge (spawnSync) chặn API — list-poses giờ là endpoint native (19.300ms → 35ms).
     </div>
   </div>
 

@@ -6,8 +6,14 @@
 
 ---
 
-## Trạng thái lõi (đêm 29/08)
+## Trạng thái lõi (đêm 29/08 + sáng 29/08)
 
+- **AGENT LÊN CẤP APP (sáng 29/08, 522afa6)**: AgentDrawer mount trên router —
+  nút 🤖 nổi ở mọi trang, conversation sống qua navigation (client-side),
+  context (project/view/playhead qua ref) tự truyền; tab Agent trong editor
+  bị THÁO; picker→editor chuyển sang client-side nav (full reload giết
+  conversation); /api/assets/poses native (python bridge spawnSync từng đóng
+  băng API ~20s → poses 35ms); ui-audit exempt covered-by-open-overlay
 - **M1b SHIPPED**: take switcher (play + đổi take 1 click, voice_take.py +
   /api/project/audio-take), QC badge đỏ trên timeline (qc.pass=false),
   breathPadSec live retime + voice-first ripple (applyVoiceTake grows beat +
@@ -25,11 +31,10 @@
   13.7s 3-beat sản xuất hoàn toàn bằng loop: scaffold-voice-plan --regen →
   generate-timeline (5/5 PASS, 0 warnings) → render-window draft. Artifact:
   renders/mini-loop-draft.mp4 (919KB, audio -16.5dB đúng target, frames thật)
+- **reviews/ convention (7f882e6)**: HTML user-facing chỉ ở reviews/ (YYYY-
+  MM-DD-<kebab>.html), cũ → reviews/archive/; docs/ chỉ .md active
 - 194/194 vitest + 5/5 node + 34/34 harness + 13/13 e2e + typecheck + ui-audit
   0 critical (multi-viewport + state navigation) + verify agent 8/8 PASS
-- Fixes lẻ: keyframe-arm contrast 2.4→3:1 (WCAG 1.4.11, audit state mới bắt
-  được), AgentPanel URL :2024→:2025 (server thật), ui-audit --click hỗ trợ
-  `label#N` (nth element)
 
 ## QUEUE TIẾP THEO
 
