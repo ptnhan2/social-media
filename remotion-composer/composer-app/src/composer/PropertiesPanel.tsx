@@ -1,7 +1,6 @@
-import React from "react";
+﻿import React from "react";
 import type { EditorClip } from "../../../shared/isaacverse/editor";
 import { ANIM_PRESETS, EFFECT_PRESETS, FILTER_PRESETS, SPEED_PRESETS, TRANSITION_PRESETS } from "../../../shared/isaacverse/clipStyle";
-import { validateProviderTextEdit } from "../../../shared/isaacverse/voiceClip";
 
 export type PropTab = "transform" | "text" | "audio" | "image" | "animation" | "speed" | "color" | "transition" | "character" | "info";
 
@@ -50,187 +49,26 @@ const num = (value: unknown, fallback: number) => (typeof value === "number" && 
  *  M1b adds the take switcher (stage F — play/switch existing takes) and
  *  breathPadSec retiming (stage H — ripple downstream beats when the
  *  narration overflows its slot). */
-type VoiceTake = {
-  id?: string;
-  path?: string;
-  score?: number;
-  pass?: boolean;
-  error?: string;
-  metrics?: { durationSec?: number; peakDb?: number; lufs?: number | null; wer?: number | null; tailSilenceSec?: number };
-};
-
+/** Voice clip timing section (CONTENT-STUDIO-SPEC — the DỰNG layer). The
+ *  voice-BIRTH panel (script text, direction, settings, takes, regen, QC)
+ *  moved to the Content Studio (/project) — the editor keeps only what
+ *  needs timeline neighbors: breathPad retime + (below) gain/fades/mute. */
 const VoiceSection: React.FC<{
   clip: EditorClip;
-  projectId?: string;
-  onCommit: (changes: Record<string, unknown>) => void;
   onRetimeVoice?: (breathPadSec: number) => void;
-}> = ({ clip, projectId, onCommit, onRetimeVoice }) => {
+}> = ({ clip, onRetimeVoice }) => {
   const md = clip.metadata as Record<string, unknown>;
-  const sentenceText = typeof md.sentenceText === "string" ? md.sentenceText : typeof md.transcript === "string" ? md.transcript : "";
-  const providerText = typeof md.providerText === "string" ? md.providerText : sentenceText;
-  const voiceSettings = (md.voiceSettings as Record<string, unknown>) ?? {};
-  const qc = md.qc as { pass?: boolean; checks?: { id: string; label: string; pass: boolean; value: string; threshold: string }[]; durationSec?: number; expectedSec?: number; wer?: number | null } | undefined;
-  const takes = Array.isArray(md.takes) ? (md.takes as VoiceTake[]) : [];
-  const takeId = typeof md.takeId === "string" ? md.takeId : "";
   const breathPadSec = typeof md.breathPadSec === "number" ? md.breathPadSec : 0.3;
-  const [regenState, setRegenState] = React.useState<"idle" | "running" | "done" | "error">("idle");
-  const [regenMessage, setRegenMessage] = React.useState("");
-  const [takeState, setTakeState] = React.useState<"idle" | "running" | "done" | "error">("idle");
-  const [takeMessage, setTakeMessage] = React.useState("");
-  const [playingTakeId, setPlayingTakeId] = React.useState<string | null>(null);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
-  const [draftSentence, setDraftSentence] = React.useState(sentenceText);
-  const [draftProvider, setDraftProvider] = React.useState(providerText);
-  React.useEffect(() => { setDraftSentence(sentenceText); setDraftProvider(providerText); }, [sentenceText, providerText]);
-  const wordCheck = validateProviderTextEdit(sentenceText, draftProvider);
-
-  // Shared job poller for regen + take-switch endpoints (same job contract:
-  // POST -> {jobId} -> poll /status until done|error).
-  const pollJob = async (startUrl: string, body: Record<string, unknown>, statusUrl: (jobId: string) => string) => {
-    const start = await fetch(startUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((r) => r.json());
-    if (!start.jobId) throw new Error(start.error || "job failed to start");
-    for (let i = 0; i < 90; i += 1) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      const status = await fetch(statusUrl(start.jobId)).then((r) => r.json());
-      if (status.status === "done") return status;
-      if (status.status === "error") throw new Error(status.message || "job error");
-    }
-    throw new Error("job timed out");
-  };
-
-  const regen = async () => {
-    if (!projectId) { setRegenState("error"); setRegenMessage("projectId unavailable"); return; }
-    setRegenState("running"); setRegenMessage("");
-    try {
-      // Send the CURRENT field value explicitly — the server-side clip
-      // metadata may be stale (the onBlur commit is async and races this
-      // POST). The user must hear exactly the text on screen.
-      const status = await pollJob(
-        "/api/project/audio-regen",
-        { projectId, clipId: clip.id, takes: 2, providerText: draftProvider.trim() || undefined },
-        (jobId) => `/api/project/audio-regen/status?jobId=${encodeURIComponent(jobId)}`,
-      );
-      setRegenState("done");
-      setRegenMessage(`Regenerated — QC ${status.result?.qc?.pass === true ? "PASS" : "FAIL"}, ${status.result?.stemDurationSec ?? "?"}s`);
-    } catch (error) {
-      setRegenState("error");
-      setRegenMessage(error instanceof Error ? error.message : String(error));
-    }
-  };
-
-  const switchTake = async (nextTakeId: string) => {
-    if (!projectId) { setTakeState("error"); setTakeMessage("projectId unavailable"); return; }
-    setTakeState("running"); setTakeMessage("");
-    try {
-      const status = await pollJob(
-        "/api/project/audio-take",
-        { projectId, clipId: clip.id, takeId: nextTakeId },
-        (jobId) => `/api/project/audio-take/status?jobId=${encodeURIComponent(jobId)}`,
-      );
-      setTakeState("done");
-      setTakeMessage(`Take switched — QC ${status.result?.qc?.pass === true ? "PASS" : "FAIL"}, ${status.result?.stemDurationSec ?? "?"}s`);
-    } catch (error) {
-      setTakeState("error");
-      setTakeMessage(error instanceof Error ? error.message : String(error));
-    }
-  };
-
-  const playTake = (take: VoiceTake) => {
-    if (!projectId || !take.id || !take.path) return;
-    const filename = String(take.path).split(/[\\/]/).pop();
-    if (!filename) return;
-    audioRef.current?.pause();
-    if (playingTakeId === take.id) { setPlayingTakeId(null); return; }
-    const audio = new Audio(`/${projectId}/voice/takes/${encodeURIComponent(filename)}`);
-    audio.onended = () => setPlayingTakeId(null);
-    audio.onerror = () => setPlayingTakeId(null);
-    audioRef.current = audio;
-    setPlayingTakeId(take.id);
-    void audio.play().catch(() => setPlayingTakeId(null));
-  };
-
   return (
     <div className="ve-prop-voice">
-      <label className="ve-prop-field ve-prop-field-wide">
-        <span>Sentence text</span>
-        <textarea rows={2} value={draftSentence} onChange={(e) => setDraftSentence(e.target.value)}
-          onBlur={() => { if (draftSentence !== sentenceText) onCommit({ sentenceText: draftSentence }); }} />
+      <label className="ve-prop-field">
+        <span>Breath pad (s)</span>
+        <input type="number" step="0.05" min="0" max="2" value={breathPadSec}
+          onChange={(e) => { const next = Number(e.target.value); if (Number.isFinite(next)) onRetimeVoice?.(Math.max(0, next)); }}
+          disabled={!onRetimeVoice}
+          title="Silence appended after the narration — the clip retimes and downstream beats ripple" />
       </label>
-      <label className="ve-prop-field ve-prop-field-wide">
-        <span>Provider text (chuỗi gửi TTS)</span>
-        <textarea rows={3} value={draftProvider} onChange={(e) => setDraftProvider(e.target.value)}
-          onBlur={() => { if (draftProvider !== providerText) onCommit({ providerText: draftProvider }); }} />
-      </label>
-      {!wordCheck.ok ? (
-        <p className="ve-hint">⚠ Từ đã đổi ({wordCheck.changedWords.slice(0, 6).join(", ")}) — tags/CAPS thoải mái, nhưng đổi từ sẽ lệch script.</p>
-      ) : (
-        <p className="ve-hint">v3: nhấn từ = VIẾT HOA · pause = "…" hoặc [pause] · cảm xúc = [excited] [whisper] [sarcastic]... · không đổi từ.</p>
-      )}
-      <div className="ve-prop-grid">
-        <label className="ve-prop-field ve-prop-field-wide">
-          <span>Voice ID</span>
-          <input type="text" value={String(voiceSettings.voiceId ?? "")} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, voiceId: e.target.value } })} />
-        </label>
-        <label className="ve-prop-field">
-          <span>Stability</span>
-          <input type="number" step="0.05" min="0" max="1" value={num(voiceSettings.stability, 0.35)} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, stability: Number(e.target.value) } })} />
-        </label>
-        <label className="ve-prop-field">
-          <span>Style</span>
-          <input type="number" step="0.05" min="0" max="1" value={num(voiceSettings.style, 0.35)} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, style: Number(e.target.value) } })} />
-        </label>
-        <label className="ve-prop-field">
-          <span>Speed</span>
-          <input type="number" step="0.05" min="0.7" max="1.2" value={num(voiceSettings.speed, 1)} onChange={(e) => onCommit({ voiceSettings: { ...voiceSettings, speed: Number(e.target.value) } })} />
-        </label>
-        <label className="ve-prop-field">
-          <span>Breath pad (s)</span>
-          <input type="number" step="0.05" min="0" max="2" value={breathPadSec}
-            onChange={(e) => { const next = Number(e.target.value); if (Number.isFinite(next)) onRetimeVoice?.(Math.max(0, next)); }}
-            disabled={!onRetimeVoice}
-            title="Silence appended after the narration — the clip retimes and downstream beats ripple" />
-        </label>
-      </div>
-      {takes.length ? (
-        <div className="ve-prop-field ve-prop-field-wide ve-take-list">
-          <span>Takes ({takes.length}) — chọn take cho clip này</span>
-          {takes.map((take) => {
-            const id = typeof take.id === "string" ? take.id : "";
-            const isCurrent = id === takeId && id !== "";
-            const duration = typeof take.metrics?.durationSec === "number" ? `${take.metrics.durationSec.toFixed(2)}s` : "—";
-            return (
-              <div key={id || take.path} className={`ve-take-row ${isCurrent ? "current" : ""}`}>
-                <span className="ve-take-name" title={id}>{id ? id.split("-take-").pop() : "?"}</span>
-                <span className={`ve-take-badge ${take.pass ? "pass" : "fail"}`} title={take.error || (take.pass ? "QC pass" : "QC fail")}>{take.error ? "ERR" : take.pass ? "✓" : "✗"}</span>
-                <span className="ve-take-duration">{duration}</span>
-                <button type="button" className="ve-take-play" aria-label={`Play take ${id.split("-take-").pop()}`}
-                  disabled={!projectId || !take.path}
-                  onClick={() => playTake(take)}>{playingTakeId === id ? "■" : "▶"}</button>
-                <button type="button" className="ve-take-select" disabled={isCurrent || takeState === "running"}
-                  onClick={() => void switchTake(id)}>{isCurrent ? "Đang dùng" : "Dùng"}</button>
-              </div>
-            );
-          })}
-          {takeMessage ? <p className="ve-hint">{takeMessage}</p> : null}
-        </div>
-      ) : null}
-      {qc ? (
-        <div className="ve-prop-field ve-prop-field-wide">
-          <span>QC {qc.pass === true ? <b style={{ color: "#2dd4a0" }}>PASS</b> : <b style={{ color: "#ff6b6b" }}>FAIL</b>}</span>
-          <ul style={{ margin: "4px 0 0", paddingLeft: 16, fontSize: 12, color: "#b9bfcc" }}>
-            {(qc.checks ?? []).map((check) => (
-              <li key={check.id} style={{ color: check.pass ? "#b9bfcc" : "#ff9b9b" }}>
-                {check.pass ? "✓" : "✗"} {check.label}: {check.value} ({check.threshold})
-              </li>
-            ))}
-            {qc.wer !== null && qc.wer !== undefined ? <li>WER: {(qc.wer * 100).toFixed(1)}%</li> : null}
-          </ul>
-        </div>
-      ) : null}
-      <button type="button" className="ve-prop-btn" disabled={regenState === "running"} onClick={() => void regen()}>
-        {regenState === "running" ? "Regenerating…" : "Regenerate voice (2 takes + QC)"}
-      </button>
-      {regenMessage ? <p className="ve-hint">{regenMessage}</p> : null}
+      <p className="ve-hint">🎛️ Voice direction / takes / regen đã dời sang <b>Content Studio</b> — mở 📄 Project trên header.</p>
     </div>
   );
 };
@@ -582,7 +420,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       {activeTab === "audio" ? (
         <div className="ve-prop-section">
-          {clip.kind === "voice" ? <VoiceSection clip={clip} projectId={projectId} onCommit={onCommit} onRetimeVoice={onRetimeVoice} /> : null}
+          {clip.kind === "voice" ? <VoiceSection clip={clip} onRetimeVoice={onRetimeVoice} /> : null}
           <label className="ve-prop-field">
             <span>Gain dB</span>
             <input type="number" step="0.5" value={num(md.gainDb, 0)} onChange={(e) => onCommit({ gainDb: Number(e.target.value) })} />
