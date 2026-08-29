@@ -12,8 +12,10 @@
    E2E (verify 8/8). Queue: A (produce loop mở rộng: A1 agent viết edit-doc,
    A2 auto-register compositions, A3 critique loop trên mini-loop = learning
    thật)
-2. **Morning checklist**: `docs/MORNING-CHECKLIST-29-08-OVERNIGHT.html` —
-   mọi mục đã pre-verified (rule #18), user chỉ việc check
+2. **Morning checklist**: `reviews/2026-08-29-morning-checklist.html` —
+   mọi mục đã pre-verified (rule #18), user chỉ việc check.
+   (HTML review user-facing giờ nằm ở `reviews/` — xem AGENTS.md Document
+   Hygiene; `reviews/archive/` chứa cái cũ)
 3. Deep-links sẵn: Composer mini-loop-test + ai-dialogue-therapy (đã mở tab)
 
 ## 🌙 TÓM TẮT OVERNIGHT 29/08 (00:45–05:45, user ngủ, full autonomy)

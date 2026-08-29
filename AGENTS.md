@@ -143,7 +143,8 @@ Agent ↔ user = Vietnamese. Scripts, code-facing schemas and video content = En
 ## Document Hygiene
 
 - `docs/` chỉ giữ file .md **còn active** (đang dùng, được tham chiếu).
-- File cũ / superseded → `docs/archive/`.
+- **`reviews/` là nơi DUY NHẤT cho HTML user-facing** (checklist handoff, spec review pages, reports trình bày cho user duyệt): đặt ngay `reviews/` nếu còn active, superseded/cũ → `reviews/archive/`. Tên file `YYYY-MM-DD-<ten-kebab>.html`. CẤM tạo HTML review trong `docs/`, workspace root, hay bất kỳ chỗ khác.
+- File cũ / superseded → `docs/archive/` (md) / `reviews/archive/` (html).
 - Khi một doc bị superseded: **di chuyển vào archive ngay** + thêm 1 dòng note ở đầu file chỉ thay thế bằng gì.
 - Không tạo file md mới nếu file cũ sửa được. Không viết nhiều file cùng mục đích.
 - **Thứ tự đọc cho session mới**: `docs/HARNESS-RECOVERY.md` → `docs/PATTERN-LEARNING-AND-EVAL-SPEC.md` → `docs/TODO-NEXT.md`.

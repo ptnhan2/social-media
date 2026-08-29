@@ -20,7 +20,7 @@ Verdict nào FAIL/PARTIAL → fix xong rồi mới sang bước 2. Không handof
 
 ## 3. Checklist pre-verified (rule #18)
 
-Tạo/updates checklist HTML (hygiene #1 — human-facing = HTML) chỉ chứa những gì ĐÃ verify ở bước 1, mỗi mục kèm:
+Tạo/update checklist HTML tại **`reviews/YYYY-MM-DD-<ten-kebab>.html`** — `reviews/` là nơi DUY NHẤT cho HTML user-facing (AGENTS.md Document Hygiene); cũ/superseded → `reviews/archive/`. CẤM đặt trong `docs/` hay root. Checklist chỉ chứa những gì ĐÃ verify ở bước 1, mỗi mục kèm:
 - Cách user tự nhìn thấy (click đâu, nghe gì — chỉ mô tả, không giao việc)
 - Evidence agent đã verify (số liệu, screenshots paths, HTTP status)
 - Mục L5 perception (nghe giọng, taste) ghi rõ "human gate — quyết của bạn"

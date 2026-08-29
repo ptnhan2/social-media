@@ -1,7 +1,7 @@
 # Production Pipeline Spec — nửa "produce" của harness (Phase 2)
 
 > **Status: DRAFT v3 — 2026-08-27 (23:56). Chờ user duyệt.**
-> **Review UI: `docs/PIPELINE-PRODUCTION-SPEC-REVIEW.html`** — checklist D1-D8.
+> **Review UI: `reviews/2026-08-27-pipeline-production-spec-review.html`** — checklist D1-D8.
 > v3: **timeline-centric parity** (user correction #3): KHÔNG panel mới — voice
 > segments = audio clips trên timeline có sẵn, direction/QC/takes/provenance =
 > clip metadata, edit surface = PropertiesPanel Audio tab (đã có), regen =
