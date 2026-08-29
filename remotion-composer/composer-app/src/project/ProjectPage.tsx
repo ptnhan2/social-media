@@ -5,13 +5,13 @@ import type { VideoDoc } from "../../../shared/isaacverse/schema";
 import { useAgentUi } from "../agent/AgentDrawer";
 
 /**
- * CONTENT STUDIO (CONTENT-STUDIO-SPEC — script-centric writing surface).
- * Design: the SCRIPT is the document — beats read as paragraphs (serif,
- * borderless, focus-only affordances). Voice birth controls tuck behind a
- * per-beat toggle; approval is a quiet status strip; the candidate video
- * opens ON DEMAND (never embedded at the script stage — watching lives in
- * the editor). Structure over boxes: whitespace + a left gutter, not nested
- * borders.
+ * CONTENT STUDIO (CONTENT-STUDIO-SPEC — script-centric working surface).
+ * VISUAL LANGUAGE: the app's own (user directive 30/08 — "làm như video
+ * editor + asset studio"): #0d1520 cards with ve-panel-style headers,
+ * ve-prop-fields, ve-buttons. One intentional deviation: the script text
+ * reads as a document (serif) — inside a proper field frame. Structure per
+ * spec: script hero, voice birth on demand, NO embedded video (candidate on
+ * demand in the approval card), prompt + history as their own cards.
  */
 
 type VoiceTake = { id?: string; path?: string; pass?: boolean; durationSec?: number };
@@ -31,20 +31,19 @@ const pollJob = async (startUrl: string, body: Record<string, unknown>, statusUr
   throw new Error("job timed out");
 };
 
-/** Quiet quote-style prompt — the recipe that generated this script. */
-const PromptQuote: React.FC<{ instruction?: string }> = ({ instruction }) => {
+/** The recipe that generated this script — its own card, quote-styled text. */
+const PromptCard: React.FC<{ instruction?: string }> = ({ instruction }) => {
   const agent = useAgentUi();
   if (!instruction) return null;
   return (
-    <div className="pp-prompt">
+    <section className="pp-card">
+      <div className="pp-card-title">Prompt <small>— công thức sinh script này</small></div>
       <p className="pp-prompt-text">“{instruction}”</p>
-      <button type="button" className="pp-quiet-btn" onClick={() => { agent.setDraftPrompt(instruction); agent.setOpen(true); }}>↻ chạy lại prompt này</button>
-    </div>
+      <button type="button" className="ve-btn" onClick={() => { agent.setDraftPrompt(instruction); agent.setOpen(true); }}>↻ Chạy lại prompt này</button>
+    </section>
   );
 };
 
-/** ONE beat reads as a document block: script paragraph first, voice birth
- *  controls behind a toggle. The left gutter carries beat number + QC dot. */
 const BeatEditor: React.FC<{
   index: number;
   beat: EditorClip;
@@ -137,14 +136,14 @@ const BeatEditor: React.FC<{
     } finally { setBusy("none"); }
   };
 
-  const playStem = (src: string) => {
+  const playSrc = (src: string, id: string) => {
     audioRef.current?.pause();
-    if (playing === "stem") { setPlaying(null); return; }
+    if (playing === id) { setPlaying(null); return; }
     const audio = new Audio(`/${src}`);
     audio.onended = () => setPlaying(null);
     audio.onerror = () => setPlaying(null);
     audioRef.current = audio;
-    setPlaying("stem");
+    setPlaying(id);
     void audio.play().catch(() => setPlaying(null));
   };
 
@@ -152,52 +151,50 @@ const BeatEditor: React.FC<{
     if (!projectId || !take.id || !take.path) return;
     const filename = String(take.path).split(/[\\/]/).pop();
     if (!filename) return;
-    audioRef.current?.pause();
-    if (playing === take.id) { setPlaying(null); return; }
-    const audio = new Audio(`/${projectId}/voice/takes/${encodeURIComponent(filename)}`);
-    audio.onended = () => setPlaying(null);
-    audio.onerror = () => setPlaying(null);
-    audioRef.current = audio;
-    setPlaying(take.id);
-    void audio.play().catch(() => setPlaying(null));
+    playSrc(`/${projectId}/voice/takes/${filename}`, take.id);
   };
 
   return (
-    <article className={`pp-beat ${qc?.pass ? "" : "pp-beat-warn"}`}>
-      <div className="pp-beat-gutter">
+    <article className="pp-beat">
+      <div className="pp-beat-side">
         <span className="pp-beat-num">{index + 1}</span>
         <span className={`pp-dot ${voice?.metadata.qc ? (qc?.pass ? "ok" : "bad") : "none"}`} title={voice?.metadata.qc ? (qc?.pass ? "QC pass" : "QC fail") : "chưa có VO"} />
       </div>
-      <div className="pp-beat-body">
-        <textarea className="pp-script" rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`} disabled={!voice}
-          onChange={(e) => setDraftScript(e.target.value)}
-          onBlur={() => { if (draftScript !== sentenceText && draftScript.trim()) void save({ sentenceText: draftScript.trim() }, "Script"); }} />
-        <div className="pp-beat-meta">
-          <span className="pp-chip">{treatment}</span>
-          <span className="pp-soft">{(beat.range.endSec - beat.range.startSec).toFixed(1)}s</span>
+      <div className="pp-beat-main">
+        <label className="ve-prop-field pp-script-field">
+          <span>Script — beat {index + 1} · {treatment} · {(beat.range.endSec - beat.range.startSec).toFixed(1)}s</span>
+          <textarea className="pp-script" rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`} disabled={!voice}
+            onChange={(e) => setDraftScript(e.target.value)}
+            onBlur={() => { if (draftScript !== sentenceText && draftScript.trim()) void save({ sentenceText: draftScript.trim() }, "Script"); }} />
+        </label>
+        <div className="pp-beat-tools">
           {typeof voice?.metadata.src === "string" && voice.metadata.src ? (
-            <button type="button" className="pp-quiet-btn" aria-label={`Play voice beat ${index + 1}`} onClick={() => playStem(voice.metadata.src as string)}>▶</button>
+            <button type="button" className="pp-tool" aria-label={`Play voice beat ${index + 1}`} onClick={() => playSrc(voice.metadata.src as string, `stem-${index}`)}>{playing === `stem-${index}` ? "■ stop" : "▶ nghe"}</button>
           ) : null}
-          <button type="button" className="pp-quiet-btn pp-voice-toggle" aria-expanded={voiceOpen} onClick={() => setVoiceOpen(!voiceOpen)}>🎙 voice</button>
+          <button type="button" className="pp-tool" aria-expanded={voiceOpen} onClick={() => setVoiceOpen(!voiceOpen)}>🎙 voice{takes.length ? ` · take ${takeId.split("-take-").pop() ?? ""}` : ""}</button>
         </div>
 
         {voiceOpen ? (
           <div className="pp-voicedetails">
-            <label className="pp-vfield">
-              <span>direction</span>
+            <label className="ve-prop-field ve-prop-field-wide">
+              <span>Direction (providerText — tags/CAPS)</span>
               <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`} disabled={!voice}
                 onChange={(e) => setDraftDirection(e.target.value)}
                 onBlur={() => { if (draftDirection !== providerText) void save({ providerText: draftDirection }, "Direction"); }} />
             </label>
-            <div className="pp-vsettings">
-              <label><span>voice</span><input type="text" value={draftSettings.voiceId} aria-label={`Voice ID beat ${index + 1}`} disabled={!voice}
-                onChange={(e) => setDraftSettings((s) => ({ ...s, voiceId: e.target.value }))} onBlur={() => commitSetting("voiceId")} /></label>
-              <label><span>model</span><input type="text" value={draftSettings.modelId} aria-label={`Model beat ${index + 1}`} disabled={!voice}
-                onChange={(e) => setDraftSettings((s) => ({ ...s, modelId: e.target.value }))} onBlur={() => commitSetting("modelId")} /></label>
-              <label><span>speed</span><input type="number" step="0.05" min="0.7" max="1.2" value={draftSettings.speed} aria-label={`Speed beat ${index + 1}`} disabled={!voice}
-                onChange={(e) => setDraftSettings((s) => ({ ...s, speed: e.target.value }))} onBlur={() => commitSetting("speed")} /></label>
-              <label><span>stability</span><input type="number" step="0.05" min="0" max="1" value={draftSettings.stability} aria-label={`Stability beat ${index + 1}`} disabled={!voice}
-                onChange={(e) => setDraftSettings((s) => ({ ...s, stability: e.target.value }))} onBlur={() => commitSetting("stability")} /></label>
+            <div className="ve-prop-section">
+              <label className="ve-prop-field"><span>Voice</span>
+                <input type="text" value={draftSettings.voiceId} aria-label={`Voice ID beat ${index + 1}`} disabled={!voice}
+                  onChange={(e) => setDraftSettings((s) => ({ ...s, voiceId: e.target.value }))} onBlur={() => commitSetting("voiceId")} /></label>
+              <label className="ve-prop-field"><span>Model</span>
+                <input type="text" value={draftSettings.modelId} aria-label={`Model beat ${index + 1}`} disabled={!voice}
+                  onChange={(e) => setDraftSettings((s) => ({ ...s, modelId: e.target.value }))} onBlur={() => commitSetting("modelId")} /></label>
+              <label className="ve-prop-field"><span>Speed</span>
+                <input type="number" step="0.05" min="0.7" max="1.2" value={draftSettings.speed} aria-label={`Speed beat ${index + 1}`} disabled={!voice}
+                  onChange={(e) => setDraftSettings((s) => ({ ...s, speed: e.target.value }))} onBlur={() => commitSetting("speed")} /></label>
+              <label className="ve-prop-field"><span>Stability</span>
+                <input type="number" step="0.05" min="0" max="1" value={draftSettings.stability} aria-label={`Stability beat ${index + 1}`} disabled={!voice}
+                  onChange={(e) => setDraftSettings((s) => ({ ...s, stability: e.target.value }))} onBlur={() => commitSetting("stability")} /></label>
             </div>
             {takes.length ? (
               <div className="pp-takes">
@@ -206,9 +203,9 @@ const BeatEditor: React.FC<{
                   const isCurrent = id === takeId;
                   return (
                     <span key={id} className={`pp-take ${isCurrent ? "current" : ""}`}>
-                      <button type="button" className="pp-quiet-btn" aria-label={`Play take ${id.split("-take-").pop()}`} disabled={!take.path} onClick={() => playTake(take)}>{playing === id ? "■" : "▶"}</button>
-                      <span className="pp-soft">{id.split("-take-").pop()}{typeof take.durationSec === "number" ? ` ${take.durationSec.toFixed(1)}s` : ""}</span>
-                      <button type="button" className="pp-quiet-btn" disabled={isCurrent || busy !== "none"} onClick={() => void switchTake(id)}>{isCurrent ? "đang dùng" : "dùng"}</button>
+                      <button type="button" className="pp-tool" aria-label={`Play take ${id.split("-take-").pop()}`} disabled={!take.path} onClick={() => playTake(take)}>{playing === id ? "■" : "▶"}</button>
+                      <small>{id.split("-take-").pop()}{typeof take.durationSec === "number" ? ` ${take.durationSec.toFixed(1)}s` : ""}{take.pass ? " ✓" : " ✗"}</small>
+                      <button type="button" className="pp-tool" disabled={isCurrent || busy !== "none"} onClick={() => void switchTake(id)}>{isCurrent ? "đang dùng" : "dùng"}</button>
                     </span>
                   );
                 })}
@@ -220,23 +217,21 @@ const BeatEditor: React.FC<{
                 <ul>{(qc.checks ?? []).map((check) => <li key={check.id}>{check.pass ? "✓" : "✗"} {check.label}: {check.value} ({check.threshold})</li>)}</ul>
               </details>
             ) : null}
-            <div className="pp-voiceactions">
-              <button type="button" className="pp-btn pp-regen" disabled={busy !== "none" || !voice} onClick={() => void regen()}>
-                {busy === "regen" ? "Regenerating…" : "Regen voice (2 takes + QC)"}
+            <div>
+              <button type="button" className="ve-btn" disabled={busy !== "none" || !voice} onClick={() => void regen()}>
+                {busy === "regen" ? "Regenerating…" : "🎙 Regen voice (2 takes + QC)"}
               </button>
             </div>
           </div>
         ) : null}
-        {message ? <p className="pp-msg">{message}</p> : null}
-        {!voice ? <p className="pp-msg">Chưa có voice clip — chạy generate trước.</p> : null}
+        {message ? <p className="ve-hint">{message}</p> : null}
+        {!voice ? <p className="ve-hint">Chưa có voice clip — chạy generate trước.</p> : null}
       </div>
     </article>
   );
 };
 
-/** Approval = quiet status strip. The candidate video opens ON DEMAND in an
- *  overlay — never embedded at the script stage (user directive 29/08). */
-const ApprovalStrip: React.FC<{ projectId: string; approval: ProjectApproval | null; candidateUrl?: string; onChanged: () => void }> = ({ projectId, approval, candidateUrl, onChanged }) => {
+const ApprovalCard: React.FC<{ projectId: string; approval: ProjectApproval | null; candidateUrl?: string; onChanged: () => void }> = ({ projectId, approval, candidateUrl, onChanged }) => {
   const [note, setNote] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -247,41 +242,43 @@ const ApprovalStrip: React.FC<{ projectId: string; approval: ProjectApproval | n
     try {
       await setApproval(projectId, next, note);
       setNote(""); setShowCandidate(false);
-      setMessage(next === "approved" ? "Đã KEEP ✓" : "Đã ghi REDO + note ✓");
+      setMessage(next === "approved" ? "Đã KEEP ✓ — agent đọc được ở chu kỳ kế tiếp." : "Đã ghi REDO + note ✓");
       onChanged();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     } finally { setBusy(false); }
   };
   return (
-    <section className="pp-approval">
-      <div className="pp-approval-row">
-        <span className={`pp-dot ${status === "approved" ? "ok" : status === "pending" ? "warn" : status === "changes_requested" ? "bad" : "none"}`} />
-        <span className="pp-approval-label">
-          {status === "approved" ? "Approved" : status === "pending" ? "Chờ bạn duyệt" : status === "changes_requested" ? "Changes requested" : "Chưa cần duyệt"}
-          {approval?.summary ? <small> — {approval.summary}</small> : null}
-        </span>
-        {status === "pending" && candidateUrl ? (
-          <button type="button" className="pp-quiet-btn" onClick={() => setShowCandidate(!showCandidate)}>{showCandidate ? "ẩn candidate" : "▶ xem candidate"}</button>
-        ) : null}
-        <a className="pp-quiet-btn" href="#pp-history" onClick={() => void 0}>history ↗</a>
+    <section className="pp-card">
+      <div className="pp-card-title">Approval
+        <small className={status === "approved" ? "pp-ok-text" : status === "pending" ? "pp-warn-text" : status === "changes_requested" ? "pp-bad-text" : ""}>
+          {status === "approved" ? "APPROVED" : status === "pending" ? "PENDING REVIEW" : status === "changes_requested" ? "CHANGES REQUESTED" : "chưa cần duyệt"}
+        </small>
       </div>
-      {status === "pending" && showCandidate && candidateUrl ? (
-        <video controls src={candidateUrl} className="pp-candidate" title="Candidate draft" />
+      {approval?.summary ? <p className="ve-hint">{approval.summary}</p> : null}
+      {status === "pending" && candidateUrl ? (
+        <div>
+          <button type="button" className="pp-tool" onClick={() => setShowCandidate(!showCandidate)}>{showCandidate ? "ẩn candidate" : "▶ xem candidate"}</button>
+          {showCandidate ? <video controls src={candidateUrl} className="pp-candidate" title="Candidate draft" /> : null}
+        </div>
       ) : null}
       {status === "pending" ? (
         <div className="pp-approval-form">
-          <input className="pp-note-input" aria-label="Approval note" placeholder="note cho agent (bắt buộc khi Redo)" value={note} onChange={(e) => setNote(e.target.value)} />
-          <button type="button" className="pp-btn pp-keep" disabled={busy} onClick={() => void submit("approved")}>Keep</button>
-          <button type="button" className="pp-btn pp-redo" disabled={busy || !note.trim()} title="Redo yêu cầu note" onClick={() => void submit("changes_requested")}>Redo</button>
+          <input className="ve-prop-field pp-note-input" aria-label="Approval note" placeholder="note cho agent (bắt buộc khi Redo)" value={note} onChange={(e) => setNote(e.target.value)} />
+          <button type="button" className="ve-btn pp-keep" disabled={busy} onClick={() => void submit("approved")}>✅ Keep</button>
+          <button type="button" className="ve-btn pp-redo" disabled={busy || !note.trim()} title="Redo yêu cầu note" onClick={() => void submit("changes_requested")}>↻ Redo</button>
         </div>
-      ) : null}
-      {message ? <p className="pp-msg">{message}</p> : null}
+      ) : (
+        <p className="ve-hint">{status === "none" ? "Agent sẽ chuyển sang PENDING khi có bản cần duyệt." : "Agent đọc status này ở chu kỳ kế tiếp."}</p>
+      )}
+      {message ? <p className="ve-hint">{message}</p> : null}
     </section>
   );
 };
 
-const HistoryFootnote: React.FC<{ projectId: string }> = ({ projectId }) => {
+type TraceEvent = { ts: string; stage: "plan" | "voice" | "timeline" | "render" | "approval" | "note"; title: string; data?: Record<string, unknown> };
+
+const HistoryCard: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [events, setEvents] = React.useState<TraceEvent[] | null>(null);
   const [open, setOpen] = React.useState<number | null>(null);
   React.useEffect(() => {
@@ -292,8 +289,8 @@ const HistoryFootnote: React.FC<{ projectId: string }> = ({ projectId }) => {
   }, [projectId]);
   if (events === null || events.length === 0) return null;
   return (
-    <details className="pp-footnote" id="pp-history">
-      <summary>history — {events.length} bước</summary>
+    <details className="pp-card pp-collapse">
+      <summary className="pp-card-title">History <small>— {events.length} bước</small></summary>
       <ol className="pp-trace">
         {events.map((event, index) => (
           <li key={index} className={`pp-trace-item stage-${event.stage}`}>
@@ -310,16 +307,16 @@ const HistoryFootnote: React.FC<{ projectId: string }> = ({ projectId }) => {
   );
 };
 
-type TraceEvent = { ts: string; stage: "plan" | "voice" | "timeline" | "render" | "approval" | "note"; title: string; data?: Record<string, unknown> };
-
 export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void }> = ({ projectId, onOpenEditor }) => {
   const [snapshot, setSnapshot] = React.useState<Awaited<ReturnType<typeof loadProject>> | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [renders, setRenders] = React.useState<ProjectRender[]>([]);
+  const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
 
   const refresh = React.useCallback(() => {
     loadProject(projectId).then(setSnapshot).catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
     fetchRenders(projectId).then((payload) => setRenders(payload.renders)).catch(() => setRenders([]));
+    fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
   }, [projectId]);
   React.useEffect(() => { refresh(); }, [refresh]);
 
@@ -334,32 +331,34 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
     .slice()
     .sort((a, b) => a.range.startSec - b.range.startSec);
   const latest = renders[0];
-  const approvalPath = `${projectId}`;
 
   return (
     <div className="pp-page">
-      <header className="pp-header">
-        <h1>{videoDoc?.idea ? videoDoc.idea : projectId}</h1>
-        <div className="pp-header-meta">
-          <span className="pp-soft">{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</span>
-          <button type="button" className="pp-quiet-btn" onClick={onOpenEditor}>mở editor ↗</button>
+      <header className="pp-appbar">
+        <div>
+          <h1>{videoDoc?.idea ? videoDoc.idea : projectId}</h1>
+          <small>{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</small>
         </div>
+        <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗</button>
       </header>
 
-      <PromptQuote instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
+      <PromptCard instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
 
-      <main className="pp-scriptlist">
-        {beatClips.map((beat, index) => {
-          const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
-          return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
-        })}
-      </main>
+      <section className="pp-card">
+        <div className="pp-card-title">Script <small>— {beatClips.length} beats, sửa trực tiếp</small></div>
+        <div className="pp-beats">
+          {beatClips.map((beat, index) => {
+            const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
+            return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
+          })}
+        </div>
+      </section>
 
-      <ApprovalStripFetcher projectId={approvalPath} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
+      <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
 
       {videoDoc ? (
-        <details className="pp-footnote">
-          <summary>story</summary>
+        <details className="pp-card pp-collapse">
+          <summary className="pp-card-title">Story</summary>
           <div className="pp-story">
             <p><b>Idea.</b> {videoDoc.idea}</p>
             <p><b>Surface problem.</b> {videoDoc.surfaceProblem}</p>
@@ -369,15 +368,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
         </details>
       ) : null}
 
-      <HistoryFootnote projectId={projectId} />
+      <HistoryCard projectId={projectId} />
     </div>
   );
-};
-
-const ApprovalStripFetcher: React.FC<{ projectId: string; candidateUrl?: string; onChanged: () => void }> = ({ projectId, candidateUrl, onChanged }) => {
-  const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
-  React.useEffect(() => {
-    fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
-  }, [projectId, onChanged]);
-  return <ApprovalStrip projectId={projectId} approval={approval} candidateUrl={candidateUrl} onChanged={() => { onChanged(); fetchApproval(projectId).then(setApprovalState).catch(() => undefined); }} />;
 };

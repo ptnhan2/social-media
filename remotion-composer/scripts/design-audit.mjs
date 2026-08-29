@@ -22,23 +22,18 @@ const block = css.slice(start, end);
 
 const failures = [];
 
-// ---- 1. palette: allowed raw colors = declared tokens (+ scrollbar bg exception) ----
-const tokenBlock = block.match(/:root|\.pp-page \{[\s\S]*?\}/)?.[0] ?? "";
-const declared = [...new Set([...block.matchAll(/--pp-[\w-]+:\s*(#[0-9a-fA-F]{6})/g)].map((m) => m[1].toLowerCase()))];
-const allowedRgba = [/rgba\(122, 162, 247/, /rgba\(158, 206, 106/, /rgba\(247, 118, 142/, /^#000$/];
-for (const match of block.matchAll(/(#[0-9a-fA-F]{3,8})\b/g)) {
-  const color = match[1].toLowerCase();
-  if (color.startsWith("#") && !declared.includes(color) && !allowedRgba.length) failures.push(`palette: raw color ${color} not a token`);
-}
-const rawHexes = [...new Set([...block.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((m) => m[0].toLowerCase()))];
+// ---- 1. palette discipline: allowed = the APP palette (v4 reuses the app's
+// visual language per user directive — the studio must not invent colors the
+// editor/asset-studio don't already use) + a few app-standard extras ----
+const APP_PALETTE = new Set([
+  "#0b0e14", "#0d1520", "#111827", "#1f2937", "#2b3647", "#12203a",
+  "#d8dee9", "#b9bfcc", "#8d96a3", "#7c8797", "#6b7280", "#4b5563",
+  "#2563eb", "#60a5fa", "#2dd4a0", "#f5b544", "#ff6b6b", "#ff9b9b",
+  "#14532d", "#0d1f18", "#2a1520", "#000", "#fff", "#ffffff",
+]);
+const rawHexes = [...new Set([...block.matchAll(/#[0-9a-fA-F]{3,6}\b/g)].map((m) => m[0].toLowerCase()))];
 for (const hex of rawHexes) {
-  if (!declared.includes(hex) && hex !== "#000000" && hex !== "#232a3d") {
-    failures.push(`palette: ${hex} is not a declared --pp token (declared: ${declared.join(", ")})`);
-  }
-}
-// one-off 3-digit hexes (scrollbar) are exempt — declared explicitly
-for (const hex of [...new Set([...block.matchAll(/#[0-9a-fA-F]{3}\b(?!\"|\))/g)].map((m) => m[0].toLowerCase()))]) {
-  if (hex !== "#000") failures.push(`palette: 3-digit hex ${hex} outside tokens`);
+  if (!APP_PALETTE.has(hex)) failures.push(`palette: ${hex} is not in the app palette — the studio must reuse the editor/asset-studio language`);
 }
 
 // ---- 2. type scale ----
@@ -62,12 +57,12 @@ for (const match of block.matchAll(/(?:padding|margin|gap)[^:;]*:\s*([^;]+);/g))
 }
 
 // ---- report ----
-const summary = { declaredTokens: declared.length, rawHexCount: rawHexes.length, failures: failures.length };
+const summary = { appPaletteColors: APP_PALETTE.size, usedColors: rawHexes.length, failures: failures.length };
 console.log(JSON.stringify(summary, null, 2));
 if (failures.length) {
   for (const failure of [...new Set(failures)].slice(0, 20)) console.log("  ✗ " + failure);
   process.exit(1);
 }
-console.log("  ✓ palette: all colors are tokens");
+console.log("  ✓ palette: all colors from the app language");
 console.log("  ✓ type scale: all sizes on scale");
 console.log("  ✓ spacing: all values multiple of 4");

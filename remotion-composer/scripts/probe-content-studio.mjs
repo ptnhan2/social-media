@@ -20,11 +20,11 @@ const settingsDefault = await page.locator(".pp-vsettings").count();
 const videosDefault = await page.locator("video").count();
 
 // expand beat 1 voice details
-await page.locator(".pp-voice-toggle").first().click();
+await page.locator(".pp-tool[aria-expanded]").first().click();
 await page.waitForTimeout(500);
-const settingsAfterExpand = await page.locator(".pp-vsettings").count();
-const directionTa = await page.locator(".pp-vfield textarea").count();
-const regenBtn = await page.locator(".pp-regen").count();
+const settingsAfterExpand = await page.locator(".ve-prop-section .ve-prop-field input").count();
+const directionTa = await page.locator(".pp-voicedetails .ve-prop-field textarea").count();
+const regenBtn = await page.locator("text=Regen voice").count();
 const takeChips = await page.locator(".pp-take").count();
 
 // script save flow (real endpoint)
