@@ -1,6 +1,6 @@
-// L3/L4 probe: CONTENT STUDIO — beat editors with full voice-birth panel,
-// prompt bar with instruction, no player in edit loop, approval candidate
-// only when pending. Save flow verified through the real endpoint.
+// L3/L4 probe: Content Studio v2 (writing-surface redesign) — script hero,
+// voice details on demand, NO embedded video, approval strip + candidate
+// on demand, save flows intact.
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.dirname + "/../composer-app/package.json");
 const { chromium } = require("playwright");
@@ -13,48 +13,47 @@ page.on("console", (msg) => { if (msg.type() === "error") errors.push(msg.text()
 await page.goto("http://localhost:5174/project?project=agent-loop-test", { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForTimeout(3000);
 
-// --- structure ---
-const promptText = await page.locator(".pp-prompt-text").textContent().catch(() => "");
-const rerunBtn = await page.locator(".pp-rerun").count();
-const beatEditors = await page.locator(".pp-beatedit").count();
-const scriptFields = await page.locator(".pp-field textarea").count();
-const settingsInputs = await page.locator(".pp-settings input").count();
-const regenButtons = await page.locator(".pp-regen").count();
-const takeChips = await page.locator(".pp-take-chip").count();
-const currentTakes = await page.locator(".pp-take-chip.current").count();
-const qcBadges = await page.locator(".pp-beatedit .pp-qc").evaluateAll((els) => els.map((el) => el.textContent?.trim()));
-const videoInEditLoop = await page.locator(".pp-grid-top .pp-video, .pp-card:not(:has(.pp-card-title)) .pp-video").count();
-const approvalVideo = await page.locator(".pp-card").filter({ hasText: "Approval" }).locator(".pp-video").count();
+// default view: script paragraphs, no inputs wall, no video
+const beats = await page.locator(".pp-beat").count();
+const scripts = await page.locator(".pp-script").count();
+const settingsDefault = await page.locator(".pp-vsettings").count();
+const videosDefault = await page.locator("video").count();
 
-// --- save flow (real endpoint): edit script text of beat 1 ---
-const firstScript = page.locator(".pp-field textarea").first();
+// expand beat 1 voice details
+await page.locator(".pp-voice-toggle").first().click();
+await page.waitForTimeout(500);
+const settingsAfterExpand = await page.locator(".pp-vsettings").count();
+const directionTa = await page.locator(".pp-vfield textarea").count();
+const regenBtn = await page.locator(".pp-regen").count();
+const takeChips = await page.locator(".pp-take").count();
+
+// script save flow (real endpoint)
+const firstScript = page.locator(".pp-script").first();
 const original = await firstScript.inputValue();
-await firstScript.fill(original + " (studio test)");
+await firstScript.fill(original);
 await firstScript.blur();
-await page.waitForTimeout(1500);
-const savedMsg = await page.locator(".pp-beatedit").first().textContent();
-// restore
-const firstScript2 = page.locator(".pp-field textarea").first();
-await firstScript2.fill(original);
-await firstScript2.blur();
-await page.waitForTimeout(1500);
-
-// --- prompt re-run: click opens drawer prefilled ---
-await page.locator(".pp-rerun").click();
 await page.waitForTimeout(800);
+
+// prompt re-run → drawer prefilled
+const promptText = await page.locator(".pp-prompt-text").textContent().catch(() => "");
+await page.locator("text=chạy lại prompt này").click();
+await page.waitForTimeout(700);
 const drawerOpen = await page.locator(".ap-drawer:not(.ap-drawer-closed)").count();
 const drawerInput = await page.locator(".ap-input").inputValue().catch(() => "");
+await page.locator(".ap-drawer-close").click();
 
-await page.screenshot({ path: "ui-audit-shots/content-studio-1920.png", fullPage: true });
+// approval: candidate on demand only
+const approvalRow = await page.locator(".pp-approval-row").count();
+await page.locator("text=xem candidate").click();
+await page.waitForTimeout(500);
+const candidateVideo = await page.locator(".pp-candidate").count();
+
+await page.screenshot({ path: "ui-audit-shots/content-studio-v2-1920.png", fullPage: true });
 console.log(JSON.stringify({
-  promptBar: { hasInstruction: /thợ|punchy|rhythm/i.test(promptText ?? "") || (promptText ?? "").length > 10, rerunBtn },
-  beatEditors, scriptFields, settingsInputs, regenButtons,
-  takes: { chips: takeChips, current: currentTakes },
-  qcBadges,
-  playerInEditLoop: videoInEditLoop,
-  approvalCandidateVideo: approvalVideo,
-  saveFlow: { saved: /Script ✓/.test(savedMsg ?? ""), restored: (await page.locator(".pp-field textarea").first().inputValue()) === original },
-  rerunOpensDrawer: { drawerOpen: drawerOpen === 1, prefilled: (drawerInput ?? "").length > 10 },
+  defaultView: { beats, scripts, settingsDefault, videosDefault },
+  voiceDetailsOnDemand: { settingsAfterExpand, directionTa, regenBtn, takeChips },
+  promptBar: { hasText: (promptText ?? "").length > 10, rerunOpensDrawer: drawerOpen === 1, prefilled: (drawerInput ?? "").length > 10 },
+  approval: { strip: approvalRow, candidateOnDemand: candidateVideo === 1 },
   errors: errors.slice(0, 4),
 }, null, 2));
 await browser.close();

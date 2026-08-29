@@ -5,28 +5,20 @@ import type { VideoDoc } from "../../../shared/isaacverse/schema";
 import { useAgentUi } from "../agent/AgentDrawer";
 
 /**
- * CONTENT STUDIO (CONTENT-STUDIO-SPEC — script-centric working surface).
- * The script is the LIVING DOCUMENT: agent and human edit the same beats in
- * place. Each beat carries its full voice-birth panel (direction, settings,
- * takes, QC, regen) — DỜI từ editor Audio tab. The prompt layer shows the
- * instruction that generated this script version + re-run affordance.
- * NO video player in the edit loop — watch in the editor (live player);
- * the approval card shows the candidate mp4 only when a verdict is pending.
+ * CONTENT STUDIO (CONTENT-STUDIO-SPEC — script-centric writing surface).
+ * Design: the SCRIPT is the document — beats read as paragraphs (serif,
+ * borderless, focus-only affordances). Voice birth controls tuck behind a
+ * per-beat toggle; approval is a quiet status strip; the candidate video
+ * opens ON DEMAND (never embedded at the script stage — watching lives in
+ * the editor). Structure over boxes: whitespace + a left gutter, not nested
+ * borders.
  */
-
-type TraceEvent = {
-  ts: string;
-  stage: "plan" | "voice" | "timeline" | "render" | "approval" | "note";
-  title: string;
-  data?: Record<string, unknown>;
-};
 
 type VoiceTake = { id?: string; path?: string; pass?: boolean; durationSec?: number };
 type VoiceSettingsShape = { voiceId?: string; modelId?: string; stability?: number; style?: number; speed?: number };
 
 const num = (value: unknown, fallback: number) => (typeof value === "number" && Number.isFinite(value) ? value : fallback);
 
-/** Shared job poller for the regen + take-switch endpoints. */
 const pollJob = async (startUrl: string, body: Record<string, unknown>, statusUrl: (jobId: string) => string) => {
   const start = await fetch(startUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((r) => r.json());
   if (!start.jobId) throw new Error(start.error || "job failed to start");
@@ -39,25 +31,20 @@ const pollJob = async (startUrl: string, body: Record<string, unknown>, statusUr
   throw new Error("job timed out");
 };
 
-/** Prompt bar — the instruction that generated the current script version,
- *  with re-run: prefill the agent drawer (user tweaks the prompt, sends). */
-const PromptBar: React.FC<{ instruction?: string }> = ({ instruction }) => {
+/** Quiet quote-style prompt — the recipe that generated this script. */
+const PromptQuote: React.FC<{ instruction?: string }> = ({ instruction }) => {
   const agent = useAgentUi();
-  if (!instruction) {
-    return <div className="pp-card pp-promptbar"><span className="pp-prompt-label">📌 Prompt</span><span className="pp-hint">Script này chưa mang prompt sinh ra nó (agent hãy truyền <code>instruction</code> khi gọi write_edit_doc).</span></div>;
-  }
+  if (!instruction) return null;
   return (
-    <div className="pp-card pp-promptbar">
-      <span className="pp-prompt-label">📌 Prompt sinh script này</span>
-      <p className="pp-prompt-text">{instruction}</p>
-      <button type="button" className="pp-btn pp-rerun" title="Sửa prompt này rồi cho agent chạy lại" onClick={() => { agent.setDraftPrompt(instruction); agent.setOpen(true); }}>↻ Chạy lại prompt này</button>
+    <div className="pp-prompt">
+      <p className="pp-prompt-text">“{instruction}”</p>
+      <button type="button" className="pp-quiet-btn" onClick={() => { agent.setDraftPrompt(instruction); agent.setOpen(true); }}>↻ chạy lại prompt này</button>
     </div>
   );
 };
 
-/** ONE beat = script line + its voice birth panel. Everything editable in
- *  place through the sanctioned write-paths (clip-metadata / audio-regen /
- *  audio-take) — the same endpoints the agent uses. */
+/** ONE beat reads as a document block: script paragraph first, voice birth
+ *  controls behind a toggle. The left gutter carries beat number + QC dot. */
 const BeatEditor: React.FC<{
   index: number;
   beat: EditorClip;
@@ -76,9 +63,6 @@ const BeatEditor: React.FC<{
 
   const [draftScript, setDraftScript] = React.useState(sentenceText);
   const [draftDirection, setDraftDirection] = React.useState(providerText);
-  // settings use LOCAL DRAFTS + onBlur commit (cold-diff review MAJOR #1:
-  // committing per keystroke fought the async refresh and could persist
-  // intermediate numeric states like Number("0.") -> 0)
   const [draftSettings, setDraftSettings] = React.useState({
     voiceId: String(settings.voiceId ?? ""),
     modelId: String(settings.modelId ?? "eleven_v3"),
@@ -96,27 +80,14 @@ const BeatEditor: React.FC<{
     });
   }, [sentenceText, providerText, settings.voiceId, settings.modelId, settings.speed, settings.stability]);
 
-  const commitSetting = (key: "voiceId" | "modelId" | "speed" | "stability") => {
-    const raw = draftSettings[key];
-    if (key === "speed" || key === "stability") {
-      const parsed = Number(raw);
-      if (!Number.isFinite(parsed)) { setMessage(`${key}: giá trị số không hợp lệ`); return; }
-      if (Math.abs(parsed - num(settings[key], key === "speed" ? 1 : 0.35)) < 0.0001) return;
-      void save({ voiceSettings: { ...settings, [key]: parsed } }, key);
-    } else {
-      if (raw === String(settings[key] ?? (key === "modelId" ? "eleven_v3" : ""))) return;
-      void save({ voiceSettings: { ...settings, [key]: raw } }, key);
-    }
-  };
-
   const [message, setMessage] = React.useState("");
   const [busy, setBusy] = React.useState<"none" | "saving" | "regen" | `take:${string}`>("none");
+  const [voiceOpen, setVoiceOpen] = React.useState(false);
   const [playing, setPlaying] = React.useState<string | null>(null);
-  const [qcOpen, setQcOpen] = React.useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   const save = async (changes: ClipMetadataChanges, label: string) => {
-    if (!voice) { setMessage("Beat này chưa có voice clip — chạy generate trước."); return; }
+    if (!voice) { setMessage("Beat chưa có voice — chạy generate trước."); return; }
     setBusy("saving"); setMessage("");
     try {
       await setClipMetadata(projectId, voice.id, changes);
@@ -127,13 +98,23 @@ const BeatEditor: React.FC<{
     } finally { setBusy("none"); }
   };
 
+  const commitSetting = (key: "voiceId" | "modelId" | "speed" | "stability") => {
+    const raw = draftSettings[key];
+    if (key === "speed" || key === "stability") {
+      const parsed = Number(raw);
+      if (!Number.isFinite(parsed)) { setMessage(`${key}: số không hợp lệ`); return; }
+      if (Math.abs(parsed - num(settings[key], key === "speed" ? 1 : 0.35)) < 0.0001) return;
+      void save({ voiceSettings: { ...settings, [key]: parsed } }, key);
+    } else {
+      if (raw === String(settings[key] ?? (key === "modelId" ? "eleven_v3" : ""))) return;
+      void save({ voiceSettings: { ...settings, [key]: raw } }, key);
+    }
+  };
+
   const regen = async () => {
     if (!projectId || !voice) return;
     setBusy("regen"); setMessage("");
     try {
-      // commit any un-committed direction FIRST (cold-diff review MINOR #3:
-      // regen must speak exactly what's on screen, and the stored
-      // providerText must match the audio it produced)
       if (draftDirection !== providerText) {
         await setClipMetadata(projectId, voice.id, { providerText: draftDirection });
       }
@@ -156,6 +137,17 @@ const BeatEditor: React.FC<{
     } finally { setBusy("none"); }
   };
 
+  const playStem = (src: string) => {
+    audioRef.current?.pause();
+    if (playing === "stem") { setPlaying(null); return; }
+    const audio = new Audio(`/${src}`);
+    audio.onended = () => setPlaying(null);
+    audio.onerror = () => setPlaying(null);
+    audioRef.current = audio;
+    setPlaying("stem");
+    void audio.play().catch(() => setPlaying(null));
+  };
+
   const playTake = (take: VoiceTake) => {
     if (!projectId || !take.id || !take.path) return;
     const filename = String(take.path).split(/[\\/]/).pop();
@@ -171,144 +163,144 @@ const BeatEditor: React.FC<{
   };
 
   return (
-    <div className="pp-beatedit">
-      <div className="pp-beat-head">
-        <span className="pp-beat-num">#{index + 1}</span>
-        <span className="pp-treatment">{treatment}</span>
-        <span className="pp-range">{beat.range.startSec.toFixed(1)}–{beat.range.endSec.toFixed(1)}s</span>
-        {qc ? <span className={`pp-qc ${qc.pass ? "pass" : "fail"}`}>{qc.pass ? "QC ✓" : "QC ✗"}</span> : <span className="pp-qc none">no VO</span>}
+    <article className={`pp-beat ${qc?.pass ? "" : "pp-beat-warn"}`}>
+      <div className="pp-beat-gutter">
+        <span className="pp-beat-num">{index + 1}</span>
+        <span className={`pp-dot ${voice?.metadata.qc ? (qc?.pass ? "ok" : "bad") : "none"}`} title={voice?.metadata.qc ? (qc?.pass ? "QC pass" : "QC fail") : "chưa có VO"} />
       </div>
-
-      <label className="pp-field">
-        <span>Script <small>(từ — sửa được)</small></span>
-        <textarea rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`} disabled={!voice}
+      <div className="pp-beat-body">
+        <textarea className="pp-script" rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`} disabled={!voice}
           onChange={(e) => setDraftScript(e.target.value)}
           onBlur={() => { if (draftScript !== sentenceText && draftScript.trim()) void save({ sentenceText: draftScript.trim() }, "Script"); }} />
-      </label>
-
-      <label className="pp-field">
-        <span>Direction <small>(providerText gửi TTS — tags/CAPS)</small></span>
-        <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`} disabled={!voice}
-          onChange={(e) => setDraftDirection(e.target.value)}
-          onBlur={() => { if (draftDirection !== providerText) void save({ providerText: draftDirection }, "Direction"); }} />
-      </label>
-
-      {!voice ? <p className="pp-hint">Beat chưa có voice clip — chạy generate (agent / scaffold) trước khi chỉnh ở đây.</p> : null}
-
-      <div className="pp-settings">
-        <label><span>voice</span><input type="text" value={draftSettings.voiceId} aria-label={`Voice ID beat ${index + 1}`} disabled={!voice}
-          onChange={(e) => setDraftSettings((s) => ({ ...s, voiceId: e.target.value }))} onBlur={() => commitSetting("voiceId")} /></label>
-        <label><span>model</span><input type="text" value={draftSettings.modelId} aria-label={`Model beat ${index + 1}`} disabled={!voice}
-          onChange={(e) => setDraftSettings((s) => ({ ...s, modelId: e.target.value }))} onBlur={() => commitSetting("modelId")} /></label>
-        <label><span>speed</span><input type="number" step="0.05" min="0.7" max="1.2" value={draftSettings.speed} aria-label={`Speed beat ${index + 1}`} disabled={!voice}
-          onChange={(e) => setDraftSettings((s) => ({ ...s, speed: e.target.value }))} onBlur={() => commitSetting("speed")} /></label>
-        <label><span>stability</span><input type="number" step="0.05" min="0" max="1" value={draftSettings.stability} aria-label={`Stability beat ${index + 1}`} disabled={!voice}
-          onChange={(e) => setDraftSettings((s) => ({ ...s, stability: e.target.value }))} onBlur={() => commitSetting("stability")} /></label>
-      </div>
-
-      <div className="pp-beat-actions">
-        <button type="button" className="pp-mini pp-regen" disabled={busy !== "none" || !voice} onClick={() => void regen()}>
-          {busy === "regen" ? "Regenerating…" : "🎙️ Regen voice (2 takes + QC)"}
-        </button>
-        {qc ? (
-          <button type="button" className="pp-mini" onClick={() => setQcOpen(!qcOpen)}>{qcOpen ? "▾ QC" : "▸ QC"}</button>
-        ) : null}
-      </div>
-
-      {qcOpen && qc ? (
-        <ul className="pp-trace-qc">
-          {(qc.checks ?? []).map((check) => <li key={check.id}>{check.pass ? "✓" : "✗"} {check.label}: {check.value} ({check.threshold})</li>)}
-          {qc.wer !== null && qc.wer !== undefined ? <li>WER: {(qc.wer * 100).toFixed(1)}%</li> : null}
-        </ul>
-      ) : null}
-
-      {takes.length ? (
-        <div className="pp-takes">
-          {takes.map((take) => {
-            const id = typeof take.id === "string" ? take.id : "";
-            const isCurrent = id === takeId;
-            return (
-              <span key={id} className={`pp-take-chip ${isCurrent ? "current" : ""}`}>
-                <button type="button" className="pp-mini" aria-label={`Play take ${id.split("-take-").pop()} beat ${index + 1}`} disabled={!take.path} onClick={() => playTake(take)}>{playing === id ? "■" : "▶"}</button>
-                <small>{id.split("-take-").pop()}{typeof take.durationSec === "number" ? ` ${take.durationSec.toFixed(1)}s` : ""}{take.pass ? " ✓" : " ✗"}</small>
-                <button type="button" className="pp-mini" disabled={isCurrent || busy !== "none"} onClick={() => void switchTake(id)}>{isCurrent ? "đang dùng" : "dùng"}</button>
-              </span>
-            );
-          })}
+        <div className="pp-beat-meta">
+          <span className="pp-chip">{treatment}</span>
+          <span className="pp-soft">{(beat.range.endSec - beat.range.startSec).toFixed(1)}s</span>
+          {typeof voice?.metadata.src === "string" && voice.metadata.src ? (
+            <button type="button" className="pp-quiet-btn" aria-label={`Play voice beat ${index + 1}`} onClick={() => playStem(voice.metadata.src as string)}>▶</button>
+          ) : null}
+          <button type="button" className="pp-quiet-btn pp-voice-toggle" aria-expanded={voiceOpen} onClick={() => setVoiceOpen(!voiceOpen)}>🎙 voice</button>
         </div>
-      ) : null}
 
-      {message ? <p className="pp-hint">{message}</p> : null}
-    </div>
+        {voiceOpen ? (
+          <div className="pp-voicedetails">
+            <label className="pp-vfield">
+              <span>direction</span>
+              <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`} disabled={!voice}
+                onChange={(e) => setDraftDirection(e.target.value)}
+                onBlur={() => { if (draftDirection !== providerText) void save({ providerText: draftDirection }, "Direction"); }} />
+            </label>
+            <div className="pp-vsettings">
+              <label><span>voice</span><input type="text" value={draftSettings.voiceId} aria-label={`Voice ID beat ${index + 1}`} disabled={!voice}
+                onChange={(e) => setDraftSettings((s) => ({ ...s, voiceId: e.target.value }))} onBlur={() => commitSetting("voiceId")} /></label>
+              <label><span>model</span><input type="text" value={draftSettings.modelId} aria-label={`Model beat ${index + 1}`} disabled={!voice}
+                onChange={(e) => setDraftSettings((s) => ({ ...s, modelId: e.target.value }))} onBlur={() => commitSetting("modelId")} /></label>
+              <label><span>speed</span><input type="number" step="0.05" min="0.7" max="1.2" value={draftSettings.speed} aria-label={`Speed beat ${index + 1}`} disabled={!voice}
+                onChange={(e) => setDraftSettings((s) => ({ ...s, speed: e.target.value }))} onBlur={() => commitSetting("speed")} /></label>
+              <label><span>stability</span><input type="number" step="0.05" min="0" max="1" value={draftSettings.stability} aria-label={`Stability beat ${index + 1}`} disabled={!voice}
+                onChange={(e) => setDraftSettings((s) => ({ ...s, stability: e.target.value }))} onBlur={() => commitSetting("stability")} /></label>
+            </div>
+            {takes.length ? (
+              <div className="pp-takes">
+                {takes.map((take) => {
+                  const id = typeof take.id === "string" ? take.id : "";
+                  const isCurrent = id === takeId;
+                  return (
+                    <span key={id} className={`pp-take ${isCurrent ? "current" : ""}`}>
+                      <button type="button" className="pp-quiet-btn" aria-label={`Play take ${id.split("-take-").pop()}`} disabled={!take.path} onClick={() => playTake(take)}>{playing === id ? "■" : "▶"}</button>
+                      <span className="pp-soft">{id.split("-take-").pop()}{typeof take.durationSec === "number" ? ` ${take.durationSec.toFixed(1)}s` : ""}</span>
+                      <button type="button" className="pp-quiet-btn" disabled={isCurrent || busy !== "none"} onClick={() => void switchTake(id)}>{isCurrent ? "đang dùng" : "dùng"}</button>
+                    </span>
+                  );
+                })}
+              </div>
+            ) : null}
+            {qc ? (
+              <details className="pp-qcdetails">
+                <summary>QC {qc.pass ? "✓" : "✗"}</summary>
+                <ul>{(qc.checks ?? []).map((check) => <li key={check.id}>{check.pass ? "✓" : "✗"} {check.label}: {check.value} ({check.threshold})</li>)}</ul>
+              </details>
+            ) : null}
+            <div className="pp-voiceactions">
+              <button type="button" className="pp-btn pp-regen" disabled={busy !== "none" || !voice} onClick={() => void regen()}>
+                {busy === "regen" ? "Regenerating…" : "Regen voice (2 takes + QC)"}
+              </button>
+            </div>
+          </div>
+        ) : null}
+        {message ? <p className="pp-msg">{message}</p> : null}
+        {!voice ? <p className="pp-msg">Chưa có voice clip — chạy generate trước.</p> : null}
+      </div>
+    </article>
   );
 };
 
-const ApprovalCard: React.FC<{ projectId: string; approval: ProjectApproval | null; candidateUrl?: string; onChanged: () => void }> = ({ projectId, approval, candidateUrl, onChanged }) => {
+/** Approval = quiet status strip. The candidate video opens ON DEMAND in an
+ *  overlay — never embedded at the script stage (user directive 29/08). */
+const ApprovalStrip: React.FC<{ projectId: string; approval: ProjectApproval | null; candidateUrl?: string; onChanged: () => void }> = ({ projectId, approval, candidateUrl, onChanged }) => {
   const [note, setNote] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const [message, setMessage] = React.useState("");
+  const [showCandidate, setShowCandidate] = React.useState(false);
   const status = approval?.status ?? "none";
   const submit = async (next: "approved" | "changes_requested") => {
     setBusy(true); setMessage("");
     try {
       await setApproval(projectId, next, note);
-      setNote("");
-      setMessage(next === "approved" ? "Đã KEEP — agent đọc được ở chu kỳ kế tiếp." : "Đã ghi REDO + note cho agent.");
+      setNote(""); setShowCandidate(false);
+      setMessage(next === "approved" ? "Đã KEEP ✓" : "Đã ghi REDO + note ✓");
       onChanged();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
     } finally { setBusy(false); }
   };
-  const badge = status === "approved" ? <b className="pp-ok">APPROVED</b>
-    : status === "pending" ? <b className="pp-warn">PENDING REVIEW</b>
-    : status === "changes_requested" ? <b className="pp-bad">CHANGES REQUESTED</b>
-    : <b className="pp-muted">CHƯA CẦN DUYỆT</b>;
   return (
-    <div className="pp-card">
-      <div className="pp-card-title">Approval {badge}</div>
-      {status === "pending" && candidateUrl ? (
-        <video controls src={candidateUrl} className="pp-video" title="Candidate draft" />
+    <section className="pp-approval">
+      <div className="pp-approval-row">
+        <span className={`pp-dot ${status === "approved" ? "ok" : status === "pending" ? "warn" : status === "changes_requested" ? "bad" : "none"}`} />
+        <span className="pp-approval-label">
+          {status === "approved" ? "Approved" : status === "pending" ? "Chờ bạn duyệt" : status === "changes_requested" ? "Changes requested" : "Chưa cần duyệt"}
+          {approval?.summary ? <small> — {approval.summary}</small> : null}
+        </span>
+        {status === "pending" && candidateUrl ? (
+          <button type="button" className="pp-quiet-btn" onClick={() => setShowCandidate(!showCandidate)}>{showCandidate ? "ẩn candidate" : "▶ xem candidate"}</button>
+        ) : null}
+        <a className="pp-quiet-btn" href="#pp-history" onClick={() => void 0}>history ↗</a>
+      </div>
+      {status === "pending" && showCandidate && candidateUrl ? (
+        <video controls src={candidateUrl} className="pp-candidate" title="Candidate draft" />
       ) : null}
-      {approval?.summary ? <p className="pp-hint">{approval.summary}</p> : null}
-      {approval?.note ? <p className="pp-hint">Note gần nhất: {approval.note}</p> : null}
       {status === "pending" ? (
-        <>
-          <textarea className="pp-note" rows={2} aria-label="Approval note" placeholder="Note cho agent (bắt buộc khi Redo)" value={note} onChange={(e) => setNote(e.target.value)} />
-          <div className="pp-actions">
-            <button type="button" className="pp-btn pp-keep" disabled={busy} onClick={() => void submit("approved")}>✅ Keep</button>
-            <button type="button" className="pp-btn pp-redo" disabled={busy || !note.trim()} title="Redo yêu cầu note" onClick={() => void submit("changes_requested")}>↻ Redo</button>
-          </div>
-        </>
-      ) : (
-        <p className="pp-hint">{status === "none" ? "Agent sẽ chuyển sang PENDING khi có bản cần duyệt (request_approval)." : "Agent đọc status này ở chu kỳ kế tiếp. Xem trong editor để kiểm tra working state."}</p>
-      )}
-      {message ? <p className="pp-hint">{message}</p> : null}
-    </div>
+        <div className="pp-approval-form">
+          <input className="pp-note-input" aria-label="Approval note" placeholder="note cho agent (bắt buộc khi Redo)" value={note} onChange={(e) => setNote(e.target.value)} />
+          <button type="button" className="pp-btn pp-keep" disabled={busy} onClick={() => void submit("approved")}>Keep</button>
+          <button type="button" className="pp-btn pp-redo" disabled={busy || !note.trim()} title="Redo yêu cầu note" onClick={() => void submit("changes_requested")}>Redo</button>
+        </div>
+      ) : null}
+      {message ? <p className="pp-msg">{message}</p> : null}
+    </section>
   );
 };
 
-const ProcessTimeline: React.FC<{ projectId: string }> = ({ projectId }) => {
+const HistoryFootnote: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [events, setEvents] = React.useState<TraceEvent[] | null>(null);
   const [open, setOpen] = React.useState<number | null>(null);
-  const load = React.useCallback(() => {
+  React.useEffect(() => {
     fetch(`/api/project/trace?projectId=${encodeURIComponent(projectId)}`)
       .then((r) => r.json())
       .then((payload) => setEvents(Array.isArray(payload.events) ? payload.events : []))
       .catch(() => setEvents([]));
   }, [projectId]);
-  React.useEffect(() => { load(); }, [load]);
-  if (events === null) return null;
+  if (events === null || events.length === 0) return null;
   return (
-    <details className="pp-collapse">
-      <summary>History — tiến trình ({events.length} bước)</summary>
+    <details className="pp-footnote" id="pp-history">
+      <summary>history — {events.length} bước</summary>
       <ol className="pp-trace">
         {events.map((event, index) => (
           <li key={index} className={`pp-trace-item stage-${event.stage}`}>
             <button type="button" className="pp-trace-head" aria-expanded={open === index} onClick={() => setOpen(open === index ? null : index)}>
-              <span className="pp-trace-icon">{{ plan: "📝", voice: "🎙️", timeline: "🎞️", render: "🎬", approval: "🚦", note: "📌" }[event.stage] ?? "📌"}</span>
+              <span className="pp-trace-ts">{event.ts.slice(5, 16).replace("T", " ")}</span>
               <span className="pp-trace-stage">{event.stage}</span>
               <span className="pp-trace-title">{event.title}</span>
-              <span className="pp-trace-ts">{event.ts.slice(5, 16).replace("T", " ")}</span>
             </button>
             {open === index ? <div className="pp-trace-body"><pre className="pp-trace-raw">{JSON.stringify(event.data, null, 1)}</pre></div> : null}
           </li>
@@ -318,16 +310,16 @@ const ProcessTimeline: React.FC<{ projectId: string }> = ({ projectId }) => {
   );
 };
 
+type TraceEvent = { ts: string; stage: "plan" | "voice" | "timeline" | "render" | "approval" | "note"; title: string; data?: Record<string, unknown> };
+
 export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void }> = ({ projectId, onOpenEditor }) => {
   const [snapshot, setSnapshot] = React.useState<Awaited<ReturnType<typeof loadProject>> | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [renders, setRenders] = React.useState<ProjectRender[]>([]);
-  const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
 
   const refresh = React.useCallback(() => {
     loadProject(projectId).then(setSnapshot).catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
     fetchRenders(projectId).then((payload) => setRenders(payload.renders)).catch(() => setRenders([]));
-    fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
   }, [projectId]);
   React.useEffect(() => { refresh(); }, [refresh]);
 
@@ -342,44 +334,50 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
     .slice()
     .sort((a, b) => a.range.startSec - b.range.startSec);
   const latest = renders[0];
+  const approvalPath = `${projectId}`;
 
   return (
     <div className="pp-page">
       <header className="pp-header">
-        <div>
-          <h1>{videoDoc?.idea ? videoDoc.idea : projectId}</h1>
-          <small>{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</small>
+        <h1>{videoDoc?.idea ? videoDoc.idea : projectId}</h1>
+        <div className="pp-header-meta">
+          <span className="pp-soft">{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</span>
+          <button type="button" className="pp-quiet-btn" onClick={onOpenEditor}>mở editor ↗</button>
         </div>
-        <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗ <small style={{ color: "#dbe7ff", fontSize: "10px" }}>(xem video + dựng)</small></button>
       </header>
 
-      <PromptBar instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
+      <PromptQuote instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
 
-      <div className="pp-card">
-        <div className="pp-card-title">Script <small>{beatClips.length} beats — sửa trực tiếp, agent sửa qua drawer</small></div>
-        <div className="pp-beatlist">
-          {beatClips.map((beat, index) => {
-            const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
-            return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
-          })}
-        </div>
-      </div>
+      <main className="pp-scriptlist">
+        {beatClips.map((beat, index) => {
+          const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
+          return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
+        })}
+      </main>
 
-      <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
+      <ApprovalStripFetcher projectId={approvalPath} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
 
       {videoDoc ? (
-        <details className="pp-collapse">
-          <summary>Story</summary>
+        <details className="pp-footnote">
+          <summary>story</summary>
           <div className="pp-story">
-            <div><b>Idea</b><p>{videoDoc.idea}</p></div>
-            <div><b>Surface problem</b><p>{videoDoc.surfaceProblem}</p></div>
-            <div><b>Deeper problem</b><p>{videoDoc.deeperProblem}</p></div>
-            <div><b>Thumbnail promise</b><p>{videoDoc.thumbnailPromise}</p></div>
+            <p><b>Idea.</b> {videoDoc.idea}</p>
+            <p><b>Surface problem.</b> {videoDoc.surfaceProblem}</p>
+            <p><b>Deeper problem.</b> {videoDoc.deeperProblem}</p>
+            <p><b>Thumbnail promise.</b> {videoDoc.thumbnailPromise}</p>
           </div>
         </details>
       ) : null}
 
-      <ProcessTimeline projectId={projectId} />
+      <HistoryFootnote projectId={projectId} />
     </div>
   );
+};
+
+const ApprovalStripFetcher: React.FC<{ projectId: string; candidateUrl?: string; onChanged: () => void }> = ({ projectId, candidateUrl, onChanged }) => {
+  const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
+  React.useEffect(() => {
+    fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
+  }, [projectId, onChanged]);
+  return <ApprovalStrip projectId={projectId} approval={approval} candidateUrl={candidateUrl} onChanged={() => { onChanged(); fetchApproval(projectId).then(setApprovalState).catch(() => undefined); }} />;
 };
