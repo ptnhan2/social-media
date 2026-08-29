@@ -2,7 +2,7 @@
   "ok": true,
   "projectId": "agent-loop-test",
   "mode": "sync",
-  "generatedAt": "2026-08-29T11:33:36.268Z",
+  "generatedAt": "2026-08-29T14:56:39.882Z",
   "styleVersion": 74,
   "checks": [
     {
@@ -28,7 +28,7 @@
       "label": "Editor doc generated (sync)",
       "pass": true,
       "detail": [
-        "refreshed=21 keptUser=0 added=0 dropped=0"
+        "refreshed=18 keptUser=1 added=2 dropped=0"
       ]
     },
     {
@@ -41,9 +41,9 @@
   "warnings": [],
   "blocking": [],
   "stats": {
-    "refreshed": 21,
-    "keptUser": 0,
-    "added": 0,
+    "refreshed": 18,
+    "keptUser": 1,
+    "added": 2,
     "dropped": 0
   }
 }

@@ -311,7 +311,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
           <h1>{videoDoc?.idea ? videoDoc.idea : projectId}</h1>
           <small>{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</small>
         </div>
-        <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗ <small>(xem video + dựng)</small></button>
+        <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗ <small style={{ color: "#dbe7ff", fontSize: "10px" }}>(xem video + dựng)</small></button>
       </header>
 
       <PromptBar instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
