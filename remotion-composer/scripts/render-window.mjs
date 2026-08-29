@@ -97,6 +97,15 @@ const sourceHash = (entryPoint) => {
       } catch {}
     }
   }
+  // The compositions manifest is statically imported by Root.tsx — a NEW
+  // project registration changes the bundle output without touching any
+  // .tsx file. Include it in the cache key or new compositions stay
+  // invisible until an unrelated source edit busts the cache.
+  const manifestPath = path.join(composerRoot, "projects", "isaacverse-final", "projects-manifest.json");
+  if (fs.existsSync(manifestPath)) {
+    hash.update("projects-manifest");
+    hash.update(fs.readFileSync(manifestPath));
+  }
   return hash.digest("hex");
 };
 

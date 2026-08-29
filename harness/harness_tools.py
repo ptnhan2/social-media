@@ -18,6 +18,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 
 from langchain.tools import tool
 
@@ -720,6 +721,88 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
     if result.returncode != 0:
         return f"EDITOR OP FAILED: {err or out or 'unknown error'}"
     return f"EDITOR OP OK:\n{out}"
+
+
+@tool
+def write_edit_doc(project_slug: str, story: str, beats: str, overwrite_confirm: bool = False) -> str:
+    """Write the edit-doc from YOUR beat plan (A1 — the produce flow's first mile).
+
+    You (the agent) design the beats; this tool is the VALIDATED write-path.
+    It builds 04-video-doc.json + 05-edit-doc.json through the project store's
+    sanctioned saveSourceDocs (schema validation + atomic writes + public
+    sync), computing startSec cumulatively from your durations.
+
+    Args:
+        project_slug: Project folder name (created if new).
+        story: JSON string {idea, surfaceProblem, deeperProblem,
+              thumbnailPromise, commonGoal: {viewer, creator}} — from the
+              story doc (02-story/story.md) when one exists.
+        beats: JSON string array, ONE object per beat, in play order:
+              {transcript (EXACT spoken words), narrativeFunction,
+               treatment: {id, params}, durationSec? (default 4 — the
+               voice-first retime adjusts it), journeySlot?, id?}.
+              Treatments available: chapter-card (params: title, subtitle,
+              accent — the proven minimal), semantic-diagram (title, kicker,
+              centerLabel, nodes, edges), process-timeline (title, steps,
+              activeStep), candidate-comparison (title, criteria,
+              selectedIndex, candidates), host-reflection-cinematic
+              (subtitle, lightSide), cinematic-metaphor (subtitle, label,
+              mode). Param shapes: remotion-composer/shared/isaacverse/
+              EditVideo.tsx + the style store.
+        overwrite_confirm: MUST be true to replace an existing edit doc
+              (a backup is kept). Without it the tool refuses.
+
+    Rule: transcript = exact spoken words (tags/CAPS allowed later in the
+    Audio tab — the words themselves never change). 3-6s per beat.
+    """
+    cmd = ["node", os.path.join(RENDERER_DIR, "scripts", "write-edit-doc.mjs"),
+           "--project", project_slug]
+    payload_files = []
+    try:
+        for name, payload in (("story", story), ("beats", beats)):
+            handle = tempfile.NamedTemporaryFile("w", suffix=f"-{name}.json",
+                                                 delete=False, encoding="utf-8")
+            handle.write(payload)
+            handle.close()
+            payload_files.append(handle.name)
+            cmd += [f"--{name}", handle.name]
+        if overwrite_confirm:
+            cmd.append("--overwrite-confirm")
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
+                                errors="replace", cwd=RENDERER_DIR, timeout=180)
+    finally:
+        for file in payload_files:
+            try: os.unlink(file)
+            except OSError: pass
+    out = (result.stdout or "").strip()
+    err = (result.stderr or "").strip()
+    span = ""
+    for text in (out, err):
+        start = text.find("{")
+        end = text.rfind("}")
+        if start >= 0 and end > start:
+            span = text[start:end + 1]
+            break
+    if result.returncode != 0 and not span:
+        return f"WRITE EDIT DOC FAILED: {err or out or 'unknown error'}"
+    try:
+        payload = json.loads(span)
+    except json.JSONDecodeError:
+        return f"WRITE EDIT DOC FAILED (unparseable): {span[:400]}"
+    if not payload.get("ok"):
+        lines = ["WRITE EDIT DOC REFUSED:"]
+        for blocker in payload.get("blocking", [])[:10]:
+            lines.append(f"  - {blocker}")
+        for warning in payload.get("warnings", [])[:6]:
+            lines.append(f"  WARN {warning}")
+        lines.append("Fix the beats and call again.")
+        return "\n".join(lines)
+    lines = [f"WRITE EDIT DOC OK — {payload.get('beats')} beat(s), {payload.get('durationSec')}s planned",
+             f"files: {', '.join(payload.get('files', []))}"]
+    if payload.get("backup"):
+        lines.append(f"backup of previous doc: {payload['backup']}")
+    lines.append("NEXT: scaffold-voice-plan --regen (TTS + voice-first retime) -> generate-timeline -> render. Those are separate tools/steps — voice first, then the timeline.")
+    return "\n".join(lines)
 
 
 @tool
