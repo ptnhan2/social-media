@@ -1,0 +1,49 @@
+{
+  "id": "readable-code",
+  "idea": "Readable code is a gift to your future self",
+  "surfaceProblem": "Code that works but nobody can read",
+  "deeperProblem": "Unclear code destroys team velocity and confidence",
+  "thumbnailPromise": "Same function, before and after",
+  "commonGoal": {
+    "aligned": true,
+    "viewer": "write readable code",
+    "creator": "code-quality channel"
+  },
+  "beats": [
+    {
+      "id": "rc-b1",
+      "journeySlot": "call",
+      "summary": "hook"
+    },
+    {
+      "id": "rc-b2",
+      "journeySlot": "call",
+      "summary": "naming"
+    },
+    {
+      "id": "rc-b3",
+      "journeySlot": "call",
+      "summary": "structure"
+    },
+    {
+      "id": "rc-b4",
+      "journeySlot": "call",
+      "summary": "comments"
+    },
+    {
+      "id": "rc-b5",
+      "journeySlot": "call",
+      "summary": "consistency"
+    },
+    {
+      "id": "rc-b6",
+      "journeySlot": "call",
+      "summary": "metric"
+    },
+    {
+      "id": "rc-b7",
+      "journeySlot": "call",
+      "summary": "resolution"
+    }
+  ]
+}

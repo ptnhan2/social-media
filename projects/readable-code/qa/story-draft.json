@@ -1,0 +1,14 @@
+{
+  "status": "approved",
+  "idea": "Readable code is a gift to your future self and your team",
+  "surfaceProblem": "You write code that works but nobody else can understand it",
+  "deeperProblem": "Unclear code destroys team velocity and your own confidence when you return to it months later",
+  "thumbnailPromise": "Same function - before and after readable refactoring",
+  "commonGoal": {
+    "viewer": "write code teammates thank you for",
+    "creator": "establish the code-quality channel"
+  },
+  "originalIdea": "How to write code that other developers can actually read",
+  "note": "",
+  "updatedAt": "2026-08-30T12:20:41.374Z"
+}

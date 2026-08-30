@@ -1,0 +1,183 @@
+{
+  "id": "readable-code-edit",
+  "videoId": "readable-code",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "rc-b1",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 0,
+      "durationSec": 20,
+      "transcript": "Code that works but nobody can read is technical debt you pay every single day.",
+      "narrativeFunction": "hook",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "WORKS BUT UNREADABLE",
+          "subtitle": "the daily tax",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "rc-b2",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 20,
+      "durationSec": 20,
+      "transcript": "Naming is the cheapest refactor. A good function name replaces three lines of comments.",
+      "narrativeFunction": "naming",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "NAMING IS CHEAP",
+          "subtitle": "one rename, three comments saved",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "rc-b3",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 40,
+      "durationSec": 20,
+      "transcript": "Small functions are not about line count. They are about one idea per unit.",
+      "narrativeFunction": "structure",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "ONE IDEA PER FUNCTION",
+          "subtitle": "structure beats cleverness",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "rc-b4",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 60,
+      "durationSec": 20,
+      "transcript": "Comments explain WHY, never WHAT. If your comment describes the code, rewrite the code.",
+      "narrativeFunction": "comments",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "WHY NOT WHAT",
+          "subtitle": "comments are confessions",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "rc-b5",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 80,
+      "durationSec": 25,
+      "transcript": "Consistency beats correctness. A codebase that does the same thing the same way everywhere is readable even when it is wrong.",
+      "narrativeFunction": "consistency",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "CONSISTENCY > CORRECTNESS",
+          "subtitle": "the pattern principle",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "rc-b6",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 105,
+      "durationSec": 22,
+      "transcript": "The test is simple: can someone new to the codebase find what they need in under thirty seconds?",
+      "narrativeFunction": "metric",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "THE 30-SECOND TEST",
+          "subtitle": "readability metric",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "rc-b7",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 127,
+      "durationSec": 23,
+      "transcript": "Write code as if the person maintaining it is a violent psychopath who knows where you live. That person is you, six months from now.",
+      "narrativeFunction": "resolution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "BE KIND TO FUTURE YOU",
+          "subtitle": "readable code is self-care",
+          "accent": "#ec6a5e"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  },
+  "instruction": "Giọng điệu: người thợ đang chỉ trχει một sai lầm phổ biến — mỗi câu ngắn, gắt, kết bằng meta so sánh (clock/breath). Beat 1 là câu hỏi tu từ, beat 2 vạch ra gốc rễ vấn đề, beat 3 đưa ra quy tắc dùng được ngay."
+}
