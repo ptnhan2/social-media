@@ -155,6 +155,94 @@ idea → story (review checkpoint #1) → script (checkpoint #2, sửa trực ti
 | Produce | tools riêng (nếu chạy agent-side) | progress job + stepper | [Generate] button = CÙNG endpoint | — (deterministic) |
 | Stage stepper | — (derived) | journey stage luôn thấy | — | — |
 
+## 6. RESEARCH — bước quyết định chất lượng nội dung (design 30/08 19:30)
+
+> User correction: "từ idea → ... → script có đi qua 1 bước được gọi là
+> research. Đây là 1 bước quan trọng vì nó quyết định khá lớn về nội dung
+> của video, mà nó cũng không phải 1 task đơn giản đưa đại 1 prompt cho
+> AI là ra kết quả đâu."
+
+### Vì sao research không phải "1 prompt cho AI"
+
+1. **Multi-query iterative**: broad → refine → dig deeper → lặp
+2. **Source evaluation**: academic vs blog random? Data mới hay cũ?
+3. **Fact extraction + verification**: mỗi claim cần source
+4. **Competitive gap analysis**: video top 10 về chủ đề nói gì? Cái gì CHƯA ai nói?
+5. **Audience insight**: community nào thảo luận? Pain points thực tế?
+
+### Kiến trúc (pattern chuẩn ngành 2026 — research từ 7 sources)
+
+```
+IDEA → [PLANNER: 3-5 sub-questions] → [SEARCH: Tavily per sub-q, parallel]
+     → [SYNTHESIZE: findings + citations] → qa/research.json (structured)
+     → STUDIO: Research review card → [Duyệt research]
+     → draft_story (INFORMED BY research) → story → script
+```
+
+### Tavily API (chọn sau benchmark 6 providers)
+
+| Provider | Cost/1k | Chọn vì |
+|---|---|---|
+| **Tavily** ⭐ | $8 (PAYG) | AI-native, LangChain SDK, content extraction built-in, 1000 free/mo |
+| Firecrawl | $1.66 | Rẻ nhất nhưng chậm (P95 3.4s) |
+| Serper | $1 | Raw SERP — cần fetcher riêng |
+
+Volume của ta: ~20 queries/video = ~$0.16/video (không đáng kể).
+1000 credits miễn phí/tháng đủ prototype + development.
+
+### qa/research.json structure
+
+```json
+{
+  "status": "pending | approved",
+  "originalIdea": "...",
+  "subQuestions": [
+    {"q": "...", "findings": [{"fact": "...", "source": "url", "credibility": "high"}]}
+  ],
+  "insights": ["angle competitors missed", "surprising stat", "pain point"],
+  "sources": [{"url": "...", "title": "...", "type": "academic|blog|docs|community"}],
+  "gaps": ["what we couldn't find — flag for user"],
+  "competitive": [{"title": "...", "whatTheySay": "...", "whatTheyMiss": "..."}]
+}
+```
+
+### Parity audit — research stage
+
+| Agent làm gì | User XEM | User SỬA | Learning hook |
+|---|---|---|---|
+| research_topic (plan→search→synthesize→research.json) | Research card trong studio (sub-questions + findings + sources + insights + gaps) | [Duyệt research] / [Dig deeper vào X] → agent re-search | research edits → feedback.jsonl |
+
+### Journey update
+
+```
+idea → RESEARCH (checkpoint mới) → story → script → voice → video → approved
+```
+
+Stepper thêm "Research" stage (giữa Ý tưởng và Story).
+
+## 7. WALKTHROUGH AUDIT GAPS — chưa fix (từ WALKTHROUGH-AUDIT-3.md)
+
+### P0 — phải fix ngay
+- **A1**: "Bắt đầu" không BẮT ĐẦU — chỉ pre-fill prompt, user phải Send thêm
+- **A2**: Không confirm dialog trước Generate (7 TTS = tốn tiền)
+- **A3**: Không hiển thị total duration (7 beats × 20s = 150s — user phải cộng nhẩm)
+
+### P1 — fix trong implementation này
+- **A4**: Shape info không hiển thị trong StoryCard
+- **C1**: Agent drawer quick actions vô dụng cho empty project
+- **D4**: Partial generate (chỉ beats thay đổi) — defer nhưng note
+
+### P2 — design decisions cần user input
+- B1: ADD/DELETE/REORDER beat (CRUD table stakes)
+- B2: Treatment selector per beat
+- B3: Edit duration per beat
+- B4: Direction pre-voice
+- D1: Storyboard preview
+- D2: Export/Share từ studio
+- D5: Progress feedback
+- A5: Audience/tone/language inputs
+- D3: YouTube metadata
+
 ## 4. PROGRESS LOG
 
 - **2026-08-30 17:35 — UX WALKTHROUGH FIXES (0c9db3f)**: browser-driven flow
