@@ -40,7 +40,6 @@ export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOp
       setDeleteConfirm(null);
     }
   };
-  const [newId, setNewId] = React.useState("");
 
   const handleCreate = async () => {
     const id = newId.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "-").replace(/^-+|-+$/g, "");
