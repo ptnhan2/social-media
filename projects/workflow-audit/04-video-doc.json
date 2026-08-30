@@ -1,0 +1,29 @@
+{
+  "id": "workflow-audit",
+  "idea": "AI music all sounds the same because the models optimize for average taste",
+  "surfaceProblem": "Every AI track feels pleasant but forgettable",
+  "deeperProblem": "The models flatten outliers to avoid risk",
+  "thumbnailPromise": "Same prompt, three generations",
+  "commonGoal": {
+    "aligned": true,
+    "viewer": "make AI music that stands out",
+    "creator": "own the niche"
+  },
+  "beats": [
+    {
+      "id": "ux-beat-01",
+      "journeySlot": "status_quo",
+      "summary": "name the false solution"
+    },
+    {
+      "id": "ux-beat-02",
+      "journeySlot": "call",
+      "summary": "reframe the unit of editing"
+    },
+    {
+      "id": "ux-beat-03",
+      "journeySlot": "resolution",
+      "summary": "resolve with a memorable rule"
+    }
+  ]
+}

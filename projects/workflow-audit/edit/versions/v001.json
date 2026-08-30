@@ -1,0 +1,43 @@
+{
+  "id": "workflow-audit-edit",
+  "videoId": "workflow-audit",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "workflow-audit-beat-01",
+      "journeySlot": "call",
+      "startSec": 0,
+      "durationSec": 5,
+      "transcript": "",
+      "narrativeFunction": "New beat",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "New Project"
+        },
+        "assets": []
+      },
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "audioPlan": {
+    "voice": [],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "none",
+    "intensity": 0
+  }
+}
