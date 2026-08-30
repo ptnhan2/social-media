@@ -19,6 +19,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.request
 
 from langchain.tools import tool
@@ -724,6 +725,19 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
     return f"EDITOR OP OK:\n{out}"
 
 
+def _load_env() -> None:
+    """Load .env keys into os.environ (setdefault — doesn't override)."""
+    env_path = os.path.join(PROJECT_ROOT, ".env")
+    if not os.path.exists(env_path):
+        return
+    with open(env_path, encoding="utf-8-sig") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
 @tool
 def research_topic(project_slug: str, idea: str, audience: str = "") -> str:
     """Research a video topic using web search (Creation Flow — the CRITICAL step before story).
@@ -747,7 +761,7 @@ def research_topic(project_slug: str, idea: str, audience: str = "") -> str:
     api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
         # try .env
-        load_env()
+        _load_env()
         api_key = os.environ.get("TAVILY_API_KEY")
     if not api_key:
         return ("RESEARCH FAILED: No TAVILY_API_KEY. Add it to .env:\n"
@@ -900,22 +914,21 @@ def _classify_source(url: str) -> str:
 
 
 def _chat_completion(messages: list, max_tokens: int = 500) -> str:
-    """Minimal LLM call using the harness model (for research planning/synthesis)."""
-    cfg = _provider_config("deepseek")
+    """Minimal LLM call using DeepSeek chat model (for research planning/synthesis).
+    Uses deepseek-chat (text-only) — NOT the VLM model."""
+    load_env_fn = _load_env
+    load_env_fn()
     api_key = os.environ.get("DEEPSEEK_API_KEY", "")
-    if not api_key:
-        load_env()
-        api_key = os.environ.get("DEEPSEEK_API_KEY", "")
     if not api_key:
         raise RuntimeError("No DEEPSEEK_API_KEY for research LLM calls")
     payload = json.dumps({
-        "model": cfg.get("model", "deepseek-chat"),
+        "model": "deepseek-chat",
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": 0.3,
     }).encode()
     req = urllib.request.Request(
-        f"{cfg.get('base_url', 'https://api.deepseek.com/v1')}/chat/completions",
+        "https://api.deepseek.com/v1/chat/completions",
         data=payload, method="POST",
         headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
     )
