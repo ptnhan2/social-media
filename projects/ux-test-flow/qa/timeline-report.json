@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "projectId": "ux-test-flow",
+  "mode": "sync",
+  "generatedAt": "2026-08-30T10:19:19.600Z",
+  "styleVersion": 74,
+  "checks": [
+    {
+      "id": "schema",
+      "label": "Edit-doc schema",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "timeline",
+      "label": "Timeline semantics (contiguity, cues, params)",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "assets",
+      "label": "Assets exist on disk",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "generate",
+      "label": "Editor doc generated (sync)",
+      "pass": true,
+      "detail": [
+        "refreshed=? keptUser=? added=? dropped=?"
+      ]
+    },
+    {
+      "id": "voice",
+      "label": "Voice clips have src + QC pass",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "composition",
+      "label": "Composition registered (auto)",
+      "pass": true,
+      "detail": [
+        "ux-test-flow-30s + ux-test-flow-30s-editor via projects-manifest.json"
+      ]
+    }
+  ],
+  "warnings": [],
+  "blocking": [],
+  "stats": {}
+}

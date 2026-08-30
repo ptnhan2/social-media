@@ -1,0 +1,1326 @@
+{
+  "id": "editor:ux-test-flow",
+  "projectId": "ux-test-flow",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationSec": 18.33,
+  "tracks": [
+    {
+      "id": "video-main",
+      "kind": "video",
+      "name": "Main track",
+      "order": 0,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "semantic-beats"
+      },
+      "accepts": [
+        "image",
+        "video"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "clip:beat:ux-beat-01",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "name the false solution",
+          "source": {
+            "beatId": "ux-beat-01"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Every AI track sounds pleasant. So why does none of it stick with you?",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:ux-beat-02",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "reframe the unit of editing",
+          "source": {
+            "beatId": "ux-beat-02"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:ux-beat-03",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "resolve with a memorable rule",
+          "source": {
+            "beatId": "ux-beat-03"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-1",
+      "kind": "overlay",
+      "name": "Overlay 1",
+      "order": 4,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "ux-beat-01:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "ux-beat-01",
+            "elementId": "ux-beat-01:bg"
+          },
+          "parentClipId": "clip:beat:ux-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-01:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-02:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "ux-beat-02",
+            "elementId": "ux-beat-02:bg"
+          },
+          "parentClipId": "clip:beat:ux-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-02:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-03:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "ux-beat-03",
+            "elementId": "ux-beat-03:bg"
+          },
+          "parentClipId": "clip:beat:ux-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-03:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-2",
+      "kind": "overlay",
+      "name": "Overlay 2",
+      "order": 5,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "ux-beat-01:bg-glow",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "bg-glow",
+          "source": {
+            "beatId": "ux-beat-01",
+            "elementId": "ux-beat-01:bg-glow"
+          },
+          "parentClipId": "clip:beat:ux-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-01:bg-glow",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(circle at 50% 50%, #f2b84b18, transparent 55%)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-02:bg-glow",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "bg-glow",
+          "source": {
+            "beatId": "ux-beat-02",
+            "elementId": "ux-beat-02:bg-glow"
+          },
+          "parentClipId": "clip:beat:ux-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-02:bg-glow",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(circle at 50% 50%, #61d7e818, transparent 55%)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-03:bg-glow",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "bg-glow",
+          "source": {
+            "beatId": "ux-beat-03",
+            "elementId": "ux-beat-03:bg-glow"
+          },
+          "parentClipId": "clip:beat:ux-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-03:bg-glow",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(circle at 50% 50%, #2dd4a018, transparent 55%)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-3",
+      "kind": "overlay",
+      "name": "Overlay 3",
+      "order": 6,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "ux-beat-01:accent-line",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "ux-beat-01",
+            "elementId": "ux-beat-01:accent-line"
+          },
+          "parentClipId": "clip:beat:ux-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-01:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5662037037037037,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "linear-gradient(90deg, transparent, #ff6b35, #ffd166, #ff6b35, transparent)",
+            "boxShadow": "0 0 24px #ff6b3580, 0 2px 8px rgba(0,0,0,0.5)",
+            "borderRadius": 4,
+            "wipeX": {
+              "startSec": 0.15,
+              "durationSec": 1.35
+            },
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "width": "treatments.chapter-card.accentLine.maxWidth",
+              "height": "treatments.chapter-card.accentLine.height"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-02:accent-line",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "ux-beat-02",
+            "elementId": "ux-beat-02:accent-line"
+          },
+          "parentClipId": "clip:beat:ux-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-02:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5662037037037037,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "linear-gradient(90deg, transparent, #ff6b35, #ffd166, #ff6b35, transparent)",
+            "boxShadow": "0 0 24px #ff6b3580, 0 2px 8px rgba(0,0,0,0.5)",
+            "borderRadius": 4,
+            "wipeX": {
+              "startSec": 0.15,
+              "durationSec": 1.35
+            },
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "width": "treatments.chapter-card.accentLine.maxWidth",
+              "height": "treatments.chapter-card.accentLine.height"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-03:accent-line",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "ux-beat-03",
+            "elementId": "ux-beat-03:accent-line"
+          },
+          "parentClipId": "clip:beat:ux-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "ux-beat-03:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5800925925925926,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "linear-gradient(90deg, transparent, #ff6b35, #ffd166, #ff6b35, transparent)",
+            "boxShadow": "0 0 24px #ff6b3580, 0 2px 8px rgba(0,0,0,0.5)",
+            "borderRadius": 4,
+            "wipeX": {
+              "startSec": 0.15,
+              "durationSec": 1.35
+            },
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "width": "treatments.chapter-card.accentLine.maxWidth",
+              "height": "treatments.chapter-card.accentLine.height"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-4",
+      "kind": "overlay",
+      "name": "Overlay 4",
+      "order": 7,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "ux-beat-01:subtitle",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "the averaging problem",
+          "source": {
+            "beatId": "ux-beat-01",
+            "elementId": "ux-beat-01:subtitle"
+          },
+          "parentClipId": "clip:beat:ux-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "ux-beat-01:subtitle",
+            "type": "text",
+            "x": 0.07005208333333333,
+            "y": 0.5912037037037037,
+            "w": 0.8598958333333333,
+            "h": 0.03148148148148148,
+            "text": "the averaging problem",
+            "z": 12,
+            "opacity": 1,
+            "fontSize": 24,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4,
+            "letterSpacing": 1.92,
+            "textTransform": "uppercase",
+            "textAlign": "center",
+            "color": "#00d4ff",
+            "textShadow": "0 2px 10px rgba(0,0,0,0.8)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.subtitle.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-02:subtitle",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "where the model smooths",
+          "source": {
+            "beatId": "ux-beat-02",
+            "elementId": "ux-beat-02:subtitle"
+          },
+          "parentClipId": "clip:beat:ux-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "ux-beat-02:subtitle",
+            "type": "text",
+            "x": 0.07005208333333333,
+            "y": 0.5912037037037037,
+            "w": 0.8598958333333333,
+            "h": 0.03148148148148148,
+            "text": "where the model smooths",
+            "z": 12,
+            "opacity": 1,
+            "fontSize": 24,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4,
+            "letterSpacing": 1.92,
+            "textTransform": "uppercase",
+            "textAlign": "center",
+            "color": "#00d4ff",
+            "textShadow": "0 2px 10px rgba(0,0,0,0.8)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.subtitle.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-03:subtitle",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "produce - critique - improve",
+          "source": {
+            "beatId": "ux-beat-03",
+            "elementId": "ux-beat-03:subtitle"
+          },
+          "parentClipId": "clip:beat:ux-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "ux-beat-03:subtitle",
+            "type": "text",
+            "x": 0.07005208333333333,
+            "y": 0.6050925925925926,
+            "w": 0.8598958333333333,
+            "h": 0.03148148148148148,
+            "text": "produce - critique - improve",
+            "z": 12,
+            "opacity": 1,
+            "fontSize": 24,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4,
+            "letterSpacing": 1.92,
+            "textTransform": "uppercase",
+            "textAlign": "center",
+            "color": "#00d4ff",
+            "textShadow": "0 2px 10px rgba(0,0,0,0.8)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.subtitle.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-5",
+      "kind": "overlay",
+      "name": "Overlay 5",
+      "order": 8,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "ux-beat-01:title",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "PLEASANT BUT\nFORGETTABLE",
+          "source": {
+            "beatId": "ux-beat-01",
+            "elementId": "ux-beat-01:title"
+          },
+          "parentClipId": "clip:beat:ux-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "ux-beat-01:title",
+            "type": "text",
+            "x": 0.3143229166666667,
+            "y": 0.3773148148148148,
+            "w": 0.37135416666666665,
+            "h": 0.1648148148148148,
+            "text": "PLEASANT BUT\nFORGETTABLE",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 82,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "textTransform": "uppercase",
+            "lineHeight": 1.08,
+            "letterSpacing": 3.2800000000000002,
+            "textAlign": "center",
+            "textGradient": {
+              "start": "#ff6b35",
+              "end": "#ffd166",
+              "stop": 45
+            },
+            "strokeWidth": 1.5,
+            "strokeColor": "rgba(0,0,0,0.25)",
+            "filter": "drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 0 30px #f2b84b50)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.title.fontSizeLong",
+              "fontWeight": "treatments.chapter-card.title.fontWeight",
+              "textGradientStart": "colors.gradientStart",
+              "textGradientEnd": "colors.gradientEnd"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-02:title",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "NOVELTY LIVES IN THE\nEDGES",
+          "source": {
+            "beatId": "ux-beat-02",
+            "elementId": "ux-beat-02:title"
+          },
+          "parentClipId": "clip:beat:ux-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "ux-beat-02:title",
+            "type": "text",
+            "x": 0.1953125,
+            "y": 0.3773148148148148,
+            "w": 0.609375,
+            "h": 0.1648148148148148,
+            "text": "NOVELTY LIVES IN THE\nEDGES",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 82,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "textTransform": "uppercase",
+            "lineHeight": 1.08,
+            "letterSpacing": 3.2800000000000002,
+            "textAlign": "center",
+            "textGradient": {
+              "start": "#ff6b35",
+              "end": "#ffd166",
+              "stop": 45
+            },
+            "strokeWidth": 1.5,
+            "strokeColor": "rgba(0,0,0,0.25)",
+            "filter": "drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 0 30px #61d7e850)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.title.fontSizeLong",
+              "fontWeight": "treatments.chapter-card.title.fontWeight",
+              "textGradientStart": "colors.gradientStart",
+              "textGradientEnd": "colors.gradientEnd"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "ux-beat-03:title",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "EMBRACE THE UGLY\nTAKE",
+          "source": {
+            "beatId": "ux-beat-03",
+            "elementId": "ux-beat-03:title"
+          },
+          "parentClipId": "clip:beat:ux-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "ux-beat-03:title",
+            "type": "text",
+            "x": 0.19869791666666667,
+            "y": 0.36342592592592593,
+            "w": 0.6026041666666667,
+            "h": 0.1925925925925926,
+            "text": "EMBRACE THE UGLY\nTAKE",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 96,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "textTransform": "uppercase",
+            "lineHeight": 1.08,
+            "letterSpacing": 7.68,
+            "textAlign": "center",
+            "textGradient": {
+              "start": "#ff6b35",
+              "end": "#ffd166",
+              "stop": 45
+            },
+            "strokeWidth": 1.5,
+            "strokeColor": "rgba(0,0,0,0.25)",
+            "filter": "drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 0 30px #2dd4a050)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.title.fontSizeShort",
+              "fontWeight": "treatments.chapter-card.title.fontWeight",
+              "textGradientStart": "colors.gradientStart",
+              "textGradientEnd": "colors.gradientEnd"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "voice",
+      "kind": "voice",
+      "name": "Audio 1",
+      "order": 1,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "audio-plan.voice"
+      },
+      "accepts": [
+        "audio"
+      ],
+      "capabilities": {
+        "visual": false,
+        "audio": true,
+        "canvas": false,
+        "trim": true,
+        "split": true,
+        "gain": true,
+        "fade": true,
+        "mute": true,
+        "solo": true
+      },
+      "clips": [
+        {
+          "id": "clip:voice:ux-test-flow:voice:ux-beat-01",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 0,
+            "endSec": 4.67
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "ux-beat-01"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ux-test-flow/voice/stems/ux-beat-01.wav",
+            "transcript": "Every AI track sounds pleasant. So why does none of it stick with you?",
+            "sentenceText": "Every AI track sounds pleasant. So why does none of it stick with you?",
+            "providerText": "Every AI track sounds pleasant. So why does none of it stick with you?",
+            "segmentId": "ux-test-flow:voice:ux-beat-01",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-30T17:18:54",
+              "durationSec": 4.32,
+              "expectedSec": 5.6000000000000005,
+              "peakDb": -1.6,
+              "meanDb": -16.3,
+              "lufs": -15.55,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.6 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "4.32s vs 5.60s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-15.55 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "ux-beat-01-take-02",
+            "takes": [
+              {
+                "id": "ux-beat-01-take-01",
+                "pass": true,
+                "durationSec": 4.08,
+                "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-01-take-01.mp3"
+              },
+              {
+                "id": "ux-beat-01-take-02",
+                "pass": true,
+                "durationSec": 4.32,
+                "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-01-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ux-test-flow:voice:ux-beat-02",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 4.67,
+            "endSec": 11.34
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "ux-beat-02"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ux-test-flow/voice/stems/ux-beat-02.wav",
+            "transcript": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+            "sentenceText": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+            "providerText": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+            "segmentId": "ux-test-flow:voice:ux-beat-02",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-30T17:19:06",
+              "durationSec": 6.32,
+              "expectedSec": 6.4,
+              "peakDb": -1.7,
+              "meanDb": -16.7,
+              "lufs": -15.87,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.7 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "6.32s vs 6.40s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-15.87 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "ux-beat-02-take-02",
+            "takes": [
+              {
+                "id": "ux-beat-02-take-01",
+                "pass": true,
+                "durationSec": 6.56,
+                "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-02-take-01.mp3"
+              },
+              {
+                "id": "ux-beat-02-take-02",
+                "pass": true,
+                "durationSec": 6.32,
+                "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-02-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:ux-test-flow:voice:ux-beat-03",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 11.34,
+            "endSec": 18.33
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "ux-beat-03"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "ux-test-flow/voice/stems/ux-beat-03.wav",
+            "transcript": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+            "sentenceText": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+            "providerText": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+            "segmentId": "ux-test-flow:voice:ux-beat-03",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-30T17:19:19",
+              "durationSec": 6.64,
+              "expectedSec": 6.4,
+              "peakDb": -1.5,
+              "meanDb": -16.2,
+              "lufs": -15.67,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "6.64s vs 6.40s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-15.67 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "ux-beat-03-take-02",
+            "takes": [
+              {
+                "id": "ux-beat-03-take-01",
+                "pass": true,
+                "durationSec": 6.8,
+                "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-03-take-01.mp3"
+              },
+              {
+                "id": "ux-beat-03-take-02",
+                "pass": true,
+                "durationSec": 6.64,
+                "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-03-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    }
+  ],
+  "markers": [
+    {
+      "id": "marker:beat:ux-beat-01",
+      "kind": "beat",
+      "range": {
+        "startSec": 0,
+        "endSec": 4.67
+      },
+      "label": "name the false solution",
+      "source": {
+        "beatId": "ux-beat-01"
+      }
+    },
+    {
+      "id": "marker:beat:ux-beat-02",
+      "kind": "beat",
+      "range": {
+        "startSec": 4.67,
+        "endSec": 11.34
+      },
+      "label": "reframe the unit of editing",
+      "source": {
+        "beatId": "ux-beat-02"
+      }
+    },
+    {
+      "id": "marker:beat:ux-beat-03",
+      "kind": "beat",
+      "range": {
+        "startSec": 11.34,
+        "endSec": 18.33
+      },
+      "label": "resolve with a memorable rule",
+      "source": {
+        "beatId": "ux-beat-03"
+      }
+    }
+  ],
+  "assets": [],
+  "revision": {
+    "baseEditVersion": "v001",
+    "revision": 0,
+    "updatedAt": "2026-08-30T10:19:20.328Z"
+  },
+  "schemaVersion": 3
+}

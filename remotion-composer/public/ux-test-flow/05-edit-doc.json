@@ -1,0 +1,285 @@
+{
+  "id": "ux-test-flow-edit",
+  "videoId": "ux-test-flow",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "ux-beat-01",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "status_quo",
+      "startSec": 0,
+      "durationSec": 4.67,
+      "transcript": "Every AI track sounds pleasant. So why does none of it stick with you?",
+      "narrativeFunction": "name the false solution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "PLEASANT BUT FORGETTABLE",
+          "subtitle": "the averaging problem",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "ux-beat-02",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 4.67,
+      "durationSec": 6.67,
+      "transcript": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+      "narrativeFunction": "reframe the unit of editing",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "NOVELTY LIVES IN THE EDGES",
+          "subtitle": "where the model smooths",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "ux-beat-03",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "resolution",
+      "startSec": 11.34,
+      "durationSec": 6.99,
+      "transcript": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+      "narrativeFunction": "resolve with a memorable rule",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "EMBRACE THE UGLY TAKE",
+          "subtitle": "produce - critique - improve",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [
+      {
+        "id": "ux-test-flow:voice:ux-beat-01",
+        "src": "ux-test-flow/voice/stems/ux-beat-01.wav",
+        "startSec": 0,
+        "endSec": 4.67,
+        "transcript": "Every AI track sounds pleasant. So why does none of it stick with you?",
+        "qc": {
+          "pass": true,
+          "checkedAt": "2026-08-30T17:18:54",
+          "durationSec": 4.32,
+          "expectedSec": 5.6000000000000005,
+          "peakDb": -1.6,
+          "meanDb": -16.3,
+          "lufs": -15.55,
+          "tailSilenceSec": 0,
+          "wer": 0,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-1.6 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": true,
+              "value": "4.32s vs 5.60s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.00s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-15.55 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "ux-beat-01-take-02",
+        "takes": [
+          {
+            "id": "ux-beat-01-take-01",
+            "pass": true,
+            "durationSec": 4.08,
+            "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-01-take-01.mp3"
+          },
+          {
+            "id": "ux-beat-01-take-02",
+            "pass": true,
+            "durationSec": 4.32,
+            "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-01-take-02.mp3"
+          }
+        ]
+      },
+      {
+        "id": "ux-test-flow:voice:ux-beat-02",
+        "src": "ux-test-flow/voice/stems/ux-beat-02.wav",
+        "startSec": 4.67,
+        "endSec": 11.34,
+        "transcript": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+        "qc": {
+          "pass": true,
+          "checkedAt": "2026-08-30T17:19:06",
+          "durationSec": 6.32,
+          "expectedSec": 6.4,
+          "peakDb": -1.7,
+          "meanDb": -16.7,
+          "lufs": -15.87,
+          "tailSilenceSec": 0,
+          "wer": 0,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-1.7 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": true,
+              "value": "6.32s vs 6.40s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.00s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-15.87 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "ux-beat-02-take-02",
+        "takes": [
+          {
+            "id": "ux-beat-02-take-01",
+            "pass": true,
+            "durationSec": 6.56,
+            "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-02-take-01.mp3"
+          },
+          {
+            "id": "ux-beat-02-take-02",
+            "pass": true,
+            "durationSec": 6.32,
+            "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-02-take-02.mp3"
+          }
+        ]
+      },
+      {
+        "id": "ux-test-flow:voice:ux-beat-03",
+        "src": "ux-test-flow/voice/stems/ux-beat-03.wav",
+        "startSec": 11.34,
+        "endSec": 18.33,
+        "transcript": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+        "qc": {
+          "pass": true,
+          "checkedAt": "2026-08-30T17:19:19",
+          "durationSec": 6.64,
+          "expectedSec": 6.4,
+          "peakDb": -1.5,
+          "meanDb": -16.2,
+          "lufs": -15.67,
+          "tailSilenceSec": 0,
+          "wer": 0,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-1.5 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": true,
+              "value": "6.64s vs 6.40s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.00s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-15.67 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "ux-beat-03-take-02",
+        "takes": [
+          {
+            "id": "ux-beat-03-take-01",
+            "pass": true,
+            "durationSec": 6.8,
+            "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-03-take-01.mp3"
+          },
+          {
+            "id": "ux-beat-03-take-02",
+            "pass": true,
+            "durationSec": 6.64,
+            "path": "C:\\DevWork\\social-media\\projects\\ux-test-flow\\voice\\takes\\ux-beat-03-take-02.mp3"
+          }
+        ]
+      }
+    ],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  },
+  "instruction": "Giọng điệu: người thợ đang chỉ trχει một sai lầm phổ biến — mỗi câu ngắn, gắt, kết bằng meta so sánh (clock/breath). Beat 1 là câu hỏi tu từ, beat 2 vạch ra gốc rễ vấn đề, beat 3 đưa ra quy tắc dùng được ngay."
+}

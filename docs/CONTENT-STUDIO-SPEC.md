@@ -157,6 +157,14 @@ idea → story (review checkpoint #1) → script (checkpoint #2, sửa trực ti
 
 ## 4. PROGRESS LOG
 
+- **2026-08-30 17:35 — UX WALKTHROUGH FIXES (0c9db3f)**: browser-driven flow
+  test qua toàn bộ journey (idea → story → script → generate → editor) trên
+  project `ux-test-flow` (18.33s video, timeline OK). 10 UX notes → 5 fixes:
+  MAJOR script textareas disabled khi chưa có voice (sai logic checkpoint),
+  deriveStage story-approved → script, ApprovalCard chỉ từ stage video, title
+  fallback, drawer header. Deferred: progress %/ETA cho Generate (làm sau),
+  quick actions hide khi chưa có script (cosmetic), track name "Audio 1"
+  (cosmetic).
 - **2026-08-30 05:10 — CREATION FLOW SHIPPED (bd6b567..017ccc7, T1-T7)**:
   journey có mặt từ đầu đến cuối. JourneyStepper (stage DERIVED từ artifacts:
   idea → story → script → voice → video → approved); Create mode ("Video của

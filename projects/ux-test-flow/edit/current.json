@@ -1,0 +1,95 @@
+{
+  "id": "ux-test-flow-edit",
+  "videoId": "ux-test-flow",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "ux-beat-01",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "status_quo",
+      "startSec": 0,
+      "durationSec": 4,
+      "transcript": "Every AI track sounds pleasant. So why does none of it stick with you?",
+      "narrativeFunction": "name the false solution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "PLEASANT BUT FORGETTABLE",
+          "subtitle": "the averaging problem",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "ux-beat-02",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 4,
+      "durationSec": 5,
+      "transcript": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+      "narrativeFunction": "reframe the unit of editing",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "NOVELTY LIVES IN THE EDGES",
+          "subtitle": "where the model smooths",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "ux-beat-03",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "resolution",
+      "startSec": 9,
+      "durationSec": 4,
+      "transcript": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+      "narrativeFunction": "resolve with a memorable rule",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "EMBRACE THE UGLY TAKE",
+          "subtitle": "produce - critique - improve",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  },
+  "instruction": "Giọng điệu: người thợ đang chỉ trχει một sai lầm phổ biến — mỗi câu ngắn, gắt, kết bằng meta so sánh (clock/breath). Beat 1 là câu hỏi tu từ, beat 2 vạch ra gốc rễ vấn đề, beat 3 đưa ra quy tắc dùng được ngay."
+}
