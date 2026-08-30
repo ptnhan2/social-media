@@ -2,7 +2,7 @@
   "ok": false,
   "projectId": "legacy-code-signs",
   "mode": "sync",
-  "generatedAt": "2026-08-30T19:04:17.157Z",
+  "generatedAt": "2026-08-30T20:44:46.512Z",
   "styleVersion": 74,
   "checks": [
     {
@@ -28,7 +28,7 @@
       "label": "Editor doc generated (sync)",
       "pass": true,
       "detail": [
-        "refreshed=? keptUser=? added=? dropped=?"
+        "refreshed=70 keptUser=0 added=0 dropped=0"
       ]
     },
     {
@@ -38,19 +38,16 @@
       "detail": [
         "QC fail: clip:voice:legacy-code-signs:voice:legacy-code-signs-beat-03"
       ]
-    },
-    {
-      "id": "composition",
-      "label": "Composition registered (auto)",
-      "pass": true,
-      "detail": [
-        "legacy-code-signs-30s + legacy-code-signs-30s-editor via projects-manifest.json"
-      ]
     }
   ],
   "warnings": [
     "voice issues: 0 no-src, 1 QC-fail"
   ],
   "blocking": [],
-  "stats": {}
+  "stats": {
+    "refreshed": 70,
+    "keptUser": 0,
+    "added": 0,
+    "dropped": 0
+  }
 }

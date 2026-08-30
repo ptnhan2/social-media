@@ -45,7 +45,7 @@ const fail = (error) => { console.error(JSON.stringify({ ok: false, error })); p
 const slug = String(args.project || "");
 if (!slug || !/^[a-zA-Z0-9._-]+$/.test(slug)) fail("--project <slug> required (safe id)");
 const op = String(args.op || "");
-const OPS = ["set-transcript", "set-direction", "add", "delete", "move", "set-treatment", "set-duration"];
+const OPS = ["set-transcript", "set-direction", "add", "delete", "move", "set-treatment", "set-duration", "set-presence"];
 if (!OPS.includes(op)) fail(`--op must be one of: ${OPS.join(", ")}`);
 
 const editDocPath = path.join(ROOT, "projects", slug, "05-edit-doc.json");
@@ -170,6 +170,34 @@ if (op === "set-transcript") {
   traceTitle = `Duration sửa: ${beatId}`;
   traceData = { beatId, from: beat.durationSec, to: durationSec };
   beat.durationSec = Number(durationSec.toFixed(3));
+} else if (op === "set-presence") {
+  // Character presence per beat (rule #16 surface — the human sticker was
+  // previously hard-wired to the shared isaacverse-final library with NO way
+  // to change or disable it): auto = context heuristic + shared library,
+  // none = off, a pose = that pose, preferring the project's OWN Asset
+  // Studio poses when they exist on disk
+  const pose = String(args.pose || "");
+  const POSES = new Set(["auto", "none", "present", "think", "point-right", "celebrate"]);
+  if (!POSES.has(pose)) fail(`--pose must be one of: ${[...POSES].join(", ")}`);
+  const beat = findBeat(beatId);
+  const params = beat.treatment.params;
+  if (pose === "auto") {
+    delete params.characterPresence;
+  } else if (pose === "none") {
+    params.characterPresence = { ...(typeof params.characterPresence === "object" && params.characterPresence ? params.characterPresence : {}), enabled: false };
+  } else {
+    const projectPose = path.join(COMPOSER, "public", slug, "character", "poses", `${pose}.png`);
+    const prev = typeof params.characterPresence === "object" && params.characterPresence ? params.characterPresence : {};
+    delete prev.asset; // always re-resolve — a stale asset from another pose must not survive
+    params.characterPresence = {
+      ...prev,
+      enabled: true,
+      pose,
+      ...(existsSync(projectPose) ? { asset: `${slug}/character/poses/${pose}.png` } : {}),
+    };
+  }
+  traceTitle = `Character presence: ${beatId} → ${pose}`;
+  traceData = { beatId, pose, asset: params.characterPresence?.asset ?? "shared-library" };
 }
 
 // ---- retime + sync audioPlan.voice to the new beat layout ----

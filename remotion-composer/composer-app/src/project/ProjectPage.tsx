@@ -28,6 +28,10 @@ const TREATMENT_OPTIONS = [
   { id: "process-timeline", label: "Process timeline" },
 ];
 
+/** Treatments that render CharacterPresence (the human sticker) — the control
+ *  is hidden elsewhere (a pose on chapter-card would be a silent no-op). */
+const PRESENCE_TREATMENTS = new Set(["semantic-diagram", "process-timeline"]);
+
 const num = (value: unknown, fallback: number) => (typeof value === "number" && Number.isFinite(value) ? value : fallback);
 
 const pollJob = async (startUrl: string, body: Record<string, unknown>, statusUrl: (jobId: string) => string) => {
@@ -73,6 +77,10 @@ const BeatEditor: React.FC<{
   const takes = Array.isArray(md.takes) ? (md.takes as VoiceTake[]) : [];
   const takeId = typeof md.takeId === "string" ? md.takeId : "";
   const treatment = typeof beatMd.treatmentId === "string" ? beatMd.treatmentId : "?";
+  // presence select value: explicit pose, or "none" when disabled, else "auto"
+  const presence = beatMd.presence as { pose?: string; enabled?: boolean; asset?: string } | undefined;
+  const presenceValue = presence?.enabled === false ? "none" : presence?.pose ?? "auto";
+  const presenceOwnAsset = typeof presence?.asset === "string" && presence.asset.startsWith(`${projectId}/`) ? " (asset riêng)" : "";
 
   const [draftScript, setDraftScript] = React.useState(sentenceText);
   const [draftDirection, setDraftDirection] = React.useState(beatDirection || providerText);
@@ -161,6 +169,19 @@ const BeatEditor: React.FC<{
     try {
       await scriptBeat(projectId, "set-duration", { beatId: String(beat.source.beatId ?? ""), duration: durationSec });
       setMessage(`Duration → ${durationSec}s ✓`);
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+      setBusy("none");
+    }
+  };
+
+  // character presence per beat (rule #16: the human sticker was hard-wired
+  // to the shared isaacverse-final library with no way to change or disable)
+  const setPresence = async (pose: string) => {
+    setBusy("op"); setMessage("");
+    try {
+      await scriptBeat(projectId, "set-presence", { beatId: String(beat.source.beatId ?? ""), pose });
       onChanged();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error));
@@ -265,6 +286,20 @@ const BeatEditor: React.FC<{
               {TREATMENT_OPTIONS.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
             </select>
           </label>
+          {PRESENCE_TREATMENTS.has(treatment) ? (
+            <label className="pp-treatment-field" title={`Nhân vật — auto = theo ngữ cảnh (ảnh thư viện dùng chung), tắt = không hiện, pose = chọn${presenceOwnAsset ? presenceOwnAsset : ""}`}>
+              <span className="pp-treatment-label">👤</span>
+              <select className="pp-treatment-select" aria-label={`Character presence beat ${index + 1}`} value={presenceValue} disabled={busy !== "none"}
+                onChange={(e) => void setPresence(e.target.value)}>
+                <option value="auto">👤 Auto</option>
+                <option value="none">🚫 Tắt</option>
+                <option value="present">Present</option>
+                <option value="think">Think</option>
+                <option value="point-right">Point right</option>
+                <option value="celebrate">Celebrate</option>
+              </select>
+            </label>
+          ) : null}
           <label className="pp-duration-field" title="Thời lượng beat (giây)">
             <input type="number" className="pp-duration-input" aria-label={`Duration beat ${index + 1}`} min="1" max="600" step="0.5"
               defaultValue={Number((beat.range.endSec - beat.range.startSec).toFixed(1))} key={`dur-${beat.id}-${(beat.range.endSec - beat.range.startSec).toFixed(1)}`} disabled={busy !== "none"}
@@ -815,7 +850,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
     range: { startSec: beat.startSec, endSec: beat.startSec + beat.durationSec },
     label: beat.narrativeFunction ?? beat.id,
     source: { beatId: beat.id },
-    metadata: { transcript: beat.transcript, direction: beat.direction, treatmentId: beat.treatment?.id } as Record<string, unknown>,
+    metadata: { transcript: beat.transcript, direction: beat.direction, treatmentId: beat.treatment?.id, presence: beat.treatment?.params?.characterPresence } as Record<string, unknown>,
   }));
   const latest = renders[0];
   const stage = deriveStage(snapshot, storyDraft, renders.length, approval, research);

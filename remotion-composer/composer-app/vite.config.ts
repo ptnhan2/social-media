@@ -862,7 +862,7 @@ export default defineConfig({
             try {
               const projectId = String(body.projectId || "");
               const op = String(body.op || "");
-              const OPS = new Set(["set-transcript", "set-direction", "add", "delete", "move", "set-treatment", "set-duration"]);
+              const OPS = new Set(["set-transcript", "set-direction", "add", "delete", "move", "set-treatment", "set-duration", "set-presence"]);
               if (!projectId || !/^[a-zA-Z0-9._-]+$/.test(projectId)) throw new Error("projectId required (safe id)");
               if (!OPS.has(op)) throw new Error(`op must be one of: ${[...OPS].join(", ")}`);
               const needsBeatId = op !== "add";
@@ -877,6 +877,10 @@ export default defineConfig({
                 if (!TREATMENTS.has(String(body.treatment))) throw new Error(`treatment must be one of: ${[...TREATMENTS].join(", ")}`);
               }
               if (op === "set-duration" && (typeof body.duration !== "number" || body.duration < 1 || body.duration > 600)) throw new Error("duration must be 1-600 seconds");
+              if (op === "set-presence") {
+                const POSES = new Set(["auto", "none", "present", "think", "point-right", "celebrate"]);
+                if (!POSES.has(String(body.pose))) throw new Error(`pose must be one of: ${[...POSES].join(", ")}`);
+              }
               const snapshot = PROJECT_STORE.load(projectId);
               if (!snapshot.editDoc) throw new Error("Project has no edit document — write a script first");
               // argv array spawn (no shell) — values with spaces/quotes are
@@ -888,6 +892,7 @@ export default defineConfig({
               if (op === "move") cmd.push("--dir", String(body.dir));
               if (op === "set-treatment") cmd.push("--treatment", String(body.treatment));
               if (op === "set-duration") cmd.push("--duration", String(body.duration));
+              if (op === "set-presence") cmd.push("--pose", String(body.pose));
               if (op === "add" && body.index !== undefined && body.index !== null) cmd.push("--index", String(body.index));
               const apply = spawnSync(process.execPath, cmd, { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
               if (apply.status !== 0) {

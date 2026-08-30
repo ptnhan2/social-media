@@ -183,7 +183,7 @@ const characterPresenceElement = (treatmentId: string, beat: SemanticBeat, resol
   const cx = anchor.left / 100 * W;
   const cy = anchor.top / 100 * H;
   const a = accent(beat, resolve);
-  return image(`${beat.id}:character-presence`, cx - width / 2, cy - height / 2, width, height, presenceAsset(merged.pose), {
+  return image(`${beat.id}:character-presence`, cx - width / 2, cy - height / 2, width, height, merged.asset ?? presenceAsset(merged.pose), {
     z: 30, opacity: merged.opacity ?? 0.95,
     animIn: PRESENCE_TO_CLIP_ANIM[merged.motion ?? "fade-scale"],
     animDurationSec: 0.6, startSec: merged.startSec ?? 0.7,

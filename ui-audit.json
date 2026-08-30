@@ -1,5 +1,5 @@
 {
-  "url": "http://localhost:5174/project?project=readable-code",
+  "url": "http://localhost:5174/project?project=legacy-code-signs",
   "viewports": [
     {
       "viewport": {
@@ -94,7 +94,7 @@
         "w": 1920,
         "h": 1080
       },
-      "url": "http://localhost:5174/project?project=readable-code",
+      "url": "http://localhost:5174/project?project=legacy-code-signs",
       "scanned": 5,
       "hoverRules": 92,
       "fontsStatus": "loaded",
@@ -129,7 +129,7 @@
         "w": 1366,
         "h": 768
       },
-      "url": "http://localhost:5174/project?project=readable-code",
+      "url": "http://localhost:5174/project?project=legacy-code-signs",
       "scanned": 5,
       "hoverRules": 92,
       "fontsStatus": "loaded",
@@ -164,7 +164,7 @@
         "w": 1024,
         "h": 768
       },
-      "url": "http://localhost:5174/project?project=readable-code",
+      "url": "http://localhost:5174/project?project=legacy-code-signs",
       "scanned": 5,
       "hoverRules": 92,
       "fontsStatus": "loaded",
@@ -199,7 +199,7 @@
         "w": 768,
         "h": 1024
       },
-      "url": "http://localhost:5174/project?project=readable-code",
+      "url": "http://localhost:5174/project?project=legacy-code-signs",
       "scanned": 5,
       "hoverRules": 92,
       "fontsStatus": "loaded",

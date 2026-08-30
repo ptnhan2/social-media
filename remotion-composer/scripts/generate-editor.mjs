@@ -241,10 +241,15 @@ async function main() {
       stats.dropped += 1;
     }
 
-    const durationSec = Math.max(0, ...tracks.flatMap((track) => track.clips.map((clip) => clip.range.endSec)), 0.1);
+    // drop PROJECTION tracks that went empty (element disappeared: presence
+    // disabled, treatment switched) — user-created tracks always survive
+    const liveTracks = tracks.filter((track) => track.clips.length > 0 || track.metadata?.userCreated === true);
+    if (liveTracks.length !== tracks.length) stats.droppedTracks = tracks.length - liveTracks.length;
+
+    const durationSec = Math.max(0, ...liveTracks.flatMap((track) => track.clips.map((clip) => clip.range.endSec)), 0.1);
     return [{
       ...existingDoc,
-      tracks: tracks.map((track, order) => ({ ...track, order })),
+      tracks: liveTracks.map((track, order) => ({ ...track, order })),
       markers: freshDoc.markers,
       durationSec,
       revision: {

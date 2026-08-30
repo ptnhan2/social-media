@@ -81,7 +81,10 @@
               "to": "team",
               "revealAt": 1.6
             }
-          ]
+          ],
+          "characterPresence": {
+            "enabled": false
+          }
         },
         "assets": []
       },

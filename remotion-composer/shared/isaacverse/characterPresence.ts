@@ -20,6 +20,11 @@ export type CharacterPresenceConfig = {
   startSec?: number;
   opacity?: number;
   enabled?: boolean;
+  /** Public-relative asset path override (e.g. "<slug>/character/poses/think.png").
+   *  Set per-beat by the studio's set-presence op / the agent — resolves
+   *  PER-PROJECT assets (Asset Studio poses) instead of the shared
+   *  isaacverse-final library. Absent = presenceAsset() default. */
+  asset?: string;
 };
 
 export const PRESENCE_HEIGHT: Record<PresenceSize, number> = { chip: 130, small: 216, medium: 378, half: 594, full: 972 };
@@ -174,8 +179,11 @@ export const resolveCharacterPresence = (
 /** Character asset path for a pose (public-relative).
  *  Poses are BAKED composited assets (real body + channel head, see
  *  tools/assets/bake_poses.py + process_body.py) — regenerate by editing the
- *  pose anchor json and re-running the pipeline. */
-export const presenceAsset = (pose: PresencePose | undefined): string =>
+ *  pose anchor json and re-running the pipeline.
+ *  DEFAULT is the shared isaacverse-final library — a project must OPT IN to
+ *  its own character via params.characterPresence.asset (the studio's
+ *  set-presence op resolves per-project Asset Studio poses first). */
+export const presenceAsset = (pose: PresencePose | undefined, base = "isaacverse-final"): string =>
   !pose || pose === "none"
-    ? "isaacverse-final/character/head.png"
-    : `isaacverse-final/character/poses/${pose}.png`;
+    ? `${base}/character/head.png`
+    : `${base}/character/poses/${pose}.png`;

@@ -120,18 +120,51 @@ Agent dispatch subagent để chạy tool có sẵn trong toolset của chính n
 <b>Nhưng:</b> với user thật (không phải agent biết restart server), lần chạy đầu tiên hôm nay sẽ <b class="bad">chết ở bước research và không tự phục hồi được</b>. Ba fix CRITICAL trên là điều kiện để đưa cho user thật. Sau đó, efficiency của agent loop (MAJOR #4) quyết định trải nghiệm "agent làm giúp tôi" có đáng tiền không.
 </div>
 
-<h2>6. Đề xuất thứ tự fix</h2>
+<h2>6. Bổ sung sau feedback (03:19) — Root cause "human sticker" + bài học audit</h2>
+
+<div class="finding"><b>User bắt lỗ hổng mà walkthrough bỏ sót: nhân vật human sticker trong video bị gán cứng vào ảnh cũ của isaacverse-final.</b><br>
+Root cause nằm NGAY trong file text đọc được — <code>characterPresence.ts:178</code>: <code>presenceAsset()</code> hard-code <code>isaacverse-final/character/poses/…</code> cho <b>MỌI project</b>. Hai lỗ hổng chồng nhau:<br>
+<b>(a) Ảnh cứng:</b> project nào cũng render character bằng thư viện ảnh của isaacverse-final (ảnh từ 25/08). Asset Studio CÓ lưu poses per-project (<code>&lt;slug&gt;/character/poses/</code>) nhưng render path không bao giờ đọc chúng — poses user tạo là DEAD CODE.<br>
+<b>(b) Zero surface can thiệp:</b> character tự xuất hiện theo narrative keyword (CONTEXT_PRESENCE) mà user không yêu cầu, không có chỗ nào trong studio/editor chọn/tắt/đổi — cả human lẫn agent. Rule #16 vi phạm trầm trọng nhất từ trước tới giờ.</div>
+
+<h3>Đã fix ngay (commit này)</h3>
+<table>
+<tr><th>Thay đổi</th><th>Chi tiết</th></tr>
+<tr><td class="good">presence config thêm <code>asset</code> override</td><td>Asset sống trong <code>beat.treatment.params.characterPresence.asset</code> — cả 2 render path (Remotion + projection) ưu tiên nó, fallback thư viện dùng chung</td></tr>
+<tr><td class="good">script-beat op <code>set-presence</code></td><td><code>auto</code> (context heuristic) / <code>none</code> (tắt) / pose cụ thể — tự resolve asset per-project (poses Asset Studio) khi tồn tại, fallback shared library</td></tr>
+<tr><td class="good">Studio surface: select 👤 trong BeatEditor</td><td>Hiện với semantic-diagram + process-timeline (2 treatment render character) — chọn Auto/Tắt/pose; badge "(asset riêng)" khi dùng pose của project</td></tr>
+<tr><td class="good">Fix bug tiềm tàng lộ ra</td><td>Tắt presence/đổi treatment làm element biến mất → track <code>visual-N</code> sync trước thành rỗng → validator reject mọi generate-timeline sau đó. Sync giờ drop projection tracks rỗng</td></tr>
+</table>
+
+<h3>Bài học audit (cách tư duy user chỉ — tìm vấn đề THẬT, không phải bề mặt)</h3>
+<div class="note">
+Walkthrough cũ của tôi dừng ở "video render OK, QC pass" — vì tôi <b>không đọc output bằng mắt data</b>. Câu hỏi đúng không phải "video có chạy không" mà là: <b>"với MỖI thứ xuất hiện trong video, ai đặt nó vào đó? User/agent chỉnh được ở ĐÂU?"</b> — mọi câu trả lời "hard-coded / không ai / không đâu" là một lỗ hổng workflow thật sự. Audit lại theo câu hỏi này:
+</div>
+<table>
+<tr><th>Thứ trong video</th><th>Ai đặt?</th><th>Surface can thiệp?</th><th>Trạng thái</th></tr>
+<tr><td>Nhân vật (presence)</td><td>Code hard-code + narrative keyword auto</td><td>❌ → ✅ select 👤 (vừa thêm)</td><td class="good">FIXED</td></tr>
+<tr><td>Ảnh poses per-project</td><td>Asset Studio tạo file</td><td>❌ file dead-code → ✅ set-presence tự resolve</td><td class="good">FIXED (wire)</td></tr>
+<tr><td>Treatment params (title/subtitle/nodes/steps...)</td><td>Agent (write_edit_doc) hoặc default khi đổi treatment</td><td>❌ KHÔNG có UI edit params — đổi treatment = params reset về default seed</td><td class="bad">GAP — tựa "chọn template" mà không sửa được nội dung template</td></tr>
+<tr><td>Style knobs (fonts/colors)</td><td>Agent qua update_style</td><td>⚠️ Chỉ qua chat drawer — không có UI trực tiếp (parity #16 mỏng)</td><td class="warn">GAP parity</td></tr>
+<tr><td>Music/SFX</td><td>Không ai — audioPlan rỗng</td><td>❌ Không có generator, không có surface</td><td class="warn">Missing feature</td></tr>
+<tr><td>Voice giọng đọc (voiceId/model)</td><td>Default</td><td>✅ BeatEditor voice panel (voiceId, model, speed, stability)</td><td>OK</td></tr>
+<tr><td>Aspect ratio / fps / resolution</td><td>Default 1920×1080/30</td><td>❌ Combo hiển thị nhưng disabled</td><td class="warn">GAP (9:16 shorts? YouTube default 16:9 nên chưa gấp)</td></tr>
+<tr><td>PRESENCE_ASPECT calibration</td><td>Comment code: "UPDATE when poses are re-baked"</td><td>❌ Dev-only — user re-bake poses sẽ lệch aspect</td><td class="warn">GAP (thấp)</td></tr>
+</table>
+
+<h2>8. Đề xuất thứ tự fix (gộp walkthrough + audit surface)</h2>
 <table>
 <tr><th>#</th><th>Việc</th><th>Độ khó</th><th>Tác động</th></tr>
 <tr><td>1</td><td>Đồng bộ filesystem view studio ↔ agent (stale mirror là root cause của cả dead-end lẫn lang thang)</td><td>Vừa</td><td class="bad">CRITICAL #1b — điều kiện tồn tại của "agent đồng hành"</td></tr>
 <tr><td>2</td><td>Runbook + health-check: restart langgraph sau khi đổi tool, verify tool list ở /ok</td><td>Nhỏ</td><td class="bad">CRITICAL #1</td></tr>
 <tr><td>3</td><td>Approval tự continuation: duyệt research/story/REDO → auto-send message cho agent</td><td>Vừa</td><td class="bad">CRITICAL #3 — biến "agent đồng hành" thành thật</td></tr>
 <tr><td>4</td><td>AgentPanel: task ERROR → message thân thiện + nút retry</td><td>Nhỏ</td><td class="bad">CRITICAL #2</td></tr>
-<tr><td>5</td><td>createBlankProject: beats [] + lưu shape vào state</td><td>Nhỏ</td><td>MAJOR #5</td></tr>
-<tr><td>6</td><td>System prompt agent: gọi tool trực tiếp, chỉ focus project hiện tại, verify freshness trước khi kết luận "không có"</td><td>Nhỏ</td><td>MAJOR #4/#6</td></tr>
-<tr><td>7</td><td>Voice preview 1 câu trước generate + duration step fix + picker cleanup</td><td>Vừa</td><td>Polish + YouTuber needs</td></tr>
+<tr><td>5</td><td>Treatment params edit UI (title/subtitle/nodes/steps per beat — giờ đổi treatment reset params)</td><td>Vừa</td><td class="warn">Audit gap lớn nhất còn lại</td></tr>
+<tr><td>6</td><td>createBlankProject: beats [] + lưu shape vào state</td><td>Nhỏ</td><td>MAJOR #5</td></tr>
+<tr><td>7</td><td>System prompt agent: gọi tool trực tiếp, chỉ focus project hiện tại, verify freshness trước khi kết luận "không có"</td><td>Nhỏ</td><td>MAJOR #4/#6</td></tr>
+<tr><td>8</td><td>Voice preview 1 câu trước generate + duration step fix + picker cleanup + style-knob UI (parity #16)</td><td>Vừa</td><td>Polish + YouTuber needs</td></tr>
 </table>
 
-<p class="meta">Walkthrough bởi agent (vai YouTuber code-quality channel) · 31/08/2026 01:20–02:30 · Tất cả thao tác qua UI thật · Evidence: pipeline-log 13 bước, renders/auto-2026-08-30T19-04-25-736Z.mp4, qa/research.json, qa/story-draft.json, approval.json</p>
+<p class="meta">Walkthrough bởi agent (vai YouTuber code-quality channel) · 31/08/2026 01:20–03:40 · Tất cả thao tác qua UI thật · Bổ sung sau feedback user: root cause human sticker + fix (presence asset override + set-presence op + BeatEditor select 👤 + sync drop empty tracks) + audit surface toàn video · Evidence: pipeline-log, renders, qa/*, commits 31/08</p>
 </body>
 </html>

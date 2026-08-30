@@ -227,7 +227,7 @@ export const CharacterPresence: React.FC<{ config: CharacterPresenceConfig; acce
         filter: `drop-shadow(0 6px 22px rgba(0,0,0,0.6)) drop-shadow(0 0 26px ${accent}33)`,
       }}
     >
-      <Img src={staticFile(presenceAsset(merged.pose))} style={{ height: "100%", width: "auto", display: "block" }} />
+      <Img src={staticFile(merged.asset ?? presenceAsset(merged.pose))} style={{ height: "100%", width: "auto", display: "block" }} />
     </div>
   );
 };
