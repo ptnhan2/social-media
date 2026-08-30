@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handoff 31/08 — P1+P2 Script Editing</title>
+<style>
+  body { font-family: Inter, system-ui, sans-serif; background: #0b0e14; color: #d8dee9; max-width: 860px; margin: 0 auto; padding: 32px 24px; line-height: 1.6; }
+  h1 { font-size: 22px; color: #fff; border-bottom: 1px solid #1f2937; padding-bottom: 12px; }
+  h2 { font-size: 16px; color: #60a5fa; margin-top: 28px; }
+  .meta { color: #7c8797; font-size: 12px; }
+  .ok { color: #2dd4a0; font-weight: 600; }
+  .human { color: #f5b544; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border: 1px solid #1f2937; vertical-align: top; }
+  th { background: #111827; color: #b9bfcc; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  code { background: #111827; padding: 1px 6px; border-radius: 4px; font-size: 12px; color: #60a5fa; }
+  .evidence { color: #7c8797; font-size: 12px; }
+  .url { background: #12203a; padding: 6px 12px; border-radius: 6px; display: block; margin: 6px 0; color: #60a5fa; font-size: 13px; }
+  .note { background: #111827; border-left: 3px solid #2563eb; padding: 10px 16px; margin: 14px 0; font-size: 13px; border-radius: 0 6px 6px 0; }
+</style>
+</head>
+<body>
+<h1>🚦 Handoff 31/08 (00:50) — P1 + P2: Script Editing xong</h1>
+<p class="meta">Commits: 807c338 (P1) · c063f08 (P2) · 8fd6f29 (data fix) · 01e7288 (docs) — CI xanh toàn bộ · Verify agent 8/8 PASS (sau khi dọn 1 data artifact)</p>
+
+<div class="note">
+<b>Đã mở sẵn cho bạn:</b>
+<a class="url" href="http://localhost:5174/project?project=readable-code">📁 Content Studio — readable-code (walkthrough project, 7 beats sẵn sàng generate)</a>
+<a class="url" href="http://localhost:5174/project?project=agent-loop-test">📁 Content Studio — agent-loop-test (E2E vehicle, có voice + partial generate đã chạy)</a>
+Composer :5174 ✓ 200 · Agent :2025 ✓ ok — cả hai đang chạy.
+</div>
+
+<h2>1. Beat CRUD — script là living document</h2>
+<table>
+<tr><th>Mục</th><th>Cách bạn thấy</th><th>Agent đã verify</th></tr>
+<tr><td>Thêm beat</td><td>Trong readable-code, cuối phần Script có ô <code>thêm beat mới — gõ transcript rồi Enter</code>. Gõ gì đó + Enter → beat 8 xuất hiện ngay.</td><td class="ok">PASS — UI click-through: beat thêm, 8 beats · 157s hiển thị đúng</td></tr>
+<tr><td>Xoá beat</td><td>Nút <code>✕</code> mỗi beat → xác nhận <code>xoá?</code> → beat biến mất, durations retime.</td><td class="ok">PASS — click 2 bước, 8→7 beats</td></tr>
+<tr><td>Di chuyển</td><td>Nút <code>↑ ↓</code> mỗi beat (đã disable ở đầu/cuối danh sách).</td><td class="ok">PASS — beat 2↔3 swap qua UI, khôi phục lại</td></tr>
+<tr><td>Sửa script</td><td>Sửa trực tiếp textarea mỗi beat, click ra ngoài → lưu vào edit-doc (script truth). Hoạt động CẢ KHI chưa có voice.</td><td class="ok">PASS — blur-save → API → edit-doc verified</td></tr>
+</table>
+
+<h2>2. Partial generate — chỉ trả tiền TTS phần thay đổi</h2>
+<table>
+<tr><th>Mục</th><th>Cách bạn thấy</th><th>Agent đã verify</th></tr>
+<tr><td>Stale detector</td><td>Sau khi sửa script 1 beat (khi đã có voice), nút Generate đổi thành <code>⚡ Generate nhanh (1/3 beats thay đổi)</code> + dòng giải thích.</td><td class="ok">PASS — detector chính xác 1/3 (transcript mismatch), buildProviderText fallback 2 chiều</td></tr>
+<tr><td>Partial produce</td><td>Click ⚡ → confirm dialog "giữ N stem cũ" → chạy voice (chỉ beats thay đổi) → timeline → render.</td><td class="ok">PASS E2E — 1/3 beats billed (2 takes, QC PASS), 2 stems kept nguyên qc/takes, "Video draft xong ✓ 17.69s"</td></tr>
+<tr><td>Stale reset</td><td>Sau khi produce xong, nút quay về "🎬 Generate video (3 beats)" — không còn beat stale.</td><td class="ok">PASS — stale counter về 0</td></tr>
+</table>
+
+<h2>3. Direction pre-voice + treatment + duration</h2>
+<table>
+<tr><th>Mục</th><th>Cách bạn thấy</th><th>Agent đã verify</th></tr>
+<tr><td>Direction trước voice</td><td>Mở <code>🎙 voice</code> trên 1 beat chưa có voice → ô Direction chỉnh được (tags/CAPS) — sẽ được dùng khi Generate.</td><td class="ok">PASS — set-direction lưu vào edit-doc beat.direction</td></tr>
+<tr><td>Treatment selector</td><td>Dropdown <code>🎬</code> mỗi beat — 8 treatments. Chọn Semantic diagram → beat đó đổi treatment (params mặc định tự seed, giữ accent cũ).</td><td class="ok">PASS — Chapter card → Semantic diagram click-verified, "Treatment → Semantic diagram ✓"</td></tr>
+<tr><td>Duration edit</td><td>Ô số <code>N s</code> mỗi beat — sửa 20 → 25, click ra ngoài → total duration ở header Script cập nhật.</td><td class="ok">PASS — set-duration retime cumulative</td></tr>
+<tr><td>Per-beat progress</td><td>Khi đang Generate, nút hiển thị <code>Đang chạy: TTS voice 3/7 beats…</code> (live từng beat, không phải chờ cả cụm).</td><td class="ok">PASS — scaffold JSON progress line → endpoint detail → UI</td></tr>
+</table>
+
+<h2>4. Verify matrix (agent đã chạy)</h2>
+<table>
+<tr><th>Check</th><th>Kết quả</th><th>Evidence</th></tr>
+<tr><td>vitest</td><td class="ok">194/194</td><td class="evidence">26 files passed</td></tr>
+<tr><td>design-audit</td><td class="ok">0 failures</td><td class="evidence">palette/type/spacing ✓</td></tr>
+<tr><td>ui-audit (4 viewports)</td><td class="ok">0 critical</td><td class="evidence">treatment/duration controls render đúng 7 beats</td></tr>
+<tr><td>Verify agent (8 items)</td><td class="ok">8/8 PASS</td><td class="evidence">CRUD API, only-validation, stale model, lockstep, tests, liveness, data state, UI</td></tr>
+<tr><td>CI (GitHub Actions)</td><td class="ok">Xanh</td><td class="evidence">4 commits pushed, tất cả success</td></tr>
+<tr><td>Cold-diff review</td><td class="ok">4 MAJOR fixed</td><td class="evidence">empty --text parse, audio-regen segment sync, videoDoc merge, TOCTOU lock</td></tr>
+</table>
+
+<h2>5. Human gate — L5 (quyết của bạn)</h2>
+<table>
+<tr><th>Mục</th><th>Cách nghe/nhìn</th></tr>
+<tr><td class="human">🎙 Voice quality</td><td>agent-loop-test: mở <code>🎙 voice</code> mỗi beat → ▶ nghe stem — giọng có tự nhiên không là human gate.</td></tr>
+<tr><td class="human">🎬 Treatment taste</td><td>Chuyển vài beat của readable-code sang treatments khác nhau → Generate → xem video: mix treatments có đẹp không là human gate.</td></tr>
+<tr><td class="human">⚡ Có bấm Generate cho readable-code không</td><td>7 beats CHAPTER-CARD · 150s — sẽ bill TTS ~7 beats × 2 takes. Quyết của bạn.</td></tr>
+</table>
+
+<h2>6. Queue session sau</h2>
+<p class="meta">D1 storyboard preview · A5 audience/tone inputs · A3 agent cycle trọn vòng (thesis test) · chi tiết trong docs/TODO-NEXT.md</p>
+</body>
+</html>
