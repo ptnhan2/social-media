@@ -1,7 +1,8 @@
-# TODO NEXT — Updated 2026-08-30 23:59 (P1 SHIPPED: beat CRUD + partial generate + direction pre-voice)
+# TODO NEXT — Updated 2026-08-31 00:30 (P1 + P2 SHIPPED)
 
 > Chain thesis: produce ✅ · approve ✅ · content-studio ✅ · creation-flow ✅
-> · research ✅ · **P1 script-editing ✅** · fix 🟡 · learn 🟡
+> · research ✅ · **P1 script-editing ✅** · **P2 treatment/duration/progress ✅**
+> · fix 🟡 · learn 🟡
 > Đọc file này đầu session mới. Sau compact: đọc `docs/HARNESS-RECOVERY.md` nữa.
 
 ---
@@ -31,14 +32,20 @@
     edit/current.json → store.load() ưu tiên current.json → stale reads.
     Giờ scaffold viết cả hai (lockstep)
 - RESEARCH PIPELINE + VIDEO SHAPE + P0 fixes (session 1, sáng-chiều)
+- **P2 SHIPPED (session 2, 00:30)**:
+  - **B2 Treatment selector**: select 8 treatments trong mỗi beat →
+    set-treatment op (default params seeded từ transcript, giữ accent cũ
+    cho visual continuity). UI click-verified: Chapter card → Semantic
+    diagram ✓
+  - **B3 Duration edit**: number input mỗi beat → set-duration op
+    (1-600s, retime cumulative). 20↔25s verified
+  - **D5 Per-beat progress**: scaffold in JSON progress line mỗi beat →
+    produce endpoint track detail → Generate button "TTS voice 3/7 beats"
 
 ## QUEUE TIẾP THEO
 
-### P2 — visual + progress
-- **B2**: Treatment selector per beat (hiện tất cả đều CHAPTER-CARD)
-- **B3**: Edit duration per beat
+### P2 còn lại
 - **D1**: Storyboard preview (static frames từ treatments)
-- **D5**: Progress feedback trong Generate (per-beat status)
 - **A5**: Audience/tone/language inputs trong CreateCard
 
 ### P3 — YouTube integration

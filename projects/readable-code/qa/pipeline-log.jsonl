@@ -20,3 +20,10 @@
 {"ts":"2026-08-30T16:45:26.552Z","stage":"plan","title":"Direction sửa: rc-b2","data":{"beatId":"rc-b2","from":"[calm] Naming is the CHEAPEST refactor.","to":"true"}}
 {"ts":"2026-08-30T17:10:33.028Z","stage":"plan","title":"Direction sửa: rc-b1","data":{"beatId":"rc-b1","from":"true","to":"[test] direction"}}
 {"ts":"2026-08-30T17:11:18.443Z","stage":"plan","title":"Direction sửa: rc-b1","data":{"beatId":"rc-b1","from":"[test] direction","to":""}}
+{"ts":"2026-08-30T17:32:17.762Z","stage":"plan","title":"Treatment đổi: rc-b3","data":{"beatId":"rc-b3","from":"chapter-card","to":"semantic-diagram"}}
+{"ts":"2026-08-30T17:32:20.098Z","stage":"plan","title":"Duration sửa: rc-b5","data":{"beatId":"rc-b5","from":25,"to":20}}
+{"ts":"2026-08-30T17:33:13.301Z","stage":"plan","title":"Beat di chuyển: rc-b3 down","data":{"beatId":"rc-b3","dir":"down","from":1,"to":2}}
+{"ts":"2026-08-30T17:33:16.389Z","stage":"plan","title":"Treatment đổi: rc-b3","data":{"beatId":"rc-b3","from":"semantic-diagram","to":"chapter-card"}}
+{"ts":"2026-08-30T17:33:19.270Z","stage":"plan","title":"Duration sửa: rc-b5","data":{"beatId":"rc-b5","from":20,"to":25}}
+{"ts":"2026-08-30T17:34:37.468Z","stage":"plan","title":"Treatment đổi: rc-b3","data":{"beatId":"rc-b3","from":"chapter-card","to":"semantic-diagram"}}
+{"ts":"2026-08-30T17:35:31.300Z","stage":"plan","title":"Treatment đổi: rc-b3","data":{"beatId":"rc-b3","from":"semantic-diagram","to":"chapter-card"}}

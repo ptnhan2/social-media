@@ -16,14 +16,14 @@
       "summary": "hook"
     },
     {
-      "id": "rc-b3",
-      "journeySlot": "call",
-      "summary": "structure"
-    },
-    {
       "id": "rc-b2",
       "journeySlot": "call",
       "summary": "naming"
+    },
+    {
+      "id": "rc-b3",
+      "journeySlot": "call",
+      "summary": "structure"
     },
     {
       "id": "rc-b4",

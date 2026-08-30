@@ -219,6 +219,7 @@
         "endSec": 17.69,
         "transcript": "Plan the pauses FIRST. Let the voice decide the pace.",
         "providerText": "Plan the pauses FIRST. Let the voice decide the pace.",
+        "kept": true,
         "qc": {
           "pass": true,
           "checkedAt": "2026-08-30T23:22:34",

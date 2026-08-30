@@ -108,6 +108,9 @@ if (doRegen) {
   console.log(`[voice] regenerating ${regenTargets.length}/${planned.length} segment(s), ${takeCount} take(s) each${onlyIds ? ` (partial: ${onlyIds.length} kept)` : ""}...`);
   for (const segment of regenTargets) {
     if (!segment.transcript) { console.log(`  SKIP ${segment.beatId} (no transcript)`); continue; }
+    // per-beat progress line — produce.mjs passes it through; the studio's
+    // Generate button reads it for live "3/7 beats" feedback
+    console.log(JSON.stringify({ step: "voice", beat: segment.beatId, index: regenTargets.indexOf(segment) + 1, total: regenTargets.length }));
     const payload = JSON.stringify({
       projectId: slug, clipId: segment.beatId, providerText: segment.providerText,
       voiceSettings: {}, expectedSec: expectedDurationSec(segment.providerText), takes: takeCount,

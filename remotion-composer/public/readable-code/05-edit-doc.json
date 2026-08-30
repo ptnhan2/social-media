@@ -29,33 +29,11 @@
       "audioCues": []
     },
     {
-      "id": "rc-b3",
-      "sceneId": "",
-      "shotIds": [],
-      "journeySlot": "call",
-      "startSec": 20,
-      "durationSec": 20,
-      "transcript": "Small functions are not about line count. They are about one idea per unit.",
-      "narrativeFunction": "structure",
-      "treatment": {
-        "id": "chapter-card",
-        "params": {
-          "title": "ONE IDEA PER FUNCTION",
-          "subtitle": "structure beats cleverness",
-          "accent": "#2dd4a0"
-        },
-        "assets": []
-      },
-      "elements": [],
-      "motionPhases": [],
-      "audioCues": []
-    },
-    {
       "id": "rc-b2",
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "call",
-      "startSec": 40,
+      "startSec": 20,
       "durationSec": 20,
       "transcript": "Naming is the cheapest refactor. A good function name replaces three lines of comments.",
       "narrativeFunction": "naming",
@@ -72,6 +50,28 @@
       "motionPhases": [],
       "audioCues": [],
       "direction": "true"
+    },
+    {
+      "id": "rc-b3",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 40,
+      "durationSec": 20,
+      "transcript": "Small functions are not about line count. They are about one idea per unit.",
+      "narrativeFunction": "structure",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "SMALL FUNCTIONS ARE NOT ABOUT LINE COUNT",
+          "subtitle": "",
+          "accent": "#2dd4a0"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
     },
     {
       "id": "rc-b4",

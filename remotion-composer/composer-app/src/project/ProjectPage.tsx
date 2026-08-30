@@ -16,6 +16,18 @@ import { useAgentUi } from "../agent/AgentDrawer";
 type VoiceTake = { id?: string; path?: string; pass?: boolean; durationSec?: number };
 type VoiceSettingsShape = { voiceId?: string; modelId?: string; stability?: number; style?: number; speed?: number };
 
+/** The 8 approved treatments (validate.ts TREATMENTS) — id → user-facing label. */
+const TREATMENT_OPTIONS = [
+  { id: "chapter-card", label: "Chapter card" },
+  { id: "semantic-diagram", label: "Semantic diagram" },
+  { id: "audience-demand-proof", label: "Audience demand proof" },
+  { id: "screen-proof-in-world", label: "Screen proof in world" },
+  { id: "host-reflection-cinematic", label: "Host reflection" },
+  { id: "cinematic-metaphor", label: "Cinematic metaphor" },
+  { id: "candidate-comparison", label: "Candidate comparison" },
+  { id: "process-timeline", label: "Process timeline" },
+];
+
 const num = (value: unknown, fallback: number) => (typeof value === "number" && Number.isFinite(value) ? value : fallback);
 
 const pollJob = async (startUrl: string, body: Record<string, unknown>, statusUrl: (jobId: string) => string) => {
@@ -129,6 +141,33 @@ const BeatEditor: React.FC<{
     }
   };
 
+  // treatment switch: sensible default params seeded from the transcript
+  // server-side; the switch keeps the beat's existing accent for continuity
+  const setTreatment = async (treatmentId: string) => {
+    setBusy("op"); setMessage("");
+    try {
+      await scriptBeat(projectId, "set-treatment", { beatId: String(beat.source.beatId ?? ""), treatment: treatmentId });
+      setMessage(`Treatment → ${TREATMENT_OPTIONS.find((t) => t.id === treatmentId)?.label ?? treatmentId} ✓`);
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+      setBusy("none");
+    }
+  };
+
+  // duration edit: retimes the beat layout (startSecs recomputed cumulatively)
+  const setDuration = async (durationSec: number) => {
+    setBusy("op"); setMessage("");
+    try {
+      await scriptBeat(projectId, "set-duration", { beatId: String(beat.source.beatId ?? ""), duration: durationSec });
+      setMessage(`Duration → ${durationSec}s ✓`);
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+      setBusy("none");
+    }
+  };
+
   const save = async (changes: ClipMetadataChanges, label: string) => {
     if (!voice) { setMessage("Beat chưa có voice — chạy generate trước."); return; }
     setBusy("saving"); setMessage("");
@@ -219,6 +258,19 @@ const BeatEditor: React.FC<{
             <button type="button" className="pp-tool" aria-label={`Play voice beat ${index + 1}`} onClick={() => playSrc(voice.metadata.src as string, `stem-${index}`)}>{playing === `stem-${index}` ? "■ stop" : "▶ nghe"}</button>
           ) : null}
           <button type="button" className="pp-tool" aria-expanded={voiceOpen} onClick={() => setVoiceOpen(!voiceOpen)}>🎙 voice{takes.length ? ` · take ${takeId.split("-take-").pop() ?? ""}` : ""}</button>
+          <label className="pp-treatment-field" title="Treatment — kiểu visual của beat">
+            <span className="pp-treatment-label">🎬</span>
+            <select className="pp-treatment-select" aria-label={`Treatment beat ${index + 1}`} value={TREATMENT_OPTIONS.some((t) => t.id === treatment) ? treatment : ""} disabled={busy !== "none"}
+              onChange={(e) => { if (e.target.value) void setTreatment(e.target.value); }}>
+              {TREATMENT_OPTIONS.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+            </select>
+          </label>
+          <label className="pp-duration-field" title="Thời lượng beat (giây)">
+            <input type="number" className="pp-duration-input" aria-label={`Duration beat ${index + 1}`} min="1" max="600" step="0.5"
+              defaultValue={Number((beat.range.endSec - beat.range.startSec).toFixed(1))} key={`dur-${beat.id}-${(beat.range.endSec - beat.range.startSec).toFixed(1)}`} disabled={busy !== "none"}
+              onBlur={(e) => { const v = Number(e.target.value); if (Number.isFinite(v) && v >= 1 && v <= 600 && Math.abs(v - (beat.range.endSec - beat.range.startSec)) > 0.01) void setDuration(v); }} />
+            <span className="pp-treatment-label">s</span>
+          </label>
           <span className="pp-beat-tools-right">
             <button type="button" className="pp-tool" aria-label={`Move beat ${index + 1} up`} disabled={busy !== "none" || index === 0} onClick={() => void beatOp("move", { dir: "up" })}>↑</button>
             <button type="button" className="pp-tool" aria-label={`Move beat ${index + 1} down`} disabled={busy !== "none" || index === beatCount - 1} onClick={() => void beatOp("move", { dir: "down" })}>↓</button>
@@ -621,11 +673,17 @@ const AddBeatRow: React.FC<{ projectId: string; onChanged: () => void }> = ({ pr
 const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount: number; staleBeatIds: string[]; onDone: () => void }> = ({ projectId, hasScript, beatCount, staleBeatIds, onDone }) => {
   const [busy, setBusy] = React.useState(false);
   const [step, setStep] = React.useState("");
+  const [detail, setDetail] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [confirming, setConfirming] = React.useState<null | "full" | "partial">(null);
   const hasVoice = staleBeatIds.length < beatCount; // at least one voice segment exists
+  const stepLabel = (current: string) => {
+    const labels: Record<string, string> = { voice: "TTS voice", timeline: "timeline", render: "render" };
+    const base = labels[current] ?? "...";
+    return current === "voice" && detail ? `${base} ${detail} beats` : base;
+  };
   const generate = async (mode: "full" | "partial") => {
-    setBusy(true); setStep("voice"); setMessage(""); setConfirming(null);
+    setBusy(true); setStep("voice"); setDetail(""); setMessage(""); setConfirming(null);
     try {
       // partial = regen ONLY the changed/new beats (--only changed: the
       // scaffold compares as-voiced vs should-say transcripts per beat)
@@ -636,6 +694,7 @@ const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount:
         await new Promise((resolve) => setTimeout(resolve, 5000));
         const status = await fetch(`/api/project/produce/status?jobId=${encodeURIComponent(start.jobId)}`).then((r) => r.json());
         if (status.step) setStep(status.step);
+        if (status.detail !== undefined) setDetail(status.detail);
         if (status.status === "done") {
           setMessage(`Video draft xong ✓ — ${status.result?.durationSec ?? "?"}s, timeline ${status.result?.timelineOk ? "OK" : "có warnings"}`);
           onDone();
@@ -669,13 +728,13 @@ const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount:
             {hasVoice && staleBeatIds.length > 0 && staleBeatIds.length < beatCount ? (
               <>
                 <button type="button" className="ve-btn primary" disabled={busy} onClick={() => setConfirming("partial")}>
-                  {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : `⚡ Generate nhanh (${staleBeatIds.length}/${beatCount} beats thay đổi)`}
+                  {busy ? `Đang chạy: ${stepLabel(step)}…` : `⚡ Generate nhanh (${staleBeatIds.length}/${beatCount} beats thay đổi)`}
                 </button>
                 <button type="button" className="ve-btn" disabled={busy} onClick={() => setConfirming("full")}>Generate lại tất cả</button>
               </>
             ) : (
               <button type="button" className="ve-btn primary" disabled={busy || !hasScript} onClick={() => setConfirming("full")}>
-                {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : `🎬 Generate video (${beatCount} beats)`}
+                {busy ? `Đang chạy: ${stepLabel(step)}…` : `🎬 Generate video (${beatCount} beats)`}
               </button>
             )}
           </div>

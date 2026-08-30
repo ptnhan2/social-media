@@ -1440,6 +1440,13 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .pp-addbeat { display: flex; gap: 8px; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #1f2937; }
 .pp-addbeat-input { flex: 1; background: #111827; border: 1px solid #1f2937; border-radius: 6px; color: #d8dee9; padding: 8px 12px; font: 400 13px/1.5 Georgia, "Times New Roman", serif; }
 .pp-addbeat-input:focus { border-color: #2563eb; outline: none; }
+.pp-treatment-field { display: inline-flex; align-items: center; gap: 4px; }
+.pp-treatment-label { font-size: 11px; color: #7c8797; }
+.pp-treatment-select { background: #111827; border: 1px solid #1f2937; border-radius: 5px; color: #b9bfcc; font: 500 11px/1 Inter, sans-serif; padding: 4px 8px; cursor: pointer; }
+.pp-treatment-select:focus { border-color: #2563eb; outline: none; }
+.pp-duration-field { display: inline-flex; align-items: center; gap: 4px; }
+.pp-duration-input { width: 56px; background: #111827; border: 1px solid #1f2937; border-radius: 5px; color: #b9bfcc; font: 500 11px/1 Inter, sans-serif; padding: 4px 8px; text-align: right; }
+.pp-duration-input:focus { border-color: #2563eb; outline: none; }
 
 .pp-voicedetails { display: flex; flex-direction: column; gap: 12px; background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 12px 16px; }
 .pp-takes { display: flex; gap: 16px; flex-wrap: wrap; }

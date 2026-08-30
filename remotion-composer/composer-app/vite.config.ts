@@ -506,7 +506,8 @@ export default defineConfig({
           const url = new URL(req.url || "/", "http://composer.local");
           const job = produceJobs.get(url.searchParams.get("jobId") || "");
           if (!job) { sendJson(res, 404, { error: "Unknown produce job" }); return; }
-          sendJson(res, 200, { status: job.status, step: job.step, elapsedSec: Math.round((Date.now() - job.startedAt) / 1000), message: job.message, result: job.status === "done" ? job.result : undefined });
+          const detail = (job as { detail?: string }).detail;
+          sendJson(res, 200, { status: job.status, step: job.step, detail, elapsedSec: Math.round((Date.now() - job.startedAt) / 1000), message: job.message, result: job.status === "done" ? job.result : undefined });
         });
         server.middlewares.use("/api/project/produce", (req, res) => {
           if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
@@ -553,11 +554,20 @@ export default defineConfig({
               let stdout = ""; let stderr = "";
               child.stdout.on("data", (c: Buffer) => {
                 stdout += c.toString();
-                // live step progress: produce.mjs prints {"step":...} lines
+                // live step progress: produce.mjs prints {"step":...} lines —
+                // voice steps carry per-beat detail ("index/total") for the
+                // Generate button's live feedback
                 const job = produceJobs.get(jobId);
                 if (job) {
                   for (const line of c.toString().split(/\r?\n/)) {
-                    try { const parsed = JSON.parse(line.trim()); if (parsed.step) job.step = parsed.step; } catch { /* not a step line */ }
+                    try {
+                      const parsed = JSON.parse(line.trim());
+                      if (parsed.step) {
+                        job.step = parsed.step;
+                        if (typeof parsed.index === "number" && typeof parsed.total === "number") job.detail = `${parsed.index}/${parsed.total}`;
+                        else if (parsed.step !== "voice") job.detail = undefined;
+                      }
+                    } catch { /* not a step line */ }
                   }
                 }
               });
@@ -852,7 +862,7 @@ export default defineConfig({
             try {
               const projectId = String(body.projectId || "");
               const op = String(body.op || "");
-              const OPS = new Set(["set-transcript", "set-direction", "add", "delete", "move"]);
+              const OPS = new Set(["set-transcript", "set-direction", "add", "delete", "move", "set-treatment", "set-duration"]);
               if (!projectId || !/^[a-zA-Z0-9._-]+$/.test(projectId)) throw new Error("projectId required (safe id)");
               if (!OPS.has(op)) throw new Error(`op must be one of: ${[...OPS].join(", ")}`);
               const needsBeatId = op !== "add";
@@ -862,6 +872,11 @@ export default defineConfig({
               const text = String(body.text ?? "");
               if ((op === "set-transcript" || op === "add") && !text.trim()) throw new Error("text required (non-empty transcript)");
               if (op === "move" && body.dir !== "up" && body.dir !== "down") throw new Error('dir must be "up" or "down"');
+              if (op === "set-treatment") {
+                const TREATMENTS = new Set(["audience-demand-proof", "screen-proof-in-world", "semantic-diagram", "host-reflection-cinematic", "cinematic-metaphor", "chapter-card", "candidate-comparison", "process-timeline"]);
+                if (!TREATMENTS.has(String(body.treatment))) throw new Error(`treatment must be one of: ${[...TREATMENTS].join(", ")}`);
+              }
+              if (op === "set-duration" && (typeof body.duration !== "number" || body.duration < 1 || body.duration > 600)) throw new Error("duration must be 1-600 seconds");
               const snapshot = PROJECT_STORE.load(projectId);
               if (!snapshot.editDoc) throw new Error("Project has no edit document — write a script first");
               // argv array spawn (no shell) — values with spaces/quotes are
@@ -871,6 +886,8 @@ export default defineConfig({
               if (beatId) cmd.push("--beatId", beatId);
               if (op === "set-transcript" || op === "set-direction" || op === "add") cmd.push("--text", text);
               if (op === "move") cmd.push("--dir", String(body.dir));
+              if (op === "set-treatment") cmd.push("--treatment", String(body.treatment));
+              if (op === "set-duration") cmd.push("--duration", String(body.duration));
               if (op === "add" && body.index !== undefined && body.index !== null) cmd.push("--index", String(body.index));
               const apply = spawnSync(process.execPath, cmd, { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
               if (apply.status !== 0) {

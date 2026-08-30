@@ -45,7 +45,7 @@ const fail = (error) => { console.error(JSON.stringify({ ok: false, error })); p
 const slug = String(args.project || "");
 if (!slug || !/^[a-zA-Z0-9._-]+$/.test(slug)) fail("--project <slug> required (safe id)");
 const op = String(args.op || "");
-const OPS = ["set-transcript", "set-direction", "add", "delete", "move"];
+const OPS = ["set-transcript", "set-direction", "add", "delete", "move", "set-treatment", "set-duration"];
 if (!OPS.includes(op)) fail(`--op must be one of: ${OPS.join(", ")}`);
 
 const editDocPath = path.join(ROOT, "projects", slug, "05-edit-doc.json");
@@ -139,6 +139,37 @@ if (op === "set-transcript") {
   [beats[index], beats[target]] = [beats[target], beats[index]];
   traceTitle = `Beat di chuyển: ${beatId} ${dir}`;
   traceData = { beatId, dir, from: index, to: target };
+} else if (op === "set-treatment") {
+  // switch treatment with SENSIBLE defaults seeded from the transcript — the
+  // components render fine with empty arrays/labels; the user/agent refines
+  const TREATMENTS = {
+    "chapter-card": (t) => ({ title: t.slice(0, 40).toUpperCase(), subtitle: "", accent: "#f2b84b" }),
+    "semantic-diagram": (t) => ({ title: t.split(".")[0].slice(0, 48), centerLabel: "", nodes: [], edges: [], accent: "#61d7e8" }),
+    "audience-demand-proof": (t) => ({ comments: [], caption: t.slice(0, 80), accent: "#2dd4a0" }),
+    "screen-proof-in-world": (t) => ({ caption: t.slice(0, 80), accent: "#60a5fa" }),
+    "host-reflection-cinematic": (t) => ({ subtitle: t.slice(0, 80), lightSide: "left", accent: "#ff9b9b" }),
+    "cinematic-metaphor": (t) => ({ subtitle: t.slice(0, 80), label: "", mode: "cinematic", accent: "#c084fc" }),
+    "candidate-comparison": (t) => ({ title: t.split(".")[0].slice(0, 48), criteria: "", candidates: [], selectedIndex: 0, accent: "#f2b84b" }),
+    "process-timeline": (t) => ({ title: t.split(".")[0].slice(0, 48), steps: [], activeStep: 0, accent: "#61d7e8" }),
+  };
+  const treatmentId = String(args.treatment || "");
+  if (!TREATMENTS[treatmentId]) fail(`--treatment must be one of: ${Object.keys(TREATMENTS).join(", ")}`);
+  const beat = findBeat(beatId);
+  const transcript = String(beat.transcript ?? "");
+  const fromTreatment = beat.treatment?.id;
+  // keep the existing accent when switching (visual continuity across beats)
+  const prevAccent = typeof beat.treatment?.params?.accent === "string" ? beat.treatment.params.accent : undefined;
+  const params = TREATMENTS[treatmentId](transcript);
+  beat.treatment = { id: treatmentId, params: { ...params, ...(prevAccent ? { accent: prevAccent } : {}) }, assets: beat.treatment?.assets ?? [] };
+  traceTitle = `Treatment đổi: ${beatId}`;
+  traceData = { beatId, from: fromTreatment, to: treatmentId };
+} else if (op === "set-duration") {
+  const durationSec = Number(args.duration);
+  if (!Number.isFinite(durationSec) || durationSec < 1 || durationSec > 600) fail("--duration must be 1-600 seconds");
+  const beat = findBeat(beatId);
+  traceTitle = `Duration sửa: ${beatId}`;
+  traceData = { beatId, from: beat.durationSec, to: durationSec };
+  beat.durationSec = Number(durationSec.toFixed(3));
 }
 
 // ---- retime + sync audioPlan.voice to the new beat layout ----
