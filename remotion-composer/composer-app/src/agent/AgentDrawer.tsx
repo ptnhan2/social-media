@@ -99,11 +99,11 @@ export const AgentDrawer: React.FC = () => {
       ) : null}
       {open ? <div className="ap-drawer-backdrop" aria-hidden="true" onClick={() => setOpen(false)} /> : null}
       <aside className={`ap-drawer ${open ? "" : "ap-drawer-closed"}`} aria-label="Agent drawer" aria-hidden={!open}>
-        <div className="ap-drawer-header">
-          <strong>Agent</strong>
-          <small>{view === "editor" ? (projectId ?? "editor") : view === "studio" ? `studio · ${projectId ?? ""}` : "no project"}</small>
-          <button type="button" aria-label="Close agent drawer" className="ap-drawer-close" onClick={() => setOpen(false)}>✕</button>
-        </div>
+          <div className="ap-drawer-header">
+            <strong>Agent</strong>
+            <small>{projectId ? (view === "studio" ? `studio · ${projectId}` : projectId) : "no project"}</small>
+            <button type="button" aria-label="Close agent drawer" className="ap-drawer-close" onClick={() => setOpen(false)}>✕</button>
+          </div>
         <div className="ap-drawer-body">
           <AgentPanel projectId={projectId} currentSec={currentSec} />
         </div>

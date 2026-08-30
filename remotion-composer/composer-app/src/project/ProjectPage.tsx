@@ -161,7 +161,7 @@ const BeatEditor: React.FC<{
       <div className="pp-beat-main">
         <label className="ve-prop-field pp-script-field">
           <span>Script — beat {index + 1} · {treatment} · {(beat.range.endSec - beat.range.startSec).toFixed(1)}s</span>
-          <textarea className="pp-script" rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`} disabled={!voice}
+          <textarea className="pp-script" rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`}
             onChange={(e) => setDraftScript(e.target.value)}
             onBlur={() => { if (draftScript !== sentenceText && draftScript.trim()) void save({ sentenceText: draftScript.trim() }, "Script"); }} />
         </label>
@@ -278,13 +278,16 @@ type TraceEvent = { ts: string; stage: "idea" | "story" | "plan" | "voice" | "ti
 
 type JourneyStage = "idea" | "story" | "script" | "voice" | "video" | "approved";
 
-/** Derived journey stage — artifacts tell the truth, no stored state. */
+/** Derived journey stage — artifacts tell the truth, no stored state.
+ *  Story APPROVED moves the journey forward even before the script exists
+ *  (the user is now in script-writing territory). */
 const deriveStage = (snapshot: { editDoc?: unknown; videoDoc?: unknown }, storyDraft: StoryDraft | null, rendersCount: number, approval: ProjectApproval | null): JourneyStage => {
   if (approval?.status === "approved") return "approved";
   if (rendersCount > 0) return "video";
   const editDoc = snapshot.editDoc as IsaacVerseEditDoc | undefined;
   const hasVoice = (editDoc?.audioPlan as { voice?: unknown[] } | undefined)?.voice?.length;
   if (editDoc?.beats?.some((beat) => String(beat.transcript ?? "").trim()) || hasVoice) return hasVoice ? "voice" : "script";
+  if (storyDraft?.status === "approved") return "script";
   if (storyDraft && storyDraft.status !== "none") return "story";
   return "idea";
 };
@@ -541,7 +544,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
     <div className="pp-page">
       <header className="pp-appbar">
         <div>
-          <h1>{videoDoc?.idea ? videoDoc.idea : projectId}</h1>
+          <h1>{videoDoc?.idea ?? storyDraft?.originalIdea ?? storyDraft?.idea ?? projectId}</h1>
           <small>{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</small>
         </div>
         <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗</button>
@@ -571,7 +574,9 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
 
       {hasScript ? <GenerateCard projectId={projectId} hasScript={hasScript} onDone={refresh} /> : null}
 
-      <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
+      {stage === "video" || stage === "approved" ? (
+        <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
+      ) : null}
 
       {videoDoc ? (
         <details className="pp-card pp-collapse">
