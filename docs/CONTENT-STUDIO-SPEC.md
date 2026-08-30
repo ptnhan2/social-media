@@ -245,6 +245,17 @@ Stepper thêm "Research" stage (giữa Ý tưởng và Story).
 
 ## 4. PROGRESS LOG
 
+- **2026-08-30 21:30 — RESEARCH PIPELINE SHIPPED (4161a3b..4d73806)**:
+  `research_topic` tool hoạt động E2E với Tavily + DeepSeek API thật. Flow:
+  PLAN (DeepSeek chat decomposes thành 3-5 sub-questions) → SEARCH (Tavily
+  advanced, 5 results/sub-q) → SYNTHESIZE (DeepSeek extracts insights, pain
+  points, gaps) → qa/research.json → Research review card → [Duyệt research]
+  → draft_story INFORMED BY research. JourneyStepper: 7 stages (thêm Research
+  giữa idea và story). E2E verified: 5 sub-questions, 20 findings, 15
+  sources, insights có data thật (NASA $327M, Knight Capital $440M). 3 bugs
+  fixed trong live test: _load_env, VLM model sai cho text, import time.
+  P0 walkthrough fixes cùng shipped: Generate confirm dialog, total duration
+  display, shape info trong StoryCard.
 - **2026-08-30 17:35 — UX WALKTHROUGH FIXES (0c9db3f)**: browser-driven flow
   test qua toàn bộ journey (idea → story → script → generate → editor) trên
   project `ux-test-flow` (18.33s video, timeline OK). 10 UX notes → 5 fixes:

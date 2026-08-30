@@ -1,0 +1,223 @@
+{
+  "status": "pending",
+  "originalIdea": "How to write code that other developers can actually read",
+  "audience": "",
+  "subQuestions": [
+    {
+      "q": "What key statistics or studies quantify the cost of unreadable code (e.g., time spent reading vs. writing code, debugging hours, onboarding delays) and what real-world examples (e.g., NASA's Mars Climate Orbiter, Knight Capital) illustrate catastrophic failures from poor readability?",
+      "findings": [
+        {
+          "fact": "The loss of the Mars Climate Orbiter is one of the most cited examples of how small software mistakes can cause massive real-world failures.",
+          "source": "https://www.instagram.com/p/DSiGTmrEtw3",
+          "credibility": "medium"
+        },
+        {
+          "fact": "NASA demanded ever faster development times and even lower costs.",
+          "source": "https://space.stackexchange.com/questions/20239/why-wasnt-the-mars-climate-orbiters-fatal-error-caught-prior-to-launch",
+          "credibility": "medium"
+        },
+        {
+          "fact": "I'm writing a text about ideal scientists and would like to use the Mars Climate Orbiter as an example. For that I need to know what exactly we learned",
+          "source": "https://www.reddit.com/r/nasa/comments/k8kk7w/what_did_we_learn_from_the_mars_climate_orbiter",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Unreadable code costs significant time in debugging and onboarding; NASA's Mars Climate Orbiter failure due to unit conversion error cost $327 million. Poor readability leads to catastrophic failures.",
+          "source": "tavily-synthesis",
+          "credibility": "medium"
+        }
+      ]
+    },
+    {
+      "q": "What specific practices do senior engineers and authors like Robert C. Martin, Martin Fowler, or Google's engineering blog recommend for readable code (e.g., naming conventions, function length, comment usage), and how do these translate into concrete before-and-after code examples for a general audience?",
+      "findings": [
+        {
+          "fact": "7.   Image 13: Avatar photoKKsays: July 19, 2023 9:10 am at 9:10 am Sad to see this venerable institution disappear – I have a number of happy memories eating there. At the same time, I’m gratified to see that it will likely be replaced something that is even needed more, higher-density housing ! As much as we see the peninsula as suburbia, it’s really an urban area where much of the land has been constrained to R1 zoning and low density housing. That’s a formula for stratospheric housing prices",
+          "source": "https://www.paloaltoonline.com/blogs/2023/07/12/the-fish-market-is-closing-its-san-mateo-and-palo-alto-locations",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Sign up\n\nSign in\n\nSign up\n\nSign in\n\nUnknown user\nPabashani Herath\n\n## Pabashani Herath\n\nSenior Software Engineer at Rootcode Labs ❤️ Sri Lankan🇱🇰 LinkedIn: \n\n# Clean Code Naming Conventions\n\n## Treat naming conventions as the name of your baby. Don’t use the name of Elon’s son….\n\nPabashani Herath\n\n--\n\n5\n\nListen\n\nShare\n\nI’ve been reading Clean Code recently which was recommended by my Tech Lead, written by prolific Robert C Martin, also known as “Uncle Bob”. It has been one of my life’s most deli",
+          "source": "https://medium.com/@pabashani.herath/clean-code-naming-conventions-4cac223de3c6",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Like Reply  1 Reaction\n\nAnshul Chhabra   2d \n\n Report this comment\n\nOnce you internalise these ideas, code reviews become smoother. You argue less about style and more about design. Reviews turn into collaboration instead of correction.\n\nLike Reply  1 Reaction\n\nSanchit Narula   2d \n\n Report this comment\n\nClean Code ages well because the principles don’t depend on frameworks or languages. The tech stack changes, but readability, simplicity, and discipline outlast every trend.\n\nLike Reply  1 React",
+          "source": "https://www.linkedin.com/posts/rajya-vardhan_if-theres-one-book-i-owe-a-large-part-of-activity-7404861196950102016-imnb",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Senior engineers recommend clear, descriptive names for variables and functions, keeping functions short, and using comments sparingly for complex logic. Clean, readable code enhances collaboration and reduces errors. Follow these principles for better maintainability.",
+          "source": "tavily-synthesis",
+          "credibility": "medium"
+        }
+      ]
+    },
+    {
+      "q": "What are the most common misconceptions about readable code—such as 'more comments are better,' 'shorter code is always clearer,' or 'readability is subjective'—and what evidence or expert counterarguments debunk these myths?",
+      "findings": [
+        {
+          "fact": "A clear and consistent convention can make code readable if the reader is familiar with the convention, or completely opaque if the reader is",
+          "source": "https://medium.com/@victor.ronin/code-readability-is-not-that-subjective-a5932a14876f",
+          "credibility": "medium"
+        },
+        {
+          "fact": "There are several common misconceptions we have to clear out: Clever Code != More Advanced Code Bell Curve. Shorter Code != Cleaner Code. That",
+          "source": "https://dev.to/mcharytoniuk/common-misconceptions-about-clean-code-3jmo",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Shorter code can be clever, but not always better—readability, maintainability, and clarity often matter more, especially in real-world projects",
+          "source": "https://dev.to/anitaolsen/is-shorter-code-better-code-4230/comments",
+          "credibility": "medium"
+        },
+        {
+          "fact": "More comments are not always better; concise, clear code is often clearer than verbose comments. Shorter code isn't always clearer; readability depends on structure and organization. Readability isn't entirely subjective; objective guidelines help teams maintain consistency.",
+          "source": "tavily-synthesis",
+          "credibility": "medium"
+        }
+      ]
+    },
+    {
+      "q": "What unique angle can the video take that others miss, such as framing readability as a social/team problem (e.g., code review culture, empathy for future readers) rather than a purely technical one, or using a 'code as prose' analogy to show how structure, rhythm, and context matter?",
+      "findings": [
+        {
+          "fact": "There is a cultural and social context to readability, and while people may enter or leave this context, usually at will, we must always",
+          "source": "https://www.sacrideo.us/source-code-readability-elegance-and-complexity",
+          "credibility": "medium"
+        },
+        {
+          "fact": "I think the analogy between writing code and prose is spot on and not something that I considered before. Not just in the exposure sense",
+          "source": "https://dev.to/stephsmithio/comment/g9ba",
+          "credibility": "medium"
+        },
+        {
+          "fact": "It is written to communicate ideas to others, it has the interesting side effect that it can be transformed into something a computer can",
+          "source": "https://joeblu.com/blog/2023_01_code_prose",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Code readability can be framed as a social team problem, emphasizing empathy and communication in code reviews, and using \"code as prose\" to highlight structure and context.",
+          "source": "tavily-synthesis",
+          "credibility": "medium"
+        }
+      ]
+    },
+    {
+      "q": "How do different programming paradigms (e.g., functional vs. object-oriented) or tools (e.g., linters, formatters, type systems) impact readability, and what practical, low-effort habits can a beginner adopt immediately to improve their code's clarity without needing deep expertise?",
+      "findings": [
+        {
+          "fact": "Skip to content\n\nDEV Community \n\nLog in    Create account\n\n## DEV Community\n\nAthreya aka Maneshwar\n\nAthreya aka Maneshwar\n\nPosted on\n\n# Understanding Programming Paradigms: Structured, Functional, and Object-Oriented Programming\n\n#webdev #javascript #programming #beginners\n\nHi there! I'm Maneshwar. Currently, I’m building a private AI code review tool that runs on your LLM key (OpenAI, Gemini, etc.) with flat, no-seat pricing — designed for small teams. Check it out, if that’s your kind of thing",
+          "source": "https://dev.to/lovestaco/understanding-programming-paradigms-structured-functional-and-object-oriented-programming-11j5",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Skip to content\n\ndft-logo\n\nSign Up\n\nSign In\n\n\n\nGo Home\n\n# COMPARING THE PARADIGMS: FUNCTIONAL PROGRAMMING VS OBJECT-ORIENTED PROGRAMMING [OOP]\n\n Blog Post\n\nAre you curious about the differences between Functional Programming and Object-Oriented Programming (OOP)? Programming paradigms classify languages based on their features and approach to solving problems. Functional programming focuses on composing pure functions to build software while avoiding side effects and mutable data. On the other h",
+          "source": "https://devologyx.io/comparing-the-paradigms-functional-programming-vs-object-oriented-programming-oop",
+          "credibility": "medium"
+        },
+        {
+          "fact": "/  #beginners guide\n\n# Programming Paradigms – Paradigm Examples for Beginners\n\nGerman Cocca\n\nGerman Cocca\n\n    Programming Paradigms – Paradigm Examples for Beginners  \n\nHi everyone! In this article we're going to take a look at programming paradigms, a fancy title to describe popular ways or styles to organize your programming.\n\nI'll try to break it down in pieces and give a simple explanation of each paradigm. This way you can understand what people are talking about when they say \"object ori",
+          "source": "https://www.freecodecamp.org/news/an-introduction-to-programming-paradigms",
+          "credibility": "medium"
+        },
+        {
+          "fact": "Different programming paradigms impact readability by shaping code structure; functional programming emphasizes clarity through immutability, while object-oriented programming uses classes and objects for modularity. Beginners can improve clarity by using descriptive names and breaking code into small functions.",
+          "source": "tavily-synthesis",
+          "credibility": "medium"
+        }
+      ]
+    }
+  ],
+  "insights": [
+    "Unreadable code has measurable costs: developers spend most of their time reading code, and failures like NASA's Mars Climate Orbiter ($327M loss) and Knight Capital ($440M loss) show catastrophic consequences of poor readability.",
+    "Readability is not just a technical issue but a social one—framing it as empathy for future readers and team communication (e.g., code reviews) is a unique angle that competitors often miss.",
+    "Common misconceptions like 'more comments are better' and 'shorter code is clearer' are debunked by experts; clarity and structure matter more than verbosity or brevity."
+  ],
+  "painPoints": [
+    "Developers struggle with balancing cleverness and clarity—shorter or 'clever' code often sacrifices maintainability, leading to debugging and onboarding delays.",
+    "Teams face friction in code reviews due to subjective style debates; without clear conventions, readability becomes inconsistent and hard to enforce."
+  ],
+  "gaps": [
+    "We couldn't find specific statistics on the exact percentage of time developers spend reading vs. writing code (e.g., a widely cited figure like '10x more time reading than writing' lacks a primary source).",
+    "We lacked concrete before-and-after code examples from authoritative sources (e.g., Robert C. Martin or Google) that visually demonstrate readability improvements for a general audience."
+  ],
+  "sources": [
+    {
+      "url": "https://www.instagram.com/p/DSiGTmrEtw3",
+      "title": "The loss of the Mars Climate Orbiter is one of the most cited ...",
+      "type": "blog"
+    },
+    {
+      "url": "https://space.stackexchange.com/questions/20239/why-wasnt-the-mars-climate-orbiters-fatal-error-caught-prior-to-launch",
+      "title": "Why wasn't the Mars Climate Orbiter's fatal error caught ...",
+      "type": "community"
+    },
+    {
+      "url": "https://www.reddit.com/r/nasa/comments/k8kk7w/what_did_we_learn_from_the_mars_climate_orbiter",
+      "title": "What did we learn from the Mars Climate Orbiter accident?",
+      "type": "community"
+    },
+    {
+      "url": "https://www.paloaltoonline.com/blogs/2023/07/12/the-fish-market-is-closing-its-san-mateo-and-palo-alto-locations",
+      "title": "The Fish Market is closing its San Mateo and Palo Alto locations",
+      "type": "blog"
+    },
+    {
+      "url": "https://medium.com/@pabashani.herath/clean-code-naming-conventions-4cac223de3c6",
+      "title": "Medium",
+      "type": "blog"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/rajya-vardhan_if-theres-one-book-i-owe-a-large-part-of-activity-7404861196950102016-imnb",
+      "title": "If there’s one book I owe a large part of my success to across the last two decades, it’s Clean Code by Robert C. Martin. It changed how I thought about writing software. It changed how I… | Rajya Vardhan Mishra | 10 comments",
+      "type": "blog"
+    },
+    {
+      "url": "https://medium.com/@victor.ronin/code-readability-is-not-that-subjective-a5932a14876f",
+      "title": "Code readability is not that subjective. | by Victor Ronin",
+      "type": "blog"
+    },
+    {
+      "url": "https://dev.to/mcharytoniuk/common-misconceptions-about-clean-code-3jmo",
+      "title": "Common Misconceptions About Clean Code",
+      "type": "blog"
+    },
+    {
+      "url": "https://dev.to/anitaolsen/is-shorter-code-better-code-4230/comments",
+      "title": "Discussion of Is Shorter Code, Better Code? - DEV Community",
+      "type": "blog"
+    },
+    {
+      "url": "https://www.sacrideo.us/source-code-readability-elegance-and-complexity",
+      "title": "Source Code Readability, Elegance, and Complexity",
+      "type": "blog"
+    },
+    {
+      "url": "https://dev.to/stephsmithio/comment/g9ba",
+      "title": "Very cool background! I think the analogy between writing ...",
+      "type": "blog"
+    },
+    {
+      "url": "https://joeblu.com/blog/2023_01_code_prose",
+      "title": "Code is not Prose - joe blubaugh",
+      "type": "blog"
+    },
+    {
+      "url": "https://dev.to/lovestaco/understanding-programming-paradigms-structured-functional-and-object-oriented-programming-11j5",
+      "title": "Understanding Programming Paradigms: Structured, Functional, and Object-Oriented Programming - DEV Community",
+      "type": "blog"
+    },
+    {
+      "url": "https://devologyx.io/comparing-the-paradigms-functional-programming-vs-object-oriented-programming-oop",
+      "title": "COMPARING THE PARADIGMS: FUNCTIONAL PROGRAMMING VS OBJECT-ORIENTED PROGRAMMING [OOP] – DevologyX",
+      "type": "blog"
+    },
+    {
+      "url": "https://www.freecodecamp.org/news/an-introduction-to-programming-paradigms",
+      "title": "Programming Paradigms – Paradigm Examples for Beginners",
+      "type": "blog"
+    }
+  ],
+  "searchedAt": "2026-08-30T21:20:20"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "agent-loop-test",
+  "idea": "Why your video edits feel off even when every cut is technically fine",
+  "surfaceProblem": "Edits look correct cut-by-cut but feel wrong end-to-end",
+  "deeperProblem": "Cutting to the clock instead of the breath — rhythm is decided before the timeline",
+  "thumbnailPromise": "The same edit, before and after fixing its rhythm",
+  "commonGoal": {
+    "aligned": true,
+    "viewer": "make edits that feel right, not just look right",
+    "creator": "own the craft-of-rhythm niche"
+  },
+  "beats": [
+    {
+      "id": "agent-loop-beat-01",
+      "journeySlot": "status_quo",
+      "summary": "name the false solution"
+    },
+    {
+      "id": "agent-loop-beat-02",
+      "journeySlot": "call",
+      "summary": "reframe the unit of editing"
+    },
+    {
+      "id": "agent-loop-beat-03",
+      "journeySlot": "resolution",
+      "summary": "resolve with a memorable rule"
+    }
+  ]
+}

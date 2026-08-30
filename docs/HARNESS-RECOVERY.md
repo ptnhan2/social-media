@@ -1,21 +1,56 @@
 # SESSION RECOVERY FILE — Read this first after compact
 
-> Updated 2026-08-29 14:20 (sau session ban ngày 29/08). Master list công
-> việc: `docs/TODO-NEXT.md` — đọc file ĐÓ trước, file này chỉ là bối cảnh +
-> gotchas vận hành.
+> Updated 2026-08-30 21:30 (pre-compact). Master list công việc:
+> `docs/TODO-NEXT.md` — đọc file ĐÓ trước, file này chỉ là bối cảnh + gotchas.
 
 ---
 
-## 🌅 VIỆC TIẾP THEO (session mới)
+## 🌅 VIỆC TIẾP THEO (session mới — sau compact)
 
-1. **Đọc `docs/TODO-NEXT.md`** — queue A: A1 (agent TỰ viết edit-doc từ
-   script — mắt xích đầu tiên còn thiếu của produce flow) → A3 (critique →
-   fix → KEEP = vòng learning THẬT). A2 auto-register ĐÃ XONG (f2eeb25)
-2. **Chain thesis**: produce ✅ PROVEN (mini-loop zero-manual) · critique 🟡
-   tool có, chưa thành vòng · fix 🟡 tool proven riêng lẻ · learn 🟡 signals
-   đang chảy (feedback.jsonl hooks)
-3. Checklist user-facing: `reviews/2026-08-29-morning-checklist.html` (KHÔNG
-   còn ở docs/ — convention reviews/ từ 7f882e6)
+1. **Đọc `docs/TODO-NEXT.md`** — queue: P1 (beat CRUD + partial generate) →
+   P2 (treatment selector, storyboard preview) → A3 (agent cycle trọn vòng)
+2. **3 walkthrough audits đã xong** — findings trong
+   `docs/WALKTHROUGH-AUDIT-3.md` + `docs/WORKFLOW-AUDIT.md` + spec §7
+3. **Research pipeline SHIPPED** — Tavily + DeepSeek hoạt động E2E,
+   TAVILY_API_KEY trong .env
+
+## 🌙 TÓM TẮT SESSION 30/08 (09:00–21:30, full day)
+
+- **Agent lên cấp app**: AgentDrawer mount trên router, conversation sống qua
+  navigation, FAB 🤖 mọi trang, click-outside đóng
+- **Creation Flow shipped**: picker → slug → create mode (idea + shape) →
+  story checkpoint → script → Generate → approval. JourneyStepper 7 stages
+- **Research pipeline shipped**: research_topic (Tavily + DeepSeek) →
+  Research review card → draft_story informed by research
+- **Content Studio v4**: app visual language (user: "làm như editor + asset
+  studio"), token discipline, design-audit.mjs
+- **3 walkthrough audits**: UX bugs → workflow gaps → user needs (20 findings)
+- **P0 fixes**: Generate confirm, total duration, shape info, delete project,
+  history refresh, editor button disable
+- **Server Runbook** trong AGENTS.md (sau user correction về lỗi lặp)
+
+## ⚠️ GOTCHAS TÍCH LUỸ
+
+1. **Tavily API**: key trong .env (TAVILY_API_KEY). Free tier 1000 credits/mo
+2. **DeepSeek chat vs VLM**: `_chat_completion` dùng `deepseek-chat` (text),
+   KHÔNG dùng `deepseek-v4-flash-vision-exp` (VLM) cho planning tasks
+3. **LangGraph boot ~80s** — đợi đủ 180s, UnicodeEncodeError là noise
+4. **spawnSync python bridge đóng băng API 20s** — op nhẹ làm native JS
+5. **Drawer conversation sống chỉ khi navigation là CLIENT-SIDE**
+6. **Máy 100% CPU = đừng kết luận chết — đợi thêm**
+7. **render --output resolve theo WORKSPACE root** — "projects/x/y.mp4"
+8. **design-audit.mjs**: palette/type/spacing phải map vào app language
+9. **Scribe không đọc punctuation** — normalize trước khi so sánh WER
+10. **Project mới cần scaffold + generate-timeline** (không chỉ write_edit_doc)
+    — nếu không voice clips không tồn tại (sync drop clips không có user marks)
+
+## 📌 GHI NHỚ
+
+- Check CI sau MỖI push
+- Chain thesis: produce ✅ · approve ✅ · research ✅ · fix 🟡 · learn 🟡
+- Style store v74; design-audit phải 0 violations trước commit
+- Composer: localhost:5174 | Agent: localhost:2025/ok
+- Studio journey: idea → research → story → script → voice → video → approved
 
 ## 🌙 SESSION BAN NGÀY 29/08 (09:19–14:17)
 

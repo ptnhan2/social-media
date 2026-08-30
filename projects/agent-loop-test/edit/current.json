@@ -1,25 +1,25 @@
 {
-  "id": "workflow-audit-edit",
-  "videoId": "workflow-audit",
+  "id": "agent-loop-test-edit",
+  "videoId": "agent-loop-test",
   "version": "v001",
   "width": 1920,
   "height": 1080,
   "fps": 30,
   "beats": [
     {
-      "id": "ux-beat-01",
+      "id": "agent-loop-beat-01",
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "status_quo",
       "startSec": 0,
       "durationSec": 4,
-      "transcript": "Every AI track sounds pleasant. So why does none of it stick with you?",
+      "transcript": "Every cut looks right. So why does the edit feel wrong?",
       "narrativeFunction": "name the false solution",
       "treatment": {
         "id": "chapter-card",
         "params": {
-          "title": "PLEASANT BUT FORGETTABLE",
-          "subtitle": "the averaging problem",
+          "title": "RIGHT CUTS, WRONG FEEL",
+          "subtitle": "the rhythm problem",
           "accent": "#f2b84b"
         },
         "assets": []
@@ -29,19 +29,19 @@
       "audioCues": []
     },
     {
-      "id": "ux-beat-02",
+      "id": "agent-loop-beat-02",
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "call",
       "startSec": 4,
       "durationSec": 5,
-      "transcript": "Because the model flattens outliers to avoid risk. Novelty lives in the edges it smooths away.",
+      "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
       "narrativeFunction": "reframe the unit of editing",
       "treatment": {
         "id": "chapter-card",
         "params": {
-          "title": "NOVELTY LIVES IN THE EDGES",
-          "subtitle": "where the model smooths",
+          "title": "CLOCK, NOT BREATH",
+          "subtitle": "where rhythm actually lives",
           "accent": "#61d7e8"
         },
         "assets": []
@@ -51,18 +51,18 @@
       "audioCues": []
     },
     {
-      "id": "ux-beat-03",
+      "id": "agent-loop-beat-03",
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "resolution",
       "startSec": 9,
       "durationSec": 4,
-      "transcript": "Push the weird parameter. Embrace the ugly take. That is where memorable AI music is hiding.",
+      "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
       "narrativeFunction": "resolve with a memorable rule",
       "treatment": {
         "id": "chapter-card",
         "params": {
-          "title": "EMBRACE THE UGLY TAKE",
+          "title": "VOICE DECIDES THE CUT",
           "subtitle": "produce - critique - improve",
           "accent": "#2dd4a0"
         },
@@ -90,5 +90,6 @@
   "colorGrade": {
     "preset": "warm",
     "intensity": 0.4
-  }
+  },
+  "instruction": "Giọng điệu: người thợ đang chỉ trχει một sai lầm phổ biến — mỗi câu ngắn, gắt, kết bằng meta so sánh (clock/breath). Beat 1 là câu hỏi tu từ, beat 2 vạch ra gốc rễ vấn đề, beat 3 đưa ra quy tắc dùng được ngay."
 }

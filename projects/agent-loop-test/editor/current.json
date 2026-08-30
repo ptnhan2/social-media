@@ -4,7 +4,7 @@
   "width": 1920,
   "height": 1080,
   "fps": 30,
-  "durationSec": 17.53,
+  "durationSec": 17.69,
   "tracks": [
     {
       "id": "video-main",
@@ -41,7 +41,7 @@
           "trackId": "video-main",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "name the false solution",
           "source": {
@@ -62,8 +62,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "reframe the unit of editing",
           "source": {
@@ -84,8 +84,8 @@
           "kind": "beat",
           "trackId": "video-main",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.689999999999998
           },
           "label": "resolve with a memorable rule",
           "source": {
@@ -139,7 +139,7 @@
           "trackId": "visual-1",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "bg",
           "source": {
@@ -177,8 +177,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "bg",
           "source": {
@@ -216,8 +216,8 @@
           "kind": "element",
           "trackId": "visual-1",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.689999999999998
           },
           "label": "bg",
           "source": {
@@ -288,7 +288,7 @@
           "trackId": "visual-2",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "bg-glow",
           "source": {
@@ -329,8 +329,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "bg-glow",
           "source": {
@@ -371,8 +371,8 @@
           "kind": "element",
           "trackId": "visual-2",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.689999999999998
           },
           "label": "bg-glow",
           "source": {
@@ -446,7 +446,7 @@
           "trackId": "visual-3",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "accent-line",
           "source": {
@@ -496,8 +496,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "accent-line",
           "source": {
@@ -547,8 +547,8 @@
           "kind": "element",
           "trackId": "visual-3",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.689999999999998
           },
           "label": "accent-line",
           "source": {
@@ -631,7 +631,7 @@
           "trackId": "visual-4",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "the rhythm problem",
           "source": {
@@ -683,8 +683,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "where rhythm actually lives",
           "source": {
@@ -736,8 +736,8 @@
           "kind": "element",
           "trackId": "visual-4",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.689999999999998
           },
           "label": "produce - critique - improve",
           "source": {
@@ -822,7 +822,7 @@
           "trackId": "visual-5",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "RIGHT CUTS, WRONG\nFEEL",
           "source": {
@@ -883,8 +883,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "CLOCK, NOT\nBREATH",
           "source": {
@@ -945,8 +945,8 @@
           "kind": "element",
           "trackId": "visual-5",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.689999999999998
           },
           "label": "VOICE DECIDES THE\nCUT",
           "source": {
@@ -1038,7 +1038,7 @@
           "trackId": "voice",
           "range": {
             "startSec": 0,
-            "endSec": 4.51
+            "endSec": 4.67
           },
           "label": "Voiceover",
           "source": {
@@ -1053,12 +1053,12 @@
             "segmentId": "agent-loop-test:voice:agent-loop-beat-01",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-29T23:16:46",
-              "durationSec": 4.16,
+              "checkedAt": "2026-08-30T03:51:03",
+              "durationSec": 4.32,
               "expectedSec": 4.4,
               "peakDb": -1.5,
-              "meanDb": -15.7,
-              "lufs": -15,
+              "meanDb": -15.6,
+              "lufs": -14.16,
               "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
@@ -1073,7 +1073,7 @@
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "4.16s vs 4.40s",
+                  "value": "4.32s vs 4.40s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
@@ -1086,18 +1086,18 @@
                 {
                   "id": "lufs",
                   "label": "Loudness (post)",
-                  "pass": true,
-                  "value": "-15.0 LUFS",
+                  "pass": false,
+                  "value": "-14.16 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
             },
-            "takeId": "agent-loop-beat-01-take-02",
+            "takeId": "agent-loop-beat-01-take-01",
             "takes": [
               {
                 "id": "agent-loop-beat-01-take-01",
                 "pass": true,
-                "durationSec": 4.16,
+                "durationSec": 4.32,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-01-take-01.mp3"
               },
               {
@@ -1124,8 +1124,8 @@
           "kind": "voice",
           "trackId": "voice",
           "range": {
-            "startSec": 4.51,
-            "endSec": 10.78
+            "startSec": 4.67,
+            "endSec": 10.94
           },
           "label": "Voiceover",
           "source": {
@@ -1140,12 +1140,12 @@
             "segmentId": "agent-loop-test:voice:agent-loop-beat-02",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-29T23:17:50",
-              "durationSec": 5.92,
+              "checkedAt": "2026-08-30T03:51:38",
+              "durationSec": 5.68,
               "expectedSec": 6.8,
-              "peakDb": -1.6,
-              "meanDb": -17,
-              "lufs": -16.42,
+              "peakDb": -2.8,
+              "meanDb": -16.5,
+              "lufs": -16.19,
               "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
@@ -1153,14 +1153,14 @@
                   "id": "clip",
                   "label": "Clipping",
                   "pass": true,
-                  "value": "-1.6 dBFS peak",
+                  "value": "-2.8 dBFS peak",
                   "threshold": "< -0.5 dBFS"
                 },
                 {
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "5.92s vs 6.80s",
+                  "value": "5.68s vs 6.80s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
@@ -1174,12 +1174,12 @@
                   "id": "lufs",
                   "label": "Loudness (post)",
                   "pass": true,
-                  "value": "-16.42 LUFS",
+                  "value": "-16.19 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
             },
-            "takeId": "agent-loop-beat-02-take-01",
+            "takeId": "agent-loop-beat-02-take-02",
             "takes": [
               {
                 "id": "agent-loop-beat-02-take-01",
@@ -1190,7 +1190,7 @@
               {
                 "id": "agent-loop-beat-02-take-02",
                 "pass": true,
-                "durationSec": 5.6,
+                "durationSec": 5.68,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-02-take-02.mp3"
               }
             ]
@@ -1205,8 +1205,8 @@
           "kind": "voice",
           "trackId": "voice",
           "range": {
-            "startSec": 10.78,
-            "endSec": 17.53
+            "startSec": 10.94,
+            "endSec": 17.69
           },
           "label": "Voiceover",
           "source": {
@@ -1221,12 +1221,12 @@
             "segmentId": "agent-loop-test:voice:agent-loop-beat-03",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-29T23:18:52",
-              "durationSec": 6,
+              "checkedAt": "2026-08-30T03:52:11",
+              "durationSec": 5.92,
               "expectedSec": 7.6000000000000005,
-              "peakDb": -2,
-              "meanDb": -17,
-              "lufs": -15.8,
+              "peakDb": -1.9,
+              "meanDb": -16.8,
+              "lufs": -15.69,
               "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
@@ -1234,14 +1234,14 @@
                   "id": "clip",
                   "label": "Clipping",
                   "pass": true,
-                  "value": "-2.0 dBFS peak",
+                  "value": "-1.9 dBFS peak",
                   "threshold": "< -0.5 dBFS"
                 },
                 {
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "6.00s vs 7.60s",
+                  "value": "5.92s vs 7.60s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
@@ -1255,7 +1255,7 @@
                   "id": "lufs",
                   "label": "Loudness (post)",
                   "pass": true,
-                  "value": "-15.8 LUFS",
+                  "value": "-15.69 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
@@ -1265,13 +1265,13 @@
               {
                 "id": "agent-loop-beat-03-take-01",
                 "pass": true,
-                "durationSec": 6.16,
+                "durationSec": 6.4,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-03-take-01.mp3"
               },
               {
                 "id": "agent-loop-beat-03-take-02",
                 "pass": true,
-                "durationSec": 6,
+                "durationSec": 5.92,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-03-take-02.mp3"
               }
             ]
@@ -1290,7 +1290,7 @@
       "kind": "beat",
       "range": {
         "startSec": 0,
-        "endSec": 4.51
+        "endSec": 4.67
       },
       "label": "name the false solution",
       "source": {
@@ -1301,8 +1301,8 @@
       "id": "marker:beat:agent-loop-beat-02",
       "kind": "beat",
       "range": {
-        "startSec": 4.51,
-        "endSec": 10.78
+        "startSec": 4.67,
+        "endSec": 10.94
       },
       "label": "reframe the unit of editing",
       "source": {
@@ -1313,8 +1313,8 @@
       "id": "marker:beat:agent-loop-beat-03",
       "kind": "beat",
       "range": {
-        "startSec": 10.78,
-        "endSec": 17.53
+        "startSec": 10.94,
+        "endSec": 17.689999999999998
       },
       "label": "resolve with a memorable rule",
       "source": {
@@ -1325,8 +1325,8 @@
   "assets": [],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 12,
-    "updatedAt": "2026-08-29T16:23:42.162Z"
+    "revision": 14,
+    "updatedAt": "2026-08-29T20:52:17.482Z"
   },
   "schemaVersion": 3
 }

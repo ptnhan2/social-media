@@ -1,25 +1,71 @@
-# TODO NEXT — Updated 2026-08-30 05:15 (CREATION FLOW SHIPPED)
+# TODO NEXT — Updated 2026-08-30 21:30 (RESEARCH PIPELINE SHIPPED + pre-compact)
 
-> Chain thesis: produce ✅ · approve ✅ · content-studio ✅ · **creation-flow ✅
-> (idea → story → script → generate → approve)** · fix 🟡 · learn 🟡
+> Chain thesis: produce ✅ · approve ✅ · content-studio ✅ · creation-flow ✅
+> · **research ✅ (Tavily + DeepSeek E2E verified)** · fix 🟡 · learn 🟡
+> Đọc file này đầu session mới. Sau compact: đọc `docs/HARNESS-RECOVERY.md` nữa.
 
 ---
 
-## Trạng thái lõi (30/08 sáng)
+## Trạng thái lõi (30/08 tối — trước compact)
 
-- **CREATION FLOW SHIPPED (bd6b567..017ccc7)**: user journey từ đầu đến cuối
-  — [🎬 Video mới từ ý tưởng] trên picker → slug → studio create mode ("Video
-  của bạn về gì?") → agent draft_story → STORY checkpoint (sửa inline + Duyệt
-  + yêu cầu sửa có note) → [Viết script] → agent write_edit_doc → SCRIPT
-  checkpoint (sửa trực tiếp) → [🎬 Generate] (produce job: voice → timeline →
-  render, live progress) → Approval gate. JourneyStepper hiển thị stage
-  (DERIVED từ artifacts — không state thừa). SSE refresh: studio tự cập nhật
-  khi agent viết file. Cold-diff review độc lập đã fix 3 MAJOR + key MINORs.
-- **CONTENT STUDIO SHIPPED (8514d43..704915c)**: 3 tầng kiến trúc + writing
-  surface v4 (app visual language) + token discipline (design-audit.mjs)
-- **PROCESS TRACE + prompt layer + A1/A2 + agent app-level + M1b/M2/M3 +
-  zero-manual E2E ×2** (xem log các ngày trước)
-- 194/194 vitest · 34/34 harness · verify agent 8/8 · ui-audit 0
+- **RESEARCH PIPELINE SHIPPED (4161a3b..4d73806)**: `research_topic` tool
+  (Tavily web search + DeepSeek planning/synthesis) → `qa/research.json` →
+  Research review card trong studio → [Duyệt research] → `draft_story`
+  INFORMED BY research. Journey: idea → 🔍 RESEARCH → story → script → voice
+  → video → approved. E2E verified với API thật: 5 sub-questions, 20
+  findings, 15 sources, key insights có data thật (NASA $327M, Knight
+  Capital $440M). TAVILY_API_KEY đã có trong .env (tvly-dev-...)
+- **VIDEO SHAPE SHIPPED (c05cc02)**: CreateCard có shape presets (Hook/
+  Explainer/Deep dive/Custom) + shape flows vào agent prompt + draft_story
+  nhận targetDurationSec/beatCount
+- **P0 WALKTHROUGH FIXES SHIPPED**: Generate confirm dialog + total duration
+  display + shape info trong StoryCard + delete project + history refresh +
+  editor button disable pre-script
+- **CONTENT STUDIO v4 (704915c)**: app visual language, token discipline,
+  design-audit.mjs
+- **Walkthrough audits**: 3 lần browser-driven (#1 UX bugs, #2 workflow
+  gaps, #3 user needs) — findings trong WALKTHROUGH-AUDIT-3.md +
+  WORKFLOW-AUDIT.md
+- **Tổng cộng session 30/08**: ~25 commits (agent drawer → creation flow →
+  research pipeline → 3 walkthrough audits → P0 fixes)
+
+## QUEUE TIẾP THEO (sau compact)
+
+### P1 — beat CRUD + partial generate
+- **B1**: ADD/DELETE/REORDER beat trong studio (script editor table stakes)
+- **D4**: Partial generate — chỉ re-voice beats thay đổi (tiết kiệm TTS cost)
+- **B4**: Direction pre-voice — cho phép đặt direction tags TRƯỚC generate
+
+### P2 — visual + progress
+- **B2**: Treatment selector per beat (hiện tất cả đều CHAPTER-CARD)
+- **B3**: Edit duration per beat
+- **D1**: Storyboard preview (static frames từ treatments)
+- **D5**: Progress feedback trong Generate (per-beat status)
+- **A5**: Audience/tone/language inputs trong CreateCard
+
+### P3 — YouTube integration
+- **D2**: Export/Share từ studio (download MP4 từ approval card)
+- **D3**: Project metadata (title, description, tags cho YouTube)
+
+### A3 — running agent cycles (thesis test trọn vòng)
+- Agent tự chạy: research → story → script → generate → approval gate
+- User chỉ xuất hiện ở approval gate (KEEP/REDO)
+- Đây là lần đầu LUẬN ĐIỂM harness được kiểm chứng TRỌN VÒNG
+
+## Vận hành
+
+```powershell
+# Servers đang chạy (persistent):
+# Composer :5174 → HTTP 200
+# Agent :2025 → /ok 200
+# Tavily key trong .env (TAVILY_API_KEY=tvly-dev-...)
+# DeepSeek key trong .env (DEEPSEEK_API_KEY)
+
+# Research 1 topic:
+# → research_topic(project_slug, idea) → Research card trong studio
+# Verify: node remotion-composer/scripts/ui-audit.mjs --url "..." --click "label"
+# Design audit: node remotion-composer/scripts/design-audit.mjs
+```
 
 ## QUEUE TIẾP THEO
 
