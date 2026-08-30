@@ -27,3 +27,4 @@
 {"ts":"2026-08-30T17:33:19.270Z","stage":"plan","title":"Duration sửa: rc-b5","data":{"beatId":"rc-b5","from":20,"to":25}}
 {"ts":"2026-08-30T17:34:37.468Z","stage":"plan","title":"Treatment đổi: rc-b3","data":{"beatId":"rc-b3","from":"chapter-card","to":"semantic-diagram"}}
 {"ts":"2026-08-30T17:35:31.300Z","stage":"plan","title":"Treatment đổi: rc-b3","data":{"beatId":"rc-b3","from":"semantic-diagram","to":"chapter-card"}}
+{"ts":"2026-08-30T18:09:02.166Z","stage":"plan","title":"Direction sửa: rc-b2","data":{"beatId":"rc-b2","from":"true","to":""}}
