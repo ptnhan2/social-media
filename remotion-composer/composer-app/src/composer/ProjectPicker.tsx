@@ -20,22 +20,27 @@ export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOp
   const [projects, setProjects] = React.useState<ProjectListItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
-  const [creating, setCreating] = React.useState(false);
   const [newId, setNewId] = React.useState("");
+  const [creating, setCreating] = React.useState(false);
+  const [deleteConfirm, setDeleteConfirm] = React.useState<string | null>(null);
 
-  const refresh = React.useCallback(async () => {
+  const refresh = React.useCallback(() => {
+    setLoading(true);
+    listProjects().then((list) => { setProjects(list); setError(null); }).catch((e) => setError(e instanceof Error ? e.message : String(e))).finally(() => setLoading(false));
+  }, []);
+  React.useEffect(() => { refresh(); }, [refresh]);
+
+  const handleDelete = async (id: string) => {
     try {
-      const list = await listProjects();
-      setProjects(list);
-      setError(null);
+      await fetch("/api/projects/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId: id, confirm: true }) }).then((r) => r.json());
+      setDeleteConfirm(null);
+      refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setLoading(false);
+      setDeleteConfirm(null);
     }
-  }, []);
-
-  React.useEffect(() => { void refresh(); }, [refresh]);
+  };
+  const [newId, setNewId] = React.useState("");
 
   const handleCreate = async () => {
     const id = newId.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "-").replace(/^-+|-+$/g, "");
@@ -106,6 +111,11 @@ export const ProjectPicker: React.FC<{ onOpen: (projectId: string) => void; onOp
               {onOpenPage && p.hasEditDoc ? (
                 <button type="button" className="project-card-page" aria-label={`Open project page for ${p.id}`} title="Trang trình bày & duyệt" onClick={() => onOpenPage(p.id)}>📄</button>
               ) : null}
+              {deleteConfirm === p.id ? (
+                <button type="button" className="project-card-delete confirm" aria-label={`Confirm delete ${p.id}`} title="Xoá vĩnh viễn — không thể hoàn tác" onClick={() => void handleDelete(p.id)}>✕ Xoá?</button>
+              ) : (
+                <button type="button" className="project-card-delete" aria-label={`Delete ${p.id}`} title="Xoá project" onClick={() => setDeleteConfirm(p.id)}>🗑</button>
+              )}
             </div>
           ))}
         </div>

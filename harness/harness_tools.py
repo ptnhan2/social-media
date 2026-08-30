@@ -725,7 +725,7 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
 
 
 @tool
-def draft_story(project_slug: str, idea: str, story: str) -> str:
+def draft_story(project_slug: str, idea: str, story: str, target_duration_sec: int = 0, beat_count: int = 0) -> str:
     """Draft the STORY for a video idea (Creation Flow step 1 — CONTENT-STUDIO-SPEC §5).
 
     YOU compose the story (you are the creative here — use your storytelling
@@ -740,6 +740,12 @@ def draft_story(project_slug: str, idea: str, story: str) -> str:
         story: JSON string you composed: {idea, surfaceProblem,
               deeperProblem, thumbnailPromise, commonGoal: {viewer, creator}}
               — one or two sentences per field, concrete, no filler.
+        target_duration_sec: Target video duration in seconds (from the
+              user's shape selection — hook ~30s, explainer ~150s, etc.).
+              Your story should be scoped for THIS duration.
+        beat_count: Number of beats the script should have (from the user's
+              shape selection). The story's hero journey should have exactly
+              this many narrative beats.
     """
     try:
         story_obj = json.loads(story)
@@ -764,9 +770,11 @@ def draft_story(project_slug: str, idea: str, story: str) -> str:
         return f"DRAFT STORY FAILED: {body.get('error', 'unknown')}"
     return ("DRAFT STORY OK — status PENDING, the story card is now in the Content Studio.\n"
             f"Original idea recorded: {idea}\n"
-            "STOP and tell the human to review the story (edit fields inline, then Duyệt story). "
+            + (f"Target shape: ~{target_duration_sec}s, {beat_count} beats — scope the story for this duration.\n" if target_duration_sec else "")
+            + "STOP and tell the human to review the story (edit fields inline, then Duyệt story). "
             "After approval, write the script with write_edit_doc using the approved story as "
-            "the `story` input and the original idea as `instruction`.")
+            "the `story` input and the original idea as `instruction`. "
+            + (f"The script MUST have exactly {beat_count} beats." if beat_count else ""))
 
 
 @tool
@@ -841,7 +849,10 @@ def write_edit_doc(project_slug: str, story: str, beats: str, instruction: str =
               (a backup is kept). Without it the tool refuses.
 
     Rule: transcript = exact spoken words (tags/CAPS allowed later in the
-    studio beat editor — the words themselves never change). 3-6s per beat.
+    studio beat editor — the words themselves never change). Duration per
+    beat should match the target: ~3-8s for hooks, ~8-20s for explainers,
+    ~20-60s for deep dives. ALWAYS honor the beat_count from the user's
+    shape selection if one was given in the conversation.
     """
     cmd = ["node", os.path.join(RENDERER_DIR, "scripts", "write-edit-doc.mjs"),
            "--project", project_slug]

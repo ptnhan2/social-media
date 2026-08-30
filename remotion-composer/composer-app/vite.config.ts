@@ -1,6 +1,7 @@
 ﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, watch, appendFileSync } from "fs";
+import * as fs from "fs";
 import { resolve, sep, join as pathJoin, dirname as pathDirname } from "path";
 import { fileURLToPath } from "url";
 import { spawn, spawnSync } from "child_process";
@@ -364,6 +365,27 @@ export default defineConfig({
             outputUrl: job.status === "done" ? `/api/project/artifact?projectId=${encodeURIComponent(projectId)}&path=${encodeURIComponent(job.outputPath)}` : undefined,
           });
         });
+        // Delete project — the CRUD gap every user hits: projects accumulate
+        // forever (WORKFLOW-AUDIT P0). Guard: confirm=true required.
+        server.middlewares.use("/api/projects/delete", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const confirm = body.confirm === true;
+              if (!projectId) throw new Error("projectId required");
+              if (!confirm) throw new Error("confirm=true required — deletion is irreversible");
+              const projectDir = PROJECT_STORE.projectDir(projectId);
+              const publicDir = resolve(PUBLIC_DIR, projectId);
+              // validate the project exists
+              if (!existsSync(resolve(projectDir, "00-state.json"))) throw new Error(`Project not found: ${projectId}`);
+              // delete both the project dir and the public copy
+              fs.rmSync(projectDir, { recursive: true, force: true });
+              if (existsSync(publicDir)) fs.rmSync(publicDir, { recursive: true, force: true });
+              sendJson(res, 200, { ok: true, deleted: projectId });
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
         // ============ CREATION FLOW (CONTENT-STUDIO-SPEC §5) ============
         // Story draft: the FIRST artifact of the journey (idea -> story review
         // -> script). ONE write-path (this endpoint) for agent (draft_story
@@ -444,8 +466,23 @@ export default defineConfig({
               if (!projectId) throw new Error("projectId required");
               const snapshot = PROJECT_STORE.load(projectId);
               if (!snapshot.editDoc) throw new Error("Project has no edit document — write a script first");
-              const jobId = `produce-${Date.now()}`;
-              produceJobs.set(jobId, { status: "producing", startedAt: Date.now(), step: "voice" });
+              // guard: a beat with a transcript is REQUIRED (empty-beat TTS is
+              // billable garbage — cold-diff review MINOR #7)
+              if (!(snapshot.editDoc.beats ?? []).some((beat) => String(beat.transcript ?? "").trim())) {
+                throw new Error("No beat has a transcript — write the script first");
+              }
+              // in-flight guard: ONE produce job per project (a retry during a
+              // running job would double-bill TTS and race the writes —
+              // cold-diff review MAJOR #2)
+              for (const [existingId, existing] of produceJobs) {
+                if (existing.status === "producing" && (existing as { projectId?: string }).projectId === projectId) {
+                  sendJson(res, 200, { jobId: existingId, projectId, alreadyRunning: true });
+                  return;
+                }
+              }
+              const jobId = `produce-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+              const jobEntry: { status: "producing" | "done" | "error"; startedAt: number; step?: string; message?: string; result?: unknown; projectId?: string } = { status: "producing", startedAt: Date.now(), step: "voice", projectId };
+              produceJobs.set(jobId, jobEntry);
               const child = spawn(process.execPath, ["scripts/produce.mjs", "--project", projectId], {
                 cwd: COMPOSER_ROOT, windowsHide: true, stdio: ["ignore", "pipe", "pipe"],
               });

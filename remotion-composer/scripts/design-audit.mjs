@@ -30,6 +30,7 @@ const APP_PALETTE = new Set([
   "#d8dee9", "#b9bfcc", "#8d96a3", "#7c8797", "#6b7280", "#4b5563",
   "#2563eb", "#60a5fa", "#2dd4a0", "#f5b544", "#ff6b6b", "#ff9b9b",
   "#14532d", "#0d1f18", "#2a1520", "#000", "#fff", "#ffffff",
+  "#7f1d1d", "#991b1b", "#fecaca", "#ff6b6b", "#ff9b9b",
 ]);
 const rawHexes = [...new Set([...block.matchAll(/#[0-9a-fA-F]{3,6}\b/g)].map((m) => m[0].toLowerCase()))];
 for (const hex of rawHexes) {

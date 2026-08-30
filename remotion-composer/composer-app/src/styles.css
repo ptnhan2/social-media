@@ -107,7 +107,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .tb-row input[type="color"] { width: 32px; height: 24px; border: none; background: none; cursor: pointer; }
 .tb-row input[type="text"] { background: #0b0e14; color: #d8dee9; border: 1px solid #1f2937; border-radius: 4px; padding: 4px 6px; font-size: 11px; }
 .tb-row b { width: 34px; text-align: right; color: #d8dee9; font-weight: 400; }
-.tb-text { background: #0b0e14; color: #d8dee9; border: 1px solid #1f2937; border-radius: 6px; padding: 6px 8px; font-size: 12px; resize: vertical; }
+.tb-text { background: #0b0e14; color: #d8dee9; border: 1px solid #1f2937; border-radius: 6px; padding: 8px; font-size: 12px; resize: vertical; }
 .tb-mini { background: #111827; color: #9ca3af; border: 1px solid #1f2937; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer; }
 .tb-mini.on { background: #2563eb; color: #fff; border-color: #2563eb; }
 .tb-actions { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -233,7 +233,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .composer-preview-switch button.active { background: rgba(97, 215, 232, .18); color: #dbfaff; }
 .composer-scrub-row { display: grid; grid-template-columns: 35px minmax(0, 1fr) 35px; align-items: center; gap: 8px; padding: 10px 2px 5px; color: var(--faint); font: 10px "Roboto Mono", monospace; }
 .composer-range-controls { display: flex; align-items: center; gap: 5px; margin-top: 8px; }
-.composer-range-controls button { padding: 6px 8px; border: 1px solid var(--line); border-radius: 3px; background: rgba(12, 18, 25, .72); color: var(--muted); font: 9px "Roboto Mono", monospace; cursor: pointer; }
+.composer-range-controls button { padding: 8px; border: 1px solid var(--line); border-radius: 3px; background: rgba(12, 18, 25, .72); color: var(--muted); font: 9px "Roboto Mono", monospace; cursor: pointer; }
 .composer-range-controls button.active { border-color: rgba(97, 215, 232, .48); background: rgba(36, 89, 101, .42); color: #e5fbff; }
 .composer-range-controls span { margin-left: auto; color: var(--amber); font: 9px "Roboto Mono", monospace; }
 .composer-custom-range { display: flex; align-items: center; gap: 5px; margin-top: 5px; color: var(--faint); font: 9px "Roboto Mono", monospace; }
@@ -320,7 +320,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .composer-asset-upload { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; padding: 7px 8px; border: 1px dashed rgba(97, 215, 232, .32); border-radius: 3px; color: var(--cyan); font: 8px "Roboto Mono", monospace; cursor: pointer; }
 .composer-asset-upload input { width: 0; height: 0; overflow: hidden; opacity: 0; }
 .composer-uploaded-assets { display: grid; gap: 4px; margin-top: 5px; }
-.composer-uploaded-assets button { display: flex; align-items: center; justify-content: space-between; gap: 7px; padding: 6px 8px; border: 1px solid rgba(97, 215, 232, .25); border-radius: 3px; background: rgba(18, 42, 50, .45); color: #d7f7fc; text-align: left; cursor: grab; }
+.composer-uploaded-assets button { display: flex; align-items: center; justify-content: space-between; gap: 7px; padding: 8px; border: 1px solid rgba(97, 215, 232, .25); border-radius: 3px; background: rgba(18, 42, 50, .45); color: #d7f7fc; text-align: left; cursor: grab; }
 .composer-uploaded-assets button span { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .composer-uploaded-assets button small { flex-shrink: 0; color: var(--cyan); font: 8px "Roboto Mono", monospace; }
 .composer-muted { color: var(--faint); font-size: 10px; }
@@ -799,7 +799,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .composer-edit-overlay .editor-stage-scroll { display: grid; place-items: center; width: auto; max-width: 100%; max-height: 100%; padding: 0; border-radius: 5px; background: transparent; }
 .composer-edit-overlay .edit-surface-wrap { display: grid; place-items: center; }
 .composer-edit-overlay .canvas-stage { transform-origin: top left !important; }
-.composer-edit-overlay .composer-canvas-actions { position: absolute; right: 16px; bottom: 14px; z-index: 4; padding: 6px 8px; border: 1px solid #53578e; border-radius: 5px; background: rgba(39, 40, 66, .95); }
+.composer-edit-overlay .composer-canvas-actions { position: absolute; right: 16px; bottom: 14px; z-index: 4; padding: 8px; border: 1px solid #53578e; border-radius: 5px; background: rgba(39, 40, 66, .95); }
 .composer-edit-overlay .composer-canvas-actions > span { display: none; }
 
 @media (max-width: 1180px) and (min-width: 761px) {
@@ -815,7 +815,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
     grid-template-rows: 54px minmax(0, 1fr) 254px;
     overflow: hidden;
   }
-  .composer-review-head { min-height: 54px; padding: 0 10px; align-items: center; flex-direction: row; gap: 8px; }
+  .composer-review-head { min-height: 54px; padding: 0 8px; align-items: center; flex-direction: row; gap: 8px; }
   .composer-eyebrow { font-size: 8px; }
   .composer-review h2 { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
   .composer-review h2 span { display: none; }
@@ -876,8 +876,8 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
   background: #0d1520; color: #d8dee9; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
 .ve-header-right button:disabled { opacity: 0.35; cursor: default; }
-.ve-header-right .ve-export-btn { width: auto; padding: 0 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
-.ve-header-right .ve-studio-btn { width: auto; padding: 0 10px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; border-color: #f0883e66; color: #f0883e; }
+.ve-header-right .ve-export-btn { width: auto; padding: 0 8px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.ve-header-right .ve-studio-btn { width: auto; padding: 0 8px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; border-color: #f0883e66; color: #f0883e; }
 .ve-header-right .ve-studio-btn:hover { background: #f0883e22; }
 .ve-body { display: grid; grid-template-columns: 220px 1fr 280px; overflow: hidden; min-height: 0; }
 .ve-panel-divider { width: 4px; cursor: col-resize; background: #111827; flex-shrink: 0; z-index: 20; transition: background 0.15s; }
@@ -957,7 +957,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .ve-upload-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .ve-asset-list { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
 .ve-asset-item {
-  display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+  display: flex; align-items: center; gap: 8px; padding: 8px;
   border-radius: 6px; border: 1px solid #1f2937; background: #111827;
   cursor: pointer; text-align: left;
 }
@@ -1049,7 +1049,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 }
 .ve-img-upload {
   display: flex; align-items: center; gap: 6px; font-size: 11px; color: #d8dee9;
-  border: 1px dashed #374151; border-radius: 5px; padding: 6px 8px; cursor: pointer;
+  border: 1px dashed #374151; border-radius: 5px; padding: 8px; cursor: pointer;
 }
 .ve-img-upload:hover { border-color: #3b82f6; }
 .ve-img-upload input[type="file"] { font-size: 10px; color: #6b7280; max-width: 100%; }
@@ -1486,6 +1486,37 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .pp-slug-row input:focus { border-color: #2563eb; outline: none; }
 .pp-newidea-btn { white-space: nowrap; }
 
+/* Project delete button */
+.project-card-delete {
+  position: absolute; top: 10px; right: 46px; width: 30px; height: 30px;
+  border-radius: 6px; border: 1px solid #1f2937; background: #0d1520;
+  font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: #6b7280; transition: color .12s, border-color .12s, background .12s;
+}
+.project-card-delete:hover { border-color: #7f1d1d; color: #ff6b6b; }
+.project-card-delete.confirm { width: auto; padding: 0 8px; background: #7f1d1d; color: #fecaca; border-color: #7f1d1d; font-size: 11px; font-weight: 700; }
+.project-card-delete.confirm:hover { background: #991b1b; }
+
+/* Video shape presets — the user controls the SIZE of their video */
+.pp-shape { display: flex; flex-direction: column; gap: 8px; }
+.pp-shape-label { font: 600 11px Inter, sans-serif; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; }
+.pp-shape-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+.pp-shape-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 16px; border: 1px solid #1f2937; border-radius: 8px;
+  background: #111827; color: #d8dee9; cursor: pointer;
+  font: 500 13px Inter, sans-serif; min-width: 120px;
+  transition: border-color .12s, background .12s;
+}
+.pp-shape-btn:hover { border-color: #2b3647; }
+.pp-shape-btn.active { border-color: #2563eb; background: #12203a; }
+.pp-shape-btn small { color: #6b7280; font-size: 10px; }
+.pp-shape-btn.active small { color: #60a5fa; }
+.pp-shape-custom { display: flex; gap: 12px; }
+.pp-shape-custom label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #8d96a3; }
+.pp-shape-custom input { width: 64px; background: #111827; border: 1px solid #1f2937; border-radius: 6px; color: #d8dee9; padding: 8px; font-size: 12px; }
+.pp-shape-custom input:focus { border-color: #2563eb; outline: none; }
+
 /* ===== Agent Panel ===== */
 .ap-root { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 
@@ -1497,7 +1528,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
   border-radius: 6px; border: 1px solid #1f2937; background: #0d1520;
   font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
-.project-card-page:hover { border-color: #3b82f6; background: #17203a; }
+.project-card-page:hover { border-color: #3b82f6; background: #12203a; }
 
 /* App-level agent drawer (2026-08-29): the agent accompanies the whole
    pipeline, not just the editor — a floating toggle on every route, the
@@ -1640,7 +1671,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 
 /* Input bar */
 .ap-input-bar {
-  display: flex; gap: 4px; padding: 6px 8px; border-top: 1px solid #1f2937; flex-shrink: 0; background: #0b0e14;
+  display: flex; gap: 4px; padding: 8px; border-top: 1px solid #1f2937; flex-shrink: 0; background: #0b0e14;
 }
 .ap-input {
   flex: 1; background: #111827; border: 1px solid #1f2937; color: #d8dee9; padding: 6px 10px;
@@ -1719,7 +1750,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .ap-ba-label { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
 
 /* KEEP gate (protocol v4) */
-.ap-note-input { width: 100%; resize: vertical; font-size: 12px; padding: 6px 8px; border-radius: 6px; border: 1px solid #374151; background: #111827; color: #e5e7eb; margin: 6px 0; box-sizing: border-box; }
+.ap-note-input { width: 100%; resize: vertical; font-size: 12px; padding: 8px; border-radius: 6px; border: 1px solid #374151; background: #111827; color: #e5e7eb; margin: 6px 0; box-sizing: border-box; }
 .ap-note-input:focus { outline: none; border-color: #2563eb; }
 
 /* ============ ASSET STUDIO ============ */
@@ -1736,7 +1767,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .as-panel { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 12px; }
 .as-panel h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #8b949e; margin: 0 0 8px; }
 .as-search-row { display: flex; gap: 6px; margin-bottom: 8px; }
-.as-search-row input { flex: 1; min-width: 0; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e8edf2; padding: 6px 8px; font-size: 12px; }
+.as-search-row input { flex: 1; min-width: 0; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e8edf2; padding: 8px; font-size: 12px; }
 .as-search-row button, .as-btn { background: #21262d; color: #e8edf2; border: 1px solid #30363d; border-radius: 6px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
 .as-btn { display: block; width: 100%; margin-bottom: 8px; text-align: left; }
 .as-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -1766,11 +1797,11 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 .as-slider input { width: 100%; }
 .as-head-preview { text-align: center; margin-top: 8px; }
 .as-head-preview img { width: 72px; height: 72px; object-fit: contain; }
-.as-coverage { font-size: 12px; padding: 6px 8px; border-radius: 6px; background: #21262d; margin-bottom: 8px; color: #8b949e; }
+.as-coverage { font-size: 12px; padding: 8px; border-radius: 6px; background: #21262d; margin-bottom: 8px; color: #8b949e; }
 .as-coverage[data-covered="true"] { background: #12261e; color: #3fb950; }
 .as-coverage[data-covered="false"] { background: #2d1517; color: #f85149; }
 .as-hint { font-size: 11px; color: #484f58; margin: 4px 0 0; }
-.as-right input[type="text"], .as-right input:not([type]) { width: 100%; box-sizing: border-box; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e8edf2; padding: 6px 8px; font-size: 12px; margin-bottom: 8px; }
+.as-right input[type="text"], .as-right input:not([type]) { width: 100%; box-sizing: border-box; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e8edf2; padding: 8px; font-size: 12px; margin-bottom: 8px; }
 
 
 /* Asset Studio â€” polygon tool */
@@ -1969,7 +2000,7 @@ body { background: #0b0e14; color: #d8dee9; font-family: "Inter", "Segoe UI", sy
 
 /* ===== Asset Studio V4 â€” UX audit fixes (2026-08-24 tá»‘i) ===== */
 .as4-prompt-wrap { display: flex; flex-direction: column; gap: 4px; }
-.as4-prompt-box { width: 100%; box-sizing: border-box; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e8edf2; font-size: 11px; line-height: 1.5; padding: 6px 8px; resize: vertical; font-family: inherit; }
+.as4-prompt-box { width: 100%; box-sizing: border-box; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e8edf2; font-size: 11px; line-height: 1.5; padding: 8px; resize: vertical; font-family: inherit; }
 .as4-prompt-box:focus { border-color: #f0883e; outline: none; }
 .as4-canvas-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #6e7681; font-size: 13px; pointer-events: none; z-index: 4; }
 .as4-canvas-empty-icon { font-size: 44px; opacity: 0.7; }

@@ -316,15 +316,56 @@ const JourneyStepper: React.FC<{ stage: JourneyStage }> = ({ stage }) => {
   );
 };
 
-/** CREATE MODE: the journey's front door — "Video của bạn về gì?" */
-const CreateCard: React.FC<{ onSendIdea: (idea: string) => void }> = ({ onSendIdea }) => {
+/** Video shape — the user controls the SIZE of their video, not just the idea. */
+export type VideoShape = { targetDurationSec: number; beatCount: number; label: string };
+
+const SHAPE_PRESETS: { id: string; label: string; icon: string; shape: VideoShape }[] = [
+  { id: "hook", label: "Hook ngắn", icon: "⚡", shape: { targetDurationSec: 30, beatCount: 4, label: "Hook ~30s" } },
+  { id: "explainer", label: "Explainer", icon: "📝", shape: { targetDurationSec: 150, beatCount: 7, label: "Explainer ~2.5 phút" } },
+  { id: "deep", label: "Deep dive", icon: "🎥", shape: { targetDurationSec: 600, beatCount: 12, label: "Deep dive ~10 phút" } },
+];
+
+/** CREATE MODE: the journey's front door — "Video của bạn về gì?" + shape. */
+const CreateCard: React.FC<{ onSendIdea: (idea: string, shape: VideoShape) => void }> = ({ onSendIdea }) => {
   const [idea, setIdea] = React.useState("");
+  const [preset, setPreset] = React.useState("hook");
+  const [customMinutes, setCustomMinutes] = React.useState("");
+  const [customBeats, setCustomBeats] = React.useState("");
+  const activePreset = SHAPE_PRESETS.find((p) => p.id === preset);
+  const shape: VideoShape = preset === "custom" && Number(customMinutes) > 0 && Number(customBeats) > 0
+    ? { targetDurationSec: Number(customMinutes) * 60, beatCount: Number(customBeats), label: `Custom ${customMinutes} phút · ${customBeats} beats` }
+    : activePreset?.shape ?? SHAPE_PRESETS[0].shape;
   return (
     <section className="pp-card pp-create">
       <div className="pp-card-title">Bắt đầu <small>— video của bạn về gì?</small></div>
       <textarea className="pp-idea-input" rows={3} aria-label="Video idea" placeholder="Mô tả ý tưởng video của bạn... (chủ đề, góc nhìn, đối tượng xem)" value={idea} onChange={(e) => setIdea(e.target.value)} />
+      <div className="pp-shape">
+        <span className="pp-shape-label">Hình dạng video</span>
+        <div className="pp-shape-presets" role="radiogroup" aria-label="Video shape">
+          {SHAPE_PRESETS.map((p) => (
+            <button key={p.id} type="button" role="radio" aria-checked={preset === p.id}
+              className={`pp-shape-btn ${preset === p.id ? "active" : ""}`}
+              onClick={() => setPreset(p.id)}>
+              <span>{p.icon}</span> {p.label}
+              <small>{p.shape.targetDurationSec}s · {p.shape.beatCount} beats</small>
+            </button>
+          ))}
+          <button type="button" role="radio" aria-checked={preset === "custom"}
+            className={`pp-shape-btn ${preset === "custom" ? "active" : ""}`}
+            onClick={() => setPreset("custom")}>
+            <span>⚙️</span> Custom
+          </button>
+        </div>
+        {preset === "custom" ? (
+          <div className="pp-shape-custom">
+            <label><span>phút</span><input type="number" min="0.5" max="30" step="0.5" value={customMinutes} aria-label="Custom minutes" onChange={(e) => setCustomMinutes(e.target.value)} placeholder="2" /></label>
+            <label><span>beats</span><input type="number" min="2" max="30" value={customBeats} aria-label="Custom beats" onChange={(e) => setCustomBeats(e.target.value)} placeholder="7" /></label>
+          </div>
+        ) : null}
+        <p className="ve-hint">Target: {shape.label} — agent sẽ compose story + script theo đúng shape này.</p>
+      </div>
       <div>
-        <button type="button" className="ve-btn primary" disabled={!idea.trim()} onClick={() => onSendIdea(idea.trim())}>🚀 Bắt đầu với agent</button>
+        <button type="button" className="ve-btn primary" disabled={!idea.trim()} onClick={() => onSendIdea(idea.trim(), shape)}>🚀 Bắt đầu với agent</button>
         <p className="ve-hint">Agent sẽ research + đề xuất STORY để bạn duyệt — rồi mới viết script. Bạn chỉnh được mọi thứ ở từng bước.</p>
       </div>
     </section>
@@ -462,7 +503,7 @@ const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; onDone: ()
   );
 };
 
-const HistoryCard: React.FC<{ projectId: string }> = ({ projectId }) => {
+const HistoryCard: React.FC<{ projectId: string; refreshKey: number }> = ({ projectId, refreshKey }) => {
   const [events, setEvents] = React.useState<TraceEvent[] | null>(null);
   const [open, setOpen] = React.useState<number | null>(null);
   React.useEffect(() => {
@@ -470,7 +511,7 @@ const HistoryCard: React.FC<{ projectId: string }> = ({ projectId }) => {
       .then((r) => r.json())
       .then((payload) => setEvents(Array.isArray(payload.events) ? payload.events : []))
       .catch(() => setEvents([]));
-  }, [projectId]);
+  }, [projectId, refreshKey]); // refreshKey changes on every SSE-triggered refresh — history stays live
   if (events === null || events.length === 0) return null;
   return (
     <details className="pp-card pp-collapse">
@@ -498,8 +539,10 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
   const [renders, setRenders] = React.useState<ProjectRender[]>([]);
   const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
   const [storyDraft, setStoryDraftState] = React.useState<StoryDraft | null>(null);
+  const [refreshKey, setRefreshKey] = React.useState(0);
 
   const refresh = React.useCallback(() => {
+    setRefreshKey((k) => k + 1); // HistoryCard listens to this
     loadProject(projectId).then((payload) => { setSnapshot(payload); setError(null); }).catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
     fetchRenders(projectId).then((payload) => setRenders(payload.renders)).catch(() => setRenders([]));
     fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
@@ -535,8 +578,12 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
   const latest = renders[0];
   const stage = deriveStage(snapshot, storyDraft, renders.length, approval);
   const hasScript = (editDoc?.beats ?? []).some((beat) => String(beat.transcript ?? "").trim());
-  const sendIdeaToAgent = (idea: string) => {
-    agent.setDraftPrompt(`Tôi muốn làm video: "${idea}". Hãy dùng tool draft_story (project ${projectId}, idea verbatim, story bạn compose) để đề xuất story — rồi dừng chờ tôi duyệt trong Content Studio.`);
+  const sendIdeaToAgent = (idea: string, shape: VideoShape) => {
+    agent.setDraftPrompt(
+      `Tôi muốn làm video: "${idea}". Hình dạng: ${shape.label} (target ~${shape.targetDurationSec}s, ${shape.beatCount} beats). ` +
+      `Hãy dùng tool draft_story (project ${projectId}, idea verbatim, story bạn compose) để đề xuất story — rồi dừng chờ tôi duyệt trong Content Studio. ` +
+      `Khi viết script sau này: đúng ${shape.beatCount} beats, tổng thời lượng ~${shape.targetDurationSec}s.`,
+    );
     agent.setOpen(true);
   };
 
@@ -547,7 +594,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
           <h1>{videoDoc?.idea ?? storyDraft?.originalIdea ?? storyDraft?.idea ?? projectId}</h1>
           <small>{projectId} · {String(snapshot.state.stage ?? "?")} · {snapshot.state.currentVersion}</small>
         </div>
-        <button type="button" className="ve-btn primary" onClick={onOpenEditor}>Mở editor ↗</button>
+        <button type="button" className="ve-btn primary" onClick={onOpenEditor} disabled={!hasScript} title={hasScript ? "" : "Cần script trước khi mở editor"}>Mở editor ↗</button>
       </header>
 
       <JourneyStepper stage={stage} />
@@ -590,7 +637,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
         </details>
       ) : null}
 
-      <HistoryCard projectId={projectId} />
+      <HistoryCard projectId={projectId} refreshKey={refreshKey} />
     </div>
   );
 };
