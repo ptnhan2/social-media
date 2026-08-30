@@ -66,6 +66,22 @@ export const fetchStoryDraft = (projectId: string) => requestJson<StoryDraft>(`/
 
 export const setStoryDraft = (projectId: string, payload: { status: "pending" | "approved" | "changes_requested"; story?: Record<string, unknown>; originalIdea?: string; note?: string }) => requestJson<{ ok: true; draft: StoryDraft }>(`/api/project/story-draft`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, ...payload }) });
 
+export type ResearchData = {
+  status: "none" | "pending" | "approved";
+  originalIdea?: string;
+  audience?: string;
+  subQuestions?: { q: string; findings?: { fact: string; source: string; credibility?: string }[]; error?: string }[];
+  insights?: string[];
+  painPoints?: string[];
+  gaps?: string[];
+  sources?: { url: string; title: string; type: string }[];
+  searchedAt?: string;
+};
+
+export const fetchResearch = (projectId: string) => requestJson<ResearchData>(`/api/project/research?projectId=${encodeURIComponent(projectId)}`);
+
+export const approveResearch = (projectId: string) => requestJson<{ ok: true }>(`/api/project/research`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, status: "approved" }) });
+
 export const saveReviewQueue = (projectId: string, entries: ReviewQueueEntry[]) => requestJson<ReviewQueue>("/api/project/review-queue", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, entries }) });
 
 export type ProjectListItem = {

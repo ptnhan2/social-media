@@ -386,6 +386,56 @@ export default defineConfig({
             } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
           });
         });
+        // RESEARCH (CONTENT-STUDIO-SPEC §6 — the critical quality step):
+        // agent research_topic tool writes structured findings; user reviews
+        // in the studio BEFORE story drafting. Same pattern as story-draft.
+        server.middlewares.use("/api/project/research", (req, res) => {
+          const url = new URL(req.url || "/", "http://composer.local");
+          const projectId = url.searchParams.get("projectId") || "";
+          if (req.method === "GET") {
+            try {
+              if (!projectId) { sendJson(res, 400, { error: "projectId required" }); return; }
+              const researchPath = resolve(PROJECT_STORE.projectDir(projectId), "qa", "research.json");
+              if (!existsSync(researchPath)) { sendJson(res, 200, { status: "none" }); return; }
+              sendJson(res, 200, JSON.parse(readFileSync(researchPath, "utf-8")));
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+            return;
+          }
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const pid = String(body.projectId || projectId || "");
+              if (!pid) throw new Error("projectId required");
+              // Two modes: (1) agent writes full research object; (2) user approves
+              if (body.research && typeof body.research === "object") {
+                const researchPath = resolve(PROJECT_STORE.projectDir(pid), "qa", "research.json");
+                mkdirSync(pathDirname(researchPath), { recursive: true });
+                writeFileSync(researchPath, JSON.stringify(body.research, null, 2), "utf-8");
+                try {
+                  const traceFile = resolve(PROJECT_STORE.projectDir(pid), "qa", "pipeline-log.jsonl");
+                  mkdirSync(pathDirname(traceFile), { recursive: true });
+                  appendFileSync(traceFile, `${JSON.stringify({ ts: new Date().toISOString(), stage: "research", title: `Research: ${body.research.subQuestions?.length ?? 0} sub-questions, ${body.research.sources?.length ?? 0} sources`, data: { status: body.research.status } })}\n`, "utf-8");
+                } catch { /* trace best-effort */ }
+                sendJson(res, 200, { ok: true });
+              } else if (body.status === "approved") {
+                // user approves the research
+                const researchPath = resolve(PROJECT_STORE.projectDir(pid), "qa", "research.json");
+                if (!existsSync(researchPath)) throw new Error("No research to approve");
+                const research = JSON.parse(readFileSync(researchPath, "utf-8"));
+                research.status = "approved";
+                research.updatedAt = new Date().toISOString();
+                writeFileSync(researchPath, JSON.stringify(research, null, 2), "utf-8");
+                try {
+                  const traceFile = resolve(PROJECT_STORE.projectDir(pid), "qa", "pipeline-log.jsonl");
+                  appendFileSync(traceFile, `${JSON.stringify({ ts: new Date().toISOString(), stage: "research", title: "Research approved", data: { status: "approved" } })}\n`, "utf-8");
+                } catch { /* trace best-effort */ }
+                sendJson(res, 200, { ok: true });
+              } else {
+                throw new Error("Either `research` (object) or `status: 'approved'` required");
+              }
+            } catch (error) { sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) }); }
+          });
+        });
         // ============ CREATION FLOW (CONTENT-STUDIO-SPEC §5) ============
         // Story draft: the FIRST artifact of the journey (idea -> story review
         // -> script). ONE write-path (this endpoint) for agent (draft_story

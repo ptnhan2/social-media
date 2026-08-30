@@ -725,13 +725,219 @@ def editor_op(op: str, clip_id: str = "", time_sec: float = 0.0, edge: str = "",
 
 
 @tool
+def research_topic(project_slug: str, idea: str, audience: str = "") -> str:
+    """Research a video topic using web search (Creation Flow — the CRITICAL step before story).
+
+    This tool runs the industry-standard research pipeline: PLAN (decompose into
+    sub-questions) → SEARCH (Tavily web search per sub-question) → SYNTHESIZE
+    (findings + citations). The output lands in the studio's research review card
+    — the human reviews BEFORE you draft the story.
+
+    The research determines content quality: verified facts, unique angles that
+    competitors missed, real community pain points. WITHOUT research, the story
+    is just your training-data priors — the user explicitly called this out as
+    the most important step.
+
+    Args:
+        project_slug: Project folder name.
+        idea: The user's original idea (verbatim).
+        audience: Optional — who this video is for (beginners? experts? what
+              community?). Helps the planner generate targeted sub-questions.
+    """
+    api_key = os.environ.get("TAVILY_API_KEY")
+    if not api_key:
+        # try .env
+        load_env()
+        api_key = os.environ.get("TAVILY_API_KEY")
+    if not api_key:
+        return ("RESEARCH FAILED: No TAVILY_API_KEY. Add it to .env:\n"
+                "TAVILY_API_KEY=tvly-...\n"
+                "Get a free key at https://tavily.com (1000 free credits/month).")
+
+    # ---- Step 1: PLAN — decompose into 3-5 sub-questions ----
+    plan_prompt = (
+        f"Research brief for a video about: \"{idea}\"\n"
+        f"Target audience: {audience or 'general viewers'}\n\n"
+        "Decompose this into 3-5 sub-questions that a researcher should investigate "
+        "to produce a well-informed video script. Include:\n"
+        "- What are the key facts/statistics/examples that support the main claim?\n"
+        "- What do experts/practitioners actually say about this?\n"
+        "- What are the common misconceptions?\n"
+        "- What unique angle could this video take that others miss?\n\n"
+        "Return ONLY a JSON array of strings (the sub-questions). No explanation."
+    )
+    try:
+        plan_result = _chat_completion([{"role": "user", "content": plan_prompt}], max_tokens=300)
+        # extract JSON array from response
+        import re
+        match = re.search(r'\[.*\]', plan_result, re.DOTALL)
+        if not match:
+            return f"RESEARCH FAILED: planner returned non-JSON: {plan_result[:200]}"
+        sub_questions = json.loads(match.group(0))
+        if not isinstance(sub_questions, list) or len(sub_questions) < 2:
+            return f"RESEARCH FAILED: planner returned {len(sub_questions)} sub-questions (need 3-5)"
+        sub_questions = sub_questions[:5]  # cap at 5
+    except Exception as exc:
+        return f"RESEARCH FAILED (planner): {exc}"
+
+    # ---- Step 2: SEARCH — Tavily per sub-question (sequential for rate limits) ----
+    all_findings = []
+    all_sources = []
+    for sq in sub_questions:
+        try:
+            payload = json.dumps({
+                "query": sq,
+                "search_depth": "advanced",
+                "include_answer": True,
+                "include_raw_content": False,
+                "max_results": 5,
+            }).encode()
+            req = urllib.request.Request(
+                "https://api.tavily.com/search",
+                data=payload, method="POST",
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+            )
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            answer = data.get("answer", "")
+            results = data.get("results", [])
+            findings = []
+            for r in results[:3]:  # top 3 per sub-question
+                source_url = r.get("url", "")
+                source_title = r.get("title", "")
+                content = r.get("content", "")[:500]  # truncate
+                findings.append({"fact": content, "source": source_url, "credibility": "medium"})
+                if source_url not in [s["url"] for s in all_sources]:
+                    all_sources.append({"url": source_url, "title": source_title, "type": _classify_source(source_url)})
+            if answer:
+                findings.append({"fact": answer, "source": "tavily-synthesis", "credibility": "medium"})
+            all_findings.append({"q": sq, "findings": findings})
+        except Exception as exc:
+            all_findings.append({"q": sq, "findings": [], "error": str(exc)[:200]})
+
+    # ---- Step 3: SYNTHESIZE — LLM extracts insights + competitive angles ----
+    findings_text = "\n".join(
+        f"Q: {f['q']}\n" + "\n".join(f"  - {x['fact'][:200]}" for x in f['findings'])
+        for f in all_findings
+    )
+    synth_prompt = (
+        f"Research findings for video about: \"{idea}\"\n\n{findings_text}\n\n"
+        "Based on these findings, extract:\n"
+        "1. 2-3 KEY INSIGHTS (surprising facts, unique angles, what competitors miss)\n"
+        "2. 1-2 COMMUNITY PAIN POINTS (what real users struggle with)\n"
+        "3. 1-2 GAPS (what we couldn't find — flag for the user)\n\n"
+        "Return ONLY a JSON object: {\"insights\": [...], \"painPoints\": [...], \"gaps\": [...]}"
+    )
+    insights, pain_points, gaps = [], [], []
+    try:
+        synth_result = _chat_completion([{"role": "user", "content": synth_prompt}], max_tokens=500)
+        match = re.search(r'\{.*\}', synth_result, re.DOTALL)
+        if match:
+            parsed = json.loads(match.group(0))
+            insights = parsed.get("insights", [])
+            pain_points = parsed.get("painPoints", [])
+            gaps = parsed.get("gaps", [])
+    except Exception:
+        pass  # synthesis is best-effort — raw findings still available
+
+    # ---- Step 4: Write research.json via the studio endpoint ----
+    research = {
+        "status": "pending",
+        "originalIdea": idea,
+        "audience": audience,
+        "subQuestions": all_findings,
+        "insights": insights,
+        "painPoints": pain_points,
+        "gaps": gaps,
+        "sources": all_sources,
+        "searchedAt": time.strftime("%Y-%m-%dT%H:%M:%S"),
+    }
+    payload = json.dumps({"projectId": project_slug, "research": research}).encode()
+    req = urllib.request.Request(
+        "http://localhost:5174/api/project/research",
+        data=payload, method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:
+        # fallback: write directly to disk
+        research_path = os.path.join(PROJECT_ROOT, "projects", project_slug, "qa", "research.json")
+        os.makedirs(os.path.dirname(research_path), exist_ok=True)
+        with open(research_path, "w", encoding="utf-8") as f:
+            json.dump(research, f, ensure_ascii=False, indent=2)
+        body = {"ok": True, "fallback": "direct-write"}
+
+    if not body.get("ok"):
+        return f"RESEARCH FAILED: {body.get('error', 'unknown')}"
+
+    source_count = len(all_sources)
+    finding_count = sum(len(f["findings"]) for f in all_findings)
+    return (
+        f"RESEARCH OK — {len(sub_questions)} sub-questions, {finding_count} findings, "
+        f"{source_count} sources. Research card is now in the Content Studio.\n"
+        f"Key insights: {'; '.join(insights[:3])}\n"
+        "STOP and tell the human to review the research (sub-questions, findings, "
+        "sources, insights) — then Duyệt research. After approval, call draft_story "
+        "INFORMED BY this research (read qa/research.json first — compose the story "
+        "using verified facts and unique angles from the findings)."
+    )
+
+
+def _classify_source(url: str) -> str:
+    """Classify a source URL by type for credibility assessment."""
+    lower = url.lower()
+    if any(d in lower for d in [".edu", "arxiv.org", "doi.org", "scholar.google", "pubmed"]):
+        return "academic"
+    if any(d in lower for d in ["docs.", "developer.", "documentation", ".dev/", "github.com"]):
+        return "docs"
+    if any(d in lower for d in ["reddit.com", "news.ycombinator.com", "stackexchange", "stackoverflow"]):
+        return "community"
+    if any(d in lower for d in ["youtube.com", "youtu.be"]):
+        return "video"
+    return "blog"
+
+
+def _chat_completion(messages: list, max_tokens: int = 500) -> str:
+    """Minimal LLM call using the harness model (for research planning/synthesis)."""
+    cfg = _provider_config("deepseek")
+    api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+    if not api_key:
+        load_env()
+        api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+    if not api_key:
+        raise RuntimeError("No DEEPSEEK_API_KEY for research LLM calls")
+    payload = json.dumps({
+        "model": cfg.get("model", "deepseek-chat"),
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": 0.3,
+    }).encode()
+    req = urllib.request.Request(
+        f"{cfg.get('base_url', 'https://api.deepseek.com/v1')}/chat/completions",
+        data=payload, method="POST",
+        headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    return data["choices"][0]["message"]["content"]
+
+
+@tool
 def draft_story(project_slug: str, idea: str, story: str, target_duration_sec: int = 0, beat_count: int = 0) -> str:
-    """Draft the STORY for a video idea (Creation Flow step 1 — CONTENT-STUDIO-SPEC §5).
+    """Draft the STORY for a video idea (Creation Flow step 2 — AFTER research).
 
     YOU compose the story (you are the creative here — use your storytelling
     craft); this tool writes it to the studio's story review checkpoint
     through the SAME endpoint the user edits with. The human reviews/edits
     the story in the Content Studio BEFORE you write the script.
+
+    IMPORTANT: If qa/research.json exists and is approved, READ IT FIRST.
+    Compose the story using verified facts, unique angles, and pain points
+    from the research findings. Cite specific insights in your story fields
+    where relevant. Do NOT make up statistics or claims — use what the
+    research found.
 
     Args:
         project_slug: Project folder name.

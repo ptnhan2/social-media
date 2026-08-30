@@ -33,7 +33,7 @@ from langchain.agents.middleware import TodoListMiddleware, ModelRetryMiddleware
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
-from harness_tools import render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate, editor_op, generate_timeline, write_edit_doc, request_approval, check_approval, draft_story, check_story_review
+from harness_tools import render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate, editor_op, generate_timeline, write_edit_doc, request_approval, check_approval, draft_story, check_story_review, research_topic
 from subagents import CLIP_EDITOR_SUBAGENT, CRITIC_SUBAGENT
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -195,7 +195,7 @@ class TextOnlyContentMiddleware(AgentMiddleware):
 
 _COMMON = dict(
     model=MODEL,
-    tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate, editor_op, generate_timeline, write_edit_doc, request_approval, check_approval, draft_story, check_story_review],
+    tools=[render_window, visual_critique, think, update_style, compare_renders, pairwise_verdict, request_keep, copy_render, qa_gate, editor_op, generate_timeline, write_edit_doc, request_approval, check_approval, draft_story, check_story_review, research_topic],
     memory=["/memories/AGENTS.md", "/memories/taste-standard.md", "/memories/self-check.md"],
     skills=["/skills/"],
     subagents=[CRITIC_SUBAGENT, CLIP_EDITOR_SUBAGENT],

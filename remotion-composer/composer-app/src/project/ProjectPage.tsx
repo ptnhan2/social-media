@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchApproval, fetchRenders, loadProject, setApproval, setClipMetadata, artifactUrl, fetchStoryDraft, setStoryDraft, subscribeToChanges, type ProjectApproval, type ProjectRender, type ClipMetadataChanges, type StoryDraft } from "../composer/api";
+import { fetchApproval, fetchRenders, loadProject, setApproval, setClipMetadata, artifactUrl, fetchStoryDraft, setStoryDraft, subscribeToChanges, fetchResearch, approveResearch, type ProjectApproval, type ProjectRender, type ClipMetadataChanges, type StoryDraft, type ResearchData } from "../composer/api";
 import type { IsaacVerseEditDoc, EditorClip } from "../../../shared/isaacverse/editor";
 import type { VideoDoc } from "../../../shared/isaacverse/schema";
 import { useAgentUi } from "../agent/AgentDrawer";
@@ -276,12 +276,10 @@ const ApprovalCard: React.FC<{ projectId: string; approval: ProjectApproval | nu
 
 type TraceEvent = { ts: string; stage: "idea" | "story" | "plan" | "voice" | "timeline" | "render" | "approval" | "note"; title: string; data?: Record<string, unknown> };
 
-type JourneyStage = "idea" | "story" | "script" | "voice" | "video" | "approved";
+type JourneyStage = "idea" | "research" | "story" | "script" | "voice" | "video" | "approved";
 
-/** Derived journey stage — artifacts tell the truth, no stored state.
- *  Story APPROVED moves the journey forward even before the script exists
- *  (the user is now in script-writing territory). */
-const deriveStage = (snapshot: { editDoc?: unknown; videoDoc?: unknown }, storyDraft: StoryDraft | null, rendersCount: number, approval: ProjectApproval | null): JourneyStage => {
+/** Derived journey stage — artifacts tell the truth, no stored state. */
+const deriveStage = (snapshot: { editDoc?: unknown; videoDoc?: unknown }, storyDraft: StoryDraft | null, rendersCount: number, approval: ProjectApproval | null, research: ResearchData | null): JourneyStage => {
   if (approval?.status === "approved") return "approved";
   if (rendersCount > 0) return "video";
   const editDoc = snapshot.editDoc as IsaacVerseEditDoc | undefined;
@@ -289,11 +287,13 @@ const deriveStage = (snapshot: { editDoc?: unknown; videoDoc?: unknown }, storyD
   if (editDoc?.beats?.some((beat) => String(beat.transcript ?? "").trim()) || hasVoice) return hasVoice ? "voice" : "script";
   if (storyDraft?.status === "approved") return "script";
   if (storyDraft && storyDraft.status !== "none") return "story";
+  if (research && research.status !== "none") return "research";
   return "idea";
 };
 
 const STAGE_LABELS: { id: JourneyStage; label: string; icon: string }[] = [
   { id: "idea", label: "Ý tưởng", icon: "💡" },
+  { id: "research", label: "Research", icon: "🔍" },
   { id: "story", label: "Story", icon: "📖" },
   { id: "script", label: "Script", icon: "📝" },
   { id: "voice", label: "Voice", icon: "🎙️" },
@@ -372,8 +372,73 @@ const CreateCard: React.FC<{ onSendIdea: (idea: string, shape: VideoShape) => vo
   );
 };
 
+/** RESEARCH CHECKPOINT: the quality gate — user reviews what the agent found. */
+const ResearchCard: React.FC<{ projectId: string; research: ResearchData; onChanged: () => void }> = ({ projectId, research, onChanged }) => {
+  const agent = useAgentUi();
+  const [busy, setBusy] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [openQ, setOpenQ] = React.useState<number | null>(null);
+
+  const approve = async () => {
+    setBusy(true); setMessage("");
+    try {
+      await approveResearch(projectId);
+      setMessage("Research đã duyệt ✓");
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally { setBusy(false); }
+  };
+
+  const sourceCount = research.sources?.length ?? 0;
+  const findingCount = (research.subQuestions ?? []).reduce((sum, sq) => sum + (sq.findings?.length ?? 0), 0);
+  return (
+    <section className="pp-card">
+      <div className="pp-card-title">Research <small>{research.status === "approved" ? "— đã duyệt" : "— chờ bạn duyệt"}</small></div>
+      {research.originalIdea ? <p className="ve-hint">💡 Ý tưởng: {research.originalIdea}</p> : null}
+      <p className="ve-hint">{research.subQuestions?.length ?? 0} sub-questions · {findingCount} findings · {sourceCount} sources</p>
+      {(research.insights ?? []).length > 0 ? (
+        <div><span className="pp-chip">KEY INSIGHTS</span><ul className="pp-research-list">{(research.insights ?? []).map((insight, i) => <li key={i}>💡 {insight}</li>)}</ul></div>
+      ) : null}
+      {(research.painPoints ?? []).length > 0 ? (
+        <div><span className="pp-chip">PAIN POINTS</span><ul className="pp-research-list">{(research.painPoints ?? []).map((pp, i) => <li key={i}>⚠ {pp}</li>)}</ul></div>
+      ) : null}
+      <details className="pp-collapse">
+        <summary>Chi tiết ({research.subQuestions?.length ?? 0} sub-questions + {sourceCount} sources)</summary>
+        <div className="pp-research-detail">
+          {(research.subQuestions ?? []).map((sq, qi) => (
+            <div key={qi} className="pp-research-sq">
+              <button type="button" className="pp-trace-head" aria-expanded={openQ === qi} onClick={() => setOpenQ(openQ === qi ? null : qi)}>
+                <span className="pp-trace-stage">Q{qi + 1}</span>
+                <span className="pp-trace-title">{sq.q}</span>
+                <span className="pp-trace-ts">{sq.findings?.length ?? 0}</span>
+              </button>
+              {openQ === qi ? (
+                <ul className="pp-research-findings">
+                  {(sq.findings ?? []).map((f, fi) => <li key={fi}>{f.fact.slice(0, 200)}{f.source !== "tavily-synthesis" ? <a href={f.source} target="_blank" rel="noopener noreferrer" className="pp-tool" style={{ marginLeft: 4 }}>↗</a> : null}</li>)}
+                  {sq.error ? <li style={{ color: "#ff9b9b" }}>Error: {sq.error}</li> : null}
+                </ul>
+              ) : null}
+            </div>
+          ))}
+          {(research.gaps ?? []).length > 0 ? <div><span className="pp-chip">GAPS</span><ul className="pp-research-list">{(research.gaps ?? []).map((g, i) => <li key={i}>❓ {g}</li>)}</ul></div> : null}
+        </div>
+      </details>
+      {research.status !== "approved" ? (
+        <div className="pp-story-actions">
+          <button type="button" className="ve-btn pp-keep" disabled={busy} onClick={() => void approve()}>✓ Duyệt research</button>
+          <button type="button" className="ve-btn" onClick={() => { agent.setDraftPrompt(`Research cho project ${projectId} cần dig deeper. Đọc qa/research.json, chọn gap quan trọng nhất, research_topic lại với sub-question tập trung vào gap đó.`); agent.setOpen(true); }}>🔍 Dig deeper</button>
+        </div>
+      ) : (
+        <p className="ve-hint">Research approved — agent sẽ compose story dựa trên findings.</p>
+      )}
+      {message ? <p className="ve-hint">{message}</p> : null}
+    </section>
+  );
+};
+
 /** STORY CHECKPOINT: the first review gate — edit fields inline, approve. */
-const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; hasScript: boolean; onChanged: () => void }> = ({ projectId, draft, hasScript, onChanged }) => {
+const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; hasScript: boolean; onChanged: () => void; shapeLabel?: string }> = ({ projectId, draft, hasScript, onChanged, shapeLabel }) => {
   const agent = useAgentUi();
   const [fields, setFields] = React.useState({
     idea: draft.idea ?? "", surfaceProblem: draft.surfaceProblem ?? "",
@@ -415,6 +480,7 @@ const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; hasScript: boo
     <section className="pp-card">
       <div className="pp-card-title">Story <small>{draft.status === "approved" ? "— đã duyệt" : draft.status === "pending" ? "— chờ bạn duyệt" : draft.status === "changes_requested" ? "— đã yêu cầu sửa" : ""}</small></div>
       {draft.originalIdea ? <p className="ve-hint">💡 Ý tưởng gốc: {draft.originalIdea}</p> : null}
+      {shapeLabel ? <p className="ve-hint">🎯 Target shape: {shapeLabel}</p> : null}
       <label className="ve-prop-field ve-prop-field-wide"><span>Idea</span>
         <textarea rows={1} value={fields.idea} aria-label="Story idea" disabled={draft.status === "approved"}
           onChange={(e) => setFields((f) => ({ ...f, idea: e.target.value }))} /></label>
@@ -464,12 +530,13 @@ const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; hasScript: boo
 };
 
 /** GENERATE: the deterministic back-half as ONE button + progress. */
-const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; onDone: () => void }> = ({ projectId, hasScript, onDone }) => {
+const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount: number; onDone: () => void }> = ({ projectId, hasScript, beatCount, onDone }) => {
   const [busy, setBusy] = React.useState(false);
   const [step, setStep] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const [confirming, setConfirming] = React.useState(false);
   const generate = async () => {
-    setBusy(true); setStep("voice"); setMessage("");
+    setBusy(true); setStep("voice"); setMessage(""); setConfirming(false);
     try {
       const start = await fetch("/api/project/produce", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId }) }).then((r) => r.json());
       if (!start.jobId) throw new Error(start.error || "produce failed to start");
@@ -493,9 +560,19 @@ const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; onDone: ()
     <section className="pp-card">
       <div className="pp-card-title">Generate <small>— voice + timeline + draft render</small></div>
       <div>
-        <button type="button" className="ve-btn primary" disabled={busy || !hasScript} onClick={() => void generate()}>
-          {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : "🎬 Generate video"}
-        </button>
+        {confirming ? (
+          <div className="pp-confirm-dialog">
+            <p className="ve-hint">Sẽ generate voice cho <b>{beatCount} beats</b> (TTS + QC + retime) → timeline → draft render. Ước tính ~{Math.max(2, beatCount * 1)}-{beatCount * 2} phút.</p>
+            <div className="pp-story-actions">
+              <button type="button" className="ve-btn primary" onClick={() => void generate()}>✓ Tiếp tục</button>
+              <button type="button" className="ve-btn" onClick={() => setConfirming(false)}>Huỷ</button>
+            </div>
+          </div>
+        ) : (
+          <button type="button" className="ve-btn primary" disabled={busy || !hasScript} onClick={() => setConfirming(true)}>
+            {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : `🎬 Generate video (${beatCount} beats)`}
+          </button>
+        )}
         {!hasScript ? <p className="ve-hint">Cần script (beats có transcript) trước khi generate.</p> : null}
       </div>
       {message ? <p className="ve-hint">{message}</p> : null}
@@ -539,6 +616,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
   const [renders, setRenders] = React.useState<ProjectRender[]>([]);
   const [approval, setApprovalState] = React.useState<ProjectApproval | null>(null);
   const [storyDraft, setStoryDraftState] = React.useState<StoryDraft | null>(null);
+  const [research, setResearchState] = React.useState<ResearchData | null>(null);
   const [refreshKey, setRefreshKey] = React.useState(0);
 
   const refresh = React.useCallback(() => {
@@ -547,6 +625,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
     fetchRenders(projectId).then((payload) => setRenders(payload.renders)).catch(() => setRenders([]));
     fetchApproval(projectId).then(setApprovalState).catch(() => setApprovalState(null));
     fetchStoryDraft(projectId).then(setStoryDraftState).catch(() => setStoryDraftState(null));
+    fetchResearch(projectId).then(setResearchState).catch(() => setResearchState(null));
   }, [projectId]);
   React.useEffect(() => { refresh(); }, [refresh]);
   // LIVE journey: the agent writes files -> SSE fires -> the studio reflects
@@ -576,12 +655,13 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
   }));
   const beatClips = editorBeats.length ? editorBeats : editBeats;
   const latest = renders[0];
-  const stage = deriveStage(snapshot, storyDraft, renders.length, approval);
+  const stage = deriveStage(snapshot, storyDraft, renders.length, approval, research);
   const hasScript = (editDoc?.beats ?? []).some((beat) => String(beat.transcript ?? "").trim());
   const sendIdeaToAgent = (idea: string, shape: VideoShape) => {
     agent.setDraftPrompt(
       `Tôi muốn làm video: "${idea}". Hình dạng: ${shape.label} (target ~${shape.targetDurationSec}s, ${shape.beatCount} beats). ` +
-      `Hãy dùng tool draft_story (project ${projectId}, idea verbatim, story bạn compose) để đề xuất story — rồi dừng chờ tôi duyệt trong Content Studio. ` +
+      `Trước tiên hãy dùng tool research_topic (project ${projectId}, idea verbatim) để research chủ đề này — rồi dừng chờ tôi duyệt research trong Content Studio. ` +
+      `Sau khi research được duyệt, dùng draft_story (compose story INFORMED BY research findings) — rồi dừng chờ tôi duyệt story. ` +
       `Khi viết script sau này: đúng ${shape.beatCount} beats, tổng thời lượng ~${shape.targetDurationSec}s.`,
     );
     agent.setOpen(true);
@@ -601,15 +681,19 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
 
       {stage === "idea" ? <CreateCard onSendIdea={sendIdeaToAgent} /> : null}
 
+      {research && research.status !== "none" ? (
+        <ResearchCard projectId={projectId} research={research} onChanged={refresh} />
+      ) : null}
+
       {storyDraft && storyDraft.status !== "none" ? (
-        <StoryCard projectId={projectId} draft={storyDraft} hasScript={hasScript} onChanged={refresh} />
+        <StoryCard projectId={projectId} draft={storyDraft} hasScript={hasScript} onChanged={refresh} shapeLabel={beatClips.length > 0 ? `${beatClips.length} beats · ${beatClips.reduce((sum, b) => sum + (b.range.endSec - b.range.startSec), 0).toFixed(0)}s target` : undefined} />
       ) : null}
 
       <PromptCard instruction={typeof editDoc?.instruction === "string" ? editDoc.instruction : undefined} />
 
       {hasScript ? (
         <section className="pp-card">
-          <div className="pp-card-title">Script <small>— {beatClips.length} beats, sửa trực tiếp</small></div>
+          <div className="pp-card-title">Script <small>— {beatClips.length} beats · {beatClips.reduce((sum, b) => sum + (b.range.endSec - b.range.startSec), 0).toFixed(0)}s total, sửa trực tiếp</small></div>
           <div className="pp-beats">
             {beatClips.map((beat, index) => {
               const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
@@ -619,7 +703,7 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
         </section>
       ) : null}
 
-      {hasScript ? <GenerateCard projectId={projectId} hasScript={hasScript} onDone={refresh} /> : null}
+      {hasScript ? <GenerateCard projectId={projectId} hasScript={hasScript} beatCount={beatClips.length} onDone={refresh} /> : null}
 
       {stage === "video" || stage === "approved" ? (
         <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />
