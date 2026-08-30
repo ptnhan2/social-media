@@ -1,7 +1,8 @@
 import React from "react";
-import { fetchApproval, fetchRenders, loadProject, setApproval, setClipMetadata, artifactUrl, fetchStoryDraft, setStoryDraft, subscribeToChanges, fetchResearch, approveResearch, type ProjectApproval, type ProjectRender, type ClipMetadataChanges, type StoryDraft, type ResearchData } from "../composer/api";
+import { fetchApproval, fetchRenders, loadProject, setApproval, setClipMetadata, artifactUrl, fetchStoryDraft, setStoryDraft, subscribeToChanges, fetchResearch, approveResearch, scriptBeat, type ProjectApproval, type ProjectRender, type ClipMetadataChanges, type StoryDraft, type ResearchData } from "../composer/api";
 import type { IsaacVerseEditDoc, EditorClip } from "../../../shared/isaacverse/editor";
 import type { VideoDoc } from "../../../shared/isaacverse/schema";
+import { buildProviderText } from "../../../shared/isaacverse/voiceClip";
 import { useAgentUi } from "../agent/AgentDrawer";
 
 /**
@@ -45,21 +46,24 @@ const PromptCard: React.FC<{ instruction?: string }> = ({ instruction }) => {
 const BeatEditor: React.FC<{
   index: number;
   beat: EditorClip;
+  beatCount: number;
   voice?: EditorClip;
   projectId: string;
   onChanged: () => void;
-}> = ({ index, beat, voice, projectId, onChanged }) => {
+}> = ({ index, beat, beatCount, voice, projectId, onChanged }) => {
   const md = (voice?.metadata ?? {}) as Record<string, unknown>;
-  const sentenceText = typeof md.sentenceText === "string" ? md.sentenceText : typeof beat.metadata.transcript === "string" ? String(beat.metadata.transcript) : "";
-  const providerText = typeof md.providerText === "string" ? md.providerText : sentenceText;
+  const beatMd = (beat.metadata ?? {}) as Record<string, unknown>;
+  const sentenceText = typeof beatMd.transcript === "string" ? String(beatMd.transcript) : "";
+  const beatDirection = typeof beatMd.direction === "string" ? String(beatMd.direction) : "";
+  const providerText = typeof md.providerText === "string" ? md.providerText : "";
   const settings = (md.voiceSettings as VoiceSettingsShape) ?? {};
   const qc = md.qc as { pass?: boolean; checks?: { id: string; label: string; pass: boolean; value: string; threshold: string }[]; durationSec?: number; wer?: number | null } | undefined;
   const takes = Array.isArray(md.takes) ? (md.takes as VoiceTake[]) : [];
   const takeId = typeof md.takeId === "string" ? md.takeId : "";
-  const treatment = typeof beat.metadata.treatmentId === "string" ? beat.metadata.treatmentId : "?";
+  const treatment = typeof beatMd.treatmentId === "string" ? beatMd.treatmentId : "?";
 
   const [draftScript, setDraftScript] = React.useState(sentenceText);
-  const [draftDirection, setDraftDirection] = React.useState(providerText);
+  const [draftDirection, setDraftDirection] = React.useState(beatDirection || providerText);
   const [draftSettings, setDraftSettings] = React.useState({
     voiceId: String(settings.voiceId ?? ""),
     modelId: String(settings.modelId ?? "eleven_v3"),
@@ -68,20 +72,62 @@ const BeatEditor: React.FC<{
   });
   React.useEffect(() => {
     setDraftScript(sentenceText);
-    setDraftDirection(providerText);
+    setDraftDirection(beatDirection || providerText);
     setDraftSettings({
       voiceId: String(settings.voiceId ?? ""),
       modelId: String(settings.modelId ?? "eleven_v3"),
       speed: String(num(settings.speed, 1)),
       stability: String(num(settings.stability, 0.35)),
     });
-  }, [sentenceText, providerText, settings.voiceId, settings.modelId, settings.speed, settings.stability]);
+  }, [sentenceText, beatDirection, providerText, settings.voiceId, settings.modelId, settings.speed, settings.stability]);
 
   const [message, setMessage] = React.useState("");
-  const [busy, setBusy] = React.useState<"none" | "saving" | "regen" | `take:${string}`>("none");
+  const [busy, setBusy] = React.useState<"none" | "saving" | "regen" | "op" | `take:${string}`>("none");
   const [voiceOpen, setVoiceOpen] = React.useState(false);
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
   const [playing, setPlaying] = React.useState<string | null>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  // SCRIPT TRUTH: transcript edits write the EDIT-DOC through script-beat —
+  // works BEFORE voice exists (the old clip-metadata path needed a voice clip)
+  const saveScript = async () => {
+    const text = draftScript.trim();
+    if (!text || text === sentenceText) return;
+    setBusy("saving"); setMessage("");
+    try {
+      await scriptBeat(projectId, "set-transcript", { beatId: String(beat.source.beatId ?? ""), text });
+      setMessage("Script ✓");
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally { setBusy("none"); }
+  };
+
+  // DIRECTION TRUTH: beat.direction in the edit-doc (pre-voice P1-B4) — the
+  // scaffold/projection prefer it; survives re-generates
+  const saveDirection = async () => {
+    const text = draftDirection;
+    if (text === (beatDirection || providerText)) return;
+    setBusy("saving"); setMessage("");
+    try {
+      await scriptBeat(projectId, "set-direction", { beatId: String(beat.source.beatId ?? ""), text });
+      setMessage("Direction ✓");
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally { setBusy("none"); }
+  };
+
+  const beatOp = async (op: "delete" | "move", extra: { dir?: "up" | "down" } = {}) => {
+    setBusy("op"); setMessage("");
+    try {
+      await scriptBeat(projectId, op, { beatId: String(beat.source.beatId ?? ""), ...extra });
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+      setBusy("none");
+    }
+  };
 
   const save = async (changes: ClipMetadataChanges, label: string) => {
     if (!voice) { setMessage("Beat chưa có voice — chạy generate trước."); return; }
@@ -113,6 +159,9 @@ const BeatEditor: React.FC<{
     setBusy("regen"); setMessage("");
     try {
       if (draftDirection !== providerText) {
+        // keep both truths aligned: beat.direction (edit-doc) + the clip's
+        // working copy — the regen below reads the clip's providerText
+        await scriptBeat(projectId, "set-direction", { beatId: String(beat.source.beatId ?? ""), text: draftDirection }).catch(() => undefined);
         await setClipMetadata(projectId, voice.id, { providerText: draftDirection });
       }
       const status = await pollJob("/api/project/audio-regen", { projectId, clipId: voice.id, takes: 2, providerText: draftDirection.trim() || undefined }, (jobId) => `/api/project/audio-regen/status?jobId=${encodeURIComponent(jobId)}`);
@@ -163,22 +212,34 @@ const BeatEditor: React.FC<{
           <span>Script — beat {index + 1} · {treatment} · {(beat.range.endSec - beat.range.startSec).toFixed(1)}s</span>
           <textarea className="pp-script" rows={2} value={draftScript} aria-label={`Script beat ${index + 1}`}
             onChange={(e) => setDraftScript(e.target.value)}
-            onBlur={() => { if (draftScript !== sentenceText && draftScript.trim()) void save({ sentenceText: draftScript.trim() }, "Script"); }} />
+            onBlur={() => { if (draftScript.trim() && draftScript.trim() !== sentenceText) void saveScript(); }} />
         </label>
         <div className="pp-beat-tools">
           {typeof voice?.metadata.src === "string" && voice.metadata.src ? (
             <button type="button" className="pp-tool" aria-label={`Play voice beat ${index + 1}`} onClick={() => playSrc(voice.metadata.src as string, `stem-${index}`)}>{playing === `stem-${index}` ? "■ stop" : "▶ nghe"}</button>
           ) : null}
           <button type="button" className="pp-tool" aria-expanded={voiceOpen} onClick={() => setVoiceOpen(!voiceOpen)}>🎙 voice{takes.length ? ` · take ${takeId.split("-take-").pop() ?? ""}` : ""}</button>
+          <span className="pp-beat-tools-right">
+            <button type="button" className="pp-tool" aria-label={`Move beat ${index + 1} up`} disabled={busy !== "none" || index === 0} onClick={() => void beatOp("move", { dir: "up" })}>↑</button>
+            <button type="button" className="pp-tool" aria-label={`Move beat ${index + 1} down`} disabled={busy !== "none" || index === beatCount - 1} onClick={() => void beatOp("move", { dir: "down" })}>↓</button>
+            {confirmDelete ? (
+              <>
+                <button type="button" className="pp-tool pp-danger" aria-label={`Confirm delete beat ${index + 1}`} disabled={busy !== "none"} onClick={() => void beatOp("delete")}>xoá?</button>
+                <button type="button" className="pp-tool" aria-label={`Cancel delete beat ${index + 1}`} onClick={() => setConfirmDelete(false)}>huỷ</button>
+              </>
+            ) : (
+              <button type="button" className="pp-tool" aria-label={`Delete beat ${index + 1}`} disabled={busy !== "none"} onClick={() => setConfirmDelete(true)}>✕</button>
+            )}
+          </span>
         </div>
 
         {voiceOpen ? (
           <div className="pp-voicedetails">
             <label className="ve-prop-field ve-prop-field-wide">
               <span>Direction (providerText — tags/CAPS)</span>
-              <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`} disabled={!voice}
+              <textarea rows={2} value={draftDirection} aria-label={`Direction beat ${index + 1}`}
                 onChange={(e) => setDraftDirection(e.target.value)}
-                onBlur={() => { if (draftDirection !== providerText) void save({ providerText: draftDirection }, "Direction"); }} />
+                onBlur={() => { if (draftDirection !== (beatDirection || providerText)) void saveDirection(); }} />
             </label>
             <div className="ve-prop-section">
               <label className="ve-prop-field"><span>Voice</span>
@@ -223,7 +284,7 @@ const BeatEditor: React.FC<{
           </div>
         ) : null}
         {message ? <p className="ve-hint">{message}</p> : null}
-        {!voice ? <p className="ve-hint">Chưa có voice clip — chạy generate trước.</p> : null}
+        {!voice ? <p className="ve-hint">Chưa có voice — Direction vẫn chỉnh được; [Generate] sẽ sinh voice.</p> : null}
       </div>
     </article>
   );
@@ -529,16 +590,47 @@ const StoryCard: React.FC<{ projectId: string; draft: StoryDraft; hasScript: boo
   );
 };
 
+/** "+ thêm beat" — inline add: type the transcript, the beat lands at the end. */
+const AddBeatRow: React.FC<{ projectId: string; onChanged: () => void }> = ({ projectId, onChanged }) => {
+  const [text, setText] = React.useState("");
+  const [busy, setBusy] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const add = async () => {
+    if (!text.trim()) return;
+    setBusy(true); setMessage("");
+    try {
+      await scriptBeat(projectId, "add", { text: text.trim() });
+      setText("");
+      onChanged();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : String(error));
+    } finally { setBusy(false); }
+  };
+  return (
+    <div className="pp-addbeat">
+      <input className="pp-addbeat-input" aria-label="New beat transcript" placeholder="thêm beat mới — gõ transcript rồi Enter…" value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter" && text.trim() && !busy) void add(); }} />
+      <button type="button" className="pp-tool" disabled={busy || !text.trim()} onClick={() => void add()}>+ thêm beat</button>
+      {message ? <p className="ve-hint">{message}</p> : null}
+    </div>
+  );
+};
+
 /** GENERATE: the deterministic back-half as ONE button + progress. */
-const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount: number; onDone: () => void }> = ({ projectId, hasScript, beatCount, onDone }) => {
+const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount: number; staleBeatIds: string[]; onDone: () => void }> = ({ projectId, hasScript, beatCount, staleBeatIds, onDone }) => {
   const [busy, setBusy] = React.useState(false);
   const [step, setStep] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [confirming, setConfirming] = React.useState(false);
-  const generate = async () => {
-    setBusy(true); setStep("voice"); setMessage(""); setConfirming(false);
+  const [confirming, setConfirming] = React.useState<null | "full" | "partial">(null);
+  const hasVoice = staleBeatIds.length < beatCount; // at least one voice segment exists
+  const generate = async (mode: "full" | "partial") => {
+    setBusy(true); setStep("voice"); setMessage(""); setConfirming(null);
     try {
-      const start = await fetch("/api/project/produce", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId }) }).then((r) => r.json());
+      // partial = regen ONLY the changed/new beats (--only changed: the
+      // scaffold compares as-voiced vs should-say transcripts per beat)
+      const body = mode === "partial" ? { projectId, only: "changed" } : { projectId };
+      const start = await fetch("/api/project/produce", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((r) => r.json());
       if (!start.jobId) throw new Error(start.error || "produce failed to start");
       for (let i = 0; i < 180; i += 1) {
         await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -562,18 +654,34 @@ const GenerateCard: React.FC<{ projectId: string; hasScript: boolean; beatCount:
       <div>
         {confirming ? (
           <div className="pp-confirm-dialog">
-            <p className="ve-hint">Sẽ generate voice cho <b>{beatCount} beats</b> (TTS + QC + retime) → timeline → draft render. Ước tính ~{Math.max(2, beatCount * 1)}-{beatCount * 2} phút.</p>
+            {confirming === "partial" ? (
+              <p className="ve-hint">Chỉ regen voice cho <b>{staleBeatIds.length} beat thay đổi</b> (giữ {beatCount - staleBeatIds.length} stem cũ) → timeline → draft render. Nhanh hơn nhiều.</p>
+            ) : (
+              <p className="ve-hint">Sẽ generate voice cho <b>{beatCount} beats</b> (TTS + QC + retime) → timeline → draft render. Ước tính ~{Math.max(2, beatCount * 1)}-{beatCount * 2} phút.</p>
+            )}
             <div className="pp-story-actions">
-              <button type="button" className="ve-btn primary" onClick={() => void generate()}>✓ Tiếp tục</button>
-              <button type="button" className="ve-btn" onClick={() => setConfirming(false)}>Huỷ</button>
+              <button type="button" className="ve-btn primary" onClick={() => void generate(confirming)}>✓ Tiếp tục</button>
+              <button type="button" className="ve-btn" onClick={() => setConfirming(null)}>Huỷ</button>
             </div>
           </div>
         ) : (
-          <button type="button" className="ve-btn primary" disabled={busy || !hasScript} onClick={() => setConfirming(true)}>
-            {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : `🎬 Generate video (${beatCount} beats)`}
-          </button>
+          <div className="pp-story-actions">
+            {hasVoice && staleBeatIds.length > 0 && staleBeatIds.length < beatCount ? (
+              <>
+                <button type="button" className="ve-btn primary" disabled={busy} onClick={() => setConfirming("partial")}>
+                  {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : `⚡ Generate nhanh (${staleBeatIds.length}/${beatCount} beats thay đổi)`}
+                </button>
+                <button type="button" className="ve-btn" disabled={busy} onClick={() => setConfirming("full")}>Generate lại tất cả</button>
+              </>
+            ) : (
+              <button type="button" className="ve-btn primary" disabled={busy || !hasScript} onClick={() => setConfirming("full")}>
+                {busy ? `Đang chạy: ${step === "voice" ? "TTS voice" : step === "timeline" ? "timeline" : step === "render" ? "render" : "..."}…` : `🎬 Generate video (${beatCount} beats)`}
+              </button>
+            )}
+          </div>
         )}
         {!hasScript ? <p className="ve-hint">Cần script (beats có transcript) trước khi generate.</p> : null}
+        {hasVoice && staleBeatIds.length > 0 ? <p className="ve-hint">{staleBeatIds.length} beat mới/sửa cần voice lại — chỉnh script bao nhiêu lần cũng chỉ trả tiền TTS phần thay đổi.</p> : null}
       </div>
       {message ? <p className="ve-hint">{message}</p> : null}
     </section>
@@ -637,26 +745,41 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
 
   const videoDoc = snapshot.videoDoc as VideoDoc | undefined;
   const editDoc = snapshot.editDoc as IsaacVerseEditDoc | undefined;
-  const editorDoc = snapshot.editorDoc as IsaacVerseEditDoc | undefined;
-  const allClips = editorDoc?.tracks.flatMap((track) => track.clips) ?? [];
-  // SCRIPT TRUTH (cold-diff review MAJOR #1): the script checkpoint reads the
-  // EDIT-DOC beats — they exist right after write_edit_doc, BEFORE the
-  // timeline projection. The editor doc only enriches with voice metadata.
-  const editorBeats = (editorDoc?.tracks.find((track) => track.id === "video-main")?.clips ?? [])
-    .slice().sort((a, b) => a.range.startSec - b.range.startSec);
-  const editBeats = (editDoc?.beats ?? []).map((beat) => ({
+  const allClips = (snapshot.editorDoc as IsaacVerseEditDoc | undefined)?.tracks.flatMap((track) => track.clips) ?? [];
+  // SCRIPT TRUTH: the studio ALWAYS derives beats from the EDIT-DOC — CRUD and
+  // script edits write there, so the beat list can never drift from the doc
+  // (the old editor-beats preference hid fresh script edits until re-project)
+  const beatClips = (editDoc?.beats ?? []).map((beat) => ({
     id: `beat:${beat.id}`,
     kind: "beat" as const,
     trackId: "video-main",
     range: { startSec: beat.startSec, endSec: beat.startSec + beat.durationSec },
     label: beat.narrativeFunction ?? beat.id,
     source: { beatId: beat.id },
-    metadata: { transcript: beat.transcript, treatmentId: beat.treatment?.id } as Record<string, unknown>,
+    metadata: { transcript: beat.transcript, direction: beat.direction, treatmentId: beat.treatment?.id } as Record<string, unknown>,
   }));
-  const beatClips = editorBeats.length ? editorBeats : editBeats;
   const latest = renders[0];
   const stage = deriveStage(snapshot, storyDraft, renders.length, approval, research);
   const hasScript = (editDoc?.beats ?? []).some((beat) => String(beat.transcript ?? "").trim());
+  // STALE-STEM DETECTOR: a beat needs re-voicing when its voice segment is
+  // missing (new beat) or the segment's as-voiced transcript/direction no
+  // longer matches the script truth — the partial generate bills only these.
+  // Legacy segments embed the beat id inside `id` ("slug:voice:beatId").
+  const voiceSegments = (editDoc?.audioPlan as { voice?: { id?: string; beatId?: string; transcript?: string; providerText?: string }[] } | undefined)?.voice ?? [];
+  const segmentBeatId = (segment: { id?: string; beatId?: string }) => segment.beatId ?? String(segment.id ?? "").split(":").pop();
+  const staleBeatIds = (editDoc?.beats ?? []).filter((beat) => {
+    const segment = voiceSegments.find((s) => segmentBeatId(s) === beat.id);
+    if (!segment) return true;
+    // compare normalized (whitespace-collapsed) on both sides — a double-space
+    // edit must not re-bill TTS (same rule as the direction comparison below)
+    if (buildProviderText(String(segment.transcript ?? "")) !== buildProviderText(String(beat.transcript ?? ""))) return true;
+    // direction check: compare the EFFECTIVE provider texts (both fall back to
+    // buildProviderText when no explicit direction — otherwise every beat with
+    // a scaffold-written providerText would false-positive as stale)
+    const segmentDirection = segment.providerText ?? buildProviderText(String(segment.transcript ?? ""));
+    const beatDirection = beat.direction ?? buildProviderText(String(beat.transcript ?? ""));
+    return segmentDirection !== beatDirection;
+  }).map((beat) => beat.id);
   const sendIdeaToAgent = (idea: string, shape: VideoShape) => {
     agent.setDraftPrompt(
       `Tôi muốn làm video: "${idea}". Hình dạng: ${shape.label} (target ~${shape.targetDurationSec}s, ${shape.beatCount} beats). ` +
@@ -697,13 +820,14 @@ export const ProjectPage: React.FC<{ projectId: string; onOpenEditor: () => void
           <div className="pp-beats">
             {beatClips.map((beat, index) => {
               const voice = allClips.find((clip) => clip.kind === "voice" && clip.source.beatId === beat.source.beatId);
-              return <BeatEditor key={beat.id} index={index} beat={beat} voice={voice} projectId={projectId} onChanged={refresh} />;
+              return <BeatEditor key={beat.id} index={index} beat={beat} beatCount={beatClips.length} voice={voice} projectId={projectId} onChanged={refresh} />;
             })}
           </div>
+          <AddBeatRow projectId={projectId} onChanged={refresh} />
         </section>
       ) : null}
 
-      {hasScript ? <GenerateCard projectId={projectId} hasScript={hasScript} beatCount={beatClips.length} onDone={refresh} /> : null}
+      {hasScript ? <GenerateCard projectId={projectId} hasScript={hasScript} beatCount={beatClips.length} staleBeatIds={staleBeatIds} onDone={refresh} /> : null}
 
       {stage === "video" || stage === "approved" ? (
         <ApprovalCard projectId={projectId} approval={approval} candidateUrl={latest ? artifactUrl(projectId, latest.path) : undefined} onChanged={refresh} />

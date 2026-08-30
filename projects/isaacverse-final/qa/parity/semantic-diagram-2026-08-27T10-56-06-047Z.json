@@ -1,0 +1,89 @@
+{
+  "label": "semantic-diagram",
+  "project": "isaacverse-final",
+  "window": {
+    "startSec": 3.5,
+    "endSec": 7,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-semantic-diagram-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-semantic-diagram-editor.mp4",
+  "durationSec": 3.563,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 0.01,
+      "changedPct": 0
+    },
+    {
+      "t": 0.35,
+      "mean": 0.605,
+      "changedPct": 1.534
+    },
+    {
+      "t": 0.6,
+      "mean": 0.648,
+      "changedPct": 1.682
+    },
+    {
+      "t": 0.85,
+      "mean": 1.042,
+      "changedPct": 3.533
+    },
+    {
+      "t": 1.1,
+      "mean": 1.072,
+      "changedPct": 3.622
+    },
+    {
+      "t": 1.35,
+      "mean": 1.059,
+      "changedPct": 3.736
+    },
+    {
+      "t": 1.6,
+      "mean": 1.22,
+      "changedPct": 4.173
+    },
+    {
+      "t": 1.85,
+      "mean": 1.36,
+      "changedPct": 4.529
+    },
+    {
+      "t": 2.1,
+      "mean": 1.367,
+      "changedPct": 4.41
+    },
+    {
+      "t": 2.35,
+      "mean": 1.365,
+      "changedPct": 4.681
+    },
+    {
+      "t": 2.6,
+      "mean": 1.364,
+      "changedPct": 4.602
+    },
+    {
+      "t": 2.85,
+      "mean": 1.295,
+      "changedPct": 4.125
+    },
+    {
+      "t": 3.1,
+      "mean": 1.285,
+      "changedPct": 4.041
+    },
+    {
+      "t": 3.35,
+      "mean": 1.205,
+      "changedPct": 3.743
+    }
+  ],
+  "meanOfMeans": 1.064,
+  "maxMean": 1.367,
+  "gate": "PASS",
+  "gateThreshold": 2
+}

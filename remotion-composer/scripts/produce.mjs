@@ -27,6 +27,9 @@ const slug = args.project;
 if (!slug) { console.error(JSON.stringify({ ok: false, error: "--project <slug> required" })); process.exit(1); }
 const takes = Number(args.takes ?? 2);
 const pad = Number(args.pad ?? 0.35);
+// PARTIAL GENERATE: --only <beatIds|changed> regenerates voice for just the
+// changed/new beats (script edits don't re-bill the whole video's TTS)
+const only = typeof args.only === "string" && args.only ? args.only : null;
 
 const editDocPath = path.join(ROOT, "projects", slug, "05-edit-doc.json");
 if (!existsSync(editDocPath)) { console.error(JSON.stringify({ ok: false, error: "no edit-doc — write a script first" })); process.exit(1); }
@@ -40,7 +43,9 @@ const run = (label, cmd) => {
 };
 
 // ---- step 1: voice (TTS per beat + QC + voice-first retime) ----
-const voice = run("voice", ["scripts/scaffold-voice-plan.mjs", "--project", slug, "--regen", "--takes", String(takes), "--pad", String(pad)]);
+const voiceArgs = ["scripts/scaffold-voice-plan.mjs", "--project", slug, "--regen", "--takes", String(takes), "--pad", String(pad)];
+if (only) voiceArgs.push("--only", only);
+const voice = run("voice", voiceArgs);
 if (voice.status !== 0) {
   console.error(JSON.stringify({ ok: false, error: `voice step failed: ${String(voice.stderr || voice.stdout).slice(0, 300)}` }));
   process.exit(1);

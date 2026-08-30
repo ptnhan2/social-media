@@ -533,7 +533,21 @@ export default defineConfig({
               const jobId = `produce-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
               const jobEntry: { status: "producing" | "done" | "error"; startedAt: number; step?: string; message?: string; result?: unknown; projectId?: string } = { status: "producing", startedAt: Date.now(), step: "voice", projectId };
               produceJobs.set(jobId, jobEntry);
-              const child = spawn(process.execPath, ["scripts/produce.mjs", "--project", projectId], {
+              // partial generate: the studio sends only=<beatIds|changed> when
+              // the script changed after a previous generate — stale beats only
+              const only = typeof body.only === "string" && body.only ? body.only : null;
+              if (only !== null) {
+                // validate: "changed" OR a comma list of REAL beat ids — a
+                // garbage list would silently regenerate nothing while marking
+                // every segment "kept" (stale audio recorded as fresh)
+                if (only !== "changed") {
+                  const beatIds = new Set((snapshot.editDoc.beats ?? []).map((beat) => String(beat.id)));
+                  const unknown = only.split(",").map((id) => id.trim()).filter((id) => id && !beatIds.has(id));
+                  if (unknown.length) throw new Error(`only: unknown beat id(s): ${unknown.join(", ")}`);
+                  if (!only.split(",").some((id) => id.trim())) throw new Error('only: no beat ids (use "changed" or comma-separated ids)');
+                }
+              }
+              const child = spawn(process.execPath, ["scripts/produce.mjs", "--project", projectId, ...(only ? ["--only", only] : [])], {
                 cwd: COMPOSER_ROOT, windowsHide: true, stdio: ["ignore", "pipe", "pipe"],
               });
               let stdout = ""; let stderr = "";
@@ -828,6 +842,48 @@ export default defineConfig({
             }
           });
         });
+        // ============ SCRIPT BEAT CRUD (CONTENT-STUDIO-SPEC §5) ============
+        // The script is a living document: add/delete/move/edit beats writes
+        // through scripts/script-beat.mjs (store-sanctioned, validated,
+        // traced) — the edit-doc is the script truth, BEFORE any voice exists.
+        server.middlewares.use("/api/project/script-beat", (req, res) => {
+          if (req.method !== "POST") { sendJson(res, 405, { error: "POST required" }); return; }
+          readBody(req, res, (body) => {
+            try {
+              const projectId = String(body.projectId || "");
+              const op = String(body.op || "");
+              const OPS = new Set(["set-transcript", "set-direction", "add", "delete", "move"]);
+              if (!projectId || !/^[a-zA-Z0-9._-]+$/.test(projectId)) throw new Error("projectId required (safe id)");
+              if (!OPS.has(op)) throw new Error(`op must be one of: ${[...OPS].join(", ")}`);
+              const needsBeatId = op !== "add";
+              const beatId = String(body.beatId || "");
+              if (needsBeatId && !beatId) throw new Error("beatId required");
+              if (beatId && !/^[a-zA-Z0-9._:-]+$/.test(beatId)) throw new Error("beatId must be a safe id");
+              const text = String(body.text ?? "");
+              if ((op === "set-transcript" || op === "add") && !text.trim()) throw new Error("text required (non-empty transcript)");
+              if (op === "move" && body.dir !== "up" && body.dir !== "down") throw new Error('dir must be "up" or "down"');
+              const snapshot = PROJECT_STORE.load(projectId);
+              if (!snapshot.editDoc) throw new Error("Project has no edit document — write a script first");
+              // argv array spawn (no shell) — values with spaces/quotes are
+              // safe; the empty-string value for clearing a direction passes
+              // through correctly (script-beat's parser accepts it)
+              const cmd = ["scripts/script-beat.mjs", "--project", projectId, "--op", op];
+              if (beatId) cmd.push("--beatId", beatId);
+              if (op === "set-transcript" || op === "set-direction" || op === "add") cmd.push("--text", text);
+              if (op === "move") cmd.push("--dir", String(body.dir));
+              if (op === "add" && body.index !== undefined && body.index !== null) cmd.push("--index", String(body.index));
+              const apply = spawnSync(process.execPath, cmd, { cwd: COMPOSER_ROOT, windowsHide: true, encoding: "utf-8", timeout: 60000 });
+              if (apply.status !== 0) {
+                const errorText = String(apply.stderr || apply.stdout).trim();
+                try { throw new Error(JSON.parse(errorText).error); } catch { throw new Error(errorText.slice(0, 300) || `script-beat exited ${apply.status}`); }
+              }
+              const result = JSON.parse(String(apply.stdout).trim().split(/\r?\n/).filter((l) => l.trim().startsWith("{")).pop() || "{}");
+              sendJson(res, 200, result);
+            } catch (error) {
+              sendJson(res, 400, { error: error instanceof Error ? error.message : String(error) });
+            }
+          });
+        });
         // ============ TIMELINE GENERATION (PIPELINE-PRODUCTION-SPEC v3, M3) ============
         // generate_timeline: pre-flight validate + generate + report. The UI
         // Timeline-QA tab and the agent's generate_timeline tool call the SAME
@@ -1063,6 +1119,27 @@ export default defineConfig({
                   // browser keeps playing the STALE stem after a regen.
                   const publicSync = spawnSync(process.execPath, ["scripts/sync-project-public.mjs", projectId], { cwd: COMPOSER_ROOT, windowsHide: true, stdio: "ignore", timeout: 60000 });
                   if (publicSync.status !== 0) throw new Error("stem synced to editor doc but public sync failed — preview audio may be stale");
+                  // keep the edit-doc's voice segment in lockstep with the
+                  // fresh stem: the stale-stem detector compares this segment
+                  // against beat.transcript/direction — without this sync a
+                  // per-clip regen would look stale forever and the next
+                  // partial generate would RE-BILL TTS for a fresh stem
+                  try {
+                    const fresh = PROJECT_STORE.load(projectId);
+                    const voiceClip = fresh.editorDoc?.tracks.flatMap((t) => t.clips).find((c) => c.id === clipId);
+                    const segBeatId = String(clip.source?.beatId ?? "");
+                    const seg = fresh.editDoc?.audioPlan?.voice?.find((s) => (s.beatId ?? String(s.id ?? "").split(":").pop()) === segBeatId);
+                    if (fresh.editDoc && seg && voiceClip && fresh.videoDoc) {
+                      seg.transcript = String(md.sentenceText ?? md.transcript ?? providerText);
+                      seg.providerText = providerText;
+                      seg.startSec = voiceClip.range.startSec;
+                      seg.endSec = voiceClip.range.endSec;
+                      if (result.qc) seg.qc = result.qc;
+                      if (result.takeId) seg.takeId = result.takeId;
+                      if (Array.isArray(result.takes)) seg.takes = result.takes.filter((t: unknown) => t && typeof t === "object").map((t: { id?: string; pass?: boolean; metrics?: { durationSec?: number }; path?: string }) => ({ id: t.id, pass: t.pass === true, durationSec: t.metrics?.durationSec, path: t.path }));
+                      PROJECT_STORE.saveSourceDocs(projectId, fresh.videoDoc, fresh.editDoc);
+                    }
+                  } catch { /* non-fatal: the stem + editor doc are already correct */ }
                   job.status = "done";
                   job.result = { ...result, applied: JSON.parse(jsonSpan(apply.stdout) || "{}") };
                 } catch (error) {

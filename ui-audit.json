@@ -1,0 +1,233 @@
+{
+  "url": "http://localhost:5174/project?project=agent-loop-test",
+  "viewports": [
+    {
+      "viewport": {
+        "w": 1920,
+        "h": 1080
+      },
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "scanned": 5,
+      "fontsStatus": "loaded",
+      "screenshot": "ui-audit-shots\\viewport-1920x1080.png"
+    },
+    {
+      "viewport": {
+        "w": 1366,
+        "h": 768
+      },
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "scanned": 5,
+      "fontsStatus": "loaded",
+      "screenshot": "ui-audit-shots\\viewport-1366x768.png"
+    },
+    {
+      "viewport": {
+        "w": 1024,
+        "h": 768
+      },
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "scanned": 5,
+      "fontsStatus": "loaded",
+      "screenshot": "ui-audit-shots\\viewport-1024x768.png"
+    },
+    {
+      "viewport": {
+        "w": 768,
+        "h": 1024
+      },
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "scanned": 5,
+      "fontsStatus": "loaded",
+      "screenshot": "ui-audit-shots\\viewport-768x1024.png"
+    }
+  ],
+  "totalCritical": 0,
+  "pass": true,
+  "details": [
+    {
+      "viewport": {
+        "w": 1920,
+        "h": 1080
+      },
+      "url": "http://localhost:5174/project?project=agent-loop-test",
+      "scanned": 5,
+      "hoverRules": 92,
+      "fontsStatus": "loaded",
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "issues": {
+        "textOverflow": [],
+        "tinyTargets": [],
+        "overlap": [],
+        "clippedText": [],
+        "brokenImages": [],
+        "lowContrast": [],
+        "coveredInteractives": [],
+        "cursorMissing": [],
+        "viewportOverflow": [],
+        "deadClasses": []
+      },
+      "screenshot": "ui-audit-shots\\viewport-1920x1080.png"
+    },
+    {
+      "viewport": {
+        "w": 1366,
+        "h": 768
+      },
+      "url": "http://localhost:5174/project?project=agent-loop-test",
+      "scanned": 5,
+      "hoverRules": 92,
+      "fontsStatus": "loaded",
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "issues": {
+        "textOverflow": [],
+        "tinyTargets": [],
+        "overlap": [],
+        "clippedText": [],
+        "brokenImages": [],
+        "lowContrast": [],
+        "coveredInteractives": [],
+        "cursorMissing": [],
+        "viewportOverflow": [],
+        "deadClasses": []
+      },
+      "screenshot": "ui-audit-shots\\viewport-1366x768.png"
+    },
+    {
+      "viewport": {
+        "w": 1024,
+        "h": 768
+      },
+      "url": "http://localhost:5174/project?project=agent-loop-test",
+      "scanned": 5,
+      "hoverRules": 92,
+      "fontsStatus": "loaded",
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "issues": {
+        "textOverflow": [],
+        "tinyTargets": [],
+        "overlap": [],
+        "clippedText": [],
+        "brokenImages": [],
+        "lowContrast": [],
+        "coveredInteractives": [],
+        "cursorMissing": [],
+        "viewportOverflow": [],
+        "deadClasses": []
+      },
+      "screenshot": "ui-audit-shots\\viewport-1024x768.png"
+    },
+    {
+      "viewport": {
+        "w": 768,
+        "h": 1024
+      },
+      "url": "http://localhost:5174/project?project=agent-loop-test",
+      "scanned": 5,
+      "hoverRules": 92,
+      "fontsStatus": "loaded",
+      "counts": {
+        "textOverflow": 0,
+        "tinyTargets": 0,
+        "overlap": 0,
+        "clippedText": 0,
+        "brokenImages": 0,
+        "lowContrast": 0,
+        "coveredInteractives": 0,
+        "cursorMissing": 0,
+        "viewportOverflow": 0,
+        "deadClasses": 0
+      },
+      "issues": {
+        "textOverflow": [],
+        "tinyTargets": [],
+        "overlap": [],
+        "clippedText": [],
+        "brokenImages": [],
+        "lowContrast": [],
+        "coveredInteractives": [],
+        "cursorMissing": [],
+        "viewportOverflow": [],
+        "deadClasses": []
+      },
+      "screenshot": "ui-audit-shots\\viewport-768x1024.png"
+    }
+  ]
+}

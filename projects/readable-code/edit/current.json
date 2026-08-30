@@ -29,33 +29,11 @@
       "audioCues": []
     },
     {
-      "id": "rc-b2",
-      "sceneId": "",
-      "shotIds": [],
-      "journeySlot": "call",
-      "startSec": 20,
-      "durationSec": 20,
-      "transcript": "Naming is the cheapest refactor. A good function name replaces three lines of comments.",
-      "narrativeFunction": "naming",
-      "treatment": {
-        "id": "chapter-card",
-        "params": {
-          "title": "NAMING IS CHEAP",
-          "subtitle": "one rename, three comments saved",
-          "accent": "#61d7e8"
-        },
-        "assets": []
-      },
-      "elements": [],
-      "motionPhases": [],
-      "audioCues": []
-    },
-    {
       "id": "rc-b3",
       "sceneId": "",
       "shotIds": [],
       "journeySlot": "call",
-      "startSec": 40,
+      "startSec": 20,
       "durationSec": 20,
       "transcript": "Small functions are not about line count. They are about one idea per unit.",
       "narrativeFunction": "structure",
@@ -71,6 +49,29 @@
       "elements": [],
       "motionPhases": [],
       "audioCues": []
+    },
+    {
+      "id": "rc-b2",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 40,
+      "durationSec": 20,
+      "transcript": "Naming is the cheapest refactor. A good function name replaces three lines of comments.",
+      "narrativeFunction": "naming",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "NAMING IS CHEAP",
+          "subtitle": "one rename, three comments saved",
+          "accent": "#61d7e8"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": [],
+      "direction": "true"
     },
     {
       "id": "rc-b4",

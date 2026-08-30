@@ -71,7 +71,7 @@
           },
           "color": "cyan",
           "metadata": {
-            "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
+            "transcript": "Because rhythm is decided BEFORE the timeline — in the plan.",
             "treatmentId": "chapter-card"
           },
           "linkedClipIds": [],
@@ -93,7 +93,7 @@
           },
           "color": "cyan",
           "metadata": {
-            "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
+            "transcript": "Plan the pauses FIRST. Let the voice decide the pace.",
             "treatmentId": "chapter-card"
           },
           "linkedClipIds": [],
@@ -1134,18 +1134,18 @@
           "color": "cyan",
           "metadata": {
             "src": "agent-loop-test/voice/stems/agent-loop-beat-02.wav",
-            "transcript": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
-            "sentenceText": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
-            "providerText": "Because rhythm is decided before the timeline. You are cutting to the clock, not to the breath.",
+            "transcript": "Because rhythm is decided BEFORE the timeline — in the plan.",
+            "sentenceText": "Because rhythm is decided BEFORE the timeline — in the plan.",
+            "providerText": "Because rhythm is decided BEFORE the timeline — in the plan.",
             "segmentId": "agent-loop-test:voice:agent-loop-beat-02",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-30T03:51:38",
-              "durationSec": 5.68,
-              "expectedSec": 6.8,
-              "peakDb": -2.8,
-              "meanDb": -16.5,
-              "lufs": -16.19,
+              "checkedAt": "2026-08-30T23:13:09",
+              "durationSec": 4.4,
+              "expectedSec": 4.4,
+              "peakDb": -2.3,
+              "meanDb": -16.7,
+              "lufs": -16.43,
               "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
@@ -1153,14 +1153,14 @@
                   "id": "clip",
                   "label": "Clipping",
                   "pass": true,
-                  "value": "-2.8 dBFS peak",
+                  "value": "-2.3 dBFS peak",
                   "threshold": "< -0.5 dBFS"
                 },
                 {
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "5.68s vs 6.80s",
+                  "value": "4.40s vs 4.40s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
@@ -1174,23 +1174,23 @@
                   "id": "lufs",
                   "label": "Loudness (post)",
                   "pass": true,
-                  "value": "-16.19 LUFS",
+                  "value": "-16.43 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
             },
-            "takeId": "agent-loop-beat-02-take-02",
+            "takeId": "agent-loop-beat-02-take-01",
             "takes": [
               {
                 "id": "agent-loop-beat-02-take-01",
                 "pass": true,
-                "durationSec": 5.92,
+                "durationSec": 4.4,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-02-take-01.mp3"
               },
               {
                 "id": "agent-loop-beat-02-take-02",
                 "pass": true,
-                "durationSec": 5.68,
+                "durationSec": 4,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-02-take-02.mp3"
               }
             ]
@@ -1215,18 +1215,18 @@
           "color": "cyan",
           "metadata": {
             "src": "agent-loop-test/voice/stems/agent-loop-beat-03.wav",
-            "transcript": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
-            "sentenceText": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
-            "providerText": "Plan the pauses first. Let the voice decide the cut. That is when an edit starts to feel right.",
+            "transcript": "Plan the pauses FIRST. Let the voice decide the pace.",
+            "sentenceText": "Plan the pauses FIRST. Let the voice decide the pace.",
+            "providerText": "Plan the pauses FIRST. Let the voice decide the pace.",
             "segmentId": "agent-loop-test:voice:agent-loop-beat-03",
             "qc": {
               "pass": true,
-              "checkedAt": "2026-08-30T03:52:11",
-              "durationSec": 5.92,
-              "expectedSec": 7.6000000000000005,
-              "peakDb": -1.9,
-              "meanDb": -16.8,
-              "lufs": -15.69,
+              "checkedAt": "2026-08-30T23:22:34",
+              "durationSec": 3.84,
+              "expectedSec": 4,
+              "peakDb": -1.7,
+              "meanDb": -16.3,
+              "lufs": -15.11,
               "tailSilenceSec": 0,
               "wer": 0,
               "checks": [
@@ -1234,14 +1234,14 @@
                   "id": "clip",
                   "label": "Clipping",
                   "pass": true,
-                  "value": "-1.9 dBFS peak",
+                  "value": "-1.7 dBFS peak",
                   "threshold": "< -0.5 dBFS"
                 },
                 {
                   "id": "duration",
                   "label": "Duration",
                   "pass": true,
-                  "value": "5.92s vs 7.60s",
+                  "value": "3.84s vs 4.00s",
                   "threshold": "±15% or WER-verified"
                 },
                 {
@@ -1255,23 +1255,23 @@
                   "id": "lufs",
                   "label": "Loudness (post)",
                   "pass": true,
-                  "value": "-15.69 LUFS",
+                  "value": "-15.11 LUFS",
                   "threshold": "-16 ±1.5"
                 }
               ]
             },
-            "takeId": "agent-loop-beat-03-take-02",
+            "takeId": "agent-loop-beat-03-take-01",
             "takes": [
               {
                 "id": "agent-loop-beat-03-take-01",
                 "pass": true,
-                "durationSec": 6.4,
+                "durationSec": 3.84,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-03-take-01.mp3"
               },
               {
                 "id": "agent-loop-beat-03-take-02",
                 "pass": true,
-                "durationSec": 5.92,
+                "durationSec": 3.92,
                 "path": "C:\\DevWork\\social-media\\projects\\agent-loop-test\\voice\\takes\\agent-loop-beat-03-take-02.mp3"
               }
             ]
@@ -1325,8 +1325,8 @@
   "assets": [],
   "revision": {
     "baseEditVersion": "v001",
-    "revision": 14,
-    "updatedAt": "2026-08-29T20:52:17.482Z"
+    "revision": 15,
+    "updatedAt": "2026-08-30T16:22:40.159Z"
   },
   "schemaVersion": 3
 }

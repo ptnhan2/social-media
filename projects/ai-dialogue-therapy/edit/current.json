@@ -1,0 +1,506 @@
+{
+  "id": "edit-doc-ai-dialogue-therapy",
+  "videoId": "ai-dialogue-therapy",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "therapy-beat-01",
+      "sceneId": "scene-hook",
+      "shotIds": [
+        "therapy-beat-01:shot-01"
+      ],
+      "journeySlot": "status_quo",
+      "startSec": 0,
+      "durationSec": 3.5,
+      "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
+      "narrativeFunction": "name the false solution",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "AI Dialogue",
+          "subtitle": "sounds like therapy",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-01:phase-in",
+          "name": "title reveal",
+          "startSec": 0,
+          "durationSec": 2.5,
+          "purpose": "hook the viewer with the pattern name"
+        }
+      ],
+      "audioCues": [
+        {
+          "id": "therapy-beat-01:whoosh",
+          "atSec": 0.1,
+          "durationSec": 0.5,
+          "src": "sfx/whoosh-short.mp3",
+          "reason": "title entrance"
+        }
+      ]
+    },
+    {
+      "id": "therapy-beat-02",
+      "sceneId": "scene-pattern",
+      "shotIds": [
+        "therapy-beat-02:shot-01"
+      ],
+      "journeySlot": "call",
+      "startSec": 3.5,
+      "durationSec": 3.5,
+      "transcript": "I hear you saying that. That must be really hard.",
+      "narrativeFunction": "reframe the unit of editing",
+      "treatment": {
+        "id": "semantic-diagram",
+        "params": {
+          "title": "The 3 Therapy Patterns",
+          "kicker": "what AI defaults to",
+          "centerLabel": "therapy",
+          "nodes": [
+            {
+              "id": "validate",
+              "label": "Validation",
+              "detail": "\"I hear you\"",
+              "x": 24,
+              "y": 52,
+              "activeFrom": 0.2
+            },
+            {
+              "id": "reflect",
+              "label": "Reflection",
+              "detail": "\"It sounds like\"",
+              "x": 50,
+              "y": 52,
+              "activeFrom": 0.8
+            },
+            {
+              "id": "label",
+              "label": "Labeling",
+              "detail": "\"feeling sad\"",
+              "x": 76,
+              "y": 52,
+              "activeFrom": 1.4
+            }
+          ],
+          "edges": [
+            {
+              "from": "validate",
+              "to": "reflect",
+              "revealAt": 0.6
+            },
+            {
+              "from": "reflect",
+              "to": "label",
+              "revealAt": 1.2
+            }
+          ]
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-02:phase-flow",
+          "name": "pattern reveal",
+          "startSec": 0.2,
+          "durationSec": 2.8,
+          "purpose": "show the 3 connected patterns"
+        }
+      ],
+      "audioCues": [
+        {
+          "id": "therapy-beat-02:pop",
+          "atSec": 0.5,
+          "durationSec": 0.3,
+          "src": "sfx/pop.mp3",
+          "reason": "node entrance"
+        }
+      ]
+    },
+    {
+      "id": "therapy-beat-03",
+      "sceneId": "scene-evidence",
+      "shotIds": [
+        "therapy-beat-03:shot-01"
+      ],
+      "journeySlot": "trials",
+      "startSec": 7,
+      "durationSec": 3.5,
+      "transcript": "This isn't a bug — it's RLHF's fingerprint.",
+      "narrativeFunction": "show evidence in context",
+      "treatment": {
+        "id": "host-reflection-cinematic",
+        "params": {
+          "subtitle": "RLHF rewards empathy — every character becomes a counselor",
+          "lightSide": "left"
+        },
+        "assets": [
+          {
+            "kind": "character",
+            "src": "isaacverse-final/character/poses/think.png"
+          }
+        ]
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-03:phase-push",
+          "name": "slow push",
+          "startSec": 0,
+          "durationSec": 3.5,
+          "purpose": "build tension toward the why"
+        }
+      ],
+      "audioCues": [
+        {
+          "id": "therapy-beat-03:riser",
+          "atSec": 1.5,
+          "durationSec": 1.5,
+          "src": "sfx/riser.mp3",
+          "reason": "tension build"
+        }
+      ]
+    },
+    {
+      "id": "therapy-beat-04",
+      "sceneId": "scene-why",
+      "shotIds": [
+        "therapy-beat-04:shot-01"
+      ],
+      "journeySlot": "approach",
+      "startSec": 10.5,
+      "durationSec": 3.5,
+      "transcript": "Models get rewarded for empathy, so every character becomes a counselor.",
+      "narrativeFunction": "give a repeatable process",
+      "treatment": {
+        "id": "process-timeline",
+        "params": {
+          "title": "The RLHF Loop",
+          "steps": [
+            {
+              "label": "Train",
+              "detail": "on human feedback",
+              "color": "#61d7e8"
+            },
+            {
+              "label": "Reward",
+              "detail": "empathetic responses",
+              "color": "#f2b84b"
+            },
+            {
+              "label": "Default",
+              "detail": "to therapy speak",
+              "color": "#ec6a5e"
+            },
+            {
+              "label": "Break",
+              "detail": "the pattern",
+              "color": "#a98bff"
+            }
+          ],
+          "activeStep": 3
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-04:phase-flow",
+          "name": "workflow reveal",
+          "startSec": 0.2,
+          "durationSec": 2.6,
+          "purpose": "turn the reframe into action"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "therapy-beat-05",
+      "sceneId": "scene-comparison",
+      "shotIds": [
+        "therapy-beat-05:shot-01"
+      ],
+      "journeySlot": "crisis",
+      "startSec": 14,
+      "durationSec": 4.5,
+      "transcript": "The fix: stop validating, stop reflecting, stop labeling. Give your characters permission to interrupt, disagree, and lie.",
+      "narrativeFunction": "compare the meaningful choice",
+      "treatment": {
+        "id": "candidate-comparison",
+        "params": {
+          "title": "Same Scene, Two Voices",
+          "criteria": "Which sounds like fiction?",
+          "selectedIndex": 1,
+          "candidates": [
+            {
+              "label": "Therapy",
+              "detail": "\"I hear your frustration\"",
+              "color": "#ec6a5e",
+              "src": "isaacverse-final/character/poses/think.png"
+            },
+            {
+              "label": "Fiction",
+              "detail": "\"You always do this\"",
+              "color": "#f2b84b",
+              "src": "isaacverse-final/character/poses/point-right.png"
+            },
+            {
+              "label": "Fiction",
+              "detail": "\"Prove it.\"",
+              "color": "#61d7e8",
+              "src": "isaacverse-final/character/poses/celebrate.png"
+            }
+          ]
+        },
+        "assets": [
+          {
+            "kind": "character",
+            "src": "isaacverse-final/character/poses/think.png"
+          },
+          {
+            "kind": "character",
+            "src": "isaacverse-final/character/poses/point-right.png"
+          },
+          {
+            "kind": "character",
+            "src": "isaacverse-final/character/poses/celebrate.png"
+          }
+        ]
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-05:phase-compare",
+          "name": "side by side",
+          "startSec": 0.3,
+          "durationSec": 3.5,
+          "purpose": "make the choice visible"
+        }
+      ],
+      "audioCues": [
+        {
+          "id": "therapy-beat-05:impact",
+          "atSec": 2,
+          "durationSec": 0.5,
+          "src": "sfx/impact.mp3",
+          "reason": "selection moment"
+        }
+      ]
+    },
+    {
+      "id": "therapy-beat-06",
+      "sceneId": "scene-metaphor",
+      "shotIds": [
+        "therapy-beat-06:shot-01"
+      ],
+      "journeySlot": "reward",
+      "startSec": 18.5,
+      "durationSec": 4,
+      "transcript": "Great dialogue is conflict, not comfort.",
+      "narrativeFunction": "name the failure mode",
+      "treatment": {
+        "id": "cinematic-metaphor",
+        "params": {
+          "subtitle": "Therapy office → battlefield",
+          "label": "the shift",
+          "mode": "cinematic"
+        },
+        "assets": [
+          {
+            "kind": "image",
+            "src": "ai-dialogue-therapy/assets/therapy-session.jpg"
+          }
+        ]
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-06:phase-push",
+          "name": "slow push",
+          "startSec": 0,
+          "durationSec": 3.5,
+          "purpose": "land the metaphor"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "therapy-beat-07",
+      "sceneId": "scene-takeaway",
+      "shotIds": [
+        "therapy-beat-07:shot-01"
+      ],
+      "journeySlot": "return",
+      "startSec": 22.5,
+      "durationSec": 3.5,
+      "transcript": "That's when AI dialogue starts sounding like fiction instead of a support group.",
+      "narrativeFunction": "deliver the usable rule",
+      "treatment": {
+        "id": "host-reflection-cinematic",
+        "params": {
+          "subtitle": "Permission to interrupt. Permission to disagree. Permission to lie.",
+          "lightSide": "right"
+        },
+        "assets": [
+          {
+            "kind": "character",
+            "src": "ai-dialogue-therapy/assets/two-people-talking.jpg"
+          }
+        ]
+      },
+      "elements": [],
+      "motionPhases": [
+        {
+          "id": "therapy-beat-07:phase-push",
+          "name": "final push",
+          "startSec": 0,
+          "durationSec": 3.5,
+          "purpose": "deliver the rule with confidence"
+        }
+      ],
+      "audioCues": []
+    },
+    {
+      "id": "therapy-beat-08",
+      "sceneId": "scene-cta",
+      "shotIds": [
+        "therapy-beat-08:shot-01"
+      ],
+      "journeySlot": "resolution",
+      "startSec": 26,
+      "durationSec": 5,
+      "transcript": "",
+      "narrativeFunction": "resolve with a memorable rule",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "Break the Pattern",
+          "subtitle": "follow the thread",
+          "accent": "#f2b84b"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [
+    {
+      "id": "character-think",
+      "kind": "image",
+      "src": "isaacverse-final/character/poses/think.png",
+      "description": "thinking character pose"
+    },
+    {
+      "id": "character-point",
+      "kind": "image",
+      "src": "isaacverse-final/character/poses/point-right.png",
+      "description": "pointing character pose"
+    },
+    {
+      "id": "character-celebrate",
+      "kind": "image",
+      "src": "isaacverse-final/character/poses/celebrate.png",
+      "description": "celebrating character pose"
+    },
+    {
+      "id": "character-present",
+      "kind": "image",
+      "src": "isaacverse-final/character/poses/present.png",
+      "description": "presenting character pose"
+    }
+  ],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [
+      {
+        "id": "ai-dialogue-therapy:voice",
+        "src": "ai-dialogue-therapy/audio/voice.mp3",
+        "startSec": 0,
+        "endSec": 31,
+        "transcript": "Ever noticed AI characters always sound like they're in a therapy session?",
+        "gainDb": 0
+      }
+    ],
+    "music": [
+      {
+        "id": "therapy-music",
+        "src": "isaacverse-final/audio/music-bed.wav",
+        "startSec": 0,
+        "endSec": 30,
+        "gainDb": -20,
+        "density": 0.4
+      }
+    ],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "loudnessLufs": -14
+    }
+  },
+  "transitions": [
+    {
+      "id": "therapy-trans-01",
+      "atSec": 3.5,
+      "durationSec": 0.4,
+      "type": "blur",
+      "accent": "#f2b84b"
+    },
+    {
+      "id": "therapy-trans-02",
+      "atSec": 7,
+      "durationSec": 0.4,
+      "type": "fade",
+      "accent": "#61d7e8"
+    },
+    {
+      "id": "therapy-trans-03",
+      "atSec": 10.5,
+      "durationSec": 0.4,
+      "type": "flash",
+      "accent": "#f2b84b"
+    },
+    {
+      "id": "therapy-trans-04",
+      "atSec": 14,
+      "durationSec": 0.4,
+      "type": "blur",
+      "accent": "#ec6a5e"
+    },
+    {
+      "id": "therapy-trans-05",
+      "atSec": 18.5,
+      "durationSec": 0.4,
+      "type": "light-leak",
+      "accent": "#f2b84b"
+    },
+    {
+      "id": "therapy-trans-06",
+      "atSec": 22.5,
+      "durationSec": 0.4,
+      "type": "fade",
+      "accent": "#61d7e8"
+    },
+    {
+      "id": "therapy-trans-07",
+      "atSec": 26,
+      "durationSec": 0.4,
+      "type": "blur",
+      "accent": "#f2b84b"
+    }
+  ],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  }
+}

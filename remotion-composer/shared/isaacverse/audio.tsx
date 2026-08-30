@@ -12,6 +12,11 @@ export type VoiceSegment = {
   startSec: number;
   endSec: number;
   transcript: string;
+  /** Voice direction override (from beat.direction) — the exact string sent to
+   *  the TTS provider. Absent = derive from transcript via buildProviderText. */
+  providerText?: string;
+  /** True when a partial regen (--only) kept this segment's previous stem. */
+  kept?: boolean;
   pauseBeforeSec?: number;
   emphasisWords?: string[];
   /** Provenance from the voice pipeline (scaffold-voice-plan --regen): the

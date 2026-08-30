@@ -1,0 +1,89 @@
+{
+  "label": "process-timeline",
+  "project": "isaacverse-final",
+  "window": {
+    "startSec": 7,
+    "endSec": 10.5,
+    "quality": "draft",
+    "step": 0.25
+  },
+  "videoA": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-process-timeline-treatment.mp4",
+  "videoB": "C:\\DevWork\\social-media\\projects\\isaacverse-final\\renders\\windows\\parity-process-timeline-editor.mp4",
+  "durationSec": 3.563,
+  "frames": [
+    {
+      "t": 0.1,
+      "mean": 3.464,
+      "changedPct": 7.442
+    },
+    {
+      "t": 0.35,
+      "mean": 4.969,
+      "changedPct": 10.005
+    },
+    {
+      "t": 0.6,
+      "mean": 5.574,
+      "changedPct": 9.455
+    },
+    {
+      "t": 0.85,
+      "mean": 6.412,
+      "changedPct": 10.432
+    },
+    {
+      "t": 1.1,
+      "mean": 6.606,
+      "changedPct": 10.256
+    },
+    {
+      "t": 1.35,
+      "mean": 7.156,
+      "changedPct": 11.134
+    },
+    {
+      "t": 1.6,
+      "mean": 7.361,
+      "changedPct": 11.285
+    },
+    {
+      "t": 1.85,
+      "mean": 7.483,
+      "changedPct": 11.207
+    },
+    {
+      "t": 2.1,
+      "mean": 7.399,
+      "changedPct": 11.392
+    },
+    {
+      "t": 2.35,
+      "mean": 7.207,
+      "changedPct": 11.324
+    },
+    {
+      "t": 2.6,
+      "mean": 7.059,
+      "changedPct": 11.135
+    },
+    {
+      "t": 2.85,
+      "mean": 6.583,
+      "changedPct": 10.654
+    },
+    {
+      "t": 3.1,
+      "mean": 5.955,
+      "changedPct": 10.034
+    },
+    {
+      "t": 3.35,
+      "mean": 5.081,
+      "changedPct": 9.412
+    }
+  ],
+  "meanOfMeans": 6.308,
+  "maxMean": 7.483,
+  "gate": "FAIL",
+  "gateThreshold": 2
+}

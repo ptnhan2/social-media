@@ -60,6 +60,10 @@ export type ClipMetadataChanges = { sentenceText?: string; providerText?: string
 
 export const setClipMetadata = (projectId: string, clipId: string, changes: ClipMetadataChanges) => requestJson<{ ok: true; clipId: string }>(`/api/project/clip-metadata`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, clipId, changes }) });
 
+/** Script-beat CRUD — the edit-doc is the script truth (works BEFORE voice exists). */
+export type ScriptBeatOp = "set-transcript" | "set-direction" | "add" | "delete" | "move";
+export const scriptBeat = (projectId: string, op: ScriptBeatOp, payload: { beatId?: string; text?: string; dir?: "up" | "down"; index?: number } = {}) => requestJson<{ ok: true; projectId: string; op: string; beats: number; durationSec: number }>(`/api/project/script-beat`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId, op, ...payload }) });
+
 export type StoryDraft = { status: "none" | "pending" | "approved" | "changes_requested"; idea?: string; surfaceProblem?: string; deeperProblem?: string; thumbnailPromise?: string; commonGoal?: { viewer?: string; creator?: string }; originalIdea?: string; note?: string; updatedAt?: string };
 
 export const fetchStoryDraft = (projectId: string) => requestJson<StoryDraft>(`/api/project/story-draft?projectId=${encodeURIComponent(projectId)}`);

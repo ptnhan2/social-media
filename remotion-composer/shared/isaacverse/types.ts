@@ -110,6 +110,8 @@ export type SemanticBeat = {
   startSec: number;
   durationSec: number;
   transcript: string;
+  /** Voice direction override (providerText — audio tags/CAPS). When absent, providerText derives from transcript via buildProviderText. */
+  direction?: string;
   narrativeFunction: string;
   treatment: TreatmentInstance;
   elements?: SemanticElement[];

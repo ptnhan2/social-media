@@ -53,18 +53,60 @@ const { buildProviderText, expectedDurationSec } = await bundleVoiceClip();
 const pad = Number(args.pad ?? 0.35);
 const takeCount = Number(args.takes ?? 2);
 const doRegen = args.regen === true;
+// PARTIAL REGEN: --only beatId1,beatId2 (or --only changed) regenerates ONLY
+// those beats' voices; every other beat keeps its existing audioPlan.voice
+// segment (qc/takes/stem) — script edits no longer re-bill the whole video.
+// Legacy segments carry the beat id inside `id` ("slug:voice:beatId") — parse
+// it when the explicit field is missing.
+const segmentBeatId = (segment) => segment.beatId ?? String(segment.id ?? "").split(":").pop();
+const existingSegments = new Map((doc.audioPlan?.voice ?? []).map((segment) => [segmentBeatId(segment), segment]));
+const onlyChanged = args.only === "changed";
+const onlyIds = onlyChanged
+  // "changed" = transcript/direction no longer matches the recorded segment —
+  // the stale-stem detector the studio's partial Generate uses
+  ? doc.beats.filter((beat) => {
+    const segment = existingSegments.get(beat.id);
+    if (!segment) return true;
+    // whitespace-collapsed comparison, same normalization as the studio's
+    // stale detector — a double-space edit must not re-bill TTS
+    if (buildProviderText(String(segment.transcript ?? "")) !== buildProviderText(String(beat.transcript ?? ""))) return true;
+    const segmentDirection = typeof segment.providerText === "string" ? segment.providerText : buildProviderText(String(segment.transcript ?? ""));
+    return segmentDirection !== (beat.direction ?? buildProviderText(String(beat.transcript ?? "")));
+  }).map((beat) => beat.id)
+  : typeof args.only === "string" && args.only
+    ? String(args.only).split(",").map((id) => id.trim()).filter(Boolean)
+    : null; // null = full regen (previous behavior)
 
-const planned = doc.beats.map((beat) => ({
-  id: `${slug}:voice:${beat.id}`,
-  beatId: beat.id,
-  src: `${slug}/voice/stems/${beat.id}.wav`,
-  transcript: String(beat.transcript ?? "").trim(),
-  providerText: buildProviderText(String(beat.transcript ?? "")),
-}));
+const planned = doc.beats.map((beat) => {
+  const existing = existingSegments.get(beat.id);
+  const regenSet = doRegen ? (onlyIds ? new Set(onlyIds) : null) : new Set(); // null = all
+  const isKept = existing && (regenSet === null ? false : !regenSet.has(beat.id));
+  return {
+    id: `${slug}:voice:${beat.id}`,
+    beatId: beat.id,
+    src: `${slug}/voice/stems/${beat.id}.wav`,
+    transcript: String(beat.transcript ?? "").trim(),
+    providerText: beat.direction ?? buildProviderText(String(beat.transcript ?? "")),
+    // carried over when this beat is NOT being regenerated: retime reuses the
+    // old stem duration, qc/takes survive untouched
+    ...(isKept ? {
+      // as-voiced transcript of the EXISTING stem — must NOT refresh to the
+      // beat's current transcript: a kept beat whose script changed (explicit
+      // --only list) keeps its stale signal so a later run can re-bill it
+      transcript: String(existing.transcript ?? ""),
+      stemDurationSec: Number((existing.endSec - existing.startSec).toFixed(3)),
+      qc: existing.qc,
+      takeId: existing.takeId,
+      takes: existing.takes,
+      kept: true,
+    } : {}),
+  };
+});
 
 if (doRegen) {
-  console.log(`[voice] regenerating ${planned.length} segment(s), ${takeCount} take(s) each...`);
-  for (const segment of planned) {
+  const regenTargets = onlyIds ? planned.filter((segment) => onlyIds.includes(segment.beatId)) : planned;
+  console.log(`[voice] regenerating ${regenTargets.length}/${planned.length} segment(s), ${takeCount} take(s) each${onlyIds ? ` (partial: ${onlyIds.length} kept)` : ""}...`);
+  for (const segment of regenTargets) {
     if (!segment.transcript) { console.log(`  SKIP ${segment.beatId} (no transcript)`); continue; }
     const payload = JSON.stringify({
       projectId: slug, clipId: segment.beatId, providerText: segment.providerText,
@@ -110,7 +152,9 @@ const flags = [];
 for (let index = 0; index < doc.beats.length; index += 1) {
   const beat = doc.beats[index];
   const stem = planned.find((segment) => segment.beatId === beat.id);
-  const needed = doRegen && stem?.stemDurationSec ? stem.stemDurationSec + pad : null;
+  // kept beats already include their breath pad from the last regen — re-adding
+  // pad would grow the video on every partial run
+  const needed = doRegen && stem?.stemDurationSec ? (stem.kept ? stem.stemDurationSec : stem.stemDurationSec + pad) : null;
   if (needed !== null && needed > beat.durationSec * 1.05) {
     flags.push(`${beat.id}: narration ${needed.toFixed(2)}s vs planned ${beat.durationSec}s`);
   }
@@ -121,9 +165,13 @@ for (let index = 0; index < doc.beats.length; index += 1) {
 const voiceSegments = planned.map((segment) => {
   const beat = doc.beats.find((b) => b.id === segment.beatId);
   return {
-    id: segment.id, src: segment.src,
+    id: segment.id, src: segment.src, beatId: segment.beatId,
     startSec: beat.startSec, endSec: Number((beat.startSec + beat.durationSec).toFixed(3)),
     transcript: segment.transcript,
+    // direction (providerText override) survives the mapping — the projection
+    // prefers it over rebuilding from transcript (beat.direction = truth)
+    ...(segment.providerText ? { providerText: segment.providerText } : {}),
+    ...(segment.kept ? { kept: true } : {}),
     // QC + take provenance survive the mapping (beat cards + QC badge read them)
     ...(segment.qc ? { qc: segment.qc } : {}),
     ...(segment.takeId ? { takeId: segment.takeId } : {}),
@@ -138,7 +186,13 @@ if (typeof doc.durationSec === "number") doc.durationSec = Number(total.toFixed(
 
 const backup = `${docPath}.bak-${new Date().toISOString().replace(/[:.]/g, "-")}`;
 copyFileSync(docPath, backup);
-writeFileSync(docPath, JSON.stringify(doc, null, 2), "utf-8");
+const payload = JSON.stringify(doc, null, 2);
+writeFileSync(docPath, payload, "utf-8");
+// keep edit/current.json in lockstep: the store's load() PREFERS it over
+// 05-edit-doc.json — writing only the source would leave every studio read
+// serving the pre-produce voice plan (stale-segment false positives)
+const currentPath = path.join(ROOT, "projects", slug, "edit", "current.json");
+if (existsSync(path.dirname(currentPath))) writeFileSync(currentPath, payload, "utf-8");
 console.log(`[voice] ${voiceSegments.length} segment(s) written; beats retimed; total ${total.toFixed(2)}s`);
 if (flags.length) console.log(`[voice] REWRITE FLAGS:\n  - ${flags.join("\n  - ")}`);
 console.log(`[voice] backup: ${path.relative(ROOT, backup)}`);

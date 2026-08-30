@@ -245,6 +245,17 @@ Stepper thêm "Research" stage (giữa Ý tưởng và Story).
 
 ## 4. PROGRESS LOG
 
+- **2026-08-30 23:59 — P1 SHIPPED (beat CRUD + partial generate + direction
+  pre-voice)**: script-beat.mjs (5 ops) + /api/project/script-beat +
+  BeatEditor CRUD UI (↑↓✕ + add-row, script blur-save, direction pre-voice).
+  Partial generate: scaffold --only changed regen TTS chỉ beats stale; kept
+  segments giữ qc/takes; stale-detector trong studio (segment.transcript =
+  as-voiced vs beat.transcript = should-say) → "⚡ Generate nhanh (N/M)".
+  E2E: 1/3 billed, stale reset. Direction truth: beat.direction →
+  segment.providerText → projection. Cold-diff review: 4 MAJOR fixed (empty
+  --text parse, audio-regen segment sync, videoDoc merge per-id, TOCTOU
+  mtime lock) + scaffold giờ viết cả edit/current.json (lockstep — bug cũ
+  gây stale reads). 194/194 vitest, design/ui-audit 0.
 - **2026-08-30 21:30 — RESEARCH PIPELINE SHIPPED (4161a3b..4d73806)**:
   `research_topic` tool hoạt động E2E với Tavily + DeepSeek API thật. Flow:
   PLAN (DeepSeek chat decomposes thành 3-5 sub-questions) → SEARCH (Tavily
