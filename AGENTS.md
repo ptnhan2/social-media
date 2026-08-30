@@ -119,6 +119,38 @@ cd ..
 python tools/project/project_store.py resume --project projects/isaacverse-final
 ```
 
+## Server Runbook (chạy đúng từ LẦN ĐẦU — bài học xương máu các session trước)
+
+> Lịch sử lỗi lặp: kết luận "chết" trước khi boot xong (langgraph cần ~80s),
+> kill nhầm port, tin memory sai "PYTHONUTF8=1 crash" (logging errors là
+> noise, không fatal), retry thiếu kiên nhẫn tạo process zombie.
+> **Quy tắc vàng: verify bằng HTTP + đợi đủ deadline + không bao giờ đoán.**
+
+### Composer UI (:5174)
+- Start qua background process tool (persistent): `npm --prefix remotion-composer/composer-app run dev`
+- Boot 5–30s (tới 120s khi máy load cao). Cold-compile trang đầu sau restart có thể 50s+ — BÌNH THƯỜNG.
+- Verify: `Invoke-WebRequest http://localhost:5174/` → 200. KHÔNG kết luận chết trước 120s.
+
+### LangGraph agent (:2025)
+- Start qua background process tool (persistent): `harness\.venv\Scripts\python.exe -m langgraph_cli dev --port 2025 --host 127.0.0.1`
+- **Boot ~80 GIÂY** (graph import ~29s + startup ~40s, lâu hơn khi máy load) — đây là bình thường, không phải treo.
+- Verify: `Invoke-WebRequest http://localhost:2025/ok` → 200 `{"ok":true}`. Poll mỗi 10s, deadline 180s.
+- **KHÔNG cần PYTHONUTF8=1** — các `UnicodeEncodeError` (emoji →) trong log là NOISE, logging tự catch, server vẫn sống.
+- Nếu pid chết trong ~30s đầu (start lần 1 đôi khi die không rõ lý do): start lại CÙNG command MỘT lần — thường sống ở lần 2. Chỉ investigate sâu nếu chết 2 lần liền.
+
+### Khi phải dọn process (kill)
+1. Tìm đúng port: `Get-NetTCPConnection -LocalPort <port> -State Listen` → OwningProcess
+2. Kill CẢ CÂY: `taskkill /F /T /PID <pid>` — langgraph spawn multiprocessing child giữ port sau khi parent chết (kill parent không đủ)
+3. Xác nhận port freed (`Get-NetTCPConnection -LocalPort <port>`) rồi mới start lại
+4. TUYỆT ĐỐI không kill theo port đoán — kiểm tra process name/command line trước khi bấm
+
+### Chẩn đoán "server chậm/chết" — thứ tự kiểm tra
+1. CPU toàn máy 100%? (game client/Edge/...) → mọi thứ chậm 10–50×; ĐỢI thêm, đừng kết luận chết
+2. Port listening ≠ sống (zombie socket tồn tại) → verify HTTP luôn
+3. `Get-CimInstance Win32_Process -Filter "Name like 'python%'"` — process thật còn tồn tại không?
+4. Background tool báo "identity could not be verified" là warning thẩm mỹ — check port/HTTP thực tế
+5. Đã từng kết luận chết + start fallback Start-Process? → DỌN ZOMBIE TRƯỚC (mục trên) rồi mới start lại qua background tool — hai process cùng port là nguồn rắc rối lớn nhất
+
 ## Project Structure
 
 ```text
