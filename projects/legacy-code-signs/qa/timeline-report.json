@@ -1,0 +1,56 @@
+{
+  "ok": false,
+  "projectId": "legacy-code-signs",
+  "mode": "sync",
+  "generatedAt": "2026-08-30T19:04:17.157Z",
+  "styleVersion": 74,
+  "checks": [
+    {
+      "id": "schema",
+      "label": "Edit-doc schema",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "timeline",
+      "label": "Timeline semantics (contiguity, cues, params)",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "assets",
+      "label": "Assets exist on disk",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "id": "generate",
+      "label": "Editor doc generated (sync)",
+      "pass": true,
+      "detail": [
+        "refreshed=? keptUser=? added=? dropped=?"
+      ]
+    },
+    {
+      "id": "voice",
+      "label": "Voice clips have src + QC pass",
+      "pass": false,
+      "detail": [
+        "QC fail: clip:voice:legacy-code-signs:voice:legacy-code-signs-beat-03"
+      ]
+    },
+    {
+      "id": "composition",
+      "label": "Composition registered (auto)",
+      "pass": true,
+      "detail": [
+        "legacy-code-signs-30s + legacy-code-signs-30s-editor via projects-manifest.json"
+      ]
+    }
+  ],
+  "warnings": [
+    "voice issues: 0 no-src, 1 QC-fail"
+  ],
+  "blocking": [],
+  "stats": {}
+}

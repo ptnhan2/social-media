@@ -1,0 +1,4732 @@
+{
+  "id": "editor:legacy-code-signs",
+  "projectId": "legacy-code-signs",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationSec": 36.81,
+  "tracks": [
+    {
+      "id": "video-main",
+      "kind": "video",
+      "name": "Main track",
+      "order": 0,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "semantic-beats"
+      },
+      "accepts": [
+        "image",
+        "video"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "clip:beat:legacy-code-signs-beat-01",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "hook — fresh repo, wrong feel",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Your repo is two weeks old. So why does it already feel like legacy?",
+            "treatmentId": "chapter-card"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:legacy-code-signs-beat-02",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "reframe — legacy equals mismatch",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+            "treatmentId": "semantic-diagram"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:legacy-code-signs-beat-03",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "checklist — the three signals",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+            "treatmentId": "process-timeline"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:beat:legacy-code-signs-beat-04",
+          "kind": "beat",
+          "trackId": "video-main",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "twist — the risk is your senior",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04"
+          },
+          "color": "cyan",
+          "metadata": {
+            "transcript": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+            "treatmentId": "candidate-comparison"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-1",
+      "kind": "overlay",
+      "name": "Overlay 1",
+      "order": 4,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-01:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01",
+            "elementId": "legacy-code-signs-beat-01:bg"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-01:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(ellipse at 50% 42%, #16162e 0%, #0a0a18 55%, #050508 100%)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-02:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:bg"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "#050508",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:bg"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "#050508",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:bg",
+          "kind": "element",
+          "trackId": "visual-1",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "bg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:bg"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:bg",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "#050508",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-2",
+      "kind": "overlay",
+      "name": "Overlay 2",
+      "order": 5,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-01:bg-glow",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "bg-glow",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01",
+            "elementId": "legacy-code-signs-beat-01:bg-glow"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-01:bg-glow",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(circle at 50% 50%, #ff6b3518, transparent 55%)",
+            "animIn": "fade",
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-02:bg-glow",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "bg-glow",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:bg-glow"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:bg-glow",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(circle at 50% 46%, #ff6b3512, transparent 42%)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:bg-glow",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "bg-glow",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:bg-glow"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:bg-glow",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 0,
+            "opacity": 1,
+            "background": "radial-gradient(circle at 50% 60%, #ff6b3514, transparent 48%)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-0-card",
+          "kind": "element",
+          "trackId": "visual-2",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "candidate-0-card",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-0-card"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-0-card",
+            "type": "shape",
+            "x": 0.07,
+            "y": 0.28,
+            "w": 0.42531250000000004,
+            "h": 0.6,
+            "z": 5,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#61d7e855",
+            "borderRadius": 10,
+            "background": "rgba(7,9,13,.76)",
+            "boxShadow": "none",
+            "scale": 0.96,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 542.7,
+            "groupOriginY": 626.4000000000001,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-3",
+      "kind": "overlay",
+      "name": "Overlay 3",
+      "order": 6,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-01:accent-line",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01",
+            "elementId": "legacy-code-signs-beat-01:accent-line"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-01",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-01:accent-line",
+            "type": "shape",
+            "x": 0.4505208333333333,
+            "y": 0.5662037037037037,
+            "w": 0.09895833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "linear-gradient(90deg, transparent, #ff6b35, #ffd166, #ff6b35, transparent)",
+            "boxShadow": "0 0 24px #ff6b3580, 0 2px 8px rgba(0,0,0,0.5)",
+            "borderRadius": 4,
+            "wipeX": {
+              "startSec": 0.15,
+              "durationSec": 1.35
+            },
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "width": "treatments.chapter-card.accentLine.maxWidth",
+              "height": "treatments.chapter-card.accentLine.height"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-02:center-label",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "center-label",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:center-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:center-label",
+            "type": "shape",
+            "x": 0.4348958333333333,
+            "y": 0.38425925925925924,
+            "w": 0.13020833333333334,
+            "h": 0.23148148148148148,
+            "z": 5,
+            "opacity": 1,
+            "borderRadius": 125,
+            "borderWidth": 2,
+            "borderColor": "#00d4ff88",
+            "background": "linear-gradient(135deg, rgba(0,212,255,0.10), rgba(255,107,53,0.08))",
+            "boxShadow": "0 0 38px #00d4ff28",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:progress-track",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "progress-track",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:progress-track"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:progress-track",
+            "type": "shape",
+            "x": 0.09,
+            "y": 0.43222222222222223,
+            "w": 0.82,
+            "h": 0.05555555555555555,
+            "z": 5,
+            "opacity": 1,
+            "elementType": "edge",
+            "viewBoxW": 100,
+            "viewBoxH": 12,
+            "pathD": "M 0 6 Q 50 -6 100 6",
+            "x1": 0,
+            "y1": 6,
+            "x2": 100,
+            "y2": 6,
+            "strokeMode": "solid",
+            "strokeColor": "rgba(244,232,207,.2)",
+            "strokeWidth": 0.7,
+            "revealDurationSec": 0.001,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-0-img-bg",
+          "kind": "element",
+          "trackId": "visual-3",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "candidate-0-img-bg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-0-img-bg"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-0-img-bg",
+            "type": "shape",
+            "x": 0.07104166666666667,
+            "y": 0.2818518518518519,
+            "w": 0.42322916666666666,
+            "h": 0.40800000000000003,
+            "z": 6,
+            "opacity": 1,
+            "background": "#11151b",
+            "scale": 0.96,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 542.7,
+            "groupOriginY": 626.4000000000001,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-4",
+      "kind": "overlay",
+      "name": "Overlay 4",
+      "order": 7,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-01:subtitle",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "three signs you're writing leg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01",
+            "elementId": "legacy-code-signs-beat-01:subtitle"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-01:subtitle",
+            "type": "text",
+            "x": 0.07005208333333333,
+            "y": 0.5912037037037037,
+            "w": 0.8598958333333333,
+            "h": 0.03148148148148148,
+            "text": "three signs you're writing legacy right now",
+            "z": 12,
+            "opacity": 1,
+            "fontSize": 24,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4,
+            "letterSpacing": 1.92,
+            "textTransform": "uppercase",
+            "textAlign": "center",
+            "color": "#00d4ff",
+            "textShadow": "0 2px 10px rgba(0,0,0,0.8)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.subtitle.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-02:center-label-text",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "mismatch",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:center-label-text"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:center-label-text",
+            "type": "text",
+            "x": 0.4348958333333333,
+            "y": 0.38425925925925924,
+            "w": 0.13020833333333334,
+            "h": 0.23148148148148148,
+            "text": "mismatch",
+            "z": 6,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.6,
+            "color": "#00d4ff",
+            "textAlign": "center",
+            "startSec": 0,
+            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.centerLabel.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-0-dot",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "step-0-dot",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-0-dot"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-0-dot",
+            "type": "shape",
+            "x": 0.08270833333333333,
+            "y": 0.39798370370370373,
+            "w": 0.014583333333333334,
+            "h": 0.025925925925925925,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 14,
+            "background": "radial-gradient(circle at 35% 30%, #ff6b35, #ff6b3599)",
+            "boxShadow": "0 0 24px #ff6b35, 0 0 48px #ff6b3566",
+            "borderWidth": 3,
+            "borderColor": "#050508",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-0-badge",
+          "kind": "element",
+          "trackId": "visual-4",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "alternative",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-0-badge"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-0-badge",
+            "type": "text",
+            "x": 0.07729166666666668,
+            "y": 0.292962962962963,
+            "w": 0.06770833333333333,
+            "h": 0.02611111111111111,
+            "text": "alternative",
+            "z": 7,
+            "opacity": 1,
+            "fontSize": 13,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.56,
+            "color": "#ffffff",
+            "bgColor": "rgba(0,0,0,.68)",
+            "borderRadius": 4,
+            "textAlign": "left",
+            "startSec": 0,
+            "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-5",
+      "kind": "overlay",
+      "name": "Overlay 5",
+      "order": 8,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-01:title",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "Brand-New Code. Already\nLegacy",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01",
+            "elementId": "legacy-code-signs-beat-01:title"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-01",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-01:title",
+            "type": "text",
+            "x": 0.14895833333333333,
+            "y": 0.3773148148148148,
+            "w": 0.7020833333333333,
+            "h": 0.1648148148148148,
+            "text": "Brand-New Code. Already\nLegacy.",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 82,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "textTransform": "uppercase",
+            "lineHeight": 1.08,
+            "letterSpacing": 3.2800000000000002,
+            "textAlign": "center",
+            "textGradient": {
+              "start": "#ff6b35",
+              "end": "#ffd166",
+              "stop": 45
+            },
+            "strokeWidth": 1.5,
+            "strokeColor": "rgba(0,0,0,0.25)",
+            "filter": "drop-shadow(0 4px 14px rgba(0,0,0,0.7)) drop-shadow(0 0 30px #ff6b3550)",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.chapter-card.title.fontSizeLong",
+              "fontWeight": "treatments.chapter-card.title.fontWeight",
+              "textGradientStart": "colors.gradientStart",
+              "textGradientEnd": "colors.gradientEnd"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-02:footer",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "follow the thread",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:footer"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:footer",
+            "type": "text",
+            "x": 0.703125,
+            "y": 0.9427777777777778,
+            "w": 0.2604166666666667,
+            "h": 0.015555555555555557,
+            "text": "follow the thread",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontFamily": "body",
+            "lineHeight": 1.2,
+            "textTransform": "uppercase",
+            "letterSpacing": 1.12,
+            "textAlign": "right",
+            "color": "rgba(244,232,207,0.45)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-0-box",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "step-0-box",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-0-box"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-0-box",
+            "type": "shape",
+            "x": 0.04312499999999999,
+            "y": 0.4405762962962963,
+            "w": 0.09375,
+            "h": 0.08144,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ff6b35",
+            "borderRadius": 8,
+            "background": "#ff6b3518",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-0-label",
+          "kind": "element",
+          "trackId": "visual-5",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "The intern",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-0-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-0-label",
+            "type": "text",
+            "x": 0.079375,
+            "y": 0.7028148148148149,
+            "w": 0.4065625,
+            "h": 0.023703333333333333,
+            "text": "The intern",
+            "z": 7,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "textAlign": "left",
+            "color": "#61d7e8",
+            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
+            "scale": 0.96,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 542.7,
+            "groupOriginY": 626.4000000000001,
+            "styleSource": {
+              "fontSize": "treatments.candidate-comparison.candidate.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-6",
+      "kind": "overlay",
+      "name": "Overlay 6",
+      "order": 9,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-0-box",
+          "kind": "element",
+          "trackId": "visual-6",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "node-0-box",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-0-box"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-0-box",
+            "type": "shape",
+            "x": 0.08968749999999999,
+            "y": 0.2395601851851852,
+            "w": 0.140625,
+            "h": 0.07717592592592593,
+            "z": 10,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ff6b35",
+            "background": "rgba(7,9,13,0.84)",
+            "borderRadius": 10,
+            "boxShadow": "0 0 18px #ff6b3538, inset 0 0 18px #ff6b3512",
+            "styleSource": {
+              "borderWidth": "treatments.semantic-diagram.node.borderWidth",
+              "borderRadius": "treatments.semantic-diagram.node.borderRadius",
+              "background": "treatments.semantic-diagram.node.background",
+              "boxShadow": "treatments.semantic-diagram.node.glow"
+            },
+            "groupOriginX": 307.2,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:footer",
+          "kind": "element",
+          "trackId": "visual-6",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "step 1 / 3",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:footer"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:footer",
+            "type": "text",
+            "x": 0.7,
+            "y": 0.9400000000000001,
+            "w": 0.2604166666666667,
+            "h": 0.015555555555555557,
+            "text": "step 1 / 3",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontFamily": "body",
+            "lineHeight": 1.2,
+            "textTransform": "uppercase",
+            "letterSpacing": 1.12,
+            "textAlign": "right",
+            "color": "rgba(244,232,207,.5)",
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-0-detail",
+          "kind": "element",
+          "trackId": "visual-6",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "blamed by default",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-0-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-0-detail",
+            "type": "text",
+            "x": 0.079375,
+            "y": 0.7320737037037038,
+            "w": 0.4065625,
+            "h": 0.01625,
+            "text": "blamed by default",
+            "z": 7,
+            "opacity": 0.7,
+            "fontSize": 13,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.35,
+            "textAlign": "left",
+            "scale": 0.96,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 542.7,
+            "groupOriginY": 626.4000000000001,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-7",
+      "kind": "overlay",
+      "name": "Overlay 7",
+      "order": 10,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-1-box",
+          "kind": "element",
+          "trackId": "visual-7",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "node-1-box",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-1-box"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-1-box",
+            "type": "shape",
+            "x": 0.7696875,
+            "y": 0.2262268518518519,
+            "w": 0.140625,
+            "h": 0.10384259259259258,
+            "z": 10,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ff6b35",
+            "background": "rgba(7,9,13,0.84)",
+            "borderRadius": 10,
+            "boxShadow": "0 0 18px #ff6b3538, inset 0 0 18px #ff6b3512",
+            "styleSource": {
+              "borderWidth": "treatments.semantic-diagram.node.borderWidth",
+              "borderRadius": "treatments.semantic-diagram.node.borderRadius",
+              "background": "treatments.semantic-diagram.node.background",
+              "boxShadow": "treatments.semantic-diagram.node.glow"
+            },
+            "groupOriginX": 1612.8,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-0-label",
+          "kind": "element",
+          "trackId": "visual-7",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "Copy-paste #3",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-0-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-0-label",
+            "type": "text",
+            "x": 0.05145833333333332,
+            "y": 0.45353925925925925,
+            "w": 0.07708333333333334,
+            "h": 0.02106962962962963,
+            "text": "Copy-paste #3",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
+            "textTransform": "uppercase",
+            "letterSpacing": 0.64,
+            "textAlign": "center",
+            "color": "#ff6b35",
+            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.process-timeline.step.fontSize",
+              "fontWeight": "treatments.process-timeline.step.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:label",
+          "kind": "element",
+          "trackId": "visual-7",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "compare",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:label",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.05,
+            "w": 0.3125,
+            "h": 0.02238648148148148,
+            "text": "compare",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 17,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
+            "textTransform": "uppercase",
+            "letterSpacing": 3.06,
+            "textAlign": "left",
+            "color": "#ff6b35",
+            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.candidate-comparison.kicker.fontSize",
+              "fontWeight": "treatments.candidate-comparison.kicker.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-8",
+      "kind": "overlay",
+      "name": "Overlay 8",
+      "order": 11,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-2-box",
+          "kind": "element",
+          "trackId": "visual-8",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "node-2-box",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-2-box"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-2-box",
+            "type": "shape",
+            "x": 0.4296875,
+            "y": 0.7862268518518517,
+            "w": 0.140625,
+            "h": 0.10384259259259258,
+            "z": 10,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ff6b35",
+            "background": "rgba(7,9,13,0.84)",
+            "borderRadius": 10,
+            "boxShadow": "0 0 18px #ff6b3538, inset 0 0 18px #ff6b3512",
+            "styleSource": {
+              "borderWidth": "treatments.semantic-diagram.node.borderWidth",
+              "borderRadius": "treatments.semantic-diagram.node.borderRadius",
+              "background": "treatments.semantic-diagram.node.background",
+              "boxShadow": "treatments.semantic-diagram.node.glow"
+            },
+            "groupOriginX": 960,
+            "groupOriginY": 907.1999999999999,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-0-detail",
+          "kind": "element",
+          "trackId": "visual-8",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "same logic, third file",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-0-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-0-detail",
+            "type": "text",
+            "x": 0.05145833333333332,
+            "y": 0.4801644444444444,
+            "w": 0.07708333333333334,
+            "h": 0.02888888888888889,
+            "text": "same logic, third file",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "fontWeight": 900,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:title",
+          "kind": "element",
+          "trackId": "visual-8",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "Who writes your legacy code?",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:title"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:title",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.08164574074074074,
+            "w": 0.625,
+            "h": 0.05794148148148148,
+            "text": "Who writes your legacy code?",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 44,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "lineHeight": 1.4222,
+            "color": "#ffffff",
+            "textAlign": "left",
+            "textGradient": {
+              "start": "#ff6b35",
+              "end": "#ffd166"
+            },
+            "filter": "drop-shadow(0 3px 10px rgba(0,0,0,0.7))",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.candidate-comparison.title.fontSize",
+              "fontWeight": "treatments.candidate-comparison.title.fontWeight",
+              "textGradientStart": "colors.gradientStart",
+              "textGradientEnd": "colors.gradientEnd"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-9",
+      "kind": "overlay",
+      "name": "Overlay 9",
+      "order": 12,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-0-label",
+          "kind": "element",
+          "trackId": "visual-9",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "Team moves on",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-0-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-0-label",
+            "type": "text",
+            "x": 0.10010416666666666,
+            "y": 0.254375,
+            "w": 0.11979166666666667,
+            "h": 0.026666666666666665,
+            "text": "Team moves on",
+            "z": 11,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "lineHeight": 1.44,
+            "textAlign": "left",
+            "color": "#ff6b35",
+            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.node.fontSize",
+              "fontWeight": "treatments.semantic-diagram.node.fontWeight"
+            },
+            "groupOriginX": 307.2,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:label",
+          "kind": "element",
+          "trackId": "visual-9",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "checklist — the three signals",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:label",
+            "type": "text",
+            "x": 0.03958333333333333,
+            "y": 0.05740740740740741,
+            "w": 0.3125,
+            "h": 0.02238648148148148,
+            "text": "checklist — the three signals",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 17,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
+            "textTransform": "uppercase",
+            "letterSpacing": 3.06,
+            "textAlign": "left",
+            "color": "#ff6b35",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
+            "styleSource": {
+              "fontSize": "treatments.process-timeline.kicker.fontSize",
+              "fontWeight": "treatments.process-timeline.kicker.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:criteria",
+          "kind": "element",
+          "trackId": "visual-9",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "not who you think",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:criteria"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:criteria",
+            "type": "text",
+            "x": 0.036458333333333336,
+            "y": 0.14699462962962961,
+            "w": 0.625,
+            "h": 0.023148148148148147,
+            "text": "not who you think",
+            "z": 10,
+            "opacity": 0.68,
+            "fontSize": 18,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "fontWeight": 900,
+            "textAlign": "left",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.candidate-comparison.criteria.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-10",
+      "kind": "overlay",
+      "name": "Overlay 10",
+      "order": 13,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-0-detail",
+          "kind": "element",
+          "trackId": "visual-10",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "processes change",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-0-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-0-detail",
+            "type": "text",
+            "x": 0.10010416666666666,
+            "y": 0.2865972222222223,
+            "w": 0.11979166666666667,
+            "h": 0.01625,
+            "text": "processes change",
+            "z": 11,
+            "opacity": 0.78,
+            "fontSize": 13,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.35,
+            "fontWeight": 900,
+            "textAlign": "left",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.node.detailFontSize"
+            },
+            "groupOriginX": 307.2,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:title",
+          "kind": "element",
+          "trackId": "visual-10",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "The 3 early signals",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:title"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:title",
+            "type": "text",
+            "x": 0.03958333333333333,
+            "y": 0.090905,
+            "w": 0.625,
+            "h": 0.06320888888888888,
+            "text": "The 3 early signals",
+            "z": 10,
+            "opacity": 1,
+            "fontSize": 48,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "lineHeight": 1.4222,
+            "color": "#ffffff",
+            "textAlign": "left",
+            "textGradient": {
+              "start": "#ff6b35",
+              "end": "#ffd166"
+            },
+            "filter": "drop-shadow(0 3px 10px rgba(0,0,0,0.7)) drop-shadow(0 0 16px #ff6b3540)",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.45,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.process-timeline.title.fontSize",
+              "fontWeight": "treatments.process-timeline.title.fontWeight",
+              "textGradientStart": "colors.gradientStart",
+              "textGradientEnd": "colors.gradientEnd"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-1-card",
+          "kind": "element",
+          "trackId": "visual-10",
+          "range": {
+            "startSec": 26.599999999999998,
+            "endSec": 36.81
+          },
+          "label": "candidate-1-card",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-1-card"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-1-card",
+            "type": "shape",
+            "x": 0.5046875,
+            "y": 0.28,
+            "w": 0.42531250000000004,
+            "h": 0.6,
+            "z": 6,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#ff6b35",
+            "borderRadius": 10,
+            "background": "#ff6b3518",
+            "boxShadow": "0 0 24px #ff6b3544",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0.22,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 1377.3,
+            "groupOriginY": 626.4000000000001,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-11",
+      "kind": "overlay",
+      "name": "Overlay 11",
+      "order": 14,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-0-dot",
+          "kind": "element",
+          "trackId": "visual-11",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "node-0-dot",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-0-dot"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-0-dot",
+            "type": "shape",
+            "x": 0.15791666666666665,
+            "y": 0.31303240740740745,
+            "w": 0.004166666666666667,
+            "h": 0.007407407407407408,
+            "z": 11,
+            "opacity": 1,
+            "borderRadius": 4,
+            "background": "linear-gradient(135deg, #00d4ff, #ff6b35)",
+            "boxShadow": "0 0 12px #00d4ff",
+            "groupOriginX": 307.2,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-1-dot",
+          "kind": "element",
+          "trackId": "visual-11",
+          "range": {
+            "startSec": 16.13,
+            "endSec": 26.38
+          },
+          "label": "step-1-dot",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-1-dot"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-1-dot",
+            "type": "shape",
+            "x": 0.49479166666666663,
+            "y": 0.40168740740740744,
+            "w": 0.010416666666666666,
+            "h": 0.018518518518518517,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 10,
+            "background": "radial-gradient(circle at 35% 30%, #61d7e8, #61d7e899)",
+            "boxShadow": "0 0 12px #61d7e888",
+            "borderWidth": 3,
+            "borderColor": "#050508",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.18,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-1-img-bg",
+          "kind": "element",
+          "trackId": "visual-11",
+          "range": {
+            "startSec": 26.599999999999998,
+            "endSec": 36.81
+          },
+          "label": "candidate-1-img-bg",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-1-img-bg"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-1-img-bg",
+            "type": "shape",
+            "x": 0.5057291666666667,
+            "y": 0.2818518518518519,
+            "w": 0.42322916666666666,
+            "h": 0.40800000000000003,
+            "z": 7,
+            "opacity": 1,
+            "background": "#11151b",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0.22,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 1377.3,
+            "groupOriginY": 626.4000000000001,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-12",
+      "kind": "overlay",
+      "name": "Overlay 12",
+      "order": 15,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-1-label",
+          "kind": "element",
+          "trackId": "visual-12",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "Ecosystem moves on",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-1-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-1-label",
+            "type": "text",
+            "x": 0.7801041666666666,
+            "y": 0.2410416666666667,
+            "w": 0.11979166666666667,
+            "h": 0.05333333333333333,
+            "text": "Ecosystem moves on",
+            "z": 11,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "lineHeight": 1.44,
+            "textAlign": "left",
+            "color": "#ff6b35",
+            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.node.fontSize",
+              "fontWeight": "treatments.semantic-diagram.node.fontWeight"
+            },
+            "groupOriginX": 1612.8,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-1-box",
+          "kind": "element",
+          "trackId": "visual-12",
+          "range": {
+            "startSec": 16.13,
+            "endSec": 26.38
+          },
+          "label": "step-1-box",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-1-box"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-1-box",
+            "type": "shape",
+            "x": 0.45312499999999994,
+            "y": 0.4368725925925926,
+            "w": 0.09375,
+            "h": 0.08144,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#61d7e888",
+            "borderRadius": 8,
+            "background": "rgba(7,9,13,.76)",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.18,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-1-badge",
+          "kind": "element",
+          "trackId": "visual-12",
+          "range": {
+            "startSec": 26.599999999999998,
+            "endSec": 36.81
+          },
+          "label": "selected",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-1-badge"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-1-badge",
+            "type": "text",
+            "x": 0.5119791666666667,
+            "y": 0.292962962962963,
+            "w": 0.06770833333333333,
+            "h": 0.02611111111111111,
+            "text": "selected",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 13,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 1.56,
+            "color": "#ff6b35",
+            "bgColor": "rgba(0,0,0,.68)",
+            "borderRadius": 4,
+            "textAlign": "left",
+            "startSec": 0.22,
+            "textShadow": "0 1px 4px rgba(0,0,0,0.8)",
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-13",
+      "kind": "overlay",
+      "name": "Overlay 13",
+      "order": 16,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-1-detail",
+          "kind": "element",
+          "trackId": "visual-13",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "versions, norms",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-1-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-1-detail",
+            "type": "text",
+            "x": 0.7801041666666666,
+            "y": 0.29993055555555564,
+            "w": 0.11979166666666667,
+            "h": 0.01625,
+            "text": "versions, norms",
+            "z": 11,
+            "opacity": 0.78,
+            "fontSize": 13,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.35,
+            "fontWeight": 900,
+            "textAlign": "left",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.node.detailFontSize"
+            },
+            "groupOriginX": 1612.8,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-1-label",
+          "kind": "element",
+          "trackId": "visual-13",
+          "range": {
+            "startSec": 16.13,
+            "endSec": 26.38
+          },
+          "label": "'Just in case' params",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-1-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-1-label",
+            "type": "text",
+            "x": 0.46145833333333325,
+            "y": 0.44983555555555554,
+            "w": 0.07708333333333334,
+            "h": 0.02106962962962963,
+            "text": "'Just in case' params",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
+            "textTransform": "uppercase",
+            "letterSpacing": 0.64,
+            "textAlign": "center",
+            "color": "#61d7e8",
+            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.18,
+            "styleSource": {
+              "fontSize": "treatments.process-timeline.step.fontSize",
+              "fontWeight": "treatments.process-timeline.step.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-1-label",
+          "kind": "element",
+          "trackId": "visual-13",
+          "range": {
+            "startSec": 26.599999999999998,
+            "endSec": 36.81
+          },
+          "label": "Your senior dev",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-1-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-1-label",
+            "type": "text",
+            "x": 0.5140625,
+            "y": 0.7028148148148149,
+            "w": 0.4065625,
+            "h": 0.023703333333333333,
+            "text": "Your senior dev",
+            "z": 8,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "textAlign": "left",
+            "color": "#ff6b35",
+            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0.22,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 1377.3,
+            "groupOriginY": 626.4000000000001,
+            "styleSource": {
+              "fontSize": "treatments.candidate-comparison.candidate.fontSize"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-14",
+      "kind": "overlay",
+      "name": "Overlay 14",
+      "order": 17,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-1-dot",
+          "kind": "element",
+          "trackId": "visual-14",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "node-1-dot",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-1-dot"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-1-dot",
+            "type": "shape",
+            "x": 0.8379166666666666,
+            "y": 0.32636574074074076,
+            "w": 0.004166666666666667,
+            "h": 0.007407407407407408,
+            "z": 11,
+            "opacity": 1,
+            "borderRadius": 4,
+            "background": "linear-gradient(135deg, #00d4ff, #ff6b35)",
+            "boxShadow": "0 0 12px #00d4ff",
+            "groupOriginX": 1612.8,
+            "groupOriginY": 302.40000000000003,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-1-detail",
+          "kind": "element",
+          "trackId": "visual-14",
+          "range": {
+            "startSec": 16.13,
+            "endSec": 26.38
+          },
+          "label": "speculative options nobody cal",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-1-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-1-detail",
+            "type": "text",
+            "x": 0.46145833333333325,
+            "y": 0.4764607407407408,
+            "w": 0.07708333333333334,
+            "h": 0.02888888888888889,
+            "text": "speculative options nobody calls",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "fontWeight": 900,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.18,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-04:candidate-1-detail",
+          "kind": "element",
+          "trackId": "visual-14",
+          "range": {
+            "startSec": 26.599999999999998,
+            "endSec": 36.81
+          },
+          "label": "speculative patterns, skipped ",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04",
+            "elementId": "legacy-code-signs-beat-04:candidate-1-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-04",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-04:candidate-1-detail",
+            "type": "text",
+            "x": 0.5140625,
+            "y": 0.7320737037037038,
+            "w": 0.4065625,
+            "h": 0.01625,
+            "text": "speculative patterns, skipped tests",
+            "z": 8,
+            "opacity": 0.7,
+            "fontSize": 13,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.35,
+            "textAlign": "left",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 24,
+            "animDurationSec": 0.6,
+            "startSec": 0.22,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 160,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "groupOriginX": 1377.3,
+            "groupOriginY": 626.4000000000001,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-15",
+      "kind": "overlay",
+      "name": "Overlay 15",
+      "order": 18,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-2-label",
+          "kind": "element",
+          "trackId": "visual-15",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "Business moves on",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-2-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-2-label",
+            "type": "text",
+            "x": 0.4401041666666667,
+            "y": 0.8010416666666665,
+            "w": 0.11979166666666667,
+            "h": 0.05333333333333333,
+            "text": "Business moves on",
+            "z": 11,
+            "opacity": 1,
+            "fontSize": 20,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "textTransform": "uppercase",
+            "letterSpacing": 0.8,
+            "lineHeight": 1.44,
+            "textAlign": "left",
+            "color": "#ff6b35",
+            "textShadow": "0 2px 6px rgba(0,0,0,0.7)",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.node.fontSize",
+              "fontWeight": "treatments.semantic-diagram.node.fontWeight"
+            },
+            "groupOriginX": 960,
+            "groupOriginY": 907.1999999999999,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:progress-fill",
+          "kind": "element",
+          "trackId": "visual-15",
+          "range": {
+            "startSec": 16.3,
+            "endSec": 26.38
+          },
+          "label": "progress-fill",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:progress-fill"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:progress-fill",
+            "type": "shape",
+            "x": 0.09,
+            "y": 0.43222222222222223,
+            "w": 0.82,
+            "h": 0.05555555555555555,
+            "z": 6,
+            "opacity": 1,
+            "elementType": "edge",
+            "viewBoxW": 100,
+            "viewBoxH": 12,
+            "pathD": "M 0 6 Q 50 -6 100 6",
+            "x1": 0,
+            "y1": 6,
+            "x2": 100,
+            "y2": 6,
+            "strokeMode": "gradient",
+            "gradientStops": [
+              "#ff6b35",
+              "#ffd166"
+            ],
+            "strokeWidth": 1.2,
+            "linecap": "round",
+            "revealDurationSec": 0.85,
+            "revealTo": 0.3333333333333333,
+            "filter": "drop-shadow(0 0 3px #ff6b35)",
+            "startSec": 0.35,
+            "styleSource": {
+              "gradientStops": "treatments.process-timeline.progress"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-16",
+      "kind": "overlay",
+      "name": "Overlay 16",
+      "order": 19,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-2-detail",
+          "kind": "element",
+          "trackId": "visual-16",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "priorities shift",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-2-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-2-detail",
+            "type": "text",
+            "x": 0.4401041666666667,
+            "y": 0.8599305555555554,
+            "w": 0.11979166666666667,
+            "h": 0.01625,
+            "text": "priorities shift",
+            "z": 11,
+            "opacity": 0.78,
+            "fontSize": 13,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.35,
+            "fontWeight": 900,
+            "textAlign": "left",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.node.detailFontSize"
+            },
+            "groupOriginX": 960,
+            "groupOriginY": 907.1999999999999,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-2-dot",
+          "kind": "element",
+          "trackId": "visual-16",
+          "range": {
+            "startSec": 16.31,
+            "endSec": 26.38
+          },
+          "label": "step-2-dot",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-2-dot"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-2-dot",
+            "type": "shape",
+            "x": 0.9047916666666665,
+            "y": 0.40168740740740744,
+            "w": 0.010416666666666666,
+            "h": 0.018518518518518517,
+            "z": 8,
+            "opacity": 1,
+            "borderRadius": 10,
+            "background": "radial-gradient(circle at 35% 30%, #61d7e8, #61d7e899)",
+            "boxShadow": "0 0 12px #61d7e888",
+            "borderWidth": 3,
+            "borderColor": "#050508",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.36,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-17",
+      "kind": "overlay",
+      "name": "Overlay 17",
+      "order": 20,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:node-2-dot",
+          "kind": "element",
+          "trackId": "visual-17",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "node-2-dot",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:node-2-dot"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:node-2-dot",
+            "type": "shape",
+            "x": 0.4979166666666667,
+            "y": 0.8863657407407406,
+            "w": 0.004166666666666667,
+            "h": 0.007407407407407408,
+            "z": 11,
+            "opacity": 1,
+            "borderRadius": 4,
+            "background": "linear-gradient(135deg, #00d4ff, #ff6b35)",
+            "boxShadow": "0 0 12px #00d4ff",
+            "groupOriginX": 960,
+            "groupOriginY": 907.1999999999999,
+            "animIn": "spring",
+            "animSpring": {
+              "damping": 2,
+              "stiffness": 140,
+              "mass": 0.8,
+              "durationSec": 0.75,
+              "from": 0.82
+            },
+            "pulse": {
+              "amp": 0.08,
+              "radPerFrame": 0.2
+            },
+            "animDurationSec": 0.75,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-2-box",
+          "kind": "element",
+          "trackId": "visual-17",
+          "range": {
+            "startSec": 16.31,
+            "endSec": 26.38
+          },
+          "label": "step-2-box",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-2-box"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-2-box",
+            "type": "shape",
+            "x": 0.8631249999999999,
+            "y": 0.4368725925925926,
+            "w": 0.09375,
+            "h": 0.08144,
+            "z": 8,
+            "opacity": 1,
+            "borderWidth": 2,
+            "borderColor": "#61d7e888",
+            "borderRadius": 8,
+            "background": "rgba(7,9,13,.76)",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.36,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-18",
+      "kind": "overlay",
+      "name": "Overlay 18",
+      "order": 21,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:accent-line",
+          "kind": "element",
+          "trackId": "visual-18",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "accent-line",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:accent-line"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:accent-line",
+            "type": "shape",
+            "x": 0.04479166666666667,
+            "y": 0.16703685185185185,
+            "w": 0.06770833333333333,
+            "h": 0.004629629629629629,
+            "z": 12,
+            "opacity": 1,
+            "background": "linear-gradient(90deg, #ff6b35, #ffd166)",
+            "borderRadius": 3,
+            "boxShadow": "0 0 16px #ff6b3580",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.55,
+            "startSec": 0,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "shape"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-2-label",
+          "kind": "element",
+          "trackId": "visual-18",
+          "range": {
+            "startSec": 16.31,
+            "endSec": 26.38
+          },
+          "label": "Zero tests",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-2-label"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-2-label",
+            "type": "text",
+            "x": 0.8714583333333332,
+            "y": 0.44983555555555554,
+            "w": 0.07708333333333334,
+            "h": 0.02106962962962963,
+            "text": "Zero tests",
+            "z": 9,
+            "opacity": 1,
+            "fontSize": 16,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
+            "textTransform": "uppercase",
+            "letterSpacing": 0.64,
+            "textAlign": "center",
+            "color": "#61d7e8",
+            "textShadow": "0 2px 8px rgba(0,0,0,0.8)",
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.36,
+            "styleSource": {
+              "fontSize": "treatments.process-timeline.step.fontSize",
+              "fontWeight": "treatments.process-timeline.step.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-19",
+      "kind": "overlay",
+      "name": "Overlay 19",
+      "order": 22,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:kicker",
+          "kind": "element",
+          "trackId": "visual-19",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "the reframe",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:kicker"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:kicker",
+            "type": "text",
+            "x": 0.04479166666666667,
+            "y": 0.05740740740740741,
+            "w": 0.4166666666666667,
+            "h": 0.023703333333333333,
+            "text": "the reframe",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 18,
+            "fontWeight": 900,
+            "fontFamily": "body",
+            "lineHeight": 1.4222,
+            "textTransform": "uppercase",
+            "letterSpacing": 3.2399999999999998,
+            "textAlign": "left",
+            "color": "#00d4ff",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.55,
+            "startSec": 0,
+            "textShadow": "0 2px 8px rgba(0,0,0,0.7)",
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.kicker.fontSize",
+              "fontWeight": "treatments.semantic-diagram.kicker.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:step-2-detail",
+          "kind": "element",
+          "trackId": "visual-19",
+          "range": {
+            "startSec": 16.31,
+            "endSec": 26.38
+          },
+          "label": "'tests later' means never",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:step-2-detail"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:step-2-detail",
+            "type": "text",
+            "x": 0.8714583333333332,
+            "y": 0.4764607407407408,
+            "w": 0.07708333333333334,
+            "h": 0.02888888888888889,
+            "text": "'tests later' means never",
+            "z": 9,
+            "opacity": 0.7,
+            "fontSize": 12,
+            "fontFamily": "body",
+            "color": "#ffffff",
+            "lineHeight": 1.3,
+            "textAlign": "center",
+            "fontWeight": 900,
+            "animIn": "spring-slide-up",
+            "animSlidePx": 28,
+            "animSpring": {
+              "damping": 18,
+              "stiffness": 150,
+              "mass": 1,
+              "durationSec": 0.6,
+              "from": 1
+            },
+            "animDurationSec": 0.6,
+            "startSec": 0.36,
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-20",
+      "kind": "overlay",
+      "name": "Overlay 20",
+      "order": 23,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:title",
+          "kind": "element",
+          "trackId": "visual-20",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "Legacy isn't age. It's mismatc",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:title"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "amber",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:title",
+            "type": "text",
+            "x": 0.04479166666666667,
+            "y": 0.09222185185185185,
+            "w": 0.625,
+            "h": 0.06000018518518519,
+            "text": "Legacy isn't age. It's mismatch.",
+            "z": 15,
+            "opacity": 1,
+            "fontSize": 46,
+            "fontWeight": 900,
+            "fontFamily": "display",
+            "lineHeight": 1.4087,
+            "color": "#ffffff",
+            "textAlign": "left",
+            "letterSpacing": -0.92,
+            "strokeWidth": 1,
+            "strokeColor": "rgba(0,0,0,0.2)",
+            "filter": "drop-shadow(0 3px 10px rgba(0,0,0,0.6)) drop-shadow(0 0 18px #ff6b3530)",
+            "animIn": "fade-slide-up",
+            "animSlidePx": 18,
+            "animEasing": "cubic-out",
+            "animDurationSec": 0.55,
+            "startSec": 0,
+            "styleSource": {
+              "fontSize": "treatments.semantic-diagram.title.fontSize",
+              "fontWeight": "treatments.semantic-diagram.title.fontWeight"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": true,
+            "elementType": "text"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "legacy-code-signs-beat-03:character-presence",
+          "kind": "element",
+          "trackId": "visual-20",
+          "range": {
+            "startSec": 16.65,
+            "endSec": 26.38
+          },
+          "label": "character-presence",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03",
+            "elementId": "legacy-code-signs-beat-03:character-presence"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-03",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-03:character-presence",
+            "type": "image",
+            "x": 0.7005729166666667,
+            "y": 0.64,
+            "w": 0.058854166666666666,
+            "h": 0.2,
+            "src": "isaacverse-final/character/poses/present.png",
+            "z": 30,
+            "opacity": 0.95,
+            "fit": "cover",
+            "animIn": "p-fade-scale",
+            "animDurationSec": 0.6,
+            "startSec": 0.7,
+            "filter": "drop-shadow(0 6px 22px rgba(0,0,0,0.6)) drop-shadow(0 0 26px #ff6b3533)",
+            "styleSource": {
+              "width": "treatments.process-timeline.characterPresence",
+              "opacity": "treatments.process-timeline.characterPresence"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-21",
+      "kind": "overlay",
+      "name": "Overlay 21",
+      "order": 24,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:edge-0",
+          "kind": "element",
+          "trackId": "visual-21",
+          "range": {
+            "startSec": 6.6,
+            "endSec": 15.95
+          },
+          "label": "edge-0",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:edge-0"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:edge-0",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 4,
+            "opacity": 1,
+            "elementType": "edge",
+            "x1": 16,
+            "y1": 28,
+            "x2": 84,
+            "y2": 28,
+            "curvature": 0.12,
+            "strokeMode": "solid",
+            "strokeColor": "rgba(242,184,75,0.58)",
+            "strokeWidth": 2,
+            "gradientStops": [
+              "#7fd8e8",
+              "#f2d58a"
+            ],
+            "brushDasharray": [
+              3,
+              1,
+              5,
+              2
+            ],
+            "linecap": "round",
+            "revealDurationSec": 2,
+            "startSec": 0.6,
+            "styleSource": {
+              "curvature": "treatments.semantic-diagram.edge.curvature",
+              "stroke": "treatments.semantic-diagram.edge.stroke",
+              "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-22",
+      "kind": "overlay",
+      "name": "Overlay 22",
+      "order": 25,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:character-presence",
+          "kind": "element",
+          "trackId": "visual-22",
+          "range": {
+            "startSec": 6.7,
+            "endSec": 15.95
+          },
+          "label": "character-presence",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:character-presence"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:character-presence",
+            "type": "image",
+            "x": 0.7984375,
+            "y": 0.265,
+            "w": 0.103125,
+            "h": 0.35,
+            "src": "isaacverse-final/character/poses/present.png",
+            "z": 30,
+            "opacity": 0.95,
+            "fit": "cover",
+            "animIn": "p-pop",
+            "animDurationSec": 0.6,
+            "startSec": 0.7,
+            "filter": "drop-shadow(0 6px 22px rgba(0,0,0,0.6)) drop-shadow(0 0 26px #ff6b3533)",
+            "styleSource": {
+              "width": "treatments.semantic-diagram.characterPresence",
+              "opacity": "treatments.semantic-diagram.characterPresence"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false,
+            "elementType": "image"
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-23",
+      "kind": "overlay",
+      "name": "Overlay 23",
+      "order": 26,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:edge-1",
+          "kind": "element",
+          "trackId": "visual-23",
+          "range": {
+            "startSec": 7.1,
+            "endSec": 15.95
+          },
+          "label": "edge-1",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:edge-1"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:edge-1",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 4,
+            "opacity": 1,
+            "elementType": "edge",
+            "x1": 84,
+            "y1": 28,
+            "x2": 50,
+            "y2": 84,
+            "curvature": 0.12,
+            "strokeMode": "solid",
+            "strokeColor": "rgba(242,184,75,0.58)",
+            "strokeWidth": 2,
+            "gradientStops": [
+              "#7fd8e8",
+              "#f2d58a"
+            ],
+            "brushDasharray": [
+              3,
+              1,
+              5,
+              2
+            ],
+            "linecap": "round",
+            "revealDurationSec": 2,
+            "startSec": 1.1,
+            "styleSource": {
+              "curvature": "treatments.semantic-diagram.edge.curvature",
+              "stroke": "treatments.semantic-diagram.edge.stroke",
+              "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "visual-24",
+      "kind": "overlay",
+      "name": "Overlay 24",
+      "order": 27,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "treatment-elements"
+      },
+      "accepts": [
+        "image",
+        "video",
+        "text"
+      ],
+      "capabilities": {
+        "visual": true,
+        "audio": false,
+        "canvas": true,
+        "trim": true,
+        "split": true,
+        "gain": false,
+        "fade": false,
+        "mute": false,
+        "solo": false
+      },
+      "clips": [
+        {
+          "id": "legacy-code-signs-beat-02:edge-2",
+          "kind": "element",
+          "trackId": "visual-24",
+          "range": {
+            "startSec": 7.6,
+            "endSec": 15.95
+          },
+          "label": "edge-2",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02",
+            "elementId": "legacy-code-signs-beat-02:edge-2"
+          },
+          "parentClipId": "clip:beat:legacy-code-signs-beat-02",
+          "color": "coral",
+          "metadata": {
+            "id": "legacy-code-signs-beat-02:edge-2",
+            "type": "shape",
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "z": 4,
+            "opacity": 1,
+            "elementType": "edge",
+            "x1": 50,
+            "y1": 84,
+            "x2": 16,
+            "y2": 28,
+            "curvature": 0.12,
+            "strokeMode": "solid",
+            "strokeColor": "rgba(242,184,75,0.58)",
+            "strokeWidth": 2,
+            "gradientStops": [
+              "#7fd8e8",
+              "#f2d58a"
+            ],
+            "brushDasharray": [
+              3,
+              1,
+              5,
+              2
+            ],
+            "linecap": "round",
+            "revealDurationSec": 2,
+            "startSec": 1.6,
+            "styleSource": {
+              "curvature": "treatments.semantic-diagram.edge.curvature",
+              "stroke": "treatments.semantic-diagram.edge.stroke",
+              "revealDurationSec": "treatments.semantic-diagram.edge.revealDurationSec"
+            },
+            "styleResolvedAt": {
+              "storeVersion": 74,
+              "seed": "isaac-forensic-2026-08"
+            },
+            "rotation": 0,
+            "isTextClip": false
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "voice",
+      "kind": "voice",
+      "name": "Audio 1",
+      "order": 1,
+      "locked": false,
+      "muted": false,
+      "solo": false,
+      "hidden": false,
+      "source": {
+        "kind": "project",
+        "projectRef": "audio-plan.voice"
+      },
+      "accepts": [
+        "audio"
+      ],
+      "capabilities": {
+        "visual": false,
+        "audio": true,
+        "canvas": false,
+        "trim": true,
+        "split": true,
+        "gain": true,
+        "fade": true,
+        "mute": true,
+        "solo": true
+      },
+      "clips": [
+        {
+          "id": "clip:voice:legacy-code-signs:voice:legacy-code-signs-beat-01",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 0,
+            "endSec": 6
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "legacy-code-signs-beat-01"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-01.wav",
+            "transcript": "Your repo is two weeks old. So why does it already feel like legacy?",
+            "sentenceText": "Your repo is two weeks old. So why does it already feel like legacy?",
+            "providerText": "Your repo is two weeks old. So why does it already feel like legacy?",
+            "segmentId": "legacy-code-signs:voice:legacy-code-signs-beat-01",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-31T02:02:33",
+              "durationSec": 4.48,
+              "expectedSec": 5.6000000000000005,
+              "peakDb": -2.7,
+              "meanDb": -16.1,
+              "lufs": -15.67,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-2.7 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "4.48s vs 5.60s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-15.67 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "legacy-code-signs-beat-01-take-02",
+            "takes": [
+              {
+                "id": "legacy-code-signs-beat-01-take-01",
+                "pass": true,
+                "durationSec": 4.16,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-01-take-01.mp3"
+              },
+              {
+                "id": "legacy-code-signs-beat-01-take-02",
+                "pass": true,
+                "durationSec": 4.48,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-01-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:legacy-code-signs:voice:legacy-code-signs-beat-02",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 6,
+            "endSec": 15.95
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "legacy-code-signs-beat-02"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-02.wav",
+            "transcript": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+            "sentenceText": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+            "providerText": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+            "segmentId": "legacy-code-signs:voice:legacy-code-signs-beat-02",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-31T02:03:08",
+              "durationSec": 9.6,
+              "expectedSec": 8.8,
+              "peakDb": -1.5,
+              "meanDb": -16.8,
+              "lufs": -16.13,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-1.5 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "9.60s vs 8.80s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-16.13 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "legacy-code-signs-beat-02-take-01",
+            "takes": [
+              {
+                "id": "legacy-code-signs-beat-02-take-01",
+                "pass": true,
+                "durationSec": 9.6,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-02-take-01.mp3"
+              },
+              {
+                "id": "legacy-code-signs-beat-02-take-02",
+                "pass": true,
+                "durationSec": 8.96,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-02-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:legacy-code-signs:voice:legacy-code-signs-beat-03",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 15.95,
+            "endSec": 26.38
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "legacy-code-signs-beat-03"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-03.wav",
+            "transcript": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+            "sentenceText": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+            "providerText": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+            "segmentId": "legacy-code-signs:voice:legacy-code-signs-beat-03",
+            "qc": {
+              "pass": false,
+              "checkedAt": "2026-08-31T02:03:40",
+              "durationSec": 10.08,
+              "expectedSec": 7.6000000000000005,
+              "peakDb": -2.8,
+              "meanDb": -17.6,
+              "lufs": -16.17,
+              "tailSilenceSec": 0.3688129999999994,
+              "wer": 0.1053,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-2.8 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": false,
+                  "value": "10.08s vs 7.60s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.37s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-16.17 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "legacy-code-signs-beat-03-take-01",
+            "takes": [
+              {
+                "id": "legacy-code-signs-beat-03-take-01",
+                "pass": false,
+                "durationSec": 10.08,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-03-take-01.mp3"
+              },
+              {
+                "id": "legacy-code-signs-beat-03-take-02",
+                "pass": false,
+                "durationSec": 9.44,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-03-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        },
+        {
+          "id": "clip:voice:legacy-code-signs:voice:legacy-code-signs-beat-04",
+          "kind": "voice",
+          "trackId": "voice",
+          "range": {
+            "startSec": 26.38,
+            "endSec": 36.81
+          },
+          "label": "Voiceover",
+          "source": {
+            "beatId": "legacy-code-signs-beat-04"
+          },
+          "color": "cyan",
+          "metadata": {
+            "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-04.wav",
+            "transcript": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+            "sentenceText": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+            "providerText": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+            "segmentId": "legacy-code-signs:voice:legacy-code-signs-beat-04",
+            "qc": {
+              "pass": true,
+              "checkedAt": "2026-08-31T02:04:16",
+              "durationSec": 10.08,
+              "expectedSec": 9.2,
+              "peakDb": -2.4,
+              "meanDb": -16.7,
+              "lufs": -15.89,
+              "tailSilenceSec": 0,
+              "wer": 0,
+              "checks": [
+                {
+                  "id": "clip",
+                  "label": "Clipping",
+                  "pass": true,
+                  "value": "-2.4 dBFS peak",
+                  "threshold": "< -0.5 dBFS"
+                },
+                {
+                  "id": "duration",
+                  "label": "Duration",
+                  "pass": true,
+                  "value": "10.08s vs 9.20s",
+                  "threshold": "±15% or WER-verified"
+                },
+                {
+                  "id": "tail-silence",
+                  "label": "Tail silence",
+                  "pass": true,
+                  "value": "0.00s",
+                  "threshold": "≤ 1.5s"
+                },
+                {
+                  "id": "lufs",
+                  "label": "Loudness (post)",
+                  "pass": true,
+                  "value": "-15.89 LUFS",
+                  "threshold": "-16 ±1.5"
+                }
+              ]
+            },
+            "takeId": "legacy-code-signs-beat-04-take-02",
+            "takes": [
+              {
+                "id": "legacy-code-signs-beat-04-take-01",
+                "pass": true,
+                "durationSec": 10.24,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-04-take-01.mp3"
+              },
+              {
+                "id": "legacy-code-signs-beat-04-take-02",
+                "pass": true,
+                "durationSec": 10.08,
+                "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-04-take-02.mp3"
+              }
+            ]
+          },
+          "linkedClipIds": [],
+          "locked": false,
+          "muted": false,
+          "hidden": false
+        }
+      ]
+    }
+  ],
+  "markers": [
+    {
+      "id": "marker:beat:legacy-code-signs-beat-01",
+      "kind": "beat",
+      "range": {
+        "startSec": 0,
+        "endSec": 6
+      },
+      "label": "hook — fresh repo, wrong feel",
+      "source": {
+        "beatId": "legacy-code-signs-beat-01"
+      }
+    },
+    {
+      "id": "marker:beat:legacy-code-signs-beat-02",
+      "kind": "beat",
+      "range": {
+        "startSec": 6,
+        "endSec": 15.95
+      },
+      "label": "reframe — legacy equals mismatch",
+      "source": {
+        "beatId": "legacy-code-signs-beat-02"
+      }
+    },
+    {
+      "id": "marker:beat:legacy-code-signs-beat-03",
+      "kind": "beat",
+      "range": {
+        "startSec": 15.95,
+        "endSec": 26.38
+      },
+      "label": "checklist — the three signals",
+      "source": {
+        "beatId": "legacy-code-signs-beat-03"
+      }
+    },
+    {
+      "id": "marker:beat:legacy-code-signs-beat-04",
+      "kind": "beat",
+      "range": {
+        "startSec": 26.38,
+        "endSec": 36.81
+      },
+      "label": "twist — the risk is your senior",
+      "source": {
+        "beatId": "legacy-code-signs-beat-04"
+      }
+    }
+  ],
+  "assets": [],
+  "revision": {
+    "baseEditVersion": "v001",
+    "revision": 0,
+    "updatedAt": "2026-08-30T19:04:24.570Z"
+  },
+  "schemaVersion": 3
+}

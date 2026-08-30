@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walkthrough Report — YouTuber Experience Audit (31/08)</title>
+<style>
+  body { font-family: Inter, system-ui, sans-serif; background: #0b0e14; color: #d8dee9; max-width: 960px; margin: 0 auto; padding: 32px 24px; line-height: 1.65; }
+  h1 { font-size: 24px; color: #fff; border-bottom: 1px solid #1f2937; padding-bottom: 12px; }
+  h2 { font-size: 17px; color: #60a5fa; margin-top: 32px; }
+  h3 { font-size: 14px; color: #b9bfcc; margin-top: 20px; }
+  .meta { color: #7c8797; font-size: 12px; margin-bottom: 24px; }
+  .good { color: #2dd4a0; }
+  .bad { color: #ff6b6b; }
+  .warn { color: #f5b544; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border: 1px solid #1f2937; vertical-align: top; }
+  th { background: #111827; color: #b9bfcc; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  code { background: #111827; padding: 1px 6px; border-radius: 4px; font-size: 12px; color: #60a5fa; }
+  .timeline { border-left: 2px solid #2563eb; padding-left: 20px; margin: 16px 0; }
+  .timeline-item { margin-bottom: 16px; position: relative; }
+  .timeline-item::before { content: ""; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: #2563eb; }
+  .timeline-time { color: #f5b544; font-size: 11px; font-weight: 600; }
+  .finding { background: #111827; border-left: 3px solid #ff6b6b; padding: 10px 16px; margin: 10px 0; font-size: 13px; border-radius: 0 6px 6px 0; }
+  .finding.minor { border-left-color: #f5b544; }
+  .finding.info { border-left-color: #2dd4a0; }
+  .note { background: #0d1520; border: 1px solid #1f2937; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 6px; }
+  .url { color: #60a5fa; }
+  b.good { color: #2dd4a0; } b.bad { color: #ff6b6b; } b.warn { color: #f5b544; }
+</style>
+</head>
+<body>
+
+<h1>🎬 Walkthrough Report — Trải nghiệm YouTuber từ Ý Tưởng đến Video</h1>
+<p class="meta">Ngày 31/08/2026 · Agent đóng vai YouTuber kênh code-quality · Đi TOÀN BỘ flow qua UI thật (browser automation, không gọi tool trực tiếp) · Project: <code>legacy-code-signs</code> — "3 signs you are writing legacy code right now"</p>
+
+<div class="note">
+<b>Mở sẵn cho bạn:</b><br>
+📁 <a class="url" href="http://localhost:5174/project?project=legacy-code-signs">Content Studio — legacy-code-signs</a> (full journey: research → story → script → video)<br>
+📁 <a class="url" href="http://localhost:5174/editor?project=legacy-code-signs">Editor — legacy-code-signs</a> (timeline + voice track)<br>
+🎬 Candidate video: <code>projects/legacy-code-signs/renders/auto-2026-08-30T19-04-25-736Z.mp4</code> (36.8s, 640×360 draft)<br>
+Kết luận nhanh: <b class="good">Pipeline cốt lõi HOẠT ĐỘNG end-to-end và chất lượng nội dung tốt</b>, nhưng <b class="bad">3 vấn đề khiến user thật sẽ kẹt/chờ</b> — tất cả đều fix được.
+</div>
+
+<h2>1. Timeline quá trình (đúng những gì user sẽ trải nghiệm)</h2>
+<div class="timeline">
+  <div class="timeline-item"><div class="timeline-time">Bước 1 — Mở app</div>Mở picker → thấy 8 projects (test projects lẫn thật) → click <b>"🎬 Video mới từ ý tưởng"</b>. OK nhưng hơi rối.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 2 — Đặt slug</div>Nhập <code>legacy-code-signs</code> → tạo. Friction nhỏ: đáng lẽ auto từ idea.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 3 — Nhập ý tưởng + shape</div>CreateCard với 4 shape presets — <b class="good">rất tốt</b>, chọn Hook 30s · 4 beats, mô tả expectation rõ ràng.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 4 — Gửi agent</div>Prompt tự điền đầy đủ (idea verbatim + shape + từng bước có điểm dừng). Click Send.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 5 — Research: 25+ PHÚT & kẹt ⚠️</div>Agent chạy → 5 phút lang thang grep mã nguồn → dispatch subagent → <b class="bad">subagent ERROR → agent bỏ cuộc âm thầm</b>. Tôi phải tự nhận diện lỗi + restart server + nhắn retry.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 6 — Research card</div>Sau restart: 5 sub-questions · 20 findings · 15 sources. <b class="good">Insights mạnh</b> ("legacy code là mismatch, không phải tuổi"; "senior devs viết legacy code nguy hiểm nhất"). Duyệt.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 7 — Story: phải nhắn lại ⚠️</div>UI nói "agent SẼ compose story" nhưng <b class="bad">không có gì chạy</b> — phải mở drawer nhắn agent. Story nhận được: <b class="good">xuất sắc</b> (thumbnail promise: "Brand-new code. Already legacy. 3 signs — and sign #3 is written by your senior dev, not the intern.")</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 8 — Script (~10 phút)</div>Click nút "📝 Viết script →" (affordance tốt lần này). Agent đọc treatments rồi viết: <b class="good">4 beats chuẩn hook</b> — question → reframe → 3 signals → twist, tự chọn 4 treatments khác nhau.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 9 — Generate (~8 phút)</div>Confirm dialog rõ (4 beats, ước tính 4-8 phút, cost-aware). Voice + timeline + render chạy một mạch. QC: 3/4 pass, beat 3 fail (narration 10.08s vs 7.6s plan).</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 10 — Xem video + duyệt</div>Candidate video playable 36.8s. QC badges đỏ trên beat 3. Nhập note → Redo ✓.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 11 — Editor</div>Mở editor: <b class="good">hoàn hảo</b> — 4 beat clips + 4 voice clips sync + treatments render trên canvas + beat markers mô tả narrative.</div>
+  <div class="timeline-item"><div class="timeline-time">Bước 12 — REDO cycle: 12+ phút chưa xong ⚠️</div>Nhắn agent xử lý REDO → agent <b class="bad">lang thang đọc projects khác</b> (agent-loop-test docs), 12+ phút không ra kết quả.</div>
+</div>
+
+<h2>2. Đã tốt — giữ và phát triển</h2>
+<table>
+<tr><th>Điểm mạnh</th><th>Evidence</th></tr>
+<tr><td class="good"><b>Journey flow hoàn chỉnh end-to-end</b></td><td>Ý tưởng → research → story → script → voice → video → approval → editor — TẤT CẢ các bước đều đi qua được bằng UI</td></tr>
+<tr><td class="good"><b>Chất lượng nội dung agent tạo</b></td><td>Research insights dùng được ngay; story có angle counterintuitive; script đúng formula hook (question→reframe→list→twist); thumbnail promise xuất sắc</td></tr>
+<tr><td class="good"><b>Agent tự chọn treatments đa dạng</b></td><td>4 beats = 4 treatments khác nhau (chapter-card → semantic-diagram → process-timeline → candidate-comparison) — tự đọc treatments.tsx để chọn params đúng</td></tr>
+<tr><td class="good"><b>Voice pipeline + QC hoạt động thật</b></td><td>QC pass 3/4; beat lệch bị bắt (duration 10.08s vs 7.6s + WER 10.5%); QC badge đỏ hiển thị đúng; 2 takes/beat; play từng beat được</td></tr>
+<tr><td class="good"><b>Editor nhận project mới hoàn chỉnh</b></td><td>4 beat clips + 4 voice clips sync + treatments render + beat markers mô tả narrative ("hook — fresh repo, wrong feel")</td></tr>
+<tr><td class="good"><b>Cost-aware UX</b></td><td>Generate confirm dialog (số beats + ước tính thời gian), partial generate (chỉ trả TTS beats thay đổi), Redo yêu cầu note</td></tr>
+<tr><td class="good"><b>Technical quality output</b></td><td>Video h264+aac 48kHz, mean -17.2dB, max -1.4dB (không clipping), LUFS chuẩn -16</td></tr>
+</table>
+
+<h2>3. Chưa tốt — xếp theo mức độ ảnh hưởng user</h2>
+
+<h3>🔴 CRITICAL — user thật sẽ kẹt</h3>
+<div class="finding"><b>#1. LangGraph server chạy code cũ → agent mất tool mới → chết âm thầm.</b><br>
+Server boot 13:54 chiều 30/08, tool research_topic code lúc 21:00 tối — agent nhận prompt "dùng research_topic", không thấy tool trong session, grep mã nguồn 5 phút tìm cách gọi, dispatch subagent (cũng không có tool) → ERROR → IDLE không lời giải thích. <b>Fix:</b> (a) Runbook thêm rule "restart langgraph sau khi thêm/sửa tool"; (b) langgraph dev cần verify tool list; (c) health-check tool registration ở /ok.</div>
+
+<div class="finding"><b>#1b. Agent đọc STALE MIRROR của workspace — không thấy file studio vừa ghi (được xác nhận bằng evidence).</b><br>
+Tôi ghi REDO vào <code>qa/approval.json</code> lúc 19:16 UTC (status <code>changes_requested</code> + note đầy đủ — verify trên disk). Agent trả lời: "approval.json: pending, note rỗng, cập nhật lần cuối 29/08" và đoán "workspace này là mirror của máy Windows, snapshot cuối ~17:59 UTC". Nghĩa là: <b>file writes từ studio KHÔNG đến tay agent kịp thời</b> — agent quyết định trên data cũ, tự nhận xét "note không khớp mô tả của bạn". Agent thậm chí confuse với agent-loop-test (có "rút gọn beat 3" y hệt từ walkthrough hôm qua — trùng hợp gây tin nhắn hallucination-ish). Đây là nguyên nhân sâu của "agent lang thang": nó investigative vì dữ liệu nó thấy mâu thuẫn với yêu cầu. <b>Fix:</b> đồng bộ filesystem view giữa studio và agent tools (cùng process filesystem hoặc watch-sync tức thời); tối thiểu agent phải verify freshness (mtime) trước khi kết luận "không có".</div>
+
+<div class="finding"><b>#2. Agent dead-end sau lỗi — không message lỗi, không retry guidance.</b><br>
+Sau khi task ERROR, drawer chỉ hiển thị chip "ERROR" kỹ thuật. Không có "Research failed — bấm retry" hay lý do. User không biết下一步 làm gì. <b>Fix:</b> AgentPanel bắt task ERROR → hiển thị message thân thiện + nút retry.</div>
+
+<div class="finding"><b>#3. Approval checkpoint KHÔNG trigger agent — "agent SẼ làm X" là lời hứa rỗng.</b><br>
+Duyệt research → không có gì chạy. Duyệt story → may mắn có nút "Viết script →" (prefill prompt, nhưng user vẫn phải bấm Send). REDO → không có affordance nào. Tôi phải tự nhắn agent 3 lần trong 1 walkthrough. <b>Fix:</b> approval action tự gửi continuation message cho agent (cùng cơ chế prefill nhưng TỰ ĐỘNG), hoặc studio hiển thị rõ "nhắn agent tiếp tục: [nút]".</div>
+
+<h3>🟡 MAJOR — tốn thời gian, gây mất niềm tin</h3>
+<div class="finding"><b>#4. Agent loop inefficiency khi conversation dài.</b><br>
+REDO đơn giản (rút gọn 1 beat + regen 1 voice) — agent 12+ phút lang thang đọc editor docs của PROJECT KHÁC (agent-loop-test) mà chưa hành động. Context dài làm agent lost. <b>Fix:</b> system prompt chặt hơn (chỉ project hiện tại), hoặc REDO message tóm tắt context gọn (task-focused continuation thay vì append vào conversation dài).</div>
+
+<div class="finding"><b>#5. Project mới có beat rác từ createBlankProject.</b><br>
+"Target shape: 1 beats · 5s target" hiển thị SAI (đã chọn Hook 4 beats/30s) vì blank edit-doc có 1 beat rác 5s transcript rỗng. <b>Fix:</b> blank project beats: [] hoặc lưu shape vào state khi create.</div>
+
+<div class="finding"><b>#6. Subagent delegation sai tầng.</b><br>
+Agent dispatch subagent để chạy tool có sẵn trong toolset của chính nó (research_topic nằm trong tools list). Subagent không có tool → ERROR. <b>Fix:</b> system prompt: "gọi tool trực tiếp; subagent chỉ cho việc phức tạp cần context riêng".</div>
+
+<h3>🟢 MINOR — polish</h3>
+<div class="finding minor"><b>#7.</b> Duration input <code>step="0.5"</code> vs retime values 9.95s/10.43s → spinbutton hiển thị <i>invalid</i>. Fix: step="0.1" hoặc bỏ step.</div>
+<div class="finding minor"><b>#8.</b> Picker: test projects (mini-loop-test, test-blank-project, agent-loop-test…) lẫn với projects thật. Jargon "SCAFFOLD v000 / EDIT v001". Fix: filter/section riêng + label thân thiện ("Draft", "Có video").</div>
+<div class="finding minor"><b>#9.</b> Sources ẩn sau 3 tầng click (card → collapse → từng sub-question). YouTuber muốn scan links nhanh để trust. Fix: source list phẳng ở mức collapse đầu.</div>
+<div class="finding minor"><b>#10.</b> Slug step riêng có thể gộp: auto-slug từ idea + edit nếu muốn.</div>
+<div class="finding minor"><b>#11.</b> Header hiển thị nguyên đoạn idea dài (3 dòng) — nên rút gọn + tooltip.</div>
+<div class="finding minor"><b>#12.</b> Finding research đầu tiên hiển thị raw code block (copy-paste demo) — nên truncate/pretty.</div>
+
+<h2>4. Góc nhìn YouTuber — nhu cầu chưa được phục vụ</h2>
+<table>
+<tr><th>Nhu cầu</th><th>Hiện trạng</th><th>Ghi chú</th></tr>
+<tr><td>Nghe thử voice TRƯỚC khi generate cả video</td><td>❌ Không có — phải generate hết 4 beats mới nghe được</td><td>Preview 1 câu (1 TTS call) trước khi commit cả video sẽ giảm rủi ro sai giọng</td></tr>
+<tr><td>Thumbnail thực tế (ảnh, không chỉ promise text)</td><td>❌ Chỉ text promise trong story</td><td>Từ "Brand-new code. Already legacy." → sinh thumbnail image là giá trị lớn</td></tr>
+<tr><td>Title + description + tags YouTube</td><td>❌ Không có</td><td>P3 đã có trong queue (D3)</td></tr>
+<tr><td>Xuất video đúng kích thước (1080p)</td><td>⚠️ Draft 640×360 — đúng theo thiết kế draft loop</td><td>Cần nút "Export master 1080p" từ approval card (P3-D2)</td></tr>
+<tr><td>Music/SFX nền</td><td>❌ Chỉ voice</td><td>Audio plan có music/SFX structure nhưng pipeline chưa sinh</td></tr>
+<tr><td>Subtitle/caption</td><td>❌ Không có</td><td>Transcript có sẵn — render subtitle dễ</td></tr>
+</table>
+
+<h2>5. Tổng kết</h2>
+<div class="note">
+<b>Kết luận:</b> Luận điểm cốt lõi của product ĐÚNG — từ một ý tưởng thô, trong ~45 phút (bao gồm 25 phút kẹt vì server cũ) có một video hook 36.8s có research thật, story có angle, script chuẩn formula, voice QC, và editor đầy đủ để tinh chỉnh. <b class="good">Phần "sinh nội dung" (research → story → script) hoạt động vượt mong đợi.</b><br><br>
+<b>Nhưng:</b> với user thật (không phải agent biết restart server), lần chạy đầu tiên hôm nay sẽ <b class="bad">chết ở bước research và không tự phục hồi được</b>. Ba fix CRITICAL trên là điều kiện để đưa cho user thật. Sau đó, efficiency của agent loop (MAJOR #4) quyết định trải nghiệm "agent làm giúp tôi" có đáng tiền không.
+</div>
+
+<h2>6. Đề xuất thứ tự fix</h2>
+<table>
+<tr><th>#</th><th>Việc</th><th>Độ khó</th><th>Tác động</th></tr>
+<tr><td>1</td><td>Đồng bộ filesystem view studio ↔ agent (stale mirror là root cause của cả dead-end lẫn lang thang)</td><td>Vừa</td><td class="bad">CRITICAL #1b — điều kiện tồn tại của "agent đồng hành"</td></tr>
+<tr><td>2</td><td>Runbook + health-check: restart langgraph sau khi đổi tool, verify tool list ở /ok</td><td>Nhỏ</td><td class="bad">CRITICAL #1</td></tr>
+<tr><td>3</td><td>Approval tự continuation: duyệt research/story/REDO → auto-send message cho agent</td><td>Vừa</td><td class="bad">CRITICAL #3 — biến "agent đồng hành" thành thật</td></tr>
+<tr><td>4</td><td>AgentPanel: task ERROR → message thân thiện + nút retry</td><td>Nhỏ</td><td class="bad">CRITICAL #2</td></tr>
+<tr><td>5</td><td>createBlankProject: beats [] + lưu shape vào state</td><td>Nhỏ</td><td>MAJOR #5</td></tr>
+<tr><td>6</td><td>System prompt agent: gọi tool trực tiếp, chỉ focus project hiện tại, verify freshness trước khi kết luận "không có"</td><td>Nhỏ</td><td>MAJOR #4/#6</td></tr>
+<tr><td>7</td><td>Voice preview 1 câu trước generate + duration step fix + picker cleanup</td><td>Vừa</td><td>Polish + YouTuber needs</td></tr>
+</table>
+
+<p class="meta">Walkthrough bởi agent (vai YouTuber code-quality channel) · 31/08/2026 01:20–02:30 · Tất cả thao tác qua UI thật · Evidence: pipeline-log 13 bước, renders/auto-2026-08-30T19-04-25-736Z.mp4, qa/research.json, qa/story-draft.json, approval.json</p>
+</body>
+</html>

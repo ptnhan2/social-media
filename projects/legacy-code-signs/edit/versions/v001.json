@@ -1,0 +1,43 @@
+{
+  "id": "legacy-code-signs-edit",
+  "videoId": "legacy-code-signs",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "legacy-code-signs-beat-01",
+      "journeySlot": "call",
+      "startSec": 0,
+      "durationSec": 5,
+      "transcript": "",
+      "narrativeFunction": "New beat",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "New Project"
+        },
+        "assets": []
+      },
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "audioPlan": {
+    "voice": [],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "none",
+    "intensity": 0
+  }
+}

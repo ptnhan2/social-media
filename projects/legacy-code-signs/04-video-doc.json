@@ -1,0 +1,34 @@
+{
+  "id": "legacy-code-signs",
+  "idea": "3 signs you are writing legacy code right now — even in a brand new codebase. Hook for working developers who feel their code quality slipping but can't name why.",
+  "surfaceProblem": "You can feel your code quality slipping, but you check the calendar and think: 'the repo is two weeks old — it can't be legacy.' The age myth blinds you to the real early signals: copy-pasting the same logic into a third file, adding 'just in case' parameters nobody calls, shipping features with zero tests. Research confirms these are the three earliest decay signals — and most resources only cover decade-old systems, so nobody handed you a checklist for fresh code.",
+  "deeperProblem": "Legacy isn't about age — it's about mismatch: the code has stopped moving with the team, the ecosystem, and the business. And the trap isn't set by juniors — the most dangerous legacy code is written by the most experienced developer in the room, wrapped in speculative generality and once-best-practice patterns that are now quietly load-bearing. Michael Feathers goes further: legacy code is simply code without tests. So the senior who skips tests 'to move fast' is manufacturing your next legacy system — and because it's social (pressure to ship, no shared ownership), no single person ever feels responsible.",
+  "thumbnailPromise": "Brand-new code. Already legacy. 3 signs — and sign #3 is written by your senior dev, not the intern.",
+  "commonGoal": {
+    "aligned": true,
+    "viewer": "Walk away with a nameable 3-item checklist they can run against their own fresh code this week — spot copy-paste duplication, 'just in case' abstractions, and missing tests — and catch mismatch-driven decay before it calcifies.",
+    "creator": "Earn trust with a counterintuitive, research-backed reframe (age is a myth; seniors are the risk) that no other code-quality video leads with — making this a save-and-share hook that sets up the deep-dive video."
+  },
+  "beats": [
+    {
+      "id": "legacy-code-signs-beat-01",
+      "journeySlot": "call",
+      "summary": "hook — fresh repo, wrong feel"
+    },
+    {
+      "id": "legacy-code-signs-beat-02",
+      "journeySlot": "call",
+      "summary": "reframe — legacy equals mismatch"
+    },
+    {
+      "id": "legacy-code-signs-beat-03",
+      "journeySlot": "call",
+      "summary": "checklist — the three signals"
+    },
+    {
+      "id": "legacy-code-signs-beat-04",
+      "journeySlot": "call",
+      "summary": "twist — the risk is your senior"
+    }
+  ]
+}

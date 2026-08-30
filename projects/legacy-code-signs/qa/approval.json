@@ -1,0 +1,6 @@
+{
+  "status": "changes_requested",
+  "note": "Beat 3 QC fail (narration 10.08s vs 7.6s plan, WER 10.5%) — rút gọn transcript beat 3 (3 signals nói gọn hơn) rồi regen voice beat đó.",
+  "summary": "",
+  "updatedAt": "2026-08-30T19:16:28.856Z"
+}

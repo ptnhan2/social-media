@@ -1,0 +1,440 @@
+{
+  "id": "legacy-code-signs-edit",
+  "videoId": "legacy-code-signs",
+  "version": "v001",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "beats": [
+    {
+      "id": "legacy-code-signs-beat-01",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 0,
+      "durationSec": 6,
+      "transcript": "Your repo is two weeks old. So why does it already feel like legacy?",
+      "narrativeFunction": "hook — fresh repo, wrong feel",
+      "treatment": {
+        "id": "chapter-card",
+        "params": {
+          "title": "Brand-New Code. Already Legacy.",
+          "subtitle": "three signs you're writing legacy right now"
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "legacy-code-signs-beat-02",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 6,
+      "durationSec": 9.95,
+      "transcript": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+      "narrativeFunction": "reframe — legacy equals mismatch",
+      "treatment": {
+        "id": "semantic-diagram",
+        "params": {
+          "title": "Legacy isn't age. It's mismatch.",
+          "kicker": "the reframe",
+          "centerLabel": "mismatch",
+          "nodes": [
+            {
+              "id": "team",
+              "label": "Team moves on",
+              "detail": "processes change",
+              "x": 16,
+              "y": 28
+            },
+            {
+              "id": "ecosystem",
+              "label": "Ecosystem moves on",
+              "detail": "versions, norms",
+              "x": 84,
+              "y": 28
+            },
+            {
+              "id": "business",
+              "label": "Business moves on",
+              "detail": "priorities shift",
+              "x": 50,
+              "y": 84
+            }
+          ],
+          "edges": [
+            {
+              "from": "team",
+              "to": "ecosystem",
+              "revealAt": 0.6
+            },
+            {
+              "from": "ecosystem",
+              "to": "business",
+              "revealAt": 1.1
+            },
+            {
+              "from": "business",
+              "to": "team",
+              "revealAt": 1.6
+            }
+          ]
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "legacy-code-signs-beat-03",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 15.95,
+      "durationSec": 10.43,
+      "transcript": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+      "narrativeFunction": "checklist — the three signals",
+      "treatment": {
+        "id": "process-timeline",
+        "params": {
+          "title": "The 3 early signals",
+          "steps": [
+            {
+              "label": "Copy-paste #3",
+              "detail": "same logic, third file"
+            },
+            {
+              "label": "'Just in case' params",
+              "detail": "speculative options nobody calls"
+            },
+            {
+              "label": "Zero tests",
+              "detail": "'tests later' means never"
+            }
+          ],
+          "activeStep": 0
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    },
+    {
+      "id": "legacy-code-signs-beat-04",
+      "sceneId": "",
+      "shotIds": [],
+      "journeySlot": "call",
+      "startSec": 26.38,
+      "durationSec": 10.43,
+      "transcript": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+      "narrativeFunction": "twist — the risk is your senior",
+      "treatment": {
+        "id": "candidate-comparison",
+        "params": {
+          "title": "Who writes your legacy code?",
+          "criteria": "not who you think",
+          "candidates": [
+            {
+              "label": "The intern",
+              "detail": "blamed by default"
+            },
+            {
+              "label": "Your senior dev",
+              "detail": "speculative patterns, skipped tests"
+            }
+          ],
+          "selectedIndex": 1
+        },
+        "assets": []
+      },
+      "elements": [],
+      "motionPhases": [],
+      "audioCues": []
+    }
+  ],
+  "assets": [],
+  "shots": [],
+  "scenes": [],
+  "treatmentUsage": {},
+  "audioPlan": {
+    "voice": [
+      {
+        "id": "legacy-code-signs:voice:legacy-code-signs-beat-01",
+        "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-01.wav",
+        "beatId": "legacy-code-signs-beat-01",
+        "startSec": 0,
+        "endSec": 6,
+        "transcript": "Your repo is two weeks old. So why does it already feel like legacy?",
+        "providerText": "Your repo is two weeks old. So why does it already feel like legacy?",
+        "qc": {
+          "pass": true,
+          "checkedAt": "2026-08-31T02:02:33",
+          "durationSec": 4.48,
+          "expectedSec": 5.6000000000000005,
+          "peakDb": -2.7,
+          "meanDb": -16.1,
+          "lufs": -15.67,
+          "tailSilenceSec": 0,
+          "wer": 0,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-2.7 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": true,
+              "value": "4.48s vs 5.60s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.00s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-15.67 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "legacy-code-signs-beat-01-take-02",
+        "takes": [
+          {
+            "id": "legacy-code-signs-beat-01-take-01",
+            "pass": true,
+            "durationSec": 4.16,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-01-take-01.mp3"
+          },
+          {
+            "id": "legacy-code-signs-beat-01-take-02",
+            "pass": true,
+            "durationSec": 4.48,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-01-take-02.mp3"
+          }
+        ]
+      },
+      {
+        "id": "legacy-code-signs:voice:legacy-code-signs-beat-02",
+        "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-02.wav",
+        "beatId": "legacy-code-signs-beat-02",
+        "startSec": 6,
+        "endSec": 15.95,
+        "transcript": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+        "providerText": "Because legacy was never about age. It's about mismatch — your code stopped moving with your team, the ecosystem, and the business.",
+        "qc": {
+          "pass": true,
+          "checkedAt": "2026-08-31T02:03:08",
+          "durationSec": 9.6,
+          "expectedSec": 8.8,
+          "peakDb": -1.5,
+          "meanDb": -16.8,
+          "lufs": -16.13,
+          "tailSilenceSec": 0,
+          "wer": 0,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-1.5 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": true,
+              "value": "9.60s vs 8.80s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.00s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-16.13 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "legacy-code-signs-beat-02-take-01",
+        "takes": [
+          {
+            "id": "legacy-code-signs-beat-02-take-01",
+            "pass": true,
+            "durationSec": 9.6,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-02-take-01.mp3"
+          },
+          {
+            "id": "legacy-code-signs-beat-02-take-02",
+            "pass": true,
+            "durationSec": 8.96,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-02-take-02.mp3"
+          }
+        ]
+      },
+      {
+        "id": "legacy-code-signs:voice:legacy-code-signs-beat-03",
+        "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-03.wav",
+        "beatId": "legacy-code-signs-beat-03",
+        "startSec": 15.95,
+        "endSec": 26.38,
+        "transcript": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+        "providerText": "Three early signals. Pasting the same logic into a third file. 'Just in case' parameters nobody calls. Zero tests.",
+        "qc": {
+          "pass": false,
+          "checkedAt": "2026-08-31T02:03:40",
+          "durationSec": 10.08,
+          "expectedSec": 7.6000000000000005,
+          "peakDb": -2.8,
+          "meanDb": -17.6,
+          "lufs": -16.17,
+          "tailSilenceSec": 0.3688129999999994,
+          "wer": 0.1053,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-2.8 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": false,
+              "value": "10.08s vs 7.60s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.37s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-16.17 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "legacy-code-signs-beat-03-take-01",
+        "takes": [
+          {
+            "id": "legacy-code-signs-beat-03-take-01",
+            "pass": false,
+            "durationSec": 10.08,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-03-take-01.mp3"
+          },
+          {
+            "id": "legacy-code-signs-beat-03-take-02",
+            "pass": false,
+            "durationSec": 9.44,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-03-take-02.mp3"
+          }
+        ]
+      },
+      {
+        "id": "legacy-code-signs:voice:legacy-code-signs-beat-04",
+        "src": "legacy-code-signs/voice/stems/legacy-code-signs-beat-04.wav",
+        "beatId": "legacy-code-signs-beat-04",
+        "startSec": 26.38,
+        "endSec": 36.81,
+        "transcript": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+        "providerText": "Here's the twist — it's usually not the intern. It's your most experienced developer, moving fast, skipping tests, wrapping everything in just-in-case patterns.",
+        "qc": {
+          "pass": true,
+          "checkedAt": "2026-08-31T02:04:16",
+          "durationSec": 10.08,
+          "expectedSec": 9.2,
+          "peakDb": -2.4,
+          "meanDb": -16.7,
+          "lufs": -15.89,
+          "tailSilenceSec": 0,
+          "wer": 0,
+          "checks": [
+            {
+              "id": "clip",
+              "label": "Clipping",
+              "pass": true,
+              "value": "-2.4 dBFS peak",
+              "threshold": "< -0.5 dBFS"
+            },
+            {
+              "id": "duration",
+              "label": "Duration",
+              "pass": true,
+              "value": "10.08s vs 9.20s",
+              "threshold": "±15% or WER-verified"
+            },
+            {
+              "id": "tail-silence",
+              "label": "Tail silence",
+              "pass": true,
+              "value": "0.00s",
+              "threshold": "≤ 1.5s"
+            },
+            {
+              "id": "lufs",
+              "label": "Loudness (post)",
+              "pass": true,
+              "value": "-15.89 LUFS",
+              "threshold": "-16 ±1.5"
+            }
+          ]
+        },
+        "takeId": "legacy-code-signs-beat-04-take-02",
+        "takes": [
+          {
+            "id": "legacy-code-signs-beat-04-take-01",
+            "pass": true,
+            "durationSec": 10.24,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-04-take-01.mp3"
+          },
+          {
+            "id": "legacy-code-signs-beat-04-take-02",
+            "pass": true,
+            "durationSec": 10.08,
+            "path": "C:\\DevWork\\social-media\\projects\\legacy-code-signs\\voice\\takes\\legacy-code-signs-beat-04-take-02.mp3"
+          }
+        ]
+      }
+    ],
+    "music": [],
+    "ambience": [],
+    "beats": [],
+    "master": {
+      "limiter": true
+    }
+  },
+  "transitions": [],
+  "colorGrade": {
+    "preset": "warm",
+    "intensity": 0.4
+  },
+  "instruction": "3 signs you are writing legacy code right now — even in a brand new codebase. Hook for working developers who feel their code quality slipping but can't name why."
+}
