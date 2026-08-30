@@ -245,6 +245,12 @@ Stepper thêm "Research" stage (giữa Ý tưởng và Story).
 
 ## 4. PROGRESS LOG
 
+- **2026-08-31 00:30 — P2 SHIPPED (treatment selector + duration edit +
+  per-beat progress)**: set-treatment op (8 treatments, default params seeded
+  từ transcript, giữ accent cũ) + select UI per beat; set-duration op (1-600s
+  retime cumulative) + number input; scaffold JSON progress line mỗi beat →
+  produce detail → Generate button "TTS voice 3/7 beats" live. script-beat.mjs
+  7 ops. design-audit 0 (spacing scale 4px/8px).
 - **2026-08-30 23:59 — P1 SHIPPED (beat CRUD + partial generate + direction
   pre-voice)**: script-beat.mjs (5 ops) + /api/project/script-beat +
   BeatEditor CRUD UI (↑↓✕ + add-row, script blur-save, direction pre-voice).
